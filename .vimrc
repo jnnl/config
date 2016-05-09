@@ -1,5 +1,4 @@
 " vimrc
-" jnnl.net
 
 " General
 
