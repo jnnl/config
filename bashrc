@@ -1,3 +1,5 @@
+# bashrc
+
 alias brewup="brew update && brew upgrade && brew cleanup && brew prune && brew doctor"
 alias gdb="sudo gdb -q"
 alias startw="ruby -r un -e httpd . -p 8000 && open -a '/Applications/Safari.app' http://localhost:8000"
