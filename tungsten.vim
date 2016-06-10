@@ -1,3 +1,6 @@
+" tungsten.vim
+" jnnl.net
+
 hi clear
 syntax reset
 let g:colors_name = "tungsten"
@@ -53,7 +56,7 @@ if &background == "light"
     hi TabLineFill gui=NONE guifg=NONE guibg=#e6e6e6
     hi TabLineSel gui=NONE guifg=#333333 guibg=#fdfdfd
     hi Title gui=NONE guifg=#424242 guibg=NONE
-    hi Todo gui=NONE guifg=#1e5a40 guibg=NONE
+    hi Todo gui=NONE guifg=#1e5a20 guibg=NONE
     hi Type gui=NONE guifg=#0045b1 guibg=NONE
     hi Underlined gui=NONE guifg=NONE guibg=NONE
     hi VertSplit gui=NONE guifg=#e3e3e3 guibg=NONE
