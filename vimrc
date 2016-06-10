@@ -81,10 +81,15 @@ let &undodir   = AUXDIR.'undo//'
 
 map         , <leader>
 noremap     § :w<CR>
-nnoremap    <leader>ww :w !sudo tee > /dev/null %
 inoremap    <S-Tab> <C-V><Tab>
-nnoremap    <silent><leader>py :!clear; python %<CR>
-nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
+
+if has('win32')
+    nnoremap    <silent><leader>py :!cls; python %<CR>
+    nnoremap    <silent><leader>cc :!cls; cc % && ./a.out<CR>
+else
+    nnoremap    <leader>ww :w !sudo tee > /dev/null %
+    nnoremap    <silent><leader>py :!clear; python %<CR>
+    nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
 
 nnoremap    ﬁ <C-w><C-l> 
 nnoremap    ˛ <C-w><C-h> 
