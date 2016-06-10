@@ -1,5 +1,6 @@
 #!/bin/bash
 # install.sh
+# 
 
 # Config file directory
 dir=~/.dotfiles
@@ -24,7 +25,7 @@ if [[ -d "$dir" ]]; then
 	echo -n "$dir already exists. Continue? [y/N] "
 	read choice
 	if echo "$choice" | grep -viq "^y" ;then
-		echo "No changes were made. Exiting..."
+		echo "No changes were made."
 		exit
 	fi
 fi
@@ -41,7 +42,7 @@ for file in $files; do
             mv ~/.$file $backupdir/$file
         fi
 		if [[ "$?" -eq 0 ]]; then
-			echo "Moved .$file to $backupdir/"
+			echo "Moved ~/.$file to $backupdir/"
 		fi
 	fi
 done
@@ -62,10 +63,33 @@ echo "Linking config files to $HOME"
 cd $dir
 
 for file in $files; do
-        ln -s $dir/$file ~/.$file
+    ln -s $dir/$file ~/.$file
 	if [[ "$?" -eq 0 ]]; then
 		echo "Created symlink: $dir/$file -> ~/.$file"
 	fi
 done
+
+# Install vim-plug and colorschemes
+echo -n "Install vim-plug and tungsten.vim? [y/N] "
+read choice
+if echo "$choice" | grep -viq "^y" ;then
+    echo "Vim extras were not installed."
+    echo "done"
+    exit
+fi
+
+# Copy tungsten.vim colorscheme
+mkdir -p ~/.vim/colors/ && cp $scriptdir/tungsten.vim "$_"
+if [[ "$?" -eq 0 ]]; then
+    echo "Copied tungsten.vim to ~/.vim/colors/"
+fi
+
+# Install vim-plug
+echo "Installing vim-plug"
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+if [[ "$?" -eq 0 ]]; then
+    echo "Vim-plug installed."
+fi
 
 echo "done"
