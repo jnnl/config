@@ -90,6 +90,7 @@ else
     nnoremap    <leader>ww :w !sudo tee > /dev/null %
     nnoremap    <silent><leader>py :!clear; python %<CR>
     nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
+endif
 
 nnoremap    ﬁ <C-w><C-l> 
 nnoremap    ˛ <C-w><C-h> 
