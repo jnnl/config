@@ -1,6 +1,6 @@
 #!/bin/bash
 # install.sh
-# 
+# Installs config files from the repository to ~/.dotfiles and symlinks them to ~
 
 # Config file directory
 dir=~/.dotfiles
