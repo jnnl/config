@@ -57,11 +57,7 @@ set display+=lastline
 
 " Auxiliary directories
 
-if has('win32')
-    let AUXDIR = $HOME.'\vimfiles\'
-else
-    let AUXDIR = $HOME.'/.vim/'
-endif
+let AUXDIR = $HOME.'/.vim/'
 
 if !isdirectory(AUXDIR.'backup')
     silent call mkdir (AUXDIR.'backup', 'p')
@@ -83,14 +79,9 @@ map         , <leader>
 noremap     § :w<CR>
 inoremap    <S-Tab> <C-V><Tab>
 
-if has('win32')
-    nnoremap    <silent><leader>py :!cls; python %<CR>
-    nnoremap    <silent><leader>cc :!cls; cc % && ./a.out<CR>
-else
-    nnoremap    <leader>ww :w !sudo tee > /dev/null %
-    nnoremap    <silent><leader>py :!clear; python %<CR>
-    nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
-endif
+nnoremap    <leader>ww :w !sudo tee > /dev/null %<CR>
+nnoremap    <silent><leader>py :!clear; python %<CR>
+nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
 
 nnoremap    ﬁ <C-w><C-l> 
 nnoremap    ˛ <C-w><C-h> 
@@ -115,22 +106,14 @@ nnoremap    <leader>fw :Windows<CR>
 
 imap        <C-l> <plug>(fzf-complete-line)
 
-" Windows-specific settings
-
-if has('win32')
-    source $HOME\_winrc
-endif
-
 " Plugins
 
 call plug#begin()
 if !has('gui_running')
     Plug 'godlygeek/csapprox'
 endif
-if !has('win32')
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
-    Plug 'junegunn/fzf.vim'
-endif
+Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
+Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'xolox/vim-misc'
