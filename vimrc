@@ -76,7 +76,7 @@ let &undodir   = AUXDIR.'undo//'
 " Mappings
 
 map         , <leader>
-noremap     § :w<CR>
+nnoremap    § :w<CR>
 inoremap    <S-Tab> <C-V><Tab>
 
 nnoremap    <leader>ww :w !sudo tee > /dev/null %<CR>
@@ -104,7 +104,7 @@ nnoremap    <leader>fh :History<CR>
 nnoremap    <leader>fl :Lines<CR>
 nnoremap    <leader>fw :Windows<CR>
 
-imap        <C-l> <plug>(fzf-complete-line)
+inoremap    <C-l> <plug>(fzf-complete-line)
 
 " Plugins
 
