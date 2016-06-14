@@ -37,7 +37,7 @@ set smartcase
 " Styles
 
 if has('syntax') && !exists('g:syntax_on')
-  syntax enable
+    syntax enable
 endif
 
 set number
@@ -109,7 +109,7 @@ inoremap    <C-l> <plug>(fzf-complete-line)
 " Plugins
 
 call plug#begin()
-if !has('gui_running')
+if !has('gui_running') && &term!~'linux'
     Plug 'godlygeek/csapprox'
 endif
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
