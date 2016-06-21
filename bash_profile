@@ -5,7 +5,6 @@
 
 alias brewup="brew update && brew upgrade && brew cleanup && brew prune && brew doctor"
 alias gdb="sudo gdb -q"
-alias startw="ruby -r un -e httpd . -p 8000 && open -a '/Applications/Safari.app' http://localhost:8000"
 
 export TERM="xterm-256color"
 export PATH="$PATH:/usr/local/sbin"
@@ -21,4 +20,6 @@ fi
 
 if [[ $(hostname) == "jmac" || $(hostname) == "jmac.local" ]]; then
     export PS1="\[\033[00m\]\u\[\033[m\]:\W $ "
+else
+    export PS1="\[\033[00m\]\u\[\033[m\]@\h:\W $ "
 fi
