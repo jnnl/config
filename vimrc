@@ -43,7 +43,7 @@ endif
 set number
 set cursorline
 set background=light
-colorscheme tungsten
+colorscheme tantalum
 
 " Screen
 
@@ -99,7 +99,7 @@ nnoremap    <leader>sc :CloseSession<CR>
 
 nnoremap    <leader>fb :Buffers<CR>
 nnoremap    <leader>fc :Commits<CR>
-nnoremap    <leader>ff :Files
+nnoremap    <leader>ff :Files<CR>
 nnoremap    <leader>fh :History<CR>
 nnoremap    <leader>fl :Lines<CR>
 nnoremap    <leader>fw :Windows<CR>
@@ -109,9 +109,6 @@ inoremap    <C-l> <plug>(fzf-complete-line)
 " Plugins
 
 call plug#begin()
-if !has('gui_running') && &term!~'linux'
-    Plug 'godlygeek/csapprox'
-endif
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'

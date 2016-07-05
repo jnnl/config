@@ -8,8 +8,9 @@ dir=~/.dotfiles
 backupdir=$dir/backup
 # Directory of this script
 scriptdir=$(cd "$(dirname "$1")"; pwd)/$(basename "$1")
-# Config files
+# Config files to install
 files="bashrc vimrc"
+colorschemes="tungsten.vim tantalum.vim"
 # Operating system
 platform=$(uname)
 
@@ -36,11 +37,7 @@ mkdir -p $backupdir
 
 for file in $files; do
     if [[ -f ".$file" ]]; then
-        if [[ -f "$backupdir/$file" ]]; then
-            mv ~/.$file $backupdir/$file.$(date +%Y%m%d%H%M%S)
-        else
-            mv ~/.$file $backupdir/$file
-        fi
+        mv ~/.$file $backupdir/$file.$(date +%Y%m%d%H%M%S)
         if [[ "$?" -eq 0 ]]; then
             echo "Moved ~/.$file to $backupdir/"
         fi
@@ -70,7 +67,7 @@ for file in $files; do
 done
 
 # Install vim-plug and colorschemes
-echo -n "Install vim-plug and tungsten.vim? [y/N] "
+echo -n "Install vim-plug and colorschemes? [y/N] "
 read choice
 if echo "$choice" | grep -viq "^y" ;then
     echo "Vim extras were not installed."
@@ -78,11 +75,14 @@ if echo "$choice" | grep -viq "^y" ;then
     exit
 fi
 
-# Copy tungsten.vim colorscheme
-mkdir -p ~/.vim/colors/ && cp $scriptdir/tungsten.vim "$_"
-if [[ "$?" -eq 0 ]]; then
-    echo "Copied tungsten.vim to ~/.vim/colors/"
-fi
+# Copy colorschemes
+mkdir -p ~/.vim/colors/
+for cs in $colorschemes; do
+    cp $scriptdir/$cs "$_"
+    if [[ "$?" -eq 0 ]]; then
+        echo "Copied $cs to ~/.vim/colors/"
+    fi
+done
 
 # Install vim-plug
 echo "Installing vim-plug"
