@@ -42,7 +42,6 @@ endif
 
 set number
 set cursorline
-set background=light
 colorscheme tantalum
 
 " Screen

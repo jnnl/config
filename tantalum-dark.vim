@@ -6,7 +6,7 @@ set background=dark
 hi clear
 syntax reset
 
-let g:colors_name="tantalum"
+let g:colors_name="tantalum-dark"
 
 " Highlight groups
 
@@ -46,7 +46,7 @@ hi MoreMsg         ctermfg=none    ctermbg=none    cterm=none
 
 hi NonText         ctermfg=241     ctermbg=none    cterm=none
 
-hi Normal          ctermfg=251     ctermbg=236     cterm=none
+hi Normal          ctermfg=251     ctermbg=234     cterm=none
 
 hi Pmenu           ctermfg=243     ctermbg=254     cterm=none
 hi PmenuSel        ctermfg=255     ctermbg=241     cterm=none
