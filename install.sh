@@ -78,9 +78,9 @@ fi
 # Copy colorschemes
 mkdir -p ~/.vim/colors/
 for cs in $colorschemes; do
-    cp $scriptdir/$cs "$_"
+    cp $scriptdir/$cs ~/.vim/colors/$cs
     if [[ "$?" -eq 0 ]]; then
-        echo "Copied $cs to ~/.vim/colors/"
+        echo "Copied $cs to ~/.vim/colors/$cs"
     fi
 done
 
