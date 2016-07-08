@@ -89,7 +89,7 @@ echo "Installing vim-plug"
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 if [[ "$?" -eq 0 ]]; then
-    echo "Vim-plug installed."
+    echo "Vim-plug installed. Remember to :PlugInstall!"
 fi
 
 echo "done"
