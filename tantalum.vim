@@ -1,6 +1,5 @@
 " tantalum.vim
-" Author: Juho Junnila (juho@jnnl.net)
-" Maintainer: Juho Junnila (juho@jnnl.net)
+" jnnl.net
 
 set background=light
 hi clear
