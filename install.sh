@@ -9,7 +9,7 @@ backupdir=$dir/backup
 # Directory of this script
 scriptdir=$(cd "$(dirname "$1")"; pwd)/$(basename "$1")
 # Config files to install
-files="bashrc vimrc"
+files="bashrc vimrc tmux.conf"
 colorschemes="tungsten.vim tantalum.vim tantalum-dark.vim"
 # Operating system
 platform=$(uname)
