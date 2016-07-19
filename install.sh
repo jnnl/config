@@ -32,7 +32,7 @@ if [[ -d "$dir" ]]; then
 fi
 
 # Backup config files to the backup directory
-echo "Backing up existing config files"
+echo "Backing up existing config files..."
 mkdir -p $backupdir
 
 for file in $files; do
@@ -45,7 +45,7 @@ for file in $files; do
 done
 
 # Copy config files from the repo to the config file directory
-echo "Copying config files to $dir"
+echo "Copying config files to $dir..."
 cd $scriptdir
 
 for file in $files; do
@@ -56,7 +56,7 @@ for file in $files; do
 done
 
 # Create symlinks of the config files to home directory
-echo "Linking config files to $HOME"
+echo "Linking config files to $HOME..."
 cd $dir
 
 for file in $files; do
@@ -67,25 +67,31 @@ for file in $files; do
 done
 
 # Install vim-plug and colorschemes
-echo -n "Install vim-plug and colorschemes? [y/N] "
+echo -n "Install vim colorschemes? [y/N] "
 read choice
 if echo "$choice" | grep -viq "^y" ;then
-    echo "Vim extras were not installed."
+    echo "Vim colorschemes were not installed."
+else
+    # Copy colorschemes
+    mkdir -p ~/.vim/colors/
+    for cs in $colorschemes; do
+        cp $scriptdir/$cs ~/.vim/colors/$cs
+        if [[ "$?" -eq 0 ]]; then
+            echo "Copied $cs to ~/.vim/colors/$cs"
+        fi
+    done
+fi
+
+# Install vim-plug
+echo -n "Install vim-plug? [y/N] "
+read choice
+if echo "$choice" | grep -viq "^y" ;then
+    echo "Vim-plug was not installed."
     echo "done"
     exit
 fi
 
-# Copy colorschemes
-mkdir -p ~/.vim/colors/
-for cs in $colorschemes; do
-    cp $scriptdir/$cs ~/.vim/colors/$cs
-    if [[ "$?" -eq 0 ]]; then
-        echo "Copied $cs to ~/.vim/colors/$cs"
-    fi
-done
-
-# Install vim-plug
-echo "Installing vim-plug"
+echo "Installing vim-plug..."
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 if [[ "$?" -eq 0 ]]; then
