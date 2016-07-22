@@ -9,6 +9,7 @@ set autoread
 set wildmenu
 set lazyredraw
 set ttyfast
+set mouse=a
 
 " Indentation
 
@@ -40,6 +41,8 @@ if has('syntax') && !exists('g:syntax_on')
     syntax enable
 endif
 
+set ruler
+set rulerformat=%14l:%c
 set number
 set cursorline
 colorscheme tantalum
