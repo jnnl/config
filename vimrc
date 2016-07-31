@@ -84,6 +84,7 @@ inoremap    <S-Tab> <C-V><Tab>
 nnoremap    <leader>ww :w !sudo tee > /dev/null %<CR>
 nnoremap    <silent><leader>py :!clear; python %<CR>
 nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
+nnoremap    <leader>co :call ColTog()<CR>
 
 nnoremap    ﬁ <C-w><C-l> 
 nnoremap    ˛ <C-w><C-h> 
@@ -107,6 +108,16 @@ nnoremap    <leader>fl :Lines<CR>
 nnoremap    <leader>fw :Windows<CR>
 
 inoremap    <C-l> <plug>(fzf-complete-line)
+
+" Functions
+
+function! ColTog()
+    if g:colors_name != "blank"
+        colorscheme blank
+    else
+        colorscheme tantalum
+    endif
+endfunction
 
 " Plugins
 
