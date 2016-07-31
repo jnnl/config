@@ -124,10 +124,11 @@ endfunction
 call plug#begin()
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-session'
+Plug 'xolox/vim-misc', { 'on': ['SaveSession', 'DeleteSession', 'OpenSession', 'CloseSession'] }
+Plug 'xolox/vim-session', { 'on': ['SaveSession', 'DeleteSession', 'OpenSession', 'CloseSession'] }
 let g:session_autosave = 'no'
 let g:session_autoload = 'no'
 call plug#end()
