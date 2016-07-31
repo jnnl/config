@@ -1,11 +1,11 @@
-
-" tantalum.vim
+" blank.vim
+" jnnl.net
 
 set background=light
 hi clear
 syntax reset
 
-let g:colors_name="tantalum"
+let g:colors_name="blank"
 
 " Highlight groups
 
