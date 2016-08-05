@@ -45,6 +45,7 @@ set ruler
 set rulerformat=%14l:%c
 set number
 set cursorline
+
 colorscheme tantalum
 
 " Screen
@@ -84,22 +85,29 @@ inoremap    <S-Tab> <C-V><Tab>
 nnoremap    <leader>ww :w !sudo tee > /dev/null %<CR>
 nnoremap    <silent><leader>py :!clear; python %<CR>
 nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
-nnoremap    <leader>co :call ColTog()<CR>
+nnoremap    <leader>co :call JColorToggle()<CR>
 
 nnoremap    ﬁ <C-w><C-l> 
 nnoremap    ˛ <C-w><C-h> 
 nnoremap    ª <C-w><C-k> 
 nnoremap    √ <C-w><C-j> 
+
 nnoremap    <leader>ö gT
 nnoremap    <leader>ä gt
 nnoremap    <leader>hl :set hlsearch! hlsearch?<CR>
 nnoremap    <leader>x :Explore<CR>
 
+nnoremap    <leader>t2 :set expandtab shiftwidth=2 tabstop=2 softtabstop=2<CR>
+nnoremap    <leader>t4 :set expandtab shiftwidth=4 tabstop=4 softtabstop=4<CR>
+nnoremap    <leader>t8 :set expandtab shiftwidth=8 tabstop=8 softtabstop=8<CR>
+
+" Vim-session
 nnoremap    <leader>ss :SaveSession 
 nnoremap    <leader>sd :DeleteSession
 nnoremap    <leader>so :OpenSession<CR>
 nnoremap    <leader>sc :CloseSession<CR>
 
+" FZF
 nnoremap    <leader>fb :Buffers<CR>
 nnoremap    <leader>fc :Commits<CR>
 nnoremap    <leader>ff :Files<CR>
@@ -111,9 +119,15 @@ inoremap    <C-l> <plug>(fzf-complete-line)
 
 " Functions
 
-function! ColTog()
-    if g:colors_name != "blank"
-        colorscheme blank
+function! JColorToggle()
+    if exists("g:colors_name")
+        if g:colors_name != "blank"
+            colorscheme blank
+            set number!
+        else
+            colorscheme tantalum
+            set number
+        endif
     else
         colorscheme tantalum
     endif
