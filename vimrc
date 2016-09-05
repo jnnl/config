@@ -77,13 +77,13 @@ let &directory = AUXDIR.'swap//'
 let &undodir   = AUXDIR.'undo//'
 
 " Mappings
-
+" General
 map         , <leader>
 nnoremap    § :w<CR>
 inoremap    <S-Tab> <C-V><Tab>
 
 nnoremap    <leader>ww :w !sudo tee > /dev/null %<CR>
-nnoremap    <silent><leader>py :!clear; python %<CR>
+nnoremap    <silent><leader>py :!clear; python3 %<CR>
 nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
 nnoremap    <leader>co :call JColorToggle()<CR>
 
