@@ -92,8 +92,8 @@ nnoremap    ˛ <C-w><C-h>
 nnoremap    ª <C-w><C-k> 
 nnoremap    √ <C-w><C-j> 
 
-nnoremap    <leader>ö gT
-nnoremap    <leader>ä gt
+nnoremap    ö gT
+nnoremap    ä gt
 nnoremap    <leader>hl :set hlsearch! hlsearch?<CR>
 nnoremap    <leader>x :Explore<CR>
 
