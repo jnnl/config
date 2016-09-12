@@ -74,7 +74,7 @@ if echo "$choice" | grep -viq "^y" ;then
 else
     # Copy colorschemes
     mkdir -p ~/.vim/colors/
-    for cs in "$colorschemes"; do
+    for cs in $colorschemes; do
         cp "$scriptdir"/"$cs" ~/.vim/colors/"$cs"
         if [[ "$?" -eq 0 ]]; then
             echo "Copied "$cs" to ~/.vim/colors/"$cs""
