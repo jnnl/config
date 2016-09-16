@@ -87,6 +87,9 @@ nnoremap    <silent><leader>py :!clear; python3 %<CR>
 nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
 nnoremap    <leader>co :call JColorToggle()<CR>
 
+nnoremap    <leader>mk :make<CR>
+nnoremap    <leader>cw :cw<CR>
+
 nnoremap    ﬁ <C-w><C-l> 
 nnoremap    ˛ <C-w><C-h> 
 nnoremap    ª <C-w><C-k> 
@@ -123,7 +126,7 @@ function! JColorToggle()
     if exists("g:colors_name")
         if g:colors_name != "blank"
             colorscheme blank
-            set number!
+            set nonumber
         else
             colorscheme tantalum
             set number
