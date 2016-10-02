@@ -142,7 +142,6 @@ endfunction
 call plug#begin()
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'xolox/vim-misc', { 'on': ['SaveSession', 'DeleteSession', 'OpenSession', 'CloseSession'] }
