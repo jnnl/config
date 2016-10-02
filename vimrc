@@ -46,6 +46,7 @@ set rulerformat=%14l:%c
 set number
 set cursorline
 
+set background=dark
 colorscheme tantalum
 
 " Screen
