@@ -31,6 +31,8 @@ if [[ -d "$dir" ]]; then
     fi
 fi
 
+echo ""
+
 # Backup config files to the backup directory
 echo "Backing up existing config files..."
 mkdir -p "$backupdir"
@@ -43,6 +45,8 @@ for file in $files; do
     fi
 done
 
+echo ""
+
 # Copy config files from the repo to the config file directory
 echo "Copying config files to "$dir"..."
 cd "$scriptdir"
@@ -53,6 +57,8 @@ for file in $files; do
     fi
 done
 
+echo ""
+
 # Create symlinks of the config files to home directory
 echo "Linking config files to "$HOME"..."
 cd "$dir"
@@ -62,6 +68,8 @@ for file in $files; do
         echo "Created symlink: "$dir"/"$file" -> ~/."$file""
     fi
 done
+
+echo ""
 
 # Install vim-plug and colorschemes
 echo -n "Install vim colorschemes? [y/N] "
@@ -78,12 +86,14 @@ else
     done
 fi
 
+echo ""
+
 # Install vim-plug
 echo -n "Install vim-plug? [y/N] "
 read choice
 if echo "$choice" | grep -viq "^y"; then
     echo "Vim-plug was not installed."
-    echo "done"
+    echo -e "\ndone"
     exit
 fi
 
@@ -101,4 +111,4 @@ elif which wget 1>/dev/null; then
 else
     echo "No curl or wget found. Please install either to install vim-plug."
 fi
-echo "done"
+echo -e "\ndone"
