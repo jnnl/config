@@ -46,7 +46,7 @@ set rulerformat=%14l:%c
 set number
 set cursorline
 
-set background=dark
+set background=light
 colorscheme tantalum
 
 " Screen
@@ -80,36 +80,19 @@ let &undodir   = AUXDIR.'undo//'
 " Mappings
 " General
 map         , <leader>
+
+nnoremap    ,, :
 nnoremap    § :w<CR>
+nnoremap    B ^
+nnoremap    E $
 inoremap    <S-Tab> <C-V><Tab>
 
 nnoremap    <leader>ww :w !sudo tee > /dev/null %<CR>
 nnoremap    <silent><leader>py :!clear; python3 %<CR>
 nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
-nnoremap    <leader>co :call JColorToggle()<CR>
-
-nnoremap    <leader>mk :make<CR>
-nnoremap    <leader>cw :cw<CR>
-
-nnoremap    ﬁ <C-w><C-l> 
-nnoremap    ˛ <C-w><C-h> 
-nnoremap    ª <C-w><C-k> 
-nnoremap    √ <C-w><C-j> 
-
-nnoremap    ö gT
-nnoremap    ä gt
+nnoremap    <leader>co :call ToggleColors()<CR>
 nnoremap    <leader>hl :set hlsearch! hlsearch?<CR>
 nnoremap    <leader>x :Explore<CR>
-
-nnoremap    <leader>t2 :set expandtab shiftwidth=2 tabstop=2 softtabstop=2<CR>
-nnoremap    <leader>t4 :set expandtab shiftwidth=4 tabstop=4 softtabstop=4<CR>
-nnoremap    <leader>t8 :set expandtab shiftwidth=8 tabstop=8 softtabstop=8<CR>
-
-" Vim-session
-nnoremap    <leader>ss :SaveSession 
-nnoremap    <leader>sd :DeleteSession
-nnoremap    <leader>so :OpenSession<CR>
-nnoremap    <leader>sc :CloseSession<CR>
 
 " FZF
 nnoremap    <leader>fb :Buffers<CR>
@@ -119,11 +102,11 @@ nnoremap    <leader>fh :History<CR>
 nnoremap    <leader>fl :Lines<CR>
 nnoremap    <leader>fw :Windows<CR>
 
-inoremap    <C-l> <plug>(fzf-complete-line)
+imap        <C-l> <plug>(fzf-complete-line)
 
 " Functions
 
-function! JColorToggle()
+function! ToggleColors()
     if exists("g:colors_name")
         if g:colors_name != "blank"
             colorscheme blank
@@ -144,8 +127,4 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
-Plug 'xolox/vim-misc', { 'on': ['SaveSession', 'DeleteSession', 'OpenSession', 'CloseSession'] }
-Plug 'xolox/vim-session', { 'on': ['SaveSession', 'DeleteSession', 'OpenSession', 'CloseSession'] }
-let g:session_autosave = 'no'
-let g:session_autoload = 'no'
 call plug#end()
