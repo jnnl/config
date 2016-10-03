@@ -8,8 +8,6 @@ set backspace=indent,eol,start
 set autoread
 set wildmenu
 set lazyredraw
-set ttyfast
-set mouse=a
 
 " Indentation
 
@@ -85,6 +83,7 @@ nnoremap    ,, :
 nnoremap    § :w<CR>
 nnoremap    B ^
 nnoremap    E $
+nnoremap    gV `[v`]
 inoremap    <S-Tab> <C-V><Tab>
 
 nnoremap    <leader>ww :w !sudo tee > /dev/null %<CR>
