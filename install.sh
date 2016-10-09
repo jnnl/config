@@ -3,7 +3,7 @@
 # Installs config files from the repository to ~/.dotfiles and symlinks them to ~
 
 # Config file directory
-dir=~/.dotfiles
+dir="$HOME"/.dotfiles
 # Config file backup directory
 backupdir=""$dir"/backup"
 # Directory of this script
@@ -19,7 +19,7 @@ if [[ "$platform" == "Darwin" ]]; then
     files+=" bash_profile"
 fi
 
-cd ~
+cd "$HOME"
 
 # Check if config file directory exists
 if [[ -d "$dir" ]]; then
@@ -39,8 +39,8 @@ mkdir -p "$backupdir"
 
 for file in $files; do
     if [[ -f ".$file" ]]; then
-        if mv ~/."$file" "$backupdir"/"$file"."$(date +%Y%m%d%H%M%S)"; then
-            echo "Moved ~/."$file" to "$backupdir"/"
+        if mv "$HOME/.$file" "$backupdir"/"$file"."$(date +%Y%m%d%H%M%S)"; then
+            echo "Moved "$HOME/.$file" to "$backupdir"/"
         fi
     fi
 done
@@ -64,51 +64,55 @@ echo "Linking config files to "$HOME"..."
 cd "$dir"
 
 for file in $files; do
-    if ln -s "$dir"/"$file" ~/."$file"; then
-        echo "Created symlink: "$dir"/"$file" -> ~/."$file""
+    if ln -s "$dir"/"$file" "$HOME/.$file"; then
+        echo "Created symlink: "$dir"/"$file" -> "$HOME/.$file""
     fi
 done
 
 echo ""
 
-# Install vim-plug and colorschemes
+# Install vim colorschemes
 echo -n "Install vim colorschemes? [y/N] "
 read choice
 if echo "$choice" | grep -viq "^y"; then
     echo "Vim colorschemes were not installed."
 else
     # Copy colorschemes
-    mkdir -p ~/.vim/colors/
+    mkdir -p "$HOME"/.vim/colors/
     for cs in $colorschemes; do
-        if cp "$scriptdir"/"$cs" ~/.vim/colors/"$cs"; then
-            echo "Copied "$cs" to ~/.vim/colors/"$cs""
+        if cp "$scriptdir"/"$cs" "$HOME"/.vim/colors/"$cs"; then
+            echo "Copied "$cs" to "$HOME"/.vim/colors/"$cs""
         fi
     done
 fi
 
 echo ""
 
-# Install vim-plug
-echo -n "Install vim-plug? [y/N] "
-read choice
-if echo "$choice" | grep -viq "^y"; then
-    echo "Vim-plug was not installed."
-    echo -e "\ndone"
-    exit
+if [ ! -e "$HOME"/.vim/autoload/plug.vim ]; then
+    # Install vim-plug
+    echo -n "Install vim-plug? [y/N] "
+    read choice
+    if echo "$choice" | grep -viq "^y"; then
+        echo "Vim-plug was not installed."
+        echo -e "\ndone"
+        exit
+    fi
+
+    if which curl 1>/dev/null; then
+        echo "Installing vim-plug..."
+        if curl -fLo "$HOME"/.vim/autoload/plug.vim --create-dirs \
+            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+            echo "Vim-plug installed. Remember to :PlugInstall."
+        fi
+    elif which wget 1>/dev/null; then
+        echo "Installing vim-plug..."
+        mkdir -p "$HOME"/.vim/autoload/
+        if wget --show-progress -qO "$HOME"/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+            echo "Vim-plug installed. Remember to :PlugInstall."
+        fi
+    else
+        echo "No curl or wget found. Please install either to install vim-plug."
+    fi
 fi
 
-if which curl 1>/dev/null; then
-    echo "Installing vim-plug..."
-    if curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-        echo "Vim-plug installed. Remember to :PlugInstall."
-    fi
-elif which wget 1>/dev/null; then
-    mkdir -p ~/.vim/autoload/
-    if wget --show-progress -qO ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-        echo "Vim-plug installed. Remember to :PlugInstall."
-    fi
-else
-    echo "No curl or wget found. Please install either to install vim-plug."
-fi
 echo -e "\ndone"
