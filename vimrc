@@ -44,7 +44,7 @@ set rulerformat=%14l:%c
 set number
 set cursorline
 
-set background=light
+set background=dark
 colorscheme tantalum
 
 " Screen
@@ -84,6 +84,7 @@ nnoremap    § :w<CR>
 nnoremap    B ^
 nnoremap    E $
 nnoremap    gV `[v`]
+nnoremap    <BS> <C-^>
 inoremap    <S-Tab> <C-V><Tab>
 
 nnoremap    <leader>ww :w !sudo tee > /dev/null %<CR>
