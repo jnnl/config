@@ -42,9 +42,10 @@ endif
 set ruler
 set rulerformat=%14l:%c
 set number
+set relativenumber
 set cursorline
 
-set background=dark
+set background=light
 colorscheme tantalum
 
 " Screen
@@ -95,6 +96,7 @@ nnoremap    <leader>hl :set hlsearch! hlsearch?<CR>
 nnoremap    <leader>x :Explore<CR>
 
 " FZF
+nnoremap    <leader>fa :Ag<CR>
 nnoremap    <leader>fb :Buffers<CR>
 nnoremap    <leader>fc :Commits<CR>
 nnoremap    <leader>ff :Files<CR>
@@ -126,5 +128,7 @@ call plug#begin()
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-vinegar'
 call plug#end()
+
+" Netrw settings
+let g:netrw_banner = 0
