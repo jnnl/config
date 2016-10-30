@@ -88,31 +88,31 @@ fi
 
 echo ""
 
-if [ ! -e "$HOME"/.vim/autoload/plug.vim ]; then
-    # Install vim-plug
-    echo -n "Install vim-plug? [y/N] "
-    read choice
-    if echo "$choice" | grep -viq "^y"; then
-        echo "Vim-plug was not installed."
-        echo -e "\ndone"
-        exit
-    fi
+# Install vim-plug
+echo -n "Install vim-plug? [y/N] "
+read choice
+if echo "$choice" | grep -viq "^y"; then
+    echo "Vim-plug was not installed."
+    echo -e "\ndone"
+    exit
+fi
 
-    if which curl 1>/dev/null; then
-        echo "Installing vim-plug..."
-        if curl -fLo "$HOME"/.vim/autoload/plug.vim --create-dirs \
-            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-            echo "Vim-plug installed. Remember to :PlugInstall."
-        fi
-    elif which wget 1>/dev/null; then
-        echo "Installing vim-plug..."
-        mkdir -p "$HOME"/.vim/autoload/
-        if wget --show-progress -qO "$HOME"/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-            echo "Vim-plug installed. Remember to :PlugInstall."
-        fi
-    else
-        echo "No curl or wget found. Please install either to install vim-plug."
+if which curl 1>/dev/null; then
+    echo "Installing vim-plug..."
+    if curl -fLo "$HOME"/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+        echo "Vim-plug installed. Installing plugins..."
+        vim +PlugInstall +qa
     fi
+elif which wget 1>/dev/null; then
+    echo "Installing vim-plug..."
+    mkdir -p "$HOME"/.vim/autoload/
+    if wget --show-progress -qO "$HOME"/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+        echo "Vim-plug installed. Installing plugins..."
+        vim +PlugInstall +qa
+    fi
+else
+    echo "No curl or wget found. Please install either to install vim-plug."
 fi
 
 echo -e "\ndone"
