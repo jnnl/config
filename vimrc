@@ -90,6 +90,8 @@ inoremap    <S-Tab> <C-V><Tab>
 
 nnoremap    <leader>ww :w !sudo tee > /dev/null %<CR>
 nnoremap    <silent><leader>py :!clear; python3 %<CR>
+nnoremap    <silent><leader>rb :!clear; ruby %<CR>
+nnoremap    <silent><leader>sh :!clear; ./%<CR>
 nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
 nnoremap    <leader>co :call ToggleColors()<CR>
 nnoremap    <leader>hl :set hlsearch! hlsearch?<CR>
