@@ -8,6 +8,8 @@ get_git_branch() {
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+export PS1="\u@\h:\W\$(get_git_branch) $ "
+
 # Linux-specific settings
 if [[ $(uname) == "Linux" ]]; then
     alias gdb="gdb -q"
@@ -18,9 +20,6 @@ if [[ $(uname) == "Linux" ]]; then
 
     if [[ $(hostname) == "arch" ]]; then
         export PS1="\u:\W\$(get_git_branch) $ "
-    else
-        export PS1="\u@\h:\W\$(get_git_branch) $ "
-    fi
 fi
 
 # MacOS-specific settings
@@ -34,7 +33,4 @@ if [[ $(uname) == "Darwin" ]]; then
 
     if [[ $(hostname) == "jmac" || $(hostname) == "jmac.local" ]]; then
         export PS1="\u:\W\$(get_git_branch) $ "
-    else
-        export PS1="\u@\h:\W\$(get_git_branch) $ "
-    fi
 fi
