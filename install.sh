@@ -19,7 +19,7 @@ if [[ "$platform" == "Darwin" ]]; then
     files+=" bash_profile"
 fi
 
-cd "$HOME"
+#cd "$HOME"
 
 # Check if config file directory exists
 if [[ -d "$dir" ]]; then
@@ -49,7 +49,8 @@ echo ""
 
 # Copy config files from the repo to the config file directory
 echo "Copying config files to "$dir"..."
-cd "$scriptdir"
+
+#cd "$scriptdir"
 
 for file in $files; do
     if cp "$scriptdir"/"$file" "$dir"/; then
@@ -61,6 +62,7 @@ echo ""
 
 # Create symlinks of the config files to home directory
 echo "Linking config files to "$HOME"..."
+
 cd "$dir"
 
 for file in $files; do
@@ -93,26 +95,45 @@ echo -n "Install vim-plug? [y/N] "
 read choice
 if echo "$choice" | grep -viq "^y"; then
     echo "Vim-plug was not installed."
+else
+    if which curl 1>/dev/null; then
+        echo "Installing vim-plug..."
+        if curl -fLo "$HOME"/.vim/autoload/plug.vim --create-dirs \
+            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+            echo "Vim-plug installed. Installing plugins..."
+            vim +PlugInstall +qa
+        fi
+    elif which wget 1>/dev/null; then
+        echo "Installing vim-plug..."
+        mkdir -p "$HOME"/.vim/autoload/
+        if wget --show-progress -qO "$HOME"/.vim/autoload/plug.vim \
+            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+            echo "Vim-plug installed. Installing plugins..."
+            vim +PlugInstall +qa
+        fi
+    else
+        echo "Error: no curl or wget found. Please install either to install vim-plug."
+    fi
+fi
+
+# Install fzf
+echo -n "Install FZF? [y/N] "
+read choice
+if echo "$choice" | grep -viq "^y"; then
+    echo "FZF was not installed."
     echo -e "\ndone"
     exit
 fi
 
-if which curl 1>/dev/null; then
-    echo "Installing vim-plug..."
-    if curl -fLo "$HOME"/.vim/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-        echo "Vim-plug installed. Installing plugins..."
-        vim +PlugInstall +qa
-    fi
-elif which wget 1>/dev/null; then
-    echo "Installing vim-plug..."
-    mkdir -p "$HOME"/.vim/autoload/
-    if wget --show-progress -qO "$HOME"/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-        echo "Vim-plug installed. Installing plugins..."
-        vim +PlugInstall +qa
+if which git 1>/dev/null; then
+    echo "Installing FZF..."
+    if git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME"/.fzf; then
+        "$HOME"/.fzf/install
+    else
+        echo "Error: couldn't clone FZF repository."
     fi
 else
-    echo "No curl or wget found. Please install either to install vim-plug."
+    echo "Error: git wasn't found, skipping FZF installation."
 fi
 
 echo -e "\ndone"
