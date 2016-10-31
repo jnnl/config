@@ -9,6 +9,7 @@ get_git_branch() {
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 export PS1="\u@\h:\W\$(get_git_branch) $ "
+alias ll="ls -lahF"
 
 # Linux-specific settings
 if [[ $(uname) == "Linux" ]]; then
