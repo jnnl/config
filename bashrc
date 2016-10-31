@@ -20,6 +20,7 @@ if [[ $(uname) == "Linux" ]]; then
 
     if [[ $(hostname) == "arch" ]]; then
         export PS1="\u:\W\$(get_git_branch) $ "
+    fi
 fi
 
 # MacOS-specific settings
@@ -33,4 +34,5 @@ if [[ $(uname) == "Darwin" ]]; then
 
     if [[ $(hostname) == "jmac" || $(hostname) == "jmac.local" ]]; then
         export PS1="\u:\W\$(get_git_branch) $ "
+    fi
 fi
