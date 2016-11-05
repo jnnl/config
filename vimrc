@@ -80,6 +80,7 @@ let &undodir   = AUXDIR.'undo//'
 map         <Space> <leader>
 
 nnoremap    <Space><Space> :
+nnoremap    § :w<CR>
 nnoremap    B ^
 nnoremap    E $
 nnoremap    gV `[v`]
