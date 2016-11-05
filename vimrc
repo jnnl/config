@@ -33,8 +33,7 @@ set incsearch
 set ignorecase
 set smartcase
 
-" Styles
-
+" Styles 
 if has('syntax') && !exists('g:syntax_on')
     syntax enable
 endif
@@ -78,17 +77,17 @@ let &undodir   = AUXDIR.'undo//'
 
 " Mappings
 " General
-map         , <leader>
+map         <Space> <leader>
 
-nnoremap    ,, :
-nnoremap    § :w<CR>
+nnoremap    <Space><Space> :
 nnoremap    B ^
 nnoremap    E $
 nnoremap    gV `[v`]
 nnoremap    <BS> <C-^>
 inoremap    <S-Tab> <C-V><Tab>
 
-nnoremap    <leader>ww :w !sudo tee > /dev/null %<CR>
+nnoremap    <leader>w :w<CR>
+nnoremap    <leader>sw :w !sudo tee > /dev/null %<CR>
 nnoremap    <silent><leader>py :!clear; python3 %<CR>
 nnoremap    <silent><leader>rb :!clear; ruby %<CR>
 nnoremap    <silent><leader>sh :!clear; ./%<CR>
