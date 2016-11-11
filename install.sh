@@ -19,7 +19,7 @@ if [[ "$platform" == "Darwin" ]]; then
     files+=" bash_profile"
 fi
 
-#cd "$HOME"
+cd "$HOME"
 
 # Check if config file directory exists
 if [[ -d "$dir" ]]; then
@@ -41,6 +41,8 @@ for file in $files; do
     if [[ -f ".$file" ]]; then
         if mv "$HOME/.$file" "$backupdir"/"$file"."$(date +%Y%m%d%H%M%S)"; then
             echo "Moved "$HOME/.$file" to "$backupdir"/"
+        else
+            echo "Couldn't move "$HOME/.$file" to "$backupdir"/"
         fi
     fi
 done
@@ -50,7 +52,7 @@ echo ""
 # Copy config files from the repo to the config file directory
 echo "Copying config files to "$dir"..."
 
-#cd "$scriptdir"
+cd "$scriptdir"
 
 for file in $files; do
     if cp "$scriptdir"/"$file" "$dir"/; then
@@ -117,23 +119,28 @@ else
 fi
 
 # Install fzf
-echo -n "Install FZF? [y/N] "
-read choice
-if echo "$choice" | grep -viq "^y"; then
-    echo "FZF was not installed."
-    echo -e "\ndone"
-    exit
-fi
-
-if which git 1>/dev/null; then
-    echo "Installing FZF..."
-    if git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME"/.fzf; then
-        "$HOME"/.fzf/install
-    else
-        echo "Error: couldn't clone FZF repository."
+if ! which fzf 1>/dev/null; then
+    echo -n "Install FZF? [y/N] "
+    read choice
+    if echo "$choice" | grep -viq "^y"; then
+        echo "FZF was not installed."
+        echo -e "\ndone"
+        exit
     fi
-else
-    echo "Error: git wasn't found, skipping FZF installation."
-fi
 
-echo -e "\ndone"
+    if which git 1>/dev/null; then
+        echo "Installing FZF..."
+        if git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME"/.fzf; then
+            "$HOME"/.fzf/install
+        else
+            echo "Error: couldn't clone FZF repository."
+        fi
+    else
+        echo "Error: git wasn't found, skipping FZF installation."
+    fi
+
+    echo -e "\ndone"
+else
+    echo "FZF already installed, skipping..."
+    echo -e "\ndone"
+fi
