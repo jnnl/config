@@ -77,9 +77,9 @@ let &undodir   = AUXDIR.'undo//'
 
 " Mappings
 " General
-map         <Space> <leader>
+map         , <leader>
 
-nnoremap    <Space><Space> :
+nnoremap    ,, :
 nnoremap    § :w<CR>
 nnoremap    B ^
 nnoremap    E $
