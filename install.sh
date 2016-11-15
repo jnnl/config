@@ -98,14 +98,14 @@ read choice
 if echo "$choice" | grep -viq "^y"; then
     echo "Vim-plug was not installed."
 else
-    if which curl 1>/dev/null; then
+    if which curl &>/dev/null; then
         echo "Installing vim-plug..."
         if curl -fLo "$HOME"/.vim/autoload/plug.vim --create-dirs \
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
             echo "Vim-plug installed. Installing plugins..."
             vim +PlugInstall +qa
         fi
-    elif which wget 1>/dev/null; then
+    elif which wget &>/dev/null; then
         echo "Installing vim-plug..."
         mkdir -p "$HOME"/.vim/autoload/
         if wget --show-progress -qO "$HOME"/.vim/autoload/plug.vim \
@@ -119,7 +119,7 @@ else
 fi
 
 # Install fzf
-if ! which fzf 1>/dev/null; then
+if ! which fzf &>/dev/null; then
     echo -n "Install FZF? [y/N] "
     read choice
     if echo "$choice" | grep -viq "^y"; then
@@ -134,7 +134,7 @@ if ! which fzf 1>/dev/null; then
         exit
     fi
 
-    if which git 1>/dev/null; then
+    if which git &>/dev/null; then
         echo "Installing FZF..."
         rm -rf "$HOME"/.fzf
         if git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME"/.fzf; then
