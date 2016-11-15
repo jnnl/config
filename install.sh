@@ -136,7 +136,7 @@ if ! which fzf 1>/dev/null; then
 
     if which git 1>/dev/null; then
         echo "Installing FZF..."
-        rm -rf "$HOME"/.fzf/install
+        rm -rf "$HOME"/.fzf
         if git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME"/.fzf; then
             "$HOME"/.fzf/install
         else
