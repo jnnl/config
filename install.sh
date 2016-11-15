@@ -128,8 +128,15 @@ if ! which fzf 1>/dev/null; then
         exit
     fi
 
+    if [ -x "$HOME"/.fzf/install ]; then
+        "$HOME"/.fzf/install
+        echo -e "\ndone"
+        exit
+    fi
+
     if which git 1>/dev/null; then
         echo "Installing FZF..."
+        rm -rf "$HOME"/.fzf/install
         if git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME"/.fzf; then
             "$HOME"/.fzf/install
         else
