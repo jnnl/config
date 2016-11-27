@@ -16,7 +16,7 @@ if [[ $(uname) == "Linux" ]]; then
     alias gdb="gdb -q"
 
     export TERM="xterm-256color"
-    export PATH="$PATH:/home/juho/code/bin"
+    export PATH="$PATH:"$HOME"/code/bin"
     export SUDO_EDITOR=vim
 
     if [[ $(hostname) == "arch" ]]; then
@@ -30,7 +30,7 @@ if [[ $(uname) == "Darwin" ]]; then
     alias gdb="sudo gdb -q"
 
     export TERM="xterm-256color"
-    export PATH="$PATH:/usr/local/sbin:/Users/juho/code/bin"
+    export PATH="$PATH:/usr/local/sbin:"$HOME"/code/bin"
     export HOMEBREW_NO_ANALYTICS=1
 
     if [[ $(hostname) == "jmac" || $(hostname) == "jmac.local" ]]; then
