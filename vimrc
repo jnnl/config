@@ -21,7 +21,6 @@ set smarttab
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-
 " Splits
 
 set splitright
@@ -83,6 +82,8 @@ nnoremap    ,, :
 nnoremap    § :w<CR>
 nnoremap    B ^
 nnoremap    E $
+nnoremap    ^ <nop>
+nnoremap    $ <nop>
 nnoremap    gV `[v`]
 nnoremap    <BS> <C-^>
 inoremap    <S-Tab> <C-V><Tab>
