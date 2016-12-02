@@ -14,7 +14,7 @@ if &background == "light"
 
     hi Cursor          ctermfg=none    ctermbg=none    cterm=none
     hi CursorColumn    ctermfg=none    ctermbg=none    cterm=none
-    hi CursorLine      ctermfg=none    ctermbg=none    cterm=none
+    hi CursorLine      ctermfg=none    ctermbg=254     cterm=none
 
     hi Directory       ctermfg=none    ctermbg=none    cterm=none
 
@@ -134,7 +134,7 @@ elseif &background == "dark"
 
     hi Cursor          ctermfg=none    ctermbg=none    cterm=none
     hi CursorColumn    ctermfg=none    ctermbg=none    cterm=none
-    hi CursorLine      ctermfg=none    ctermbg=none    cterm=none
+    hi CursorLine      ctermfg=none    ctermbg=235     cterm=none
 
     hi Directory       ctermfg=none    ctermbg=none    cterm=none
 
