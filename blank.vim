@@ -54,7 +54,7 @@ hi PmenuThumb      ctermfg=none    ctermbg=none    cterm=none
 
 hi Question        ctermfg=none    ctermbg=none    cterm=none
 
-hi Search          ctermfg=none    ctermbg=none    cterm=none
+"hi Search          ctermfg=none    ctermbg=none    cterm=none
 
 hi SpecialKey      ctermfg=none    ctermbg=none    cterm=none
 
@@ -72,12 +72,12 @@ hi TabLineSel      ctermfg=none    ctermbg=none    cterm=none
 
 hi Title           ctermfg=none    ctermbg=none    cterm=none
 
-hi Visual          ctermfg=none    ctermbg=255     cterm=none
-hi VisualNOS       ctermfg=none    ctermbg=none    cterm=none
+"hi Visual          ctermfg=none    ctermbg=255     cterm=none
+"hi VisualNOS       ctermfg=none    ctermbg=none    cterm=none
 
 hi WarningMsg      ctermfg=none    ctermbg=none    cterm=none
 
-hi WildMenu        ctermfg=none    ctermbg=none    cterm=none
+"hi WildMenu        ctermfg=none    ctermbg=none    cterm=none
 
 " Syntax group names  
 
