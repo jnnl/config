@@ -58,21 +58,21 @@ set display+=lastline
 
 " Auxiliary directories
 
-let AUXDIR = $HOME.'/.vim/'
+let VIMDIR = $HOME.'/.vim/'
 
-if !isdirectory(AUXDIR.'backup')
-    silent call mkdir (AUXDIR.'backup', 'p')
+if !isdirectory(VIMDIR.'backup')
+    silent call mkdir (VIMDIR.'backup', 'p')
 endif
-if !isdirectory(AUXDIR.'swap')
-    silent call mkdir (AUXDIR.'swap', 'p')
+if !isdirectory(VIMDIR.'swap')
+    silent call mkdir (VIMDIR.'swap', 'p')
 endif
-if !isdirectory(AUXDIR.'undo')
-    silent call mkdir (AUXDIR.'undo', 'p')
+if !isdirectory(VIMDIR.'undo')
+    silent call mkdir (VIMDIR.'undo', 'p')
 endif
 
-let &backupdir = AUXDIR.'backup//'
-let &directory = AUXDIR.'swap//'
-let &undodir   = AUXDIR.'undo//'
+let &backupdir = VIMDIR.'backup//'
+let &directory = VIMDIR.'swap//'
+let &undodir   = VIMDIR.'undo//'
 
 " Mappings
 " General
@@ -82,8 +82,6 @@ nnoremap    ,, :
 nnoremap    § :w<CR>
 nnoremap    B ^
 nnoremap    E $
-nnoremap    ^ <nop>
-nnoremap    $ <nop>
 nnoremap    gV `[v`]
 nnoremap    <BS> <C-^>
 inoremap    <S-Tab> <C-V><Tab>
@@ -96,6 +94,7 @@ nnoremap    <silent><leader>sh :!clear; ./%<CR>
 nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
 nnoremap    <leader>co :call ToggleColors()<CR>
 nnoremap    <leader>hl :set hlsearch! hlsearch?<CR>
+nnoremap    <leader>z /[^\x00-\x7F]<CR>
 nnoremap    <leader>x :Explore<CR>
 
 " FZF
