@@ -25,7 +25,6 @@ if &background == "light"
     hi ErrorMsg gui=NONE guifg=NONE guibg=#ffdfdf
     hi FoldColumn gui=NONE guifg=#999999 guibg=NONE
     hi Folded gui=NONE guifg=#787878 guibg=NONE
-    hi Ignore gui=NONE guifg=NONE guibg=NONE
     hi IncSearch gui=NONE guifg=NONE guibg=#fff499
     hi LineNr gui=NONE guifg=#bfbfbf guibg=NONE
     hi MatchParen gui=NONE guifg=NONE guibg=#d6d6d6
@@ -38,13 +37,11 @@ if &background == "light"
     hi PmenuSbar gui=NONE guifg=NONE guibg=#e6e6e6
     hi PmenuSel gui=NONE guifg=NONE guibg=#d6d6d6
     hi PmenuThumb gui=NONE guifg=NONE guibg=#9e9e9e
-    hi Question gui=NONE guifg=NONE guibg=NONE
     hi Search gui=NONE guifg=NONE guibg=#fff7cf
     hi SignColumn gui=NONE guifg=#999999 guibg=NONE
     hi Special gui=NONE guifg=#787878 guibg=NONE
     hi SpecialKey gui=NONE guifg=#c2c2c2 guibg=NONE
     hi SpellBad gui=undercurl guisp=NONE guifg=NONE guibg=#fdfdf5
-    hi SpellCap gui=NONE guifg=NONE guibg=NONE
     hi SpellLocal gui=NONE guifg=NONE guibg=#fdfdf5
     hi SpellRare gui=NONE guifg=NONE guibg=#ffffff
     hi Statement gui=NONE guifg=#0045b1 guibg=NONE
@@ -58,15 +55,10 @@ if &background == "light"
     hi Title gui=NONE guifg=#424242 guibg=NONE
     hi Todo gui=NONE guifg=#1e5a20 guibg=NONE
     hi Type gui=NONE guifg=#0045b1 guibg=NONE
-    hi Underlined gui=NONE guifg=NONE guibg=NONE
     hi VertSplit gui=NONE guifg=#e3e3e3 guibg=NONE
     hi Visual gui=NONE guifg=NONE guibg=#dbdbdb
-    hi VisualNOS gui=NONE guifg=NONE guibg=NONE
     hi WarningMsg gui=NONE guifg=NONE guibg=#ffdadc
     hi WildMenu gui=bold guifg=#424242 guibg=#fcb514
-    hi lCursor gui=NONE guifg=NONE guibg=NONE
-    hi Identifier gui=NONE guifg=NONE guibg=NONE
-    hi PreProc gui=NONE guifg=NONE guibg=NONE
     hi pythonBoolean gui=NONE guifg=#b04579 guibg=NONE
     hi pythonInclude gui=NONE guifg=#0045b1 guibg=NONE
     hi pythonStatement gui=NONE guifg=#0045b1 guibg=NONE
@@ -94,12 +86,10 @@ elseif &background == "dark"
     hi ErrorMsg gui=NONE guifg=NONE guibg=#451717
     hi FoldColumn gui=NONE guifg=#616161 guibg=NONE
     hi Folded gui=NONE guifg=#707070 guibg=NONE
-    hi Ignore gui=NONE guifg=NONE guibg=NONE
     hi IncSearch gui=NONE guifg=NONE guibg=#756610
     hi LineNr gui=NONE guifg=#545454 guibg=NONE
     hi MatchParen gui=NONE guifg=NONE guibg=#454545
     hi ModeMsg gui=NONE guifg=#7aa47a guibg=NONE
-    hi MoreMsg gui=NONE guifg=NONE guibg=NONE
     hi NonText gui=NONE guifg=#616161 guibg=NONE
     hi Normal gui=NONE guifg=#ababab guibg=#282828
     hi Number gui=NONE guifg=#f88581 guibg=NONE
@@ -107,13 +97,11 @@ elseif &background == "dark"
     hi PmenuSbar gui=NONE guifg=NONE guibg=#292929
     hi PmenuSel gui=NONE guifg=NONE guibg=#333333
     hi PmenuThumb gui=NONE guifg=NONE guibg=#666666
-    hi Question gui=NONE guifg=NONE guibg=NONE
     hi Search gui=NONE guifg=NONE guibg=#4e4409
     hi SignColumn gui=NONE guifg=#666666 guibg=NONE
     hi Special gui=NONE guifg=#c7c7c7 guibg=NONE
     hi SpecialKey gui=NONE guifg=#616161 guibg=NONE
     hi SpellBad gui=undercurl guisp=NONE guifg=NONE guibg=#282828
-    hi SpellCap gui=NONE guifg=NONE guibg=NONE
     hi SpellLocal gui=NONE guifg=NONE guibg=#282828
     hi SpellRare gui=NONE guifg=NONE guibg=#1f1f1f
     hi Statement gui=NONE guifg=#6b99c7 guibg=NONE
@@ -127,13 +115,8 @@ elseif &background == "dark"
     hi Title gui=NONE guifg=#808080 guibg=NONE
     hi Todo gui=NONE guifg=#5a945a guibg=NONE
     hi Type gui=NONE guifg=#6b99c7 guibg=NONE
-    hi Underlined gui=NONE guifg=NONE guibg=NONE
     hi VertSplit gui=NONE guifg=#333333 guibg=NONE
     hi Visual gui=NONE guifg=NONE guibg=#3b3b3b
-    hi VisualNOS gui=NONE guifg=NONE guibg=NONE
     hi WarningMsg gui=NONE guifg=NONE guibg=#451717
     hi WildMenu gui=NONE guifg=#ebebeb guibg=#8c5500
-    hi lCursor gui=NONE guifg=NONE guibg=NONE
-    hi Identifier gui=NONE guifg=NONE guibg=NONE
-    hi PreProc gui=NONE guifg=NONE guibg=NONE
 endif
