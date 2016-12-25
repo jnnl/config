@@ -21,6 +21,7 @@ set smarttab
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
+
 " Splits
 
 set splitright
@@ -84,14 +85,18 @@ nnoremap    B ^
 nnoremap    E $
 nnoremap    gV `[v`]
 nnoremap    <BS> <C-^>
-inoremap    <S-Tab> <C-V><Tab>
+inoremap    <S-Tab> <C-n>
+inoremap    <expr> <Tab> TabComplete()
 
 nnoremap    <leader>w :w<CR>
 nnoremap    <leader>sw :w !sudo tee > /dev/null %<CR>
+nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
+nnoremap    <silent><leader>ca :!clear; cargo run<CR>
+nnoremap    <silent><leader>cb :!clear; cargo build<CR>
 nnoremap    <silent><leader>py :!clear; python3 %<CR>
 nnoremap    <silent><leader>rb :!clear; ruby %<CR>
+nnoremap    <silent><leader>rs :!clear; rustc % && ./%:r<CR>
 nnoremap    <silent><leader>sh :!clear; ./%<CR>
-nnoremap    <silent><leader>cc :!clear; cc % && ./a.out<CR>
 nnoremap    <leader>co :call ToggleColors()<CR>
 nnoremap    <leader>hl :set hlsearch! hlsearch?<CR>
 nnoremap    <leader>z /[^\x00-\x7F]<CR>
@@ -109,6 +114,15 @@ nnoremap    <leader>fw :Windows<CR>
 imap        <C-l> <plug>(fzf-complete-line)
 
 " Functions
+
+function! TabComplete()
+    let col = col('.') - 1
+        if !col || getline('.')[col - 1] !~ '\k'
+            return "\<Tab>"
+        else
+            return "\<C-p>"
+        endif
+endfunction
 
 function! ToggleColors()
     if exists("g:colors_name")
@@ -130,6 +144,7 @@ call plug#begin()
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
+Plug 'rust-lang/rust.vim'
 call plug#end()
 
 " Netrw settings
