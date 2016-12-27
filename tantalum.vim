@@ -57,7 +57,7 @@ if &background == "light"
 
     hi SpecialKey      ctermfg=0       ctermbg=none    cterm=none
 
-    hi SpellBad        ctermfg=none    ctermbg=none    cterm=none
+    hi SpellBad        ctermfg=none    ctermbg=217     cterm=none
     hi SpellCap        ctermfg=none    ctermbg=none    cterm=none
     hi SpellLocal      ctermfg=none    ctermbg=none    cterm=none
     hi SpellRare       ctermfg=none    ctermbg=none    cterm=none
@@ -177,7 +177,7 @@ elseif &background == "dark"
 
     hi SpecialKey      ctermfg=255     ctermbg=none    cterm=none
 
-    hi SpellBad        ctermfg=none    ctermbg=none    cterm=none
+    hi SpellBad        ctermfg=none    ctermbg=52      cterm=none
     hi SpellCap        ctermfg=none    ctermbg=none    cterm=none
     hi SpellLocal      ctermfg=none    ctermbg=none    cterm=none
     hi SpellRare       ctermfg=none    ctermbg=none    cterm=none
