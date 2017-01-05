@@ -75,10 +75,6 @@ map         , <leader>
 
 nnoremap    ,, :
 nnoremap    § :w<CR>
-nnoremap    B ^
-nnoremap    E $
-nnoremap    gV `[v`]
-nnoremap    <BS> <C-^>
 nnoremap    ö <C-o>
 nnoremap    ä <C-i>
 inoremap    <S-Tab> <C-n>
@@ -131,6 +127,11 @@ function! <SID>AutoMkDir()
 endfunction
 
 autocmd BufWritePre,FileWritePre * :call <SID>AutoMkDir()
+autocmd FileType python nnoremap <buffer> <leader>xx :!python %<CR>
+autocmd FileType ruby   nnoremap <buffer> <leader>xx :!ruby %<CR>
+autocmd FileType c      nnoremap <buffer> <leader>xx :!gcc % && ./a.out<CR>
+autocmd FileType cpp    nnoremap <buffer> <leader>xx :!g++ % && ./a.out<CR>
+autocmd FileType rust   nnoremap <buffer> <leader>xx :!rustc % && ./%:r<CR>
 
 " Plugins
 call plug#begin()
