@@ -11,6 +11,10 @@ SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
 FILES="bash_profile bashrc vimrc tmux.conf"
 CSCHEMES="tungsten.vim tantalum.vim blank.vim"
 
+if [[ $(uname -s) == "Linux" ]]; then
+    FILES+=" xinitrc Xmodmap Xresources"
+fi
+
 cd "$HOME"
 
 # Check if config file directory exists

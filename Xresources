@@ -1,0 +1,17 @@
+! Colors
+urxvt*background:   #111111
+urxvt*foreground:   #eeeeee
+
+! Text
+urxvt*font:         xft:Roboto Mono:pixelsize=14:antialias=true
+urxvt*lineSpace:    0.9
+urxvt*letterSpace:  -1
+
+! Transparency
+URxvt.transparent:  true
+URxvt.shading:      25
+
+! Miscellaneous
+urxvt*scrollBar:    false
+urxvt*urlLauncher:  chromium
+
