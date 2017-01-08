@@ -39,7 +39,6 @@ set ruler
 set rulerformat=%14l:%c
 set number
 set relativenumber
-set cursorline
 
 set background=light
 colorscheme tantalum
@@ -77,17 +76,11 @@ nnoremap    ,, :
 nnoremap    § :w<CR>
 nnoremap    ö <C-o>
 nnoremap    ä <C-i>
-inoremap    <S-Tab> <C-n>
 
 nnoremap    <leader>w :w<CR>
 nnoremap    <leader>sw :w !sudo tee > /dev/null %<CR>
 nnoremap    <silent><leader>cb :!clear; cargo build<CR>
 nnoremap    <silent><leader>cr :!clear; cargo run<CR>
-nnoremap    <silent><leader>xc :!clear; cc % && ./a.out<CR>
-nnoremap    <silent><leader>xp :!clear; python3 %<CR>
-nnoremap    <silent><leader>xr :!clear; rustc % && ./%:r<CR>
-nnoremap    <silent><leader>xs :!clear; ./%<CR>
-nnoremap    <leader>tc :call ToggleColors()<CR>
 nnoremap    <leader>hl :set hlsearch! hlsearch?<CR>
 nnoremap    <leader>hn /[^\x00-\x7F]<CR>
 nnoremap    <leader>ex :Explore<CR>
@@ -103,22 +96,6 @@ nnoremap    <leader>fw :Windows<CR>
 imap        <C-l> <plug>(fzf-complete-line)
 
 " Functions
-function! ToggleColors()
-    if exists("g:colors_name")
-        if g:colors_name != "blank"
-            colorscheme blank
-            set nonumber
-            set norelativenumber
-        else
-            colorscheme tantalum
-            set number
-            set relativenumber
-        endif
-    else
-        colorscheme tantalum
-    endif
-endfunction
-
 function! <SID>AutoMkDir()
     let s:directory = expand("<afile>:p:h")
     if !isdirectory(s:directory)
@@ -127,11 +104,12 @@ function! <SID>AutoMkDir()
 endfunction
 
 autocmd BufWritePre,FileWritePre * :call <SID>AutoMkDir()
-autocmd FileType python nnoremap <buffer> <leader>xx :!python %<CR>
-autocmd FileType ruby   nnoremap <buffer> <leader>xx :!ruby %<CR>
 autocmd FileType c      nnoremap <buffer> <leader>xx :!gcc % && ./a.out<CR>
 autocmd FileType cpp    nnoremap <buffer> <leader>xx :!g++ % && ./a.out<CR>
+autocmd FileType python nnoremap <buffer> <leader>xx :!python %<CR>
+autocmd FileType ruby   nnoremap <buffer> <leader>xx :!ruby %<CR>
 autocmd FileType rust   nnoremap <buffer> <leader>xx :!rustc % && ./%:r<CR>
+autocmd FileType sh     nnoremap <buffer> <leader>xx :!./%<CR>
 
 " Plugins
 call plug#begin()
