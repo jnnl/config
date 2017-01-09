@@ -121,7 +121,7 @@ fi
 echo ""
 
 # Install homebrew
-if [ $(uname) = "Darwin" ]; then
+if [ $(uname -s) = "Darwin" ]; then
     if ! which brew &>/dev/null; then
         echo -n "Install Homebrew? [y/N] "
         read choice
