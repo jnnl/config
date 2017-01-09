@@ -104,12 +104,12 @@ function! <SID>AutoMkDir()
 endfunction
 
 autocmd BufWritePre,FileWritePre * :call <SID>AutoMkDir()
-autocmd FileType c      nnoremap <buffer> <leader>xx :!gcc % && ./a.out<CR>
-autocmd FileType cpp    nnoremap <buffer> <leader>xx :!g++ % && ./a.out<CR>
-autocmd FileType python nnoremap <buffer> <leader>xx :!python %<CR>
-autocmd FileType ruby   nnoremap <buffer> <leader>xx :!ruby %<CR>
-autocmd FileType rust   nnoremap <buffer> <leader>xx :!rustc % && ./%:r<CR>
-autocmd FileType sh     nnoremap <buffer> <leader>xx :!./%<CR>
+autocmd FileType c      nnoremap <buffer> <leader>xx :!clear; gcc -o %:r % && ./%:r<CR>
+autocmd FileType cpp    nnoremap <buffer> <leader>xx :!clear; g++ -o %:r % && ./%:r<CR>
+autocmd FileType python nnoremap <buffer> <leader>xx :!clear; python %<CR>
+autocmd FileType ruby   nnoremap <buffer> <leader>xx :!clear; ruby %<CR>
+autocmd FileType rust   nnoremap <buffer> <leader>xx :!clear; rustc % && ./%:r<CR>
+autocmd FileType sh     nnoremap <buffer> <leader>xx :!clear; ./%<CR>
 
 " Plugins
 call plug#begin()
