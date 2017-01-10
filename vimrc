@@ -40,8 +40,9 @@ set rulerformat=%14l:%c
 set number
 set relativenumber
 
-set background=light
+set background=dark
 colorscheme tantalum
+hi Normal ctermbg=none
 
 " Screen
 if !&scrolloff
@@ -104,12 +105,12 @@ function! <SID>AutoMkDir()
 endfunction
 
 autocmd BufWritePre,FileWritePre * :call <SID>AutoMkDir()
-autocmd FileType c      nnoremap <buffer> <leader>xx :!clear; gcc -o %:r % && ./%:r<CR>
-autocmd FileType cpp    nnoremap <buffer> <leader>xx :!clear; g++ -o %:r % && ./%:r<CR>
-autocmd FileType python nnoremap <buffer> <leader>xx :!clear; python %<CR>
-autocmd FileType ruby   nnoremap <buffer> <leader>xx :!clear; ruby %<CR>
-autocmd FileType rust   nnoremap <buffer> <leader>xx :!clear; rustc % && ./%:r<CR>
-autocmd FileType sh     nnoremap <buffer> <leader>xx :!clear; ./%<CR>
+autocmd FileType c      nnoremap <buffer> <leader>xx :!clear; gcc -o %:r %:p && %:p:r<CR>
+autocmd FileType cpp    nnoremap <buffer> <leader>xx :!clear; g++ -o %:r %:p && %:p:r<CR>
+autocmd FileType python nnoremap <buffer> <leader>xx :!clear; python %:p<CR>
+autocmd FileType ruby   nnoremap <buffer> <leader>xx :!clear; ruby %:p<CR>
+autocmd FileType rust   nnoremap <buffer> <leader>xx :!clear; rustc %:p && %:p:r<CR>
+autocmd FileType sh     nnoremap <buffer> <leader>xx :!clear; ./%:p<CR>
 
 " Plugins
 call plug#begin()
