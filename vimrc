@@ -72,7 +72,7 @@ let &undodir   = VIMDIR.'undo//'
 " Mappings
 map         , <leader>
 
-nnoremap    ,, :
+nnoremap    <leader>, :
 nnoremap    § :w<CR>
 nnoremap    ö <C-o>
 nnoremap    ä <C-i>
