@@ -40,9 +40,14 @@ set rulerformat=%14l:%c
 set number
 set relativenumber
 
-set background=dark
-colorscheme tantalum
-hi Normal ctermbg=none
+if has('macunix')
+    set background=light
+    colorscheme tantalum
+elseif has('unix')
+    set background=dark
+    colorscheme tantalum
+    hi Normal ctermbg=none
+endif
 
 " Screen
 if !&scrolloff
