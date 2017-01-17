@@ -1,0 +1,15 @@
+[user]
+	email = jnnl@users.noreply.github.com
+	name = Juho Junnila
+[core]
+    editor = vim
+[push]
+    default = simple
+[alias]
+    aa = add --all
+    br = branch
+    cm = commit -m
+    co = checkout
+    lg = log --oneline --decorate --graph
+    rh = reset HEAD
+    rso = remote show origin

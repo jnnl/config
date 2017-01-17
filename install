@@ -8,7 +8,7 @@ BACKUPDIR=""$CONFIGDIR"/backup"
 # Directory of this script
 SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
 # Config files to install
-FILES="bash_profile bashrc vimrc tmux.conf"
+FILES="bash_profile bashrc gitconfig vimrc tmux.conf"
 CSCHEMES="tungsten.vim tantalum.vim blank.vim"
 
 if [[ $(uname -s) == "Linux" ]]; then
