@@ -115,7 +115,7 @@ autocmd FileType cpp    nnoremap <buffer> <leader>xx :!clear; g++ -o %:p:r %:p &
 autocmd FileType python nnoremap <buffer> <leader>xx :!clear; python %:p<CR>
 autocmd FileType ruby   nnoremap <buffer> <leader>xx :!clear; ruby %:p<CR>
 autocmd FileType rust   nnoremap <buffer> <leader>xx :!clear; rustc -o %:p:r %:p && %:p:r<CR>
-autocmd FileType sh     nnoremap <buffer> <leader>xx :!clear; ./%:p<CR>
+autocmd FileType sh     nnoremap <buffer> <leader>xx :!clear; %:p<CR>
 
 " Plugins
 call plug#begin()
