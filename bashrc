@@ -16,7 +16,6 @@ fi
 
 alias ll="ls -lahF"
 export TERM="xterm-256color"
-set -o vi
 
 # Linux-specific settings
 if [[ $(uname) == "Linux" ]]; then
