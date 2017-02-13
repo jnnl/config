@@ -1,0 +1,197 @@
+# i3 config file (v4)
+#
+# Please see http://i3wm.org/docs/userguide.html for a complete reference!
+
+# Set mod to Alt
+set $mod Mod1
+
+# Font for window titles and bar
+font pango:Terminus 8
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# Start urxvt
+bindsym $mod+Return exec urxvt
+
+# Kill focused window
+bindsym $mod+Shift+q kill
+
+# Start dmenu
+bindsym $mod+d exec dmenu_run
+bindsym Super_L exec dmenu_run
+
+# Change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# Alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# Alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Toggle horizontal/vertical split
+bindsym $mod+t split toggle
+
+# Enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# Change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# Toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# Change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# Focus the parent container
+bindsym $mod+a focus parent
+
+# Focus the child container
+bindsym $mod+c focus child
+
+# Switch to workspace
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+# Move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+
+# Reload the configuration file
+bindsym $mod+Shift+c reload
+# Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# Exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec i3-msg exit
+
+# Resize mode
+bindsym $mod+r mode "resize"
+
+mode "resize" {
+        bindsym h resize grow width 10 px or 10 ppt
+        bindsym j resize shrink height 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink width 10 px or 10 ppt
+
+        bindsym Left resize grow width 10 px or 10 ppt
+        bindsym Down resize shrink height 10 px or 10 ppt
+        bindsym Up resize grow height 10 px or 10 ppt
+        bindsym Right resize shrink width 10 px or 10 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+# i3bar
+bar {
+    status_command i3blocks
+    position top
+    colors {
+        background #111111
+        statusline #dddddd
+        separator #888888
+
+        # Color class       border  bg      text
+        focused_workspace   #333f4d #232f3d #dddddd
+        active_workspace    #333333 #1f273a #ffffff
+        inactive_workspace  #222222 #111111 #888888
+        urgent_workspace    #2f343a #900000 #ffffff
+        binding_mode        #2f343a #602020 #ffffff
+    }
+}
+
+# Color class               border  bg      text    child border
+client.focused              #333f4d #232f3d #eeeeee #434f5d
+client.focused_inactive     #0c0c0c #0f1b29 #888888 #2f3b49
+client.unfocused            #111111 #101c2a #888888 #303c4a
+client.urgent               #555555 #434f5d #ffffff #636f7d
+
+# System menu
+set $systemmenu "system:  [e]xit  [l]ock  [p]oweroff  [r]eboot  [s]uspend"
+bindsym $mod+o mode $systemmenu
+
+mode $systemmenu {
+    bindsym e       exit
+    bindsym l       exec i3lock -e -c 000000, mode "default"
+    bindsym p       exec systemctl poweroff
+    bindsym r       exec systemctl reboot
+    bindsym s       exec i3lock -e -c 000000, exec systemctl suspend, mode "default"
+    bindsym Return  mode "default"
+    bindsym Escape  mode "default"
+}
+
+# Launch menu
+set $launchmenu "launch:  [f]irefox  [s]potify  [u]rxvt"
+bindsym $mod+i mode $launchmenu
+
+mode $launchmenu {
+    bindsym f       exec firefox, mode "default" 
+    bindsym s       exec spotify, mode "default" 
+    bindsym u       exec urxvt, mode "default"
+    bindsym Return  mode "default"
+    bindsym Escape  mode "default"
+}
+
+# Lock screen
+bindsym Control+$mod+l exec i3lock -e -c 000000
+
+# Audio controls
+bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume 1 +2% && pkill -RTMIN+10 i3blocks"
+bindsym XF86AudioLowerVolume exec "pactl set-sink-volume 1 -2% && pkill -RTMIN+10 i3blocks"
+bindsym XF86AudioMute exec pactl set-sink-mute 1 toggle
+
+bindsym XF86AudioPause exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
+                             /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause \
+                             && pkill -RTMIN+10 i3blocks"
+bindsym XF86AudioNext exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
+                            /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next \
+                            && pkill -RTMIN+10 i3blocks"
+bindsym XF86AudioPrev exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
+                            /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous \
+                            && pkill -RTMIN+10 i3blocks"
+bindsym XF86AudioPlay exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
+                            /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play \
+                            && pkill -RTMIN+10 i3blocks"
+bindsym XF86AudioStop exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
+                            /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop \
+                            && pkill -RTMIN+10 i3blocks"
+
+# Startup programs
+exec urxvt
+exec redshift -b 0.95:0.75 -t 5800:5000 &
+exec --no-startup-id feh --no-fehbg --bg-scale "$HOME"/misc/photos/darkest_hour.jpg
