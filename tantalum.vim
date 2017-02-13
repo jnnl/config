@@ -39,7 +39,7 @@ if &background == "light"
 
     hi MatchParen      ctermfg=none    ctermbg=253     cterm=none
 
-    hi ModeMsg         ctermfg=24      ctermbg=none    cterm=bold
+    hi ModeMsg         ctermfg=24      ctermbg=none    cterm=none
     hi MoreMsg         ctermfg=none    ctermbg=none    cterm=none
 
     hi NonText         ctermfg=248     ctermbg=none    cterm=none
@@ -76,46 +76,47 @@ if &background == "light"
 
     hi WarningMsg      ctermfg=none    ctermbg=223     cterm=none
 
-    hi WildMenu        ctermfg=255     ctermbg=243     cterm=bold
+    hi WildMenu        ctermfg=255     ctermbg=243     cterm=none
 
     " Syntax group names  
 
     hi Comment         ctermfg=248     ctermbg=none    cterm=none
+    hi SpecialComment  ctermfg=248     ctermbg=none    cterm=none
 
     hi Constant        ctermfg=none    ctermbg=none    cterm=none
     hi String          ctermfg=242     ctermbg=none    cterm=none
     hi Character       ctermfg=242     ctermbg=none    cterm=none
     hi Number          ctermfg=131     ctermbg=none    cterm=none
-    hi Boolean         ctermfg=none    ctermbg=none    cterm=bold
+    hi Boolean         ctermfg=none    ctermbg=none    cterm=none
     hi Float           ctermfg=131     ctermbg=none    cterm=none
 
     hi Identifier      ctermfg=none    ctermbg=none    cterm=none
-    hi Function        ctermfg=24      ctermbg=none    cterm=none
+    hi Function        ctermfg=none    ctermbg=none    cterm=none
+    "hi Function        ctermfg=23      ctermbg=none    cterm=none
 
-    hi Statement       ctermfg=none    ctermbg=none    cterm=bold
-    hi Conditional     ctermfg=none    ctermbg=none    cterm=bold
-    hi Repeat          ctermfg=none    ctermbg=none    cterm=bold
-    hi Label           ctermfg=none    ctermbg=none    cterm=bold
-    hi Operator        ctermfg=none    ctermbg=none    cterm=bold
-    hi Keyword         ctermfg=none    ctermbg=none    cterm=bold
-    hi Exception       ctermfg=none    ctermbg=none    cterm=bold
+    hi Statement       ctermfg=none    ctermbg=none    cterm=none
+    hi Conditional     ctermfg=none    ctermbg=none    cterm=none
+    hi Repeat          ctermfg=none    ctermbg=none    cterm=none
+    hi Label           ctermfg=none    ctermbg=none    cterm=none
+    hi Operator        ctermfg=none    ctermbg=none    cterm=none
+    hi Keyword         ctermfg=none    ctermbg=none    cterm=none
+    hi Exception       ctermfg=none    ctermbg=none    cterm=none
 
     hi PreProc         ctermfg=none    ctermbg=none    cterm=none
-    hi Include         ctermfg=none    ctermbg=none    cterm=bold
-    hi Define          ctermfg=none    ctermbg=none    cterm=bold
-    hi Macro           ctermfg=none    ctermbg=none    cterm=bold
-    hi PreCondit       ctermfg=none    ctermbg=none    cterm=bold
+    hi Include         ctermfg=none    ctermbg=none    cterm=none
+    hi Define          ctermfg=none    ctermbg=none    cterm=none
+    hi Macro           ctermfg=none    ctermbg=none    cterm=none
+    hi PreCondit       ctermfg=none    ctermbg=none    cterm=none
 
-    hi Type            ctermfg=none    ctermbg=none    cterm=bold
-    hi StorageClass    ctermfg=none    ctermbg=none    cterm=bold
-    hi Structure       ctermfg=none    ctermbg=none    cterm=bold
-    hi Typedef         ctermfg=none    ctermbg=none    cterm=bold
+    hi Type            ctermfg=none    ctermbg=none    cterm=none
+    hi StorageClass    ctermfg=none    ctermbg=none    cterm=none
+    hi Structure       ctermfg=none    ctermbg=none    cterm=none
+    hi Typedef         ctermfg=none    ctermbg=none    cterm=none
 
-    hi Special         ctermfg=none    ctermbg=none    cterm=none
-    hi SpecialChar     ctermfg=none    ctermbg=none    cterm=none
+    hi Special         ctermfg=242     ctermbg=none    cterm=none
+    hi SpecialChar     ctermfg=242     ctermbg=none    cterm=none
     hi Tag             ctermfg=none    ctermbg=none    cterm=none
     hi Delimiter       ctermfg=none    ctermbg=none    cterm=none
-    hi SpecialComment  ctermfg=248     ctermbg=none    cterm=none
     hi Debug           ctermfg=none    ctermbg=none    cterm=none
 
     hi Underlined      ctermfg=none    ctermbg=none    cterm=none
@@ -155,21 +156,21 @@ elseif &background == "dark"
     hi IncSearch       ctermfg=none    ctermbg=58     cterm=none
 
     hi LineNr          ctermfg=241     ctermbg=none    cterm=none
-    hi CursorLineNR    ctermfg=251     ctermbg=none    cterm=none
+    hi CursorLineNR    ctermfg=249     ctermbg=none    cterm=none
 
     hi MatchParen      ctermfg=none    ctermbg=241     cterm=none
 
-    hi ModeMsg         ctermfg=67      ctermbg=none    cterm=bold
+    hi ModeMsg         ctermfg=67      ctermbg=none    cterm=none
     hi MoreMsg         ctermfg=none    ctermbg=none    cterm=none
 
     hi NonText         ctermfg=241     ctermbg=none    cterm=none
 
-    hi Normal          ctermfg=251     ctermbg=234     cterm=none
+    hi Normal          ctermfg=250     ctermbg=235     cterm=none
 
     hi Pmenu           ctermfg=243     ctermbg=254     cterm=none
     hi PmenuSel        ctermfg=255     ctermbg=241     cterm=none
     hi PmenuSbar       ctermfg=none    ctermbg=254     cterm=none
-    hi PmenuThumb      ctermfg=none    ctermbg=251     cterm=none
+    hi PmenuThumb      ctermfg=none    ctermbg=249     cterm=none
 
     hi Question        ctermfg=none    ctermbg=none    cterm=none
 
@@ -185,57 +186,58 @@ elseif &background == "dark"
     hi StatusLine      ctermfg=15      ctermbg=241     cterm=none
     hi StatusLineNC    ctermfg=249     ctermbg=241     cterm=none
 
-    hi TabLine         ctermfg=249     ctermbg=241     cterm=none
+    hi TabLine         ctermfg=250     ctermbg=241     cterm=none
     hi TabLineFill     ctermfg=none    ctermbg=241     cterm=none
     hi TabLineSel      ctermfg=15      ctermbg=none    cterm=none
 
-    hi Title           ctermfg=251     ctermbg=none    cterm=none
+    hi Title           ctermfg=250     ctermbg=none    cterm=none
 
     hi Visual          ctermfg=none    ctermbg=238     cterm=none
     hi VisualNOS       ctermfg=none    ctermbg=238     cterm=none
 
     hi WarningMsg      ctermfg=none    ctermbg=94      cterm=none
 
-    hi WildMenu        ctermfg=236     ctermbg=248     cterm=bold
+    hi WildMenu        ctermfg=236     ctermbg=248     cterm=none
 
     " Syntax group names  
 
-    hi Comment         ctermfg=241     ctermbg=none    cterm=none
+    hi Comment         ctermfg=243     ctermbg=none    cterm=none
+    hi SpecialComment  ctermfg=243     ctermbg=none    cterm=none
 
     hi Constant        ctermfg=none    ctermbg=none    cterm=none
     hi String          ctermfg=247     ctermbg=none    cterm=none
     hi Character       ctermfg=247     ctermbg=none    cterm=none
     hi Number          ctermfg=174     ctermbg=none    cterm=none
-    hi Boolean         ctermfg=none    ctermbg=none    cterm=bold
+    hi Boolean         ctermfg=none    ctermbg=none    cterm=none
     hi Float           ctermfg=174     ctermbg=none    cterm=none
 
     hi Identifier      ctermfg=none    ctermbg=none    cterm=none
-    hi Function        ctermfg=67      ctermbg=none    cterm=none
+    hi Function        ctermfg=none    ctermbg=none    cterm=none
+    "hi Function        ctermfg=66      ctermbg=none    cterm=none
 
-    hi Statement       ctermfg=none    ctermbg=none    cterm=bold
-    hi Conditional     ctermfg=none    ctermbg=none    cterm=bold
-    hi Repeat          ctermfg=none    ctermbg=none    cterm=bold
-    hi Label           ctermfg=none    ctermbg=none    cterm=bold
-    hi Operator        ctermfg=none    ctermbg=none    cterm=bold
-    hi Keyword         ctermfg=none    ctermbg=none    cterm=bold
-    hi Exception       ctermfg=none    ctermbg=none    cterm=bold
+    hi Statement       ctermfg=none    ctermbg=none    cterm=none
+    hi Conditional     ctermfg=none    ctermbg=none    cterm=none
+    hi Repeat          ctermfg=none    ctermbg=none    cterm=none
+    hi Label           ctermfg=none    ctermbg=none    cterm=none
+    hi Operator        ctermfg=none    ctermbg=none    cterm=none
+    hi Keyword         ctermfg=none    ctermbg=none    cterm=none
+    hi Exception       ctermfg=none    ctermbg=none    cterm=none
 
     hi PreProc         ctermfg=none    ctermbg=none    cterm=none
-    hi Include         ctermfg=none    ctermbg=none    cterm=bold
-    hi Define          ctermfg=none    ctermbg=none    cterm=bold
-    hi Macro           ctermfg=none    ctermbg=none    cterm=bold
-    hi PreCondit       ctermfg=none    ctermbg=none    cterm=bold
+    hi Include         ctermfg=none    ctermbg=none    cterm=none
+    hi Define          ctermfg=none    ctermbg=none    cterm=none
+    hi Macro           ctermfg=none    ctermbg=none    cterm=none
+    hi PreCondit       ctermfg=none    ctermbg=none    cterm=none
 
-    hi Type            ctermfg=none    ctermbg=none    cterm=bold
-    hi StorageClass    ctermfg=none    ctermbg=none    cterm=bold
-    hi Structure       ctermfg=none    ctermbg=none    cterm=bold
-    hi Typedef         ctermfg=none    ctermbg=none    cterm=bold
+    hi Type            ctermfg=none    ctermbg=none    cterm=none
+    hi StorageClass    ctermfg=none    ctermbg=none    cterm=none
+    hi Structure       ctermfg=none    ctermbg=none    cterm=none
+    hi Typedef         ctermfg=none    ctermbg=none    cterm=none
 
-    hi Special         ctermfg=none    ctermbg=none    cterm=none
-    hi SpecialChar     ctermfg=none    ctermbg=none    cterm=none
+    hi Special         ctermfg=247     ctermbg=none    cterm=none
+    hi SpecialChar     ctermfg=247     ctermbg=none    cterm=none
     hi Tag             ctermfg=none    ctermbg=none    cterm=none
     hi Delimiter       ctermfg=none    ctermbg=none    cterm=none
-    hi SpecialComment  ctermfg=241     ctermbg=none    cterm=none
     hi Debug           ctermfg=none    ctermbg=none    cterm=none
 
     hi Underlined      ctermfg=none    ctermbg=none    cterm=none
@@ -244,6 +246,6 @@ elseif &background == "dark"
 
     hi Error           ctermfg=none    ctermbg=none    cterm=none
 
-    hi Todo            ctermfg=243     ctermbg=none    cterm=none
+    hi Todo            ctermfg=245     ctermbg=none    cterm=none
 
 endif
