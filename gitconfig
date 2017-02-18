@@ -8,8 +8,13 @@
 [alias]
     aa = add --all
     br = branch
+    brd = branch -d
     cm = commit -m
     co = checkout
+    cob = checkout -b
+    gud = "!git add -A && git commit"
     lg = log --oneline --decorate --graph
     rh = reset HEAD
+    rhh = reset --hard HEAD
     rso = remote show origin
+    st = status
