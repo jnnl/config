@@ -41,11 +41,9 @@ set number
 set relativenumber
 
 if has('macunix')
-    set background=light
-    colorscheme tantalum
+    colorscheme tantalum-dark
 elseif has('unix')
-    set background=dark
-    colorscheme tantalum
+    colorscheme tantalum-dark
     hi Normal ctermbg=none
 endif
 
@@ -74,6 +72,7 @@ endif
 let &backupdir = VIMDIR.'backup//'
 let &directory = VIMDIR.'swap//'
 let &undodir   = VIMDIR.'undo//'
+
 
 " Mappings
 map         , <leader>
@@ -109,13 +108,24 @@ function! <SID>AutoMkDir()
     endif
 endfunction
 
-autocmd BufWritePre,FileWritePre * :call <SID>AutoMkDir()
-autocmd FileType c      nnoremap <buffer> <leader>xx :!clear; gcc -o %:p:r %:p && %:p:r<CR>
-autocmd FileType cpp    nnoremap <buffer> <leader>xx :!clear; g++ -o %:p:r %:p && %:p:r<CR>
-autocmd FileType python nnoremap <buffer> <leader>xx :!clear; python %:p<CR>
-autocmd FileType ruby   nnoremap <buffer> <leader>xx :!clear; ruby %:p<CR>
-autocmd FileType rust   nnoremap <buffer> <leader>xx :!clear; rustc -o %:p:r %:p && %:p:r<CR>
-autocmd FileType sh     nnoremap <buffer> <leader>xx :!clear; %:p<CR>
+augroup mkdir
+    autocmd!
+    autocmd BufWritePre,FileWritePre * :call <SID>AutoMkDir()
+augroup END
+
+augroup exec
+    autocmd!
+    autocmd FileType c      nnoremap <buffer> <leader>xx :!clear; gcc -o %:p:r %:p && %:p:r<CR>
+    autocmd FileType c      nnoremap <buffer> <leader>xa :!clear; gcc -o %:p:r %:p && %:p:r 
+    autocmd FileType cpp    nnoremap <buffer> <leader>xx :!clear; g++ -o %:p:r %:p && %:p:r<CR>
+    autocmd FileType cpp    nnoremap <buffer> <leader>xa :!clear; g++ -o %:p:r %:p && %:p:r 
+    autocmd FileType python nnoremap <buffer> <leader>xx :!clear; python3 %:p<CR>
+    autocmd FileType python nnoremap <buffer> <leader>xa :!clear; python3 %:p 
+    autocmd FileType ruby   nnoremap <buffer> <leader>xx :!clear; ruby %:p<CR>
+    autocmd FileType rust   nnoremap <buffer> <leader>xx :!clear; rustc -o %:p:r %:p && %:p:r<CR>
+    autocmd FileType sh     nnoremap <buffer> <leader>xx :!clear; %:p<CR>
+    autocmd FileType sh     nnoremap <buffer> <leader>xa :!clear; %:p 
+augroup END
 
 " Plugins
 call plug#begin()
@@ -124,7 +134,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'rust-lang/rust.vim'
-Plug 'ervandew/supertab'
+Plug 'ajh17/vimcompletesme'
 call plug#end()
 
 " Plugin settings
