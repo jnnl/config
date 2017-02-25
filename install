@@ -93,29 +93,33 @@ fi
 echo ""
 
 # Install vim-plug
-echo -n "Install vim-plug and plugins? [y/N] "
-read choice
-if echo "$choice" | grep -viq "^y"; then
-    echo "Vim-plug was not installed."
-else
-    if which curl &>/dev/null; then
-        echo "Installing vim-plug..."
-        if curl -fLo "$HOME"/.vim/autoload/plug.vim --create-dirs \
-            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-            echo "Vim-plug installed. Installing plugins..."
-            vim +PlugInstall +qa
-        fi
-    elif which wget &>/dev/null; then
-        echo "Installing vim-plug..."
-        mkdir -p "$HOME"/.vim/autoload/
-        if wget --show-progress -qO "$HOME"/.vim/autoload/plug.vim \
-            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-            echo "Vim-plug installed. Installing plugins..."
-            vim +PlugInstall +qa
-        fi
+if which vim &>/dev/null; then
+    echo -n "Install vim-plug and plugins? [y/N] "
+    read choice
+    if echo "$choice" | grep -viq "^y"; then
+        echo "Vim-plug was not installed."
     else
-        echo "No curl or wget found, skipping vim-plug install."
+        if which curl &>/dev/null; then
+            echo "Installing vim-plug..."
+            if curl -fLo "$HOME"/.vim/autoload/plug.vim --create-dirs \
+                https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+                echo -n "Vim-plug installed. Installing plugins..."
+                vim +PlugInstall +qa && echo -ne " done\n"
+            fi
+        elif which wget &>/dev/null; then
+            echo "Installing vim-plug..."
+            mkdir -p "$HOME"/.vim/autoload/
+            if wget --show-progress -qO "$HOME"/.vim/autoload/plug.vim \
+                https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+                echo -n "Vim-plug installed. Installing plugins..."
+                vim +PlugInstall +qa && echo -ne " done\n"
+            fi
+        else
+            echo "No curl or wget found, skipping vim-plug install."
+        fi
     fi
+else
+    echo "Vim not found, skipping vim-plug install."
 fi
 
 echo ""
