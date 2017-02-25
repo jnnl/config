@@ -3,9 +3,7 @@ urxvt*background:   #111111
 urxvt*foreground:   #eeeeee
 
 ! Text
-urxvt*font:         xft:Roboto Mono:pixelsize=14:antialias=true
-urxvt*lineSpace:    0.9
-urxvt*letterSpace:  -1
+urxvt*font:         xft:SourceCodePro:pixelsize=14:antialias=true
 
 ! Transparency
 URxvt.transparent:  true
@@ -15,4 +13,3 @@ URxvt.shading:      25
 urxvt*scrollBar:    false
 urxvt*iso14755:     false
 urxvt*iso14755_52:  false
-urxvt*urlLauncher:  chromium
