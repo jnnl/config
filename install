@@ -7,6 +7,9 @@ CONFIGDIR="$HOME"/.config/dotfiles
 BACKUPDIR=""$CONFIGDIR"/backup"
 # Directory of this script
 SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
+# Color file directory
+COLORSDIR=""$SOURCEDIR"/colors"
+
 # Config files to install
 FILES="bash_profile bashrc gitconfig vimrc tmux.conf"
 CSCHEMES="tungsten.vim tantalum.vim tantalum-dark.vim"
@@ -84,7 +87,7 @@ else
     # Copy colorschemes
     mkdir -p "$HOME"/.vim/colors/
     for cs in $CSCHEMES; do
-        if cp "$SOURCEDIR/$cs" "$HOME/.vim/colors/$cs"; then
+        if cp "$COLORSDIR/$cs" "$HOME/.vim/colors/$cs"; then
             echo "Copied "$cs" to "$HOME/.vim/colors/$cs""
         fi
     done

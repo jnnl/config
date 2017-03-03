@@ -132,6 +132,7 @@ call plug#begin()
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'rust-lang/rust.vim'
 Plug 'ajh17/vimcompletesme'

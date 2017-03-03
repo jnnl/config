@@ -18,7 +18,7 @@ hi CursorLine      ctermfg=none    ctermbg=235     cterm=none
 hi Directory       ctermfg=none    ctermbg=none    cterm=none
 
 hi DiffAdd         ctermfg=none    ctermbg=194     cterm=none
-hi DiffChange      ctermfg=none    ctermbg=254     cterm=none
+hi DiffChange      ctermfg=none    ctermbg=253     cterm=none
 hi DiffDelete      ctermfg=none    ctermbg=88      cterm=none
 hi DiffText        ctermfg=none    ctermbg=none    cterm=none
 
@@ -45,9 +45,9 @@ hi NonText         ctermfg=241     ctermbg=none    cterm=none
 
 hi Normal          ctermfg=250     ctermbg=235     cterm=none
 
-hi Pmenu           ctermfg=243     ctermbg=254     cterm=none
+hi Pmenu           ctermfg=243     ctermbg=253     cterm=none
 hi PmenuSel        ctermfg=255     ctermbg=241     cterm=none
-hi PmenuSbar       ctermfg=none    ctermbg=254     cterm=none
+hi PmenuSbar       ctermfg=none    ctermbg=253     cterm=none
 hi PmenuThumb      ctermfg=none    ctermbg=249     cterm=none
 
 hi Question        ctermfg=none    ctermbg=none    cterm=none
@@ -61,12 +61,12 @@ hi SpellCap        ctermfg=none    ctermbg=none    cterm=none
 hi SpellLocal      ctermfg=none    ctermbg=none    cterm=none
 hi SpellRare       ctermfg=none    ctermbg=none    cterm=none
 
-hi StatusLine      ctermfg=15      ctermbg=241     cterm=none
+hi StatusLine      ctermfg=215      ctermbg=241     cterm=none
 hi StatusLineNC    ctermfg=249     ctermbg=241     cterm=none
 
 hi TabLine         ctermfg=250     ctermbg=241     cterm=none
 hi TabLineFill     ctermfg=none    ctermbg=241     cterm=none
-hi TabLineSel      ctermfg=15      ctermbg=none    cterm=none
+hi TabLineSel      ctermfg=253      ctermbg=none    cterm=none
 
 hi Title           ctermfg=250     ctermbg=none    cterm=none
 
