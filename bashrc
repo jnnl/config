@@ -16,6 +16,7 @@ fi
 
 alias ll="ls -lahF"
 export TERM="xterm-256color"
+export HISTCONTROL=ignoredups
 
 # Linux-specific settings
 if [[ $(uname) == "Linux" ]]; then
