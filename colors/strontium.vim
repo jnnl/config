@@ -189,16 +189,13 @@ call s:hi("pythonFunction", s:blue, "", "")
 hi! link pythonExClass pythonFunction
 
 " Ruby
+call s:hi("rubyConstant", s:fg_light, "", "")
 call s:hi("rubyInclude", s:fg, "", "")
 call s:hi("rubySymbol", s:red3, "", "")
 hi! link rubyControl     rubySymbol
 hi! link rubyConditional rubySymbol
 hi! link rubyRepeat      rubySymbol
 hi! link rubyException   rubySymbol
-call s:hi("rubyConstant", s:fg_light, "", "")
-call s:hi("rubyAccess", s:red3, "", "")
-call s:hi("rubyAttribute", s:red3, "", "")
-call s:hi("rubyException", s:red3, "", "")
 
 call s:hi("rubyFunction", s:blue, "", "")
 
