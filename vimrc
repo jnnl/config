@@ -6,8 +6,13 @@ set encoding=utf-8
 set backspace=indent,eol,start
 set autoread
 set wildmenu
+
+" Performance tweaks
 set ttyfast
+set ttyscroll=3
 set lazyredraw
+set synmaxcol=256
+syn sync minlines=256
 
 " Indentation
 if has('autocmd')
@@ -38,14 +43,11 @@ endif
 set ruler
 set rulerformat=%14l:%c
 set number
-set relativenumber
 
-if has('macunix')
-    colorscheme tantalum-dark
-elseif has('unix')
-    colorscheme tantalum-dark
-    hi Normal ctermbg=none
-endif
+set nocursorline
+set nocursorcolumn
+
+colorscheme tantalum-dark
 
 " Screen
 if !&scrolloff
@@ -100,6 +102,7 @@ nnoremap    <leader>fw :Windows<CR>
 
 imap        <C-l> <plug>(fzf-complete-line)
 
+
 " Functions
 function! <SID>AutoMkDir()
     let s:directory = expand("<afile>:p:h")
@@ -134,7 +137,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-Plug 'rust-lang/rust.vim'
+Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 Plug 'ajh17/vimcompletesme'
 call plug#end()
 
