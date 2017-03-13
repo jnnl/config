@@ -1,7 +1,6 @@
 " tantalum-dark.vim
 " jnnl.net
 
-set background=dark
 hi clear
 
 if exists("syntax_on")
@@ -31,8 +30,8 @@ endfunction
 " Colors
 
 let s:bg      = {"term": "236", "gui": "#303030"}
-let s:bg2     = {"term": "238", "gui": "#444444"}
-let s:bg3     = {"term": "241", "gui": "#626262"}
+let s:bg2     = {"term": "237", "gui": "#3a3a3a"}
+let s:bg3     = {"term": "240", "gui": "#585858"}
 let s:bg4     = {"term": "249", "gui": "#b2b2b2"}
 let s:bg5     = {"term": "253", "gui": "#dadada"}
 
@@ -41,7 +40,6 @@ let s:fg2     = {"term": "248", "gui": "#a8a8a8"}
 let s:fg3     = {"term": "247", "gui": "#9e9e9e"}
 let s:fg4     = {"term": "243", "gui": "#767676"}
 let s:fg5     = {"term": "241", "gui": "#626262"}
-let s:fg6     = {"term": "238", "gui": "#444444"}
 
 let s:cursor  = {"term": "239", "gui": "#4e4e4e"}
 
@@ -77,7 +75,7 @@ call s:hi("DiffText", s:white, s:orange2, "")
 
 call s:hi("ErrorMsg", s:red, s:bg, "")
 
-call s:hi("VertSplit", s:fg6, s:bg2, "")
+call s:hi("VertSplit", s:bg2, s:bg2, "")
 
 call s:hi("Folded", s:fg5, s:bg, "")
 call s:hi("FoldColumn", "", "", "")
@@ -119,7 +117,7 @@ call s:hi("TabLine", s:fg3, s:bg3, "")
 call s:hi("TabLineFill", "", s:bg3, "")
 call s:hi("TabLineSel", s:fg, "", "")
 
-call s:hi("Title", s:fg, "", "")
+call s:hi("Title", s:fg, s:bg, "")
 
 call s:hi("Visual", s:fg, s:bg3, "")
 call s:hi("VisualNOS", s:fg, s:bg3, "")
@@ -129,41 +127,40 @@ call s:hi("WarningMsg", s:orange2, "", "")
 call s:hi("WildMenu", s:blue2, s:bg2, "")
 
 hi! link Constant       Normal
-hi! link Statement      Normal
-hi! link Conditonal     Normal
-hi! link Exception      Normal
-hi! link Keyword        Normal
-hi! link Label          Normal
-hi! link Repeat         Normal
 hi! link Number         Normal
 hi! link Boolean        Normal
 hi! link Float          Normal
 hi! link Identifier     Normal
 hi! link Function       Normal
+hi! link Statement      Normal
+hi! link Conditonal     Normal
+hi! link Repeat         Normal
+hi! link Label          Normal
 hi! link Operator       Normal
-hi! link Type           Normal
-hi! link StorageClass   Normal
-hi! link Structure      Normal
-hi! link Typedef        Normal
+hi! link Keyword        Normal
+hi! link Exception      Normal
 hi! link PreProc        Normal
 hi! link Include        Normal
 hi! link Define         Normal
 hi! link Macro          Normal
 hi! link PreCondit      Normal
+hi! link Type           Normal
+hi! link StorageClass   Normal
+hi! link Structure      Normal
+hi! link Typedef        Normal
+hi! link Special        Normal
 hi! link Tag            Normal
 hi! link Delimiter      Normal
+hi! link Debug          Normal
+hi! link Underlined     Normal
 
 call s:hi("String", s:fg2, "", "")
-hi! link Character String
+hi! link Character      String
+hi! link SpecialChar    String
 
 call s:hi("Comment", s:fg4, "", "")
 hi! link SpecialComment Comment
 
-call s:hi("Special", s:fg, "", "")
-call s:hi("SpecialChar", s:fg2, "", "")
-call s:hi("Debug", "", "", "")
-
-call s:hi("Underlined", s:fg, "", "")
-call s:hi("Ignore", s:fg4, "", "")
+call s:hi("Ignore", s:fg4, s:bg, "")
 call s:hi("Error", s:fg, s:red2, "")
 call s:hi("Todo", s:fg3, s:bg2, "")

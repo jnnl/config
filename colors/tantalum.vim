@@ -1,127 +1,162 @@
 " tantalum.vim
 " jnnl.net
 
-set background=light
 hi clear
-syntax reset
 
-let g:colors_name="tantalum"
+if exists("syntax_on")
+    syntax reset
+endif
 
-hi ColorColumn     ctermfg=none    ctermbg=none    cterm=none
+let g:colors_name = "tantalum"
 
-hi Conceal         ctermfg=253     ctermbg=none    cterm=none
+function! s:hi(group, fg, bg, style)
+    if !empty(a:fg)
+        exec "hi ".a:group." ctermfg="(get(a:fg, "term", ""))
+        exec "hi ".a:group." guifg="(get(a:fg, "gui", ""))
+    endif
+    if !empty(a:bg)
+        exec "hi ".a:group." ctermbg="(get(a:bg, "term", ""))
+        exec "hi ".a:group." guibg="(get(a:bg, "gui", ""))
+    endif
+    if !empty(a:style)
+        exec "hi ".a:group." cterm=".a:style
+        exec "hi ".a:group." gui=".a:style
+    else
+        exec "hi ".a:group." cterm=none"
+        exec "hi ".a:group." gui=none"
+    endif
+endfunction
 
-hi Cursor          ctermfg=none    ctermbg=none    cterm=none
-hi CursorColumn    ctermfg=none    ctermbg=none    cterm=none
-hi CursorLine      ctermfg=none    ctermbg=254     cterm=none
+" Colors
 
-hi Directory       ctermfg=none    ctermbg=none    cterm=none
+let s:bg      = {"term": "254", "gui": "#303030"}
+let s:bg2     = {"term": "253", "gui": "#3a3a3a"}
+let s:bg3     = {"term": "251", "gui": "#585858"}
+let s:bg4     = {"term": "249", "gui": "#b2b2b2"}
+let s:bg5     = {"term": "247", "gui": "#dadada"}
 
-hi DiffAdd         ctermfg=none    ctermbg=194     cterm=none
-hi DiffChange      ctermfg=none    ctermbg=254     cterm=none
-hi DiffDelete      ctermfg=none    ctermbg=224     cterm=none
-hi DiffText        ctermfg=none    ctermbg=none    cterm=none
+let s:fg      = {"term": "239", "gui": "#d0d0d0"}
+let s:fg2     = {"term": "242", "gui": "#a8a8a8"}
+let s:fg3     = {"term": "244", "gui": "#9e9e9e"}
+let s:fg4     = {"term": "246", "gui": "#767676"}
+let s:fg5     = {"term": "249", "gui": "#626262"}
 
-hi ErrorMsg        ctermfg=none    ctermbg=224     cterm=none
+let s:cursor  = {"term": "250", "gui": "#4e4e4e"}
 
-hi VertSplit       ctermfg=253     ctermbg=253     cterm=none
+let s:red     = {"term": "88",  "gui": "#af5f5f"}
+let s:red2    = {"term": "131", "gui": "#870000"}
+let s:orange  = {"term": "179", "gui": "#dfaf5f"}
+let s:yellow  = {"term": "186", "gui": "#dfdf87"}
+let s:yellow2 = {"term": "143", "gui": "#afaf5f"}
+let s:green   = {"term": "108", "gui": "#87af87"}
+let s:blue    = {"term": "32",  "gui": "#87afd7"}
 
-hi Folded          ctermfg=248     ctermbg=none    cterm=none
-hi FoldColumn      ctermfg=none    ctermbg=none    cterm=none
+" Highlights
 
-hi SignColumn      ctermfg=none    ctermbg=none    cterm=none
+call s:hi("Normal", s:fg, s:bg, "")
 
-hi IncSearch       ctermfg=none    ctermbg=222     cterm=none
+call s:hi("ColorColumn", "", "", "")
+call s:hi("Conceal", s:fg5, "", "")
 
-hi LineNr          ctermfg=248     ctermbg=none    cterm=none
-hi CursorLineNR    ctermfg=239     ctermbg=none    cterm=none
+call s:hi("Cursor", s:fg, s:cursor, "")
+call s:hi("CursorColumn", "", "", "")
+call s:hi("CursorLine", "", "", "")
 
-hi MatchParen      ctermfg=none    ctermbg=253     cterm=none
+call s:hi("Directory", s:fg3, "", "")
 
-hi ModeMsg         ctermfg=24      ctermbg=none    cterm=none
-hi MoreMsg         ctermfg=none    ctermbg=none    cterm=none
+call s:hi("DiffAdd", s:fg, s:green, "")
+call s:hi("DiffChange", s:fg, s:bg2, "")
+call s:hi("DiffDelete", s:white, s:red2, "")
+call s:hi("DiffText", s:white, s:orange, "")
 
-hi NonText         ctermfg=248     ctermbg=none    cterm=none
+call s:hi("ErrorMsg", s:red, s:bg, "")
 
-hi Normal          ctermfg=239     ctermbg=255     cterm=none
+call s:hi("VertSplit", s:bg2, s:bg2, "")
 
-hi Pmenu           ctermfg=243     ctermbg=254     cterm=none
-hi PmenuSel        ctermfg=0       ctermbg=253     cterm=none
-hi PmenuSbar       ctermfg=none    ctermbg=254     cterm=none
-hi PmenuThumb      ctermfg=none    ctermbg=252     cterm=none
+call s:hi("Folded", s:fg5, s:bg, "")
+call s:hi("FoldColumn", "", "", "")
 
-hi Question        ctermfg=none    ctermbg=none    cterm=none
+call s:hi("SignColumn", s:fg, s:bg, "")
 
-hi Search          ctermfg=none    ctermbg=222     cterm=none
+call s:hi("IncSearch", s:fg, s:yellow, "")
 
-hi SpecialKey      ctermfg=0       ctermbg=none    cterm=none
+call s:hi("LineNr", s:fg5, s:bg, "")
+call s:hi("CursorLineNr", s:fg3, s:bg, "")
 
-hi SpellBad        ctermfg=none    ctermbg=217     cterm=none
-hi SpellCap        ctermfg=none    ctermbg=none    cterm=none
-hi SpellLocal      ctermfg=none    ctermbg=none    cterm=none
-hi SpellRare       ctermfg=none    ctermbg=none    cterm=none
+call s:hi("MatchParen", s:fg, s:bg3, "")
 
-hi StatusLine      ctermfg=0       ctermbg=253     cterm=none
-hi StatusLineNC    ctermfg=243     ctermbg=253     cterm=none
+call s:hi("ModeMsg", s:blue, "", "")
+call s:hi("MoreMsg", s:yellow2, "", "")
 
-hi TabLine         ctermfg=243     ctermbg=253     cterm=none
-hi TabLineFill     ctermfg=none    ctermbg=253     cterm=none
-hi TabLineSel      ctermfg=0       ctermbg=none    cterm=none
+call s:hi("NonText", s:fg5, "", "")
 
-hi Title           ctermfg=240     ctermbg=none    cterm=none
+call s:hi("Pmenu", s:fg3, s:bg2, "")
+call s:hi("PmenuSel", s:fg, s:bg3, "")
+call s:hi("PmenuSbar", s:fg, s:bg3, "")
+call s:hi("PmenuThumb", s:fg, s:bg3, "")
 
-hi Visual          ctermfg=none    ctermbg=188     cterm=none
-hi VisualNOS       ctermfg=none    ctermbg=188     cterm=none
+call s:hi("Question", s:fg, "", "")
 
-hi WarningMsg      ctermfg=none    ctermbg=223     cterm=none
+call s:hi("Search", s:fg, s:yellow2, "")
 
-hi WildMenu        ctermfg=255     ctermbg=243     cterm=none
+call s:hi("SpecialKey", s:fg, "", "")
 
-" Syntax group names  
+call s:hi("SpellBad", "", "", "")
+call s:hi("SpellCap", "", "", "")
+call s:hi("SpellLocal", "", "", "")
+call s:hi("SpellRare", "", "", "")
 
-hi Comment         ctermfg=248     ctermbg=none    cterm=none
-hi SpecialComment  ctermfg=248     ctermbg=none    cterm=none
+call s:hi("StatusLine", s:fg, s:bg2, "")
+call s:hi("StatusLineNC", s:fg3, s:bg2, "")
 
-hi Constant        ctermfg=none    ctermbg=none    cterm=none
-hi String          ctermfg=242     ctermbg=none    cterm=none
-hi Character       ctermfg=242     ctermbg=none    cterm=none
-hi Number          ctermfg=131     ctermbg=none    cterm=none
-hi Boolean         ctermfg=none    ctermbg=none    cterm=none
-hi Float           ctermfg=131     ctermbg=none    cterm=none
+call s:hi("TabLine", s:fg4, s:bg2, "")
+call s:hi("TabLineFill", "", s:bg2, "")
+call s:hi("TabLineSel", s:fg, "", "")
 
-hi Identifier      ctermfg=none    ctermbg=none    cterm=none
-hi Function        ctermfg=none    ctermbg=none    cterm=none
-"hi Function        ctermfg=23      ctermbg=none    cterm=none
+call s:hi("Title", s:fg, s:bg, "")
 
-hi Statement       ctermfg=none    ctermbg=none    cterm=none
-hi Conditional     ctermfg=none    ctermbg=none    cterm=none
-hi Repeat          ctermfg=none    ctermbg=none    cterm=none
-hi Label           ctermfg=none    ctermbg=none    cterm=none
-hi Operator        ctermfg=none    ctermbg=none    cterm=none
-hi Keyword         ctermfg=none    ctermbg=none    cterm=none
-hi Exception       ctermfg=none    ctermbg=none    cterm=none
+call s:hi("Visual", s:fg, s:bg3, "")
+call s:hi("VisualNOS", s:fg, s:bg3, "")
 
-hi PreProc         ctermfg=none    ctermbg=none    cterm=none
-hi Include         ctermfg=none    ctermbg=none    cterm=none
-hi Define          ctermfg=none    ctermbg=none    cterm=none
-hi Macro           ctermfg=none    ctermbg=none    cterm=none
-hi PreCondit       ctermfg=none    ctermbg=none    cterm=none
+call s:hi("WarningMsg", s:orange, "", "")
 
-hi Type            ctermfg=none    ctermbg=none    cterm=none
-hi StorageClass    ctermfg=none    ctermbg=none    cterm=none
-hi Structure       ctermfg=none    ctermbg=none    cterm=none
-hi Typedef         ctermfg=none    ctermbg=none    cterm=none
+call s:hi("WildMenu", s:blue, s:bg2, "")
 
-hi Special         ctermfg=242     ctermbg=none    cterm=none
-hi SpecialChar     ctermfg=242     ctermbg=none    cterm=none
-hi Tag             ctermfg=none    ctermbg=none    cterm=none
-hi Delimiter       ctermfg=none    ctermbg=none    cterm=none
-hi Debug           ctermfg=none    ctermbg=none    cterm=none
+hi! link Constant       Normal
+hi! link Number         Normal
+hi! link Boolean        Normal
+hi! link Float          Normal
+hi! link Identifier     Normal
+hi! link Function       Normal
+hi! link Statement      Normal
+hi! link Conditonal     Normal
+hi! link Repeat         Normal
+hi! link Label          Normal
+hi! link Operator       Normal
+hi! link Keyword        Normal
+hi! link Exception      Normal
+hi! link PreProc        Normal
+hi! link Include        Normal
+hi! link Define         Normal
+hi! link Macro          Normal
+hi! link PreCondit      Normal
+hi! link Type           Normal
+hi! link StorageClass   Normal
+hi! link Structure      Normal
+hi! link Typedef        Normal
+hi! link Special        Normal
+hi! link Tag            Normal
+hi! link Delimiter      Normal
+hi! link Debug          Normal
+hi! link Underlined     Normal
 
-hi Underlined      ctermfg=none    ctermbg=none    cterm=none
+call s:hi("String", s:fg2, "", "")
+hi! link Character      String
+hi! link SpecialChar    String
 
-hi Ignore          ctermfg=none    ctermbg=none    cterm=none
+call s:hi("Comment", s:fg4, "", "")
+hi! link SpecialComment Comment
 
-hi Error           ctermfg=none    ctermbg=none    cterm=none
-
-hi Todo            ctermfg=243     ctermbg=none    cterm=none
+call s:hi("Ignore", s:fg4, s:bg, "")
+call s:hi("Error", s:fg, s:red2, "")
+call s:hi("Todo", s:fg3, s:bg2, "")
