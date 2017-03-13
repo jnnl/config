@@ -92,6 +92,10 @@ else
         fi
     done
     if which curl &>/dev/null; then
+        if curl -#fLo "$HOME"/.vim/colors/gruvbox.vim \
+            https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim; then
+            echo "Downloaded gruvbox to "$HOME"/.vim/colors/gruvbox.vim"
+        fi
         if curl -#fLo "$HOME"/.vim/colors/tomorrow-night.vim \
             https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/vim/colors/Tomorrow-Night.vim; then
             echo "Downloaded tomorrow-night to "$HOME"/.vim/colors/tomorrow-night.vim"
