@@ -101,7 +101,7 @@ call s:hi("PmenuThumb", s:fg, s:bg3, "")
 
 call s:hi("Question", s:fg, "", "")
 
-call s:hi("Search", "", s:yellow2, "")
+call s:hi("Search", s:bg, s:yellow2, "")
 
 call s:hi("SpecialKey", s:fg, "", "")
 
