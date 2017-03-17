@@ -41,7 +41,7 @@ let s:fg3     = {"term": "247", "gui": "#9e9e9e"}
 let s:fg4     = {"term": "243", "gui": "#767676"}
 let s:fg5     = {"term": "241", "gui": "#626262"}
 
-let s:cursor  = {"term": "239", "gui": "#4e4e4e"}
+let s:cursor  = {"term": "242", "gui": "#6c6c6c"}
 
 let s:white   = {"term": "255", "gui": "#ffffff"}
 let s:red     = {"term": "131", "gui": "#af5f5f"}
@@ -62,7 +62,7 @@ call s:hi("Normal", s:fg, s:bg, "")
 call s:hi("ColorColumn", "", "", "")
 call s:hi("Conceal", s:fg5, "", "")
 
-call s:hi("Cursor", "", s:cursor, "")
+call s:hi("Cursor", s:fg, s:cursor, "")
 call s:hi("CursorColumn", "", "", "")
 call s:hi("CursorLine", "", "", "")
 
