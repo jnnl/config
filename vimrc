@@ -8,8 +8,11 @@ set autoread
 set wildmenu
 
 " Performance tweaks
+if has('vim')
+    set ttyscroll=3
+endif
+
 set ttyfast
-set ttyscroll=3
 set lazyredraw
 set synmaxcol=256
 syn sync minlines=256
