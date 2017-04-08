@@ -7,182 +7,172 @@ CONFIGDIR="$HOME/.config/dotfiles"
 BACKUPDIR="$CONFIGDIR/backup"
 # Directory of this script
 SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
-# Color file directory
-COLORSDIR="$SOURCEDIR/colors"
 
 # Config files to install
-FILES="bash_profile bashrc gitconfig vimrc tmux.conf"
-CSCHEMES="tungsten.vim tantalum.vim tantalum-dark.vim strontium.vim"
+FILES="bash_profile bashrc gitconfig vimrc tmux.conf zshrc"
 
 if [[ $(uname -s) == "Linux" ]]; then
     FILES+=" xinitrc Xmodmap Xresources"
 fi
 
-cd "$HOME"
-
 # Check if config file directory exists
-if [[ -d "$CONFIGDIR" ]]; then
-    echo -n "$CONFIGDIR already exists. Continue? [y/N] "
-    read choice
-    if echo "$choice" | grep -viq "^y" ;then
-        echo "No changes were made."
-        exit
+function check_config() {
+    if [[ -d "$CONFIGDIR" ]]; then
+        echo -n "$CONFIGDIR already exists. Continue? [y/N] "
+        read choice
+        if echo "$choice" | grep -viq "^y" ;then
+            echo "No changes were made."
+            exit
+        fi
+    else
+        mkdir -p "$CONFIGDIR"
     fi
-else
-    mkdir -p "$CONFIGDIR"
-fi
 
-echo ""
+    echo ""
+}
 
 # Backup config files to the backup directory
-echo "Backing up existing config files to $BACKUPDIR..."
-mkdir -p "$BACKUPDIR"
+function backup_config() {
+    echo "Backing up existing config files to $BACKUPDIR..."
+    mkdir -p "$BACKUPDIR"
 
-for file in $FILES; do
-    if [ -L "$HOME/.$file" ]; then
-        if mv $(readlink "$HOME/.$file") "$BACKUPDIR/$file"; then
-            echo "Moved $(readlink "$HOME/.$file") to $BACKUPDIR/$file"
-            rm "$HOME/.$file"
-        fi
-    elif [ -f "$HOME/.$file" ]; then
-        if mv "$HOME/.$file" "$BACKUPDIR/$file"; then
-            echo "Moved $HOME/.$file to $BACKUPDIR/$file"
-        fi
-    fi
-done
-
-echo ""
-
-# Copy config files from the repo to the config file directory
-echo "Copying config files to $CONFIGDIR..."
-
-cd "$SOURCEDIR"
-
-for file in $FILES; do
-    if cp "$SOURCEDIR/$file" "$CONFIGDIR/"; then
-        echo "Copied $file to $CONFIGDIR/$file"
-    else
-        echo "Couldn't copy $file"
-    fi
-done
-
-echo ""
-
-# Create symlinks of the config files to home directory
-echo "Linking config files to $HOME..."
-
-cd "$CONFIGDIR"
-
-for file in $FILES; do
-    if ln -s "$CONFIGDIR/$file" "$HOME/.$file"; then
-        echo "Created symlink: $CONFIGDIR/$file -> $HOME/.$file"
-    else
-        echo "Couldn't create a symlink for $CONFIGDIR/$file"
-    fi
-done
-
-echo ""
-
-# Install vim colorschemes
-echo -n "Install vim colorschemes? [y/N] "
-read choice
-if echo "$choice" | grep -viq "^y"; then
-    echo "Vim colorschemes were not installed."
-else
-    # Copy colorschemes
-    mkdir -p "$HOME/.vim/colors/"
-    for cs in $CSCHEMES; do
-        if cp "$COLORSDIR/$cs" "$HOME/.vim/colors/$cs"; then
-            echo "Copied $cs to $HOME/.vim/colors/$cs"
+    for file in $FILES; do
+        if [ -L "$HOME/.$file" ]; then
+            if mv $(readlink "$HOME/.$file") "$BACKUPDIR/$file"; then
+                echo "Moved $(readlink "$HOME/.$file") to $BACKUPDIR/$file"
+                rm "$HOME/.$file"
+            fi
+        elif [ -f "$HOME/.$file" ]; then
+            if mv "$HOME/.$file" "$BACKUPDIR/$file"; then
+                echo "Moved $HOME/.$file to $BACKUPDIR/$file"
+            fi
         fi
     done
-    if which curl &>/dev/null; then
-        if curl -#fLo "$HOME/.vim/colors/gruvbox.vim" \
-            https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim; then
-            echo "Downloaded gruvbox to $HOME/.vim/colors/gruvbox.vim"
-        fi
-        if curl -#fLo "$HOME/.vim/colors/tomorrow-night.vim" \
-            https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/vim/colors/Tomorrow-Night.vim; then
-            echo "Downloaded tomorrow-night to $HOME/.vim/colors/tomorrow-night.vim"
-        fi
-    fi
-fi
 
-echo ""
+    echo ""
+}
+
+# Copy config files from the repo to the config file directory
+function copy_config() {
+    echo "Copying config files to $CONFIGDIR..."
+
+    for file in $FILES; do
+        if cp "$SOURCEDIR/$file" "$CONFIGDIR/"; then
+            echo "Copied $file to $CONFIGDIR/$file"
+        else
+            echo "Couldn't copy $file"
+        fi
+    done
+
+    echo ""
+}
+
+# Create symlinks of the config files to home directory
+function link_config() {
+    echo "Linking config files to $HOME..."
+
+    for file in $FILES; do
+        if ln -s "$CONFIGDIR/$file" "$HOME/.$file"; then
+            echo "Created symlink: $CONFIGDIR/$file -> $HOME/.$file"
+        else
+            echo "Couldn't create a symlink for $CONFIGDIR/$file"
+        fi
+    done
+
+    echo ""
+}
+
+# Install config files
+function install_config() {
+    check_config
+    backup_config
+    copy_config
+    link_config
+}
 
 # Install vim-plug
-if which vim &>/dev/null; then
-    echo -n "Install vim-plug and plugins? [y/N] "
-    read choice
-    if echo "$choice" | grep -viq "^y"; then
-        echo "Vim-plug was not installed."
-    else
-        if which curl &>/dev/null; then
-            echo "Installing vim-plug..."
-            if curl -#fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
-                https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-                echo -n "Vim-plug installed. Installing plugins..."
-                vim +PlugInstall +qa && echo -ne " done\n"
-            fi
-        elif which wget &>/dev/null; then
-            echo "Installing vim-plug..."
-            mkdir -p "$HOME/.vim/autoload/"
-            if wget --show-progress -qO "$HOME/.vim/autoload/plug.vim" \
-                https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-                echo -n "Vim-plug installed. Installing plugins..."
-                vim +PlugInstall +qa && echo -ne " done\n"
-            fi
-        else
-            echo "No curl or wget found, skipping vim-plug install."
-        fi
-    fi
-else
-    echo "Vim not found, skipping vim-plug install."
-fi
-
-echo ""
-
-# Install homebrew
-if [ $(uname -s) = "Darwin" ]; then
-    if ! which brew &>/dev/null; then
-        echo -n "Install Homebrew? [y/N] "
+function install_vimplug() {
+    if which vim &>/dev/null; then
+        echo -n "Install vim-plug and plugins? [y/N] "
         read choice
         if echo "$choice" | grep -viq "^y"; then
-            echo "Homebrew was not installed."
+            echo "Vim-plug was not installed."
         else
-            echo "Installing Homebrew..."
-            ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+            if which curl &>/dev/null; then
+                echo "Installing vim-plug..."
+                if curl -#fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
+                    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+                    echo -n "Vim-plug installed. Installing plugins..."
+                    vim +PlugInstall +qa && echo -ne " done\n"
+                fi
+            elif which wget &>/dev/null; then
+                echo "Installing vim-plug..."
+                mkdir -p "$HOME/.vim/autoload/"
+                if wget --show-progress -qO "$HOME/.vim/autoload/plug.vim" \
+                    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
+                    echo -n "Vim-plug installed. Installing plugins..."
+                    vim +PlugInstall +qa && echo -ne " done\n"
+                fi
+            else
+                echo "No curl or wget found, skipping vim-plug install."
+            fi
         fi
     else
-        echo "Homebrew already installed, skipping..."
+        echo "Vim not found, skipping vim-plug install."
     fi
+
     echo ""
-fi
+}
+
+# Install homebrew
+function install_homebrew() {
+    if [ $(uname -s) = "Darwin" ]; then
+        if ! which brew &>/dev/null; then
+            echo -n "Install Homebrew? [y/N] "
+            read choice
+            if echo "$choice" | grep -viq "^y"; then
+                echo "Homebrew was not installed."
+            else
+                echo "Installing Homebrew..."
+                ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+            fi
+        else
+            echo "Homebrew already installed, skipping..."
+        fi
+        echo ""
+    fi
+}
 
 # Install fzf
-if ! which fzf &>/dev/null; then
-    echo -n "Install FZF? [y/N] "
-    read choice
-    if echo "$choice" | grep -viq "^y"; then
-        echo "FZF was not installed."
-        exit
-    fi
+function install_fzf() {
+    if ! which fzf &>/dev/null; then
+        echo -n "Install FZF? [y/N] "
+        read choice
+        if echo "$choice" | grep -viq "^y"; then
+            echo "FZF was not installed."
+            exit
+        fi
 
-    if [ -x "$HOME"/.fzf/install ]; then
-        "$HOME/.fzf/install"
-        exit
-    fi
-
-    if which git &>/dev/null; then
-        echo "Installing FZF..."
-        rm -rf "$HOME/.fzf"
-        if git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"; then
+        if [ -x "$HOME"/.fzf/install ]; then
             "$HOME/.fzf/install"
+            exit
+        fi
+
+        if which git &>/dev/null; then
+            echo "Installing FZF..."
+            rm -rf "$HOME/.fzf"
+            if git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"; then
+                "$HOME/.fzf/install"
+            fi
+        else
+            echo "Git not found, skipping FZF install."
         fi
     else
-        echo "Git not found, skipping FZF install."
+        echo "FZF already installed, skipping..."
     fi
-else
-    echo "FZF already installed, skipping..."
-fi
+}
 
+install_config
+install_vimplug
+install_homebrew
+install_fzf
