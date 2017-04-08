@@ -4,30 +4,32 @@
 " General
 set encoding=utf-8
 set backspace=indent,eol,start
-set autoread
+set hidden
 set wildmenu
+set display+=lastline
 
 " Performance tweaks
+set ttimeout
+set ttimeoutlen=100
+set synmaxcol=1000
+set lazyredraw
+
 if has('vim')
+    set ttyfast
     set ttyscroll=3
 endif
 
-set ttyfast
-set lazyredraw
-set synmaxcol=256
-syn sync minlines=256
-
 " Indentation
-if has('autocmd')
-  filetype plugin indent on
-endif
+filetype plugin indent on
 
 set autoindent
+set cindent
 set expandtab
 set smarttab
+
+set shiftwidth=4
 set tabstop=4
 set softtabstop=4
-set shiftwidth=4
 
 " Splits
 set splitright
@@ -38,111 +40,150 @@ set incsearch
 set ignorecase
 set smartcase
 
-" Styles 
-if has('syntax') && !exists('g:syntax_on')
-    syntax enable
-endif
-
-set ruler
-set rulerformat=%14l:%c
+" Styles
 set number
+set noruler
 
-set nocursorline
-set nocursorcolumn
-
-colorscheme tantalum-dark
-
-" Screen
-if !&scrolloff
-    set scrolloff=1
-endif
-if !&sidescrolloff
-    set sidescrolloff=5
-endif
-set display+=lastline
+syntax enable
+set background=dark
+colorscheme tantalum
 
 " Auxiliary directories
-let VIMDIR = $HOME.'/.vim/'
-
-if !isdirectory(VIMDIR.'backup')
-    silent call mkdir (VIMDIR.'backup', 'p')
-endif
-if !isdirectory(VIMDIR.'swap')
-    silent call mkdir (VIMDIR.'swap', 'p')
-endif
-if !isdirectory(VIMDIR.'undo')
-    silent call mkdir (VIMDIR.'undo', 'p')
+if has('nvim')
+    let s:vimdir = $HOME.'/.config/nvim/'
+else
+    let s:vimdir = $HOME.'/.vim/'
 endif
 
-let &backupdir = VIMDIR.'backup//'
-let &directory = VIMDIR.'swap//'
-let &undodir   = VIMDIR.'undo//'
+if !isdirectory(s:vimdir.'swap')
+    silent call mkdir(s:vimdir.'swap', 'p')
+endif
+if !isdirectory(s:vimdir.'backup')
+    silent call mkdir(s:vimdir.'backup', 'p')
+endif
+if !isdirectory(s:vimdir.'undo')
+    silent call mkdir(s:vimdir.'undo', 'p')
+endif
 
+let &directory = s:vimdir.'swap//'
+let &backupdir = s:vimdir.'backup//'
+let &undodir   = s:vimdir.'undo//'
 
 " Mappings
-map         , <leader>
+map , <leader>
 
-nnoremap    ,, :
-nnoremap    § :w<CR>
-nnoremap    ö <C-o>
-nnoremap    ä <C-i>
+nnoremap § :w<CR>
+nnoremap ö <C-o>
+nnoremap ä <C-i>
+nnoremap j gj
+nnoremap k gk
 
-nnoremap    <leader>w :w<CR>
-nnoremap    <leader>sw :w !sudo tee > /dev/null %<CR>
-nnoremap    <silent><leader>cb :!clear; cargo build<CR>
-nnoremap    <silent><leader>cr :!clear; cargo run<CR>
-nnoremap    <leader>hl :set hlsearch! hlsearch?<CR>
-nnoremap    <leader>hn /[^\x00-\x7F]<CR>
-nnoremap    <leader>ex :Explore<CR>
+nnoremap <leader>re :source $MYVIMRC<CR>
 
-nnoremap    <leader>fa :Ag<CR>
-nnoremap    <leader>fb :Buffers<CR>
-nnoremap    <leader>fc :Commits<CR>
-nnoremap    <leader>ff :Files<CR>
-nnoremap    <leader>fh :History<CR>
-nnoremap    <leader>fl :Lines<CR>
-nnoremap    <leader>fw :Windows<CR>
+nnoremap <leader>fa :Rg<CR>
+nnoremap <leader>fb :Buffers<CR>
+nnoremap <leader>fc :Commits<CR>
+nnoremap <leader>ff :Files<CR>
+nnoremap <leader>fh :History<CR>
+nnoremap <leader>fl :Lines<CR>
+nnoremap <leader>fw :Windows<CR>
 
-imap        <C-l> <plug>(fzf-complete-line)
+nmap /  <Plug>(incsearch-forward)
+nmap ?  <Plug>(incsearch-backward)
+nmap n  <Plug>(incsearch-nohl-n)
+nmap N  <Plug>(incsearch-nohl-N)
+nmap *  <Plug>(incsearch-nohl-*)
+nmap #  <Plug>(incsearch-nohl-#)
+nmap g* <Plug>(incsearch-nohl-g*)
+nmap g# <Plug>(incsearch-nohl-g#)
 
+" Commands
+command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
+    \ .shellescape(expand('%')) | :e!
+
+command! StripTrailingWhitespace :call s:StripTrailingWhitespace()
+command! MatchNonASCII :call s:MatchNonASCII()
+
+command! -bang -nargs=* Rg
+    \ call fzf#vim#grep(
+    \     'rg --column --line-number --no-heading --color always '.
+    \     '--colors path:fg:green --colors line:fg:yellow '
+    \     .shellescape(<q-args>), 1,
+    \     <bang>0 ? fzf#vim#with_preview('up:60%')
+    \             : fzf#vim#with_preview('right:50%:hidden', '?'),
+    \     <bang>0)
 
 " Functions
-function! <SID>AutoMkDir()
-    let s:directory = expand("<afile>:p:h")
-    if !isdirectory(s:directory)
-        call mkdir(s:directory, "p")
+func! s:AutoMkDir()
+    let dir = expand('<afile>:p:h')
+    if !isdirectory(dir)
+        call mkdir(dir, 'p')
     endif
-endfunction
+endf
 
-augroup mkdir
-    autocmd!
-    autocmd BufWritePre,FileWritePre * :call <SID>AutoMkDir()
+func! s:StripTrailingWhitespace()
+    %s/\s\+$//e
+endf
+
+func! s:MatchNonASCII()
+    let ptrn = '[^\x00-\x7F]'
+    for m in getmatches()
+        if m.pattern == ptrn
+            let matched = 1
+            call matchdelete(m.id)
+        endif
+    endfor
+    if !exists('l:matched')
+        if search(ptrn)
+            call matchadd('Error', ptrn)
+        else
+            echo 'No non-ASCII characters found.'
+        endif
+    endif
+endf
+
+" Autocmds
+augroup misc
+    au!
+    au BufWritePre,FileWritePre * :call s:AutoMkDir()
+    au FileType vim setlocal keywordprg=:help
 augroup END
 
 augroup exec
-    autocmd!
-    autocmd FileType c      nnoremap <buffer> <leader>xx :!clear; gcc -o %:p:r %:p && %:p:r<CR>
-    autocmd FileType c      nnoremap <buffer> <leader>xa :!clear; gcc -o %:p:r %:p && %:p:r 
-    autocmd FileType cpp    nnoremap <buffer> <leader>xx :!clear; g++ -o %:p:r %:p && %:p:r<CR>
-    autocmd FileType cpp    nnoremap <buffer> <leader>xa :!clear; g++ -o %:p:r %:p && %:p:r 
-    autocmd FileType python nnoremap <buffer> <leader>xx :!clear; python3 %:p<CR>
-    autocmd FileType python nnoremap <buffer> <leader>xa :!clear; python3 %:p 
-    autocmd FileType ruby   nnoremap <buffer> <leader>xx :!clear; ruby %:p<CR>
-    autocmd FileType rust   nnoremap <buffer> <leader>xx :!clear; rustc -o %:p:r %:p && %:p:r<CR>
-    autocmd FileType sh     nnoremap <buffer> <leader>xx :!clear; %:p<CR>
-    autocmd FileType sh     nnoremap <buffer> <leader>xa :!clear; %:p 
+    au!
+    au FileType c      nn <buffer> <leader>x :!clear; gcc -o %:p:r %:p && %:p:r<CR>
+    au FileType cpp    nn <buffer> <leader>x :!clear; g++ -o %:p:r %:p && %:p:r<CR>
+    au FileType python nn <buffer> <leader>x :!clear; python3 %:p<CR>
+    au FileType ruby   nn <buffer> <leader>x :!clear; ruby %:p<CR>
+    au FileType rust   nn <buffer> <leader>x :!clear; rustc -o %:p:r %:p && %:p:r<CR>
+    au FileType sh     nn <buffer> <leader>x :!clear; %:p<CR>
 augroup END
 
 " Plugins
 call plug#begin()
-Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
-Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-Plug 'ajh17/vimcompletesme'
-call plug#end()
+    Plug 'jnnl/tantalum'
+    Plug 'tomasr/molokai'
 
-" Plugin settings
-let g:netrw_banner = 0
+    Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-dispatch'
+    Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-repeat'
+    Plug 'tpope/vim-obsession'
+    Plug 'tpope/vim-sleuth'
+
+    Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+
+    Plug 'junegunn/gv.vim'
+    Plug 'junegunn/fzf', { 'do': './install --all' }
+    Plug 'junegunn/fzf.vim'
+
+    Plug 'justinmk/vim-gtfo'
+    Plug 'justinmk/vim-sneak'
+    let g:sneak#label = 1
+    let g:sneak#s_next = 1
+    let g:sneak#use_ic_scs = 1
+
+    Plug 'haya14busa/incsearch.vim'
+    let g:incsearch#auto_nohlsearch = 1
+call plug#end()
