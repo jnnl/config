@@ -1,36 +1,63 @@
 # bashrc
-# General bash config
+# jnnl.net
 
-# Get current git branch for PS1
-get_git_branch() {
+[ -z "$BASH" ] && return
+
+[ -f "$HOME"/.fzf.bash ] && source "$HOME"/.fzf.bash
+
+if [ -f /usr/local/etc/bash_completion ]; then
+    source /usr/local/etc/bash_completion
+elif [ -f /usr/share/bash-completion/bash_completion ]; then
+    source /usr/share/bash-completion/bash_completion
+elif [ -f /etc/bash_completion ]; then
+    source /etc/bash_completion
+fi
+
+function _git_br() {
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# https://github.com/justinmk/config/blob/master/.bashrc
+function bd() {
+    new_dir=$(echo $(pwd) | sed 's|\(.*/'$1'[^/]*/\).*|\1|')
+    index=$(echo $new_dir | awk '{ print index($1,"/'$1'"); }')
+    if [ $index -eq 0 ]; then
+        echo "No such occurrence."
+    else
+        echo $new_dir
+        cd "$new_dir"
+    fi
+}
+
+HISTSIZE=5000
+HISTFILESIZE=5000
+HISTCONTROL=ignoreboth:erasedups
+HISTIGNORE="bg:fg:exit:ls:ll:cd"
+
+type -p fzf rg &>/dev/null && \
+    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+
+type -p vim &>/dev/null && export EDITOR=vim MANPAGER="vim '+set ft=man noma' -"
+type -p nvim &>/dev/null && export EDITOR=nvim MANPAGER="nvim '+set ft=man noma' -"
+
+export PATH="$PATH:"$HOME"/code/bin"
 
 if [ -z "$SSH_CONNECTION" ]; then
-    export PS1="\u:\W\$(get_git_branch) $ "
+    PS1="\u:\W\$(_git_br) $ "
 else
-    export PS1="\u@\h:\W $ "
+    PS1="\u@\h:\W\$(_git_br) $ "
 fi
 
 alias ll="ls -lahF"
-export TERM="xterm-256color"
-export HISTCONTROL=ignoredups
 
 # Linux-specific settings
 if [[ $(uname) == "Linux" ]]; then
     alias gdb="gdb -q"
-
-    export PATH="$PATH:"$HOME"/code/bin"
-    export SUDO_EDITOR=vim
 fi
 
-# MacOS-specific settings
+# macOS-specific settings
 if [[ $(uname) == "Darwin" ]]; then
     alias bup="brew update && brew upgrade && brew cleanup && brew doctor"
     alias gdb="sudo gdb -q"
-
-    export PATH="$PATH:/usr/local/sbin:"$HOME"/code/bin"
     export HOMEBREW_NO_ANALYTICS=1
 fi
