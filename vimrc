@@ -1,12 +1,43 @@
 " vimrc
 " jnnl.net
 
+" Plugins
+call plug#begin()
+Plug 'jnnl/tantalum.vim'
+Plug 'tomasr/molokai'
+
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-sleuth'
+
+Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+
+Plug 'junegunn/gv.vim'
+Plug 'junegunn/fzf', { 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+Plug 'justinmk/vim-gtfo'
+Plug 'justinmk/vim-sneak'
+let g:sneak#label = 1
+let g:sneak#s_next = 1
+let g:sneak#use_ic_scs = 1
+
+Plug 'haya14busa/incsearch.vim'
+let g:incsearch#auto_nohlsearch = 1
+call plug#end()
+
+
 " General
 set encoding=utf-8
 set backspace=indent,eol,start
 set hidden
 set wildmenu
 set display+=lastline
+set laststatus=1
 
 " Performance tweaks
 set ttimeout
@@ -159,31 +190,3 @@ augroup exec
     au FileType sh     nn <buffer> <leader>x :!clear; %:p<CR>
 augroup END
 
-" Plugins
-call plug#begin()
-    Plug 'jnnl/tantalum'
-    Plug 'tomasr/molokai'
-
-    Plug 'tpope/vim-commentary'
-    Plug 'tpope/vim-dispatch'
-    Plug 'tpope/vim-fugitive'
-    Plug 'tpope/vim-surround'
-    Plug 'tpope/vim-repeat'
-    Plug 'tpope/vim-obsession'
-    Plug 'tpope/vim-sleuth'
-
-    Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-
-    Plug 'junegunn/gv.vim'
-    Plug 'junegunn/fzf', { 'do': './install --all' }
-    Plug 'junegunn/fzf.vim'
-
-    Plug 'justinmk/vim-gtfo'
-    Plug 'justinmk/vim-sneak'
-    let g:sneak#label = 1
-    let g:sneak#s_next = 1
-    let g:sneak#use_ic_scs = 1
-
-    Plug 'haya14busa/incsearch.vim'
-    let g:incsearch#auto_nohlsearch = 1
-call plug#end()
