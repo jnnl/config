@@ -33,6 +33,7 @@ HISTSIZE=5000
 HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
 HISTIGNORE="bg:fg:exit:ls:ll:cd"
+SHELL_SESSION_HISTORY=0
 
 type -p fzf rg &>/dev/null && \
     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'

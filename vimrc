@@ -14,6 +14,10 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-sleuth'
 
+Plug 'w0rp/ale'
+let g:ale_enabled = 0
+let g:ale_history_enabled = 0
+
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 
 Plug 'junegunn/gv.vim'
@@ -29,7 +33,6 @@ let g:sneak#use_ic_scs = 1
 Plug 'haya14busa/incsearch.vim'
 let g:incsearch#auto_nohlsearch = 1
 call plug#end()
-
 
 " General
 set encoding=utf-8
@@ -111,6 +114,10 @@ nnoremap k gk
 
 nnoremap <leader>re :source $MYVIMRC<CR>
 
+nnoremap <silent> <leader>lt :ALEToggle<CR>
+nnoremap <silent> <C-j> <Plug>(ale_next_wrap)
+nnoremap <silent> <C-k> <Plug>(ale_previous_wrap)
+
 nnoremap <leader>fa :Rg<CR>
 nnoremap <leader>fb :Buffers<CR>
 nnoremap <leader>fc :Commits<CR>
@@ -144,6 +151,23 @@ command! -bang -nargs=* Rg
     \             : fzf#vim#with_preview('right:50%:hidden', '?'),
     \     <bang>0)
 
+" Autocmds
+augroup misc
+    au!
+    au BufWritePre,FileWritePre * :call s:AutoMkDir()
+    au FileType vim setlocal keywordprg=:help
+augroup END
+
+augroup exec
+    au!
+    au FileType c      nn <buffer> <leader>x :!clear; gcc -o %:p:r %:p && %:p:r<CR>
+    au FileType cpp    nn <buffer> <leader>x :!clear; g++ -o %:p:r %:p && %:p:r<CR>
+    au FileType python nn <buffer> <leader>x :!clear; python3 %:p<CR>
+    au FileType ruby   nn <buffer> <leader>x :!clear; ruby %:p<CR>
+    au FileType rust   nn <buffer> <leader>x :!clear; rustc -o %:p:r %:p && %:p:r<CR>
+    au FileType sh     nn <buffer> <leader>x :!clear; %:p<CR>
+augroup END
+
 " Functions
 func! s:AutoMkDir()
     let dir = expand('<afile>:p:h')
@@ -168,25 +192,7 @@ func! s:MatchNonASCII()
         if search(ptrn)
             call matchadd('Error', ptrn)
         else
-            echo 'No non-ASCII characters found.'
+            echomsg 'No non-ASCII characters found.'
         endif
     endif
 endf
-
-" Autocmds
-augroup misc
-    au!
-    au BufWritePre,FileWritePre * :call s:AutoMkDir()
-    au FileType vim setlocal keywordprg=:help
-augroup END
-
-augroup exec
-    au!
-    au FileType c      nn <buffer> <leader>x :!clear; gcc -o %:p:r %:p && %:p:r<CR>
-    au FileType cpp    nn <buffer> <leader>x :!clear; g++ -o %:p:r %:p && %:p:r<CR>
-    au FileType python nn <buffer> <leader>x :!clear; python3 %:p<CR>
-    au FileType ruby   nn <buffer> <leader>x :!clear; ruby %:p<CR>
-    au FileType rust   nn <buffer> <leader>x :!clear; rustc -o %:p:r %:p && %:p:r<CR>
-    au FileType sh     nn <buffer> <leader>x :!clear; %:p<CR>
-augroup END
-
