@@ -9,10 +9,11 @@ Plug 'tomasr/molokai'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-surround'
+let g:surround_indent = 1
 
 Plug 'w0rp/ale'
 let g:ale_enabled = 0
@@ -20,7 +21,7 @@ let g:ale_history_enabled = 0
 
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 
-Plug 'junegunn/gv.vim'
+Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'junegunn/fzf', { 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
@@ -54,8 +55,6 @@ if has('vim')
 endif
 
 " Indentation
-filetype plugin indent on
-
 set autoindent
 set cindent
 set expandtab
@@ -78,7 +77,6 @@ set smartcase
 set number
 set noruler
 
-syntax enable
 set background=dark
 colorscheme tantalum
 
@@ -113,10 +111,8 @@ nnoremap j gj
 nnoremap k gk
 
 nnoremap <leader>re :source $MYVIMRC<CR>
-
+nnoremap <leader>m :Make<CR>
 nnoremap <silent> <leader>lt :ALEToggle<CR>
-nnoremap <silent> <C-j> <Plug>(ale_next_wrap)
-nnoremap <silent> <C-k> <Plug>(ale_previous_wrap)
 
 nnoremap <leader>fa :Rg<CR>
 nnoremap <leader>fb :Buffers<CR>
