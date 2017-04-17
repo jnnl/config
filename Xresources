@@ -1,13 +1,12 @@
 ! Colors
-urxvt*background:   #111111
+urxvt*background:   #262626
 urxvt*foreground:   #eeeeee
 
 ! Text
 urxvt*font:         xft:SourceCodePro:pixelsize=14:antialias=true
 
 ! Transparency
-URxvt.transparent:  true
-URxvt.shading:      25
+URxvt.transparent:  false
 
 ! Miscellaneous
 urxvt*scrollBar:    false
