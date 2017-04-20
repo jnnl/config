@@ -25,6 +25,8 @@ Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'junegunn/fzf', { 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+Plug 'metakirby5/codi.vim', { 'on': 'Codi' }
+
 Plug 'justinmk/vim-gtfo'
 Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
@@ -43,9 +45,10 @@ set wildmenu
 set display+=lastline
 set laststatus=1
 
-" Performance tweaks
 set ttimeout
-set ttimeoutlen=100
+set ttimeoutlen=10
+
+" Performance tweaks
 set synmaxcol=1000
 set lazyredraw
 
@@ -110,9 +113,10 @@ nnoremap ä <C-i>
 nnoremap j gj
 nnoremap k gk
 
-nnoremap <leader>re :source $MYVIMRC<CR>
 nnoremap <leader>m :Make<CR>
-nnoremap <silent> <leader>lt :ALEToggle<CR>
+nnoremap <leader>r :source $MYVIMRC<CR>
+nnoremap <leader>t <C-]>
+nnoremap <silent> <leader>l :ALEToggle<CR>
 
 nnoremap <leader>fa :Rg<CR>
 nnoremap <leader>fb :Buffers<CR>
@@ -120,6 +124,7 @@ nnoremap <leader>fc :Commits<CR>
 nnoremap <leader>ff :Files<CR>
 nnoremap <leader>fh :History<CR>
 nnoremap <leader>fl :Lines<CR>
+nnoremap <leader>ft :Tags<CR>
 nnoremap <leader>fw :Windows<CR>
 
 nmap /  <Plug>(incsearch-forward)
