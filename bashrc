@@ -6,6 +6,10 @@
 
 [ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
 
+if [ -d "$HOME/.cargo/bin" ] && [[ $PATH != *cargo/bin* ]]; then
+    PATH="$PATH:$HOME/.cargo/bin"
+fi
+
 if [ -f /usr/local/etc/bash_completion ]; then
     source /usr/local/etc/bash_completion
 elif [ -f /usr/share/bash-completion/bash_completion ]; then
@@ -36,6 +40,7 @@ HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
 HISTIGNORE="bg:fg:exit:ls:ll:cd"
 SHELL_SESSION_HISTORY=0
+shopt -s histappend
 
 type -p fzf rg &>/dev/null && \
     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
