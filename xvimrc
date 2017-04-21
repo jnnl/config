@@ -1,0 +1,20 @@
+" xvimrc
+" jnnl.net
+
+set hlsearch
+set ignorecase
+set smartcase
+
+nnoremap § :w<CR>
+nnoremap ö <C-o>
+nnoremap ä <C-i>
+nnoremap j gj
+nnoremap k gk
+
+nnoremap ZZ :x<CR>
+nnoremap ZQ :q!<CR>
+
+nnoremap gcc :xcmenucmd Comment Selection<CR>
+vnoremap gc :xcmenucmd Comment Selection<CR>
+
+nmap ,ff :xccmd openQuickly<CR>

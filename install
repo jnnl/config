@@ -13,6 +13,8 @@ FILES="bash_profile bashrc gitconfig vimrc tmux.conf"
 
 if [[ $(uname -s) == "Linux" ]]; then
     FILES+=" xinitrc Xmodmap Xresources"
+elif [[ $(uname -s) == "Darwin" ]]; then
+    FILES+=" xvimrc"
 fi
 
 # Check if config file directory exists
