@@ -57,9 +57,18 @@ if has('vim')
     set ttyscroll=3
 endif
 
+" GUI settings
+if has('gui_running')
+    set go-=T
+    set go-=r
+    set go-=L
+    set vb
+    sett_vb=
+    set guifont=Source\ Code\ Pro:h14
+endif
+
 " Indentation
 set autoindent
-set cindent
 set expandtab
 set smarttab
 
