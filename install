@@ -9,7 +9,7 @@ BACKUPDIR="$CONFIGDIR/backup"
 SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Config files to install
-FILES="bash_profile bashrc gitconfig vimrc tmux.conf zshrc"
+FILES="bash_profile bashrc gitconfig vimrc tmux.conf"
 
 if [[ $(uname -s) == "Linux" ]]; then
     FILES+=" xinitrc Xmodmap Xresources"
