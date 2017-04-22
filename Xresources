@@ -1,3 +1,6 @@
+! General
+urxvt*termName:     xterm-256color
+
 ! Colors
 urxvt*background:   #262626
 urxvt*foreground:   #eeeeee
@@ -5,10 +8,8 @@ urxvt*foreground:   #eeeeee
 ! Text
 urxvt*font:         xft:SourceCodePro:pixelsize=14:antialias=true
 
-! Transparency
-URxvt.transparent:  false
-
 ! Miscellaneous
+urxvt*transparent:  false
 urxvt*scrollBar:    false
 urxvt*iso14755:     false
 urxvt*iso14755_52:  false
