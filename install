@@ -95,7 +95,7 @@ function install_config() {
 
 # Install vim-plug
 function install_vimplug() {
-    if type -p vim nvim &>/dev/null; then
+    if (type -p vim || type -p nvim) &>/dev/null; then
         echo -n "Install vim-plug and plugins? [y/N] "
         read choice
         if echo "$choice" | grep -viq "^y"; then
