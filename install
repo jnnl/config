@@ -106,7 +106,12 @@ function install_vimplug() {
                 if curl -#fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
                     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
                     echo -n "Vim-plug installed. Installing plugins..."
-                    vim +PlugInstall +qa && echo -ne " done\n"
+                    if type -p vim; then
+                        vim +PlugInstall +qa && echo -ne " done\n"
+                    elif type -p nvim; then
+                        nvim +PlugInstall +qa && echo -ne " done\n"
+                    fi
+
                 fi
             elif type -p wget &>/dev/null; then
                 echo "Installing vim-plug..."
@@ -114,7 +119,11 @@ function install_vimplug() {
                 if wget --show-progress -qO "$HOME/.vim/autoload/plug.vim" \
                     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
                     echo -n "Vim-plug installed. Installing plugins..."
-                    vim +PlugInstall +qa && echo -ne " done\n"
+                    if type -p vim; then
+                        vim +PlugInstall +qa && echo -ne " done\n"
+                    elif type -p nvim; then
+                        nvim +PlugInstall +qa && echo -ne " done\n"
+                    fi
                 fi
             else
                 echo "No curl or wget found, skipping vim-plug install."
