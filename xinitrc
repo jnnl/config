@@ -2,7 +2,7 @@ setxkbmap fi
 
 if type -p xcape &>/dev/null; then
     setxkbmap -option caps:ctrl_modifier
-    xcape -e 'Caps_Lock=Escape' -t 10 &
+    xcape -e 'Caps_Lock=Escape' &
 else
     setxkbmap -option caps:escape
 fi
