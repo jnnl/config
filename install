@@ -158,11 +158,7 @@ function install_fzf {
 
 # Install z
 function install_z {
-    if [ -f "$CONFIGDIR/z/z.sh" ]; then
-        echo "Found z.sh, skipping install."
-        return
-    fi
-    mkdir -v "$CONFIGDIR/z"
+    [ ! -d "$CONFIGDIR/z" ] && mkdir -v "$CONFIGDIR/z"
     if has curl; then
         echo "Installing z..."
         curl -#fLo "$CONFIGDIR/z/z.sh" \
