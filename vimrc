@@ -4,7 +4,6 @@
 " Plugins
 call plug#begin()
 Plug 'jnnl/tantalum.vim'
-Plug 'tomasr/molokai'
 
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
@@ -24,6 +23,7 @@ Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'junegunn/fzf', { 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/seoul256.vim'
 
 Plug 'metakirby5/codi.vim', { 'on': 'Codi' }
 
@@ -55,16 +55,6 @@ set lazyredraw
 if has('vim')
     set ttyfast
     set ttyscroll=3
-endif
-
-" GUI settings
-if has('gui_running')
-    set go-=T
-    set go-=r
-    set go-=L
-    set vb
-    sett_vb=
-    set guifont=Source\ Code\ Pro:h14
 endif
 
 " Indentation
@@ -165,6 +155,7 @@ command! -bang -nargs=* Rg
 augroup misc
     au!
     au BufWritePre,FileWritePre * :call s:AutoMkDir()
+    au GUIEnter :call s:ApplyGUISettings()
     au FileType vim setlocal keywordprg=:help
 augroup END
 
@@ -204,5 +195,16 @@ func! s:MatchNonASCII()
         else
             echomsg 'No non-ASCII characters found.'
         endif
+    endif
+endf
+
+func! s:ApplyGUISettings()
+    if has('gui_running')
+        set go-=T
+        set go-=r
+        set go-=L
+        set vb
+        set t_vb=
+        set guifont=Source\ Code\ Pro:h14
     endif
 endf
