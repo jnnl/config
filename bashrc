@@ -43,6 +43,7 @@ fi
 if [[ $(uname) == "Darwin" ]]; then
     alias bup="brew update && brew upgrade && brew cleanup && brew doctor"
     alias gdb="sudo gdb -q"
+    alias python="python3"
 
     export HOMEBREW_NO_ANALYTICS=1
 fi
@@ -74,6 +75,6 @@ fi
 
 # (type -p fzf && type -p rg) &>/dev/null && \
 #     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
-type -p vim &>/dev/null && export EDITOR=vim MANPAGER="vim '+set ft=man noma' -"
-type -p nvim &>/dev/null && export EDITOR=nvim MANPAGER="nvim '+set ft=man noma' -"
+type -p vim &>/dev/null && export EDITOR=vim
+type -p nvim &>/dev/null && export EDITOR=nvim
 type -a z &>/dev/null && export _Z_DATA="$HOME/.config/z/z"
