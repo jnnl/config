@@ -2,10 +2,12 @@
 # Installer script for dotfiles and configs
 
 OS=$(uname -s)
-# Config file directory
-CONFIGDIR="$HOME/.config/dotfiles"
-# Config file backup directory
-BACKUPDIR="$CONFIGDIR/backup"
+# Config directory
+CONFIGDIR="$HOME/.config"
+# Dotfile directory
+DOTFILEDIR="$CONFIGDIR/dotfiles"
+# Dotfile backup directory
+BACKUPDIR="$DOTFILEDIR/backup"
 # Directory of this script
 SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
 
@@ -36,27 +38,45 @@ function backup_config {
             mv -v "$HOME/.$file" "$BACKUPDIR/$file"
         fi
     done
-    echo ""
+
+    if has i3 && [ -f "$CONFIGDIR/i3/config" ]; then
+        mv -v "$CONFIGDIR/i3/config" "$BACKUPDIR/i3config"
+    fi
+
+    echo -e "done\n"
 }
 
 # Copy config files from the repo to the config file directory
 function copy_config {
-    echo "Copying config files to $CONFIGDIR..."
+    echo "Copying config files to $DOTFILEDIR..."
 
     for file in $FILES; do
-        cp -v "$SOURCEDIR/$file" "$CONFIGDIR/"
+        cp -v "$SOURCEDIR/$file" "$DOTFILEDIR/"
     done
-    echo ""
+
+    if has i3; then
+        cp -v "$SOURCEDIR/i3config" "$DOTFILEDIR/"
+    fi
+
+    echo -e "done\n"
 }
 
 # Create symlinks of the config files to home directory
 function link_config {
-    echo "Linking config files to $HOME..."
+    echo "Linking config files..."
 
     for file in $FILES; do
-        ln -vsf "$CONFIGDIR/$file" "$HOME/.$file"
+        ln -vsf "$DOTFILEDIR/$file" "$HOME/.$file"
     done
-    echo ""
+    
+    if has i3; then
+        mkdir -vp "$CONFIGDIR/i3"
+        ln -vsf "$DOTFILEDIR/i3config" "$CONFIGDIR/i3/config"
+    fi
+
+    has nvim && init_neovim
+
+    echo -e "done\n"
 }
 
 # Install config files
@@ -66,10 +86,10 @@ function install_config {
 
 # Initialize neovim environment
 function init_neovim {
-    if [ ! -d "$HOME/.config/nvim" ]; then
-        mkdir -vp "$HOME/.config"
-        ln -vs "$HOME/.vim" "$HOME/.config/nvim" && \
-	ln -vsf "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"
+    if [ ! -d "$CONFIGDIR/nvim" ]; then
+        mkdir -vp "$CONFIGDIR"
+        ln -vs "$HOME/.vim" "$CONFIGDIR/nvim" && \
+	ln -vsf "$HOME/.vimrc" "$CONFIGDIR/nvim/init.vim"
     fi
 }
 
@@ -79,11 +99,10 @@ function install_homebrew {
         if ! has brew; then
             echo "Installing Homebrew..."
             ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && \
-            brew install "$BREW_PKGS"
+            brew install "$BREW_PKGS" && echo -e "done\n"
         else
             echo "Homebrew already installed, skipping..."
         fi
-        echo ""
     fi
 }
 
@@ -95,9 +114,9 @@ function install_vimplug {
             curl -#fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
             if has vim; then
-                vim +PlugInstall +qa && echo "done"
+                vim +PlugInstall +qa && echo -e "done\n"
             elif has nvim; then
-                nvim +PlugInstall +qa && echo "done"
+                nvim +PlugInstall +qa && echo -e "done\n"
             fi
         elif has wget; then
             echo "Installing vim-plug..."
@@ -105,9 +124,9 @@ function install_vimplug {
             if wget --show-progress -qO "$HOME/.vim/autoload/plug.vim" \
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
                 if has vim; then
-                    vim +PlugInstall +qa && echo -ne " done\n"
+                    vim +PlugInstall +qa && echo -e "done\n"
                 elif has nvim; then
-                    nvim +PlugInstall +qa && echo -ne " done\n"
+                    nvim +PlugInstall +qa && echo -e "done\n"
                 fi
             fi
         else
@@ -139,19 +158,19 @@ function install_fzf {
 
 # Install z
 function install_z {
-    if [ -f "$HOME/.config/z/z.sh" ]; then
+    if [ -f "$CONFIGDIR/z/z.sh" ]; then
         echo "Found z.sh, skipping install."
         return
     fi
-    mkdir -v "$HOME/.config/z"
+    mkdir -v "$CONFIGDIR/z"
     if has curl; then
         echo "Installing z..."
-        curl -#fLo "$HOME/.config/z/z.sh" \
+        curl -#fLo "$CONFIGDIR/z/z.sh" \
         https://raw.githubusercontent.com/rupa/z/master/z.sh && \
         echo "done"
     elif has wget; then
         echo "Installing z..."
-        wget --show-progress -qO "$HOME/.config/z/z.sh" \
+        wget --show-progress -qO "$CONFIGDIR/z/z.sh" \
         https://raw.githubusercontent.com/rupa/z/master/z.sh && \
         echo "done"
     else
@@ -166,4 +185,5 @@ install_vimplug
 install_fzf
 install_z
 
+echo "done"
 source "$HOME/.bashrc"
