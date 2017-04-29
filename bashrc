@@ -31,6 +31,7 @@ else
     PS1="\u@\h:\W\$(_git_br) $ "
 fi
 
+alias l="ls -aF"
 alias ll="ls -lahF"
 
 # Linux-specific settings
@@ -71,8 +72,8 @@ if [ -d "$HOME/.cargo/bin" ] && [[ $PATH != *cargo/bin* ]]; then
     export PATH="$PATH:$HOME/.cargo/bin"
 fi
 
-(type -p fzf && type -p rg) &>/dev/null && \
-    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+# (type -p fzf && type -p rg) &>/dev/null && \
+#     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
 type -p vim &>/dev/null && export EDITOR=vim MANPAGER="vim '+set ft=man noma' -"
 type -p nvim &>/dev/null && export EDITOR=nvim MANPAGER="nvim '+set ft=man noma' -"
 type -a z &>/dev/null && export _Z_DATA="$HOME/.config/z/z"
