@@ -144,7 +144,7 @@ command! -bang -nargs=* Rg
 augroup misc
     au!
     au BufWritePre,FileWritePre * :call s:AutoMkDir()
-    au GUIEnter :call s:ApplyGUISettings()
+    au GUIEnter * :call s:ApplyGUISettings()
     au FileType vim setlocal keywordprg=:help
 augroup END
 
