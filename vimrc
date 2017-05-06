@@ -24,6 +24,7 @@ Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'junegunn/fzf', { 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/seoul256.vim'
+Plug 'junegunn/vim-slash'
 
 Plug 'metakirby5/codi.vim', { 'on': 'Codi' }
 
@@ -32,9 +33,6 @@ Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
 let g:sneak#s_next = 1
 let g:sneak#use_ic_scs = 1
-
-Plug 'haya14busa/incsearch.vim'
-let g:incsearch#auto_nohlsearch = 1
 call plug#end()
 
 " General
@@ -125,15 +123,6 @@ nnoremap <leader>fh :History<CR>
 nnoremap <leader>fl :Lines<CR>
 nnoremap <leader>ft :Tags<CR>
 nnoremap <leader>fw :Windows<CR>
-
-nmap /  <Plug>(incsearch-forward)
-nmap ?  <Plug>(incsearch-backward)
-nmap n  <Plug>(incsearch-nohl-n)
-nmap N  <Plug>(incsearch-nohl-N)
-nmap *  <Plug>(incsearch-nohl-*)
-nmap #  <Plug>(incsearch-nohl-#)
-nmap g* <Plug>(incsearch-nohl-g*)
-nmap g# <Plug>(incsearch-nohl-g#)
 
 " Commands
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
