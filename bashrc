@@ -33,6 +33,8 @@ fi
 
 alias l="ls -aF"
 alias ll="ls -lahF"
+alias f=z
+alias v=vim
 
 # Linux-specific settings
 if [[ $(uname) == "Linux" ]]; then
@@ -48,9 +50,6 @@ if [[ $(uname) == "Darwin" ]]; then
     export HOMEBREW_NO_ANALYTICS=1
 fi
 
-[ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
-[ -f "$HOME/.config/z/z.sh" ] && source "$HOME/.config/z/z.sh"
-
 if [ -f /usr/local/etc/bash_completion ]; then
     source /usr/local/etc/bash_completion
 elif [ -f /usr/share/bash-completion/bash_completion ]; then
@@ -65,13 +64,18 @@ shopt -s cdspell
 HISTSIZE=5000
 HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
-HISTIGNORE="bg:fg:exit:ls:ll:cd:z"
+HISTIGNORE="bg:fg:exit:ls:ll:l:cd:z:f:v"
 PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 
 export PATH="$PATH:$HOME/code/bin"
 if [ -d "$HOME/.cargo/bin" ] && [[ $PATH != *cargo/bin* ]]; then
     export PATH="$PATH:$HOME/.cargo/bin"
 fi
+
+[ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
+[ -f "$HOME/.config/z/z.sh" ] && source "$HOME/.config/z/z.sh"
+
+export FZF_DEFAULT_OPTS='--no-height --no-reverse'
 
 # (type -p fzf && type -p rg) &>/dev/null && \
 #     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'

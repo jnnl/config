@@ -19,6 +19,7 @@ let g:ale_enabled = 0
 let g:ale_history_enabled = 0
 
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'junegunn/fzf', { 'do': './install --all' }
@@ -26,9 +27,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/vim-slash'
 
-Plug 'metakirby5/codi.vim', { 'on': 'Codi' }
-
-Plug 'justinmk/vim-gtfo'
 Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
 let g:sneak#s_next = 1
@@ -39,6 +37,7 @@ call plug#end()
 set encoding=utf-8
 set backspace=indent,eol,start
 set hidden
+set noshowcmd
 set wildmenu
 set display+=lastline
 set laststatus=1
@@ -110,9 +109,10 @@ nnoremap ä <C-i>
 nnoremap j gj
 nnoremap k gk
 
+inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+
 nnoremap <leader>m :Make<CR>
 nnoremap <leader>r :source $MYVIMRC<CR>
-nnoremap <leader>t <C-]>
 nnoremap <silent> <leader>l :ALEToggle<CR>
 
 nnoremap <leader>fa :Rg<CR>
