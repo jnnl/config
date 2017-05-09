@@ -7,14 +7,15 @@
     default = simple
 [alias]
     aa = add --all
-    br = branch
-    brd = branch -d
+    b = branch
+    bd = branch -d
     cm = commit -m
     co = checkout
     cob = checkout -b
+    d = diff
     gud = "!git add -A && git commit"
-    lg = log --oneline --decorate --graph
+    l = log --oneline --decorate --graph
     rh = reset HEAD
     rhh = reset --hard HEAD
     rso = remote show origin
-    st = status
+    s = status

@@ -67,7 +67,7 @@ shopt -s cdspell
 HISTSIZE=5000
 HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
-HISTIGNORE="bg:fg:exit:ls:ll:l:cd:z:f"
+HISTIGNORE="bg:fg:exit:ls:ll:l:cd:z:f:v"
 PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 
 export PATH="$PATH:$HOME/code/bin"

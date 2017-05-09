@@ -1,10 +1,12 @@
 setxkbmap fi
 
-if type -p xcape &>/dev/null; then
-    setxkbmap -option caps:ctrl_modifier
-    xcape -e 'Caps_Lock=Escape' &
-else
-    setxkbmap -option caps:escape
+if ! type -p caps2esc &>/dev/null; then
+    if type -p xcape &>/dev/null; then
+        setxkbmap -option caps:ctrl_modifier
+        xcape -e 'Caps_Lock=Escape' &
+    else
+        setxkbmap -option caps:escape
+    fi
 fi
 
 [[ -f ~/.Xmodmap ]] && xmodmap ~/.Xmodmap

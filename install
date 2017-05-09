@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# Installer script for dotfiles and configs
+# Installer script for dotfiles, configs and essential packages
 
-OS=$(uname -s)
 # Config directory
 CONFIGDIR="$HOME/.config"
 # Dotfile directory
@@ -14,16 +13,49 @@ SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
 # Config files to install
 FILES="bash_profile bashrc gitconfig vimrc tmux.conf"
 BREW_PKGS="bash bash_completion ctags neovim python3 ripgrep tmux tree vim"
+PACMAN_PKGS="adobe-source-code-pro-fonts bash-completion ctags git gvim neovim"
+PACMAN_PKGS+=" python3 ripgrep strace tmux tree unzip"
+APT_PKGS="curl python3 tree"
 
-if [[ "$OS" == "Linux" ]]; then
+if is_linux; then
     FILES+=" xinitrc Xmodmap Xresources"
-elif [[ "$OS" == "Darwin" ]]; then
+elif is_mac; then
     FILES+=" xvimrc"
 fi
 
-# Check executable
 function has {
-    type -p $1 &>/dev/null
+    type -p "$1" &>/dev/null
+}
+
+function is_arch {
+    grep -i archlinux /etc/os-release &>/dev/null
+}
+
+function is_ubuntu {
+    grep -i ubuntu /etc/os-release &>/dev/null
+}
+
+function is_linux {
+    test "$(uname -s)" = Linux
+}
+
+function is_mac {
+    test "$(uname -s)" = Darwin
+}
+
+function is_root {
+    test "$EUID" = 0
+}
+
+function pkg_prompt {
+    echo "Not running as root, packages were not installed. Continue? [Y/n]"
+    read -r -n 1 choice 
+    if echo "$choice" | grep -iq "^y" || [ -z "$choice" ]; then
+        return
+    else
+        echo "Exiting..."
+        exit
+    fi
 }
 
 # Backup config files to the backup directory
@@ -33,14 +65,17 @@ function backup_config {
 
     for file in $FILES; do
         if [ -L "$HOME/.$file" ]; then
-            mv -v $(readlink "$HOME/.$file") "$BACKUPDIR/$file"
+            mv -v "$(readlink "$HOME/.$file")" "$BACKUPDIR/$file"
         elif [ -f "$HOME/.$file" ]; then
             mv -v "$HOME/.$file" "$BACKUPDIR/$file"
         fi
     done
 
     if has i3 && [ -f "$CONFIGDIR/i3/config" ]; then
-        mv -v "$CONFIGDIR/i3/config" "$BACKUPDIR/i3config"
+        mv -v "$CONFIGDIR/i3/config" "$BACKUPDIR/i3_config"
+    fi
+    if has i3status && [ -f "CONFIGDIR/i3status/config" ]; then
+        mv -v "$CONFIGDIR/i3status/config" "$BACKUPDIR/i3status_config"
     fi
 
     echo -e "done\n"
@@ -55,7 +90,10 @@ function copy_config {
     done
 
     if has i3; then
-        cp -v "$SOURCEDIR/i3config" "$DOTFILEDIR/"
+        cp -v "$SOURCEDIR/i3_config" "$DOTFILEDIR/"
+    fi
+    if has i3status; then
+        cp -v "$SOURCEDIR/i3status_config" "$DOTFILEDIR/"
     fi
 
     echo -e "done\n"
@@ -71,10 +109,12 @@ function link_config {
     
     if has i3; then
         mkdir -vp "$CONFIGDIR/i3"
-        ln -vsf "$DOTFILEDIR/i3config" "$CONFIGDIR/i3/config"
+        ln -vsf "$DOTFILEDIR/i3_config" "$CONFIGDIR/i3/config"
     fi
-
-    has nvim && init_neovim
+    if has i3status; then
+        mkdir -vp "$CONFIGDIR/i3status"
+        ln -vsf "$DOTFILEDIR/i3status_config" "$CONFIGDIR/i3/config"
+    fi
 
     echo -e "done\n"
 }
@@ -93,9 +133,36 @@ function init_neovim {
     fi
 }
 
+# Initialize macOS environment
+function init_mac {
+    install_homebrew
+}
+
+# Initialize Arch Linux environment
+function init_arch {
+    if ! pacman -Q "$PACMAN_PKGS"; then
+        if is_root; then
+            pacman -Sy --needed "$PACMAN_PKGS" && echo -e "done\n"
+        else
+            pkg_prompt
+        fi
+    fi
+}
+
+# Initialize Ubuntu environment
+function init_ubuntu {
+    if ! dpkg -l "$APT_PKGS"; then # XXX: not sure about this, test ASAP
+        if is_root; then
+            apt-get update && apt-get install "$APT_PKGS" && echo -e "done\n"
+        else
+            pkg_prompt
+        fi
+    fi
+}
+
 # Install homebrew
 function install_homebrew {
-    if [ "$OS" = "Darwin" ]; then
+    if is_mac; then
         if ! has brew; then
             echo "Installing Homebrew..."
             ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && \
@@ -174,12 +241,20 @@ function install_z {
     fi
 }
 
+# OS-specific configuration
+if is_mac; then
+    init_mac
+elif is_arch; then
+    init_arch
+elif is_ubuntu; then
+    init_ubuntu
+fi
+
+has nvim && init_neovim
+
 install_config
-init_neovim
-install_homebrew
 install_vimplug
 install_fzf
 install_z
 
 echo "done"
-source "$HOME/.bashrc"
