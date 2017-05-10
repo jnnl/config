@@ -1,28 +1,6 @@
 #!/usr/bin/env bash
 # Installer script for dotfiles, configs and essential packages
 
-# Config directory
-CONFIGDIR="$HOME/.config"
-# Dotfile directory
-DOTFILEDIR="$CONFIGDIR/dotfiles"
-# Dotfile backup directory
-BACKUPDIR="$DOTFILEDIR/backup"
-# Directory of this script
-SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
-
-# Config files to install
-FILES="bash_profile bashrc gitconfig vimrc tmux.conf"
-BREW_PKGS="bash bash_completion ctags neovim python3 ripgrep tmux tree vim"
-PACMAN_PKGS="adobe-source-code-pro-fonts bash-completion ctags git gvim neovim"
-PACMAN_PKGS+=" python3 ripgrep strace tmux tree unzip"
-APT_PKGS="curl python3 tree"
-
-if is_linux; then
-    FILES+=" xinitrc Xmodmap Xresources"
-elif is_mac; then
-    FILES+=" xvimrc"
-fi
-
 function has {
     type -p "$1" &>/dev/null
 }
@@ -48,8 +26,8 @@ function is_root {
 }
 
 function pkg_prompt {
-    echo "Not running as root, packages were not installed. Continue? [Y/n]"
-    read -r -n 1 choice 
+    echo "Couldn't install packages. Continue? [Y/n]"
+    read -r -s -n 1 choice 
     if echo "$choice" | grep -iq "^y" || [ -z "$choice" ]; then
         return
     else
@@ -140,9 +118,9 @@ function init_mac {
 
 # Initialize Arch Linux environment
 function init_arch {
-    if ! pacman -Q "$PACMAN_PKGS"; then
-        if is_root; then
-            pacman -Sy --needed "$PACMAN_PKGS" && echo -e "done\n"
+    if ! pacman -Q $PACMAN_PKGS &>/dev/null; then
+        if sudo pacman -Sy --needed $PACMAN_PKGS; then
+            echo -e "done\n"
         else
             pkg_prompt
         fi
@@ -152,8 +130,8 @@ function init_arch {
 # Initialize Ubuntu environment
 function init_ubuntu {
     if ! dpkg -l "$APT_PKGS"; then # XXX: not sure about this, test ASAP
-        if is_root; then
-            apt-get update && apt-get install "$APT_PKGS" && echo -e "done\n"
+        if sudo apt-get update && sudo apt-get install "$APT_PKGS"; then
+            echo -e "done\n"
         else
             pkg_prompt
         fi
@@ -241,13 +219,35 @@ function install_z {
     fi
 }
 
+# Config directory
+CONFIGDIR="$HOME/.config"
+# Dotfile directory
+DOTFILEDIR="$CONFIGDIR/dotfiles"
+# Dotfile backup directory
+BACKUPDIR="$DOTFILEDIR/backup"
+# Directory of this script
+SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
+
+# Config files to install
+FILES="bash_profile bashrc gitconfig vimrc tmux.conf"
+BREW_PKGS="bash bash_completion ctags neovim python3 ripgrep tmux tree vim"
+PACMAN_PKGS="adobe-source-code-pro-fonts bash-completion ctags git gvim neovim"
+PACMAN_PKGS+=" python3 ripgrep strace tmux tree unzip"
+APT_PKGS="curl python3 tree"
+
+if is_linux; then
+    FILES+=" xinitrc Xmodmap Xresources"
+elif is_mac; then
+    FILES+=" xvimrc"
+fi
+
 # OS-specific configuration
 if is_mac; then
     init_mac
 elif is_arch; then
-    init_arch
+    [ "$1" = pkg ] && init_arch
 elif is_ubuntu; then
-    init_ubuntu
+    [ "$1" = pkg ] && init_ubuntu
 fi
 
 has nvim && init_neovim
