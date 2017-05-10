@@ -9,20 +9,23 @@ function _git_br {
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
-# github.com/justinmk/config/blob/master/.bashrc
+# adapted from github.com/justinmk/config/blob/master/.bashrc
 function bd {
-    new_dir=$(echo $(pwd) | sed 's|\(.*/'$1'[^/]*/\).*|\1|')
-    index=$(echo $new_dir | awk '{ print index($1,"/'$1'"); }')
-    if [ $index -eq 0 ]; then
-        echo "No such occurrence."
-    else
-        echo $new_dir
+    new_dir="$(pwd | sed "s|\(.*/$1[^/]*/\).*|\1|")"
+    if [ -d "$new_dir" ]; then
+        echo "$new_dir"
         cd "$new_dir"
+    else
+        echo "No such occurrence."
     fi
 }
 
 function mcd {
     mkdir -p "$@" && cd "$@"
+}
+
+function has {
+    type -p "$@" &>/dev/null
 }
 
 if [ -z "$SSH_CONNECTION" ]; then
@@ -33,23 +36,22 @@ fi
 
 alias l="ls -aF"
 alias ll="ls -lahF"
+alias f=z
+alias v=vim
 
 # Linux-specific settings
-if [[ $(uname) == "Linux" ]]; then
+if [[ $(uname -s) = Linux ]]; then
     alias gdb="gdb -q"
 fi
 
 # macOS-specific settings
-if [[ $(uname) == "Darwin" ]]; then
+if [[ $(uname -s) = Darwin ]]; then
     alias bup="brew update && brew upgrade && brew cleanup && brew doctor"
     alias gdb="sudo gdb -q"
     alias python="python3"
 
     export HOMEBREW_NO_ANALYTICS=1
 fi
-
-[ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
-[ -f "$HOME/.config/z/z.sh" ] && source "$HOME/.config/z/z.sh"
 
 if [ -f /usr/local/etc/bash_completion ]; then
     source /usr/local/etc/bash_completion
@@ -65,7 +67,7 @@ shopt -s cdspell
 HISTSIZE=5000
 HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
-HISTIGNORE="bg:fg:exit:ls:ll:cd:z"
+HISTIGNORE="bg:fg:exit:ls:ll:l:cd:z:f"
 PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 
 export PATH="$PATH:$HOME/code/bin"
@@ -73,8 +75,13 @@ if [ -d "$HOME/.cargo/bin" ] && [[ $PATH != *cargo/bin* ]]; then
     export PATH="$PATH:$HOME/.cargo/bin"
 fi
 
-# (type -p fzf && type -p rg) &>/dev/null && \
+[ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
+[ -f "$HOME/.config/z/z.sh" ] && source "$HOME/.config/z/z.sh"
+
+export FZF_DEFAULT_OPTS='--no-height --no-reverse'
+
+# has fzf && has rg && \
 #     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
-type -p vim &>/dev/null && export EDITOR=vim
-type -p nvim &>/dev/null && export EDITOR=nvim
-type -a z &>/dev/null && export _Z_DATA="$HOME/.config/z/z"
+has vim && export EDITOR=vim
+has nvim && export EDITOR=nvim
+has z && export _Z_DATA="$HOME/.config/z/z"
