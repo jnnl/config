@@ -46,7 +46,7 @@ fi
 
 # macOS-specific settings
 if [[ $(uname -s) = Darwin ]]; then
-    alias bup="brew update && brew upgrade && brew cleanup && brew doctor"
+    alias bup="brew update && brew upgrade && brew cleanup"
     alias gdb="sudo gdb -q"
     alias python="python3"
 
