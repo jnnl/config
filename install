@@ -55,6 +55,9 @@ function backup_config {
     if has i3status && [ -f "CONFIGDIR/i3status/config" ]; then
         mv -v "$CONFIGDIR/i3status/config" "$BACKUPDIR/i3status_config"
     fi
+    if has i3blocks && [ -f "CONFIGDIR/i3blocks/config" ]; then
+        mv -v "$CONFIGDIR/i3blocks/config" "$BACKUPDIR/i3blocks_config"
+    fi
 
     echo -e "done\n"
 }
@@ -72,6 +75,9 @@ function copy_config {
     fi
     if has i3status; then
         cp -v "$SOURCEDIR/i3status_config" "$DOTFILEDIR/"
+    fi
+    if has i3blocks; then
+        cp -v "$SOURCEDIR/i3blocks_config" "$DOTFILEDIR/"
     fi
 
     echo -e "done\n"
@@ -91,7 +97,11 @@ function link_config {
     fi
     if has i3status; then
         mkdir -vp "$CONFIGDIR/i3status"
-        ln -vsf "$DOTFILEDIR/i3status_config" "$CONFIGDIR/i3/config"
+        ln -vsf "$DOTFILEDIR/i3status_config" "$CONFIGDIR/i3status/config"
+    fi
+    if has i3blocks; then
+        mkdir -vp "$CONFIGDIR/i3blocks"
+        ln -vsf "$DOTFILEDIR/i3blocks_config" "$CONFIGDIR/i3blocks/config"
     fi
 
     echo -e "done\n"
@@ -117,7 +127,7 @@ function init_mac {
 }
 
 # Initialize Arch Linux environment
-function init_arch {
+function install_arch_pkgs {
     if ! pacman -Q $PACMAN_PKGS &>/dev/null; then
         if sudo pacman -Sy --needed $PACMAN_PKGS; then
             echo -e "done\n"
@@ -128,9 +138,9 @@ function init_arch {
 }
 
 # Initialize Ubuntu environment
-function init_ubuntu {
-    if ! dpkg -l "$APT_PKGS"; then # XXX: not sure about this, test ASAP
-        if sudo apt-get update && sudo apt-get install "$APT_PKGS"; then
+function install_ubuntu_pkgs {
+    if sudo apt-get update && ! dpkg -l $APT_PKGS; then
+        if sudo apt-get install $APT_PKGS; then
             echo -e "done\n"
         else
             pkg_prompt
@@ -245,9 +255,9 @@ fi
 if is_mac; then
     init_mac
 elif is_arch; then
-    [ "$1" = pkg ] && init_arch
+    [ "$1" = pkg ] && install_arch_pkgs
 elif is_ubuntu; then
-    [ "$1" = pkg ] && init_ubuntu
+    [ "$1" = pkg ] && install_ubuntu_pkgs
 fi
 
 has nvim && init_neovim

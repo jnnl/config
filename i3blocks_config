@@ -1,0 +1,44 @@
+# i3blocks config file
+
+# Global properties
+command=/usr/lib/i3blocks/$BLOCK_NAME
+separator_block_width=15
+markup=none
+
+# Media player
+[mediaplayer]
+interval=3
+signal=10
+separator=false
+
+# Volume indicator
+[volume]
+instance=Master
+interval=once
+signal=10
+
+# Network interface monitoring
+[iface]
+color=#00FF00
+interval=10
+
+# Memory usage
+[memory]
+label=MEM
+interval=30
+
+# Disk usage
+[disk]
+label=DISK
+instance=/
+interval=30
+
+# Battery indicator
+[battery]
+label=BAT
+interval=30
+
+# Time
+[time]
+command=date '+%d.%m.%Y %H:%M:%S'
+interval=1
