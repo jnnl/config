@@ -6,11 +6,11 @@ function has {
 }
 
 function is_arch {
-    grep -i archlinux /etc/os-release &>/dev/null
+    grep -qi archlinux /etc/os-release
 }
 
 function is_ubuntu {
-    grep -i ubuntu /etc/os-release &>/dev/null
+    grep -qi ubuntu /etc/os-release
 }
 
 function is_linux {

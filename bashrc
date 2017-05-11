@@ -9,6 +9,7 @@ function _git_br {
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
+
 # adapted from github.com/justinmk/config/blob/master/.bashrc
 function bd {
     new_dir="$(pwd | sed "s|\(.*/$1[^/]*/\).*|\1|")"
@@ -41,6 +42,14 @@ alias v=vim
 
 # Linux-specific settings
 if [[ $(uname -s) = Linux ]]; then
+    if grep -qi archlinux /etc/os-release; then
+        alias s="sudo pacman -S"
+        alias ss="sudo pacman -Ss"
+        alias syu="sudo pacman -Syu"
+        alias q="pacman -Q"
+        alias qi="pacman -Qi"
+        alias qs="pacman -Qs"
+    fi
     alias gdb="gdb -q"
 fi
 
@@ -80,8 +89,8 @@ fi
 
 export FZF_DEFAULT_OPTS='--no-height --no-reverse'
 
-# has fzf && has rg && \
-#     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
+has fzf && has rg && \
+    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
 has vim && export EDITOR=vim
 has nvim && export EDITOR=nvim
 has z && export _Z_DATA="$HOME/.config/z/z"
