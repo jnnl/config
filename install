@@ -49,6 +49,10 @@ function backup_config {
         fi
     done
 
+    if [ -f "$CONFIGDIR/git/ignore" ]; then
+        mv -v "$CONFIGDIR/git/ignore" "$BACKUPDIR/gitignore"
+    fi
+
     if has i3 && [ -f "$CONFIGDIR/i3/config" ]; then
         mv -v "$CONFIGDIR/i3/config" "$BACKUPDIR/i3_config"
     fi
@@ -70,6 +74,8 @@ function copy_config {
         cp -v "$SOURCEDIR/$file" "$DOTFILEDIR/"
     done
 
+    cp -v "$SOURCEDIR/gitignore" "$DOTFILEDIR/"
+
     if has i3; then
         cp -v "$SOURCEDIR/i3_config" "$DOTFILEDIR/"
     fi
@@ -90,6 +96,9 @@ function link_config {
     for file in $FILES; do
         ln -vsf "$DOTFILEDIR/$file" "$HOME/.$file"
     done
+
+    mkdir -vp "$CONFIGDIR/git"
+    ln -vsf "$DOTFILEDIR/gitignore" "$CONFIGDIR/git/ignore"
     
     if has i3; then
         mkdir -vp "$CONFIGDIR/i3"
