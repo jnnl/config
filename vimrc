@@ -28,6 +28,7 @@ Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/vim-slash'
 
 Plug 'ajh17/vimcompletesme'
+Plug 'ludovicchabant/vim-gutentags'
 
 Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
@@ -112,10 +113,9 @@ nnoremap j gj
 nnoremap k gk
 nnoremap ZA :xa<CR>
 
-" inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-
-nnoremap <leader>d :Dispatch<CR>
 nnoremap <leader>r :source $MYVIMRC<CR>
+nnoremap <leader>t <C-]>
+nnoremap <leader>d :Dispatch<CR>
 
 nnoremap <silent> <leader>ll :ALEToggle<CR>
 nnoremap <silent> <leader>lä :ALENextWrap<CR>
