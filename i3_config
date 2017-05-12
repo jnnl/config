@@ -10,8 +10,9 @@ font pango:Terminus 8
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# Start urxvt
+# Start terminal
 bindsym $mod+Return exec urxvt
+# bindsym $mod+Return exec alacritty
 
 # Kill focused window
 bindsym $mod+Shift+q kill
@@ -143,12 +144,13 @@ mode $systemmenu {
 }
 
 # Launch menu
-set $launchmenu "launch:  [f]irefox  [s]potify  [u]rxvt"
+set $launchmenu "launch:  [c]hromium  [s]potify  [t]hunar  [u]rxvt"
 bindsym $mod+i mode $launchmenu
 
 mode $launchmenu {
-    bindsym f       exec firefox, mode "default" 
+    bindsym c       exec chromium, mode "default" 
     bindsym s       exec spotify, mode "default" 
+    bindsym t       exec thunar, mode "default"
     bindsym u       exec urxvt, mode "default"
     bindsym Return  mode "default"
     bindsym Escape  mode "default"
@@ -159,21 +161,11 @@ bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume 1 +2% && pkill -RTMIN+1
 bindsym XF86AudioLowerVolume exec "pactl set-sink-volume 1 -2% && pkill -RTMIN+10 i3blocks"
 bindsym XF86AudioMute exec pactl set-sink-mute 1 toggle
 
-bindsym XF86AudioPause exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
-                             /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause \
-                             && pkill -RTMIN+10 i3blocks"
-bindsym XF86AudioNext exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
-                            /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next \
-                            && pkill -RTMIN+10 i3blocks"
-bindsym XF86AudioPrev exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
-                            /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous \
-                            && pkill -RTMIN+10 i3blocks"
-bindsym XF86AudioPlay exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
-                            /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play \
-                            && pkill -RTMIN+10 i3blocks"
-bindsym XF86AudioStop exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
-                            /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop \
-                            && pkill -RTMIN+10 i3blocks"
+bindsym XF86AudioPause exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioStop exec playerctl stop
 
 # Startup programs
 exec urxvt
