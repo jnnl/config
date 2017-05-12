@@ -49,8 +49,11 @@ function backup_config {
         fi
     done
 
+    if [ -f "$CONFIGDIR/git/config" ]; then
+        mv -v "$CONFIGDIR/git/config" "$BACKUPDIR/git_config"
+    fi
     if [ -f "$CONFIGDIR/git/ignore" ]; then
-        mv -v "$CONFIGDIR/git/ignore" "$BACKUPDIR/gitignore"
+        mv -v "$CONFIGDIR/git/ignore" "$BACKUPDIR/git_ignore"
     fi
 
     if has i3 && [ -f "$CONFIGDIR/i3/config" ]; then
@@ -74,7 +77,8 @@ function copy_config {
         cp -v "$SOURCEDIR/$file" "$DOTFILEDIR/"
     done
 
-    cp -v "$SOURCEDIR/gitignore" "$DOTFILEDIR/"
+    cp -v "$SOURCEDIR/git_config" "$DOTFILEDIR/"
+    cp -v "$SOURCEDIR/git_ignore" "$DOTFILEDIR/"
 
     if has i3; then
         cp -v "$SOURCEDIR/i3_config" "$DOTFILEDIR/"
@@ -98,7 +102,8 @@ function link_config {
     done
 
     mkdir -vp "$CONFIGDIR/git"
-    ln -vsf "$DOTFILEDIR/gitignore" "$CONFIGDIR/git/ignore"
+    ln -vsf "$DOTFILEDIR/git_config" "$CONFIGDIR/git/config"
+    ln -vsf "$DOTFILEDIR/git_ignore" "$CONFIGDIR/git/ignore"
     
     if has i3; then
         mkdir -vp "$CONFIGDIR/i3"
@@ -248,7 +253,7 @@ BACKUPDIR="$DOTFILEDIR/backup"
 SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Config files to install
-FILES="bash_profile bashrc gitconfig vimrc tmux.conf"
+FILES="bash_profile bashrc vimrc tmux.conf"
 BREW_PKGS="bash bash_completion ctags neovim python3 ripgrep tmux tree vim"
 PACMAN_PKGS="adobe-source-code-pro-fonts bash-completion ctags git gvim neovim"
 PACMAN_PKGS+=" python3 ripgrep strace tmux tree unzip"
