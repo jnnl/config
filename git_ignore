@@ -1,5 +1,15 @@
+Session.vim
 tags
+!tags/
 .notags
 .DS_Store
+.Trashes
+.Spotlight-V100
+Desktop.ini
+Thumbs.db
 *.pyc
 *.dSYM/
+*.swp
+*.o
+*.so
+*.class
