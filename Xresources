@@ -2,8 +2,32 @@
 urxvt*termName:     xterm-256color
 
 ! Colors
+! Tantalum
 urxvt*background:   #262626
 urxvt*foreground:   #eeeeee
+
+! Seoul256
+!urxvt*background:   #3a3a3a
+!urxvt*foreground:   #d0d0d0
+!urxvt*color0:       #4e4e4e
+!urxvt*color1:       #d68787 
+!urxvt*color2:       #5f865f
+!urxvt*color3:       #d8af5f
+!urxvt*color4:       #85add4
+!urxvt*color5:       #d7afaf
+!urxvt*color6:       #87afaf
+!urxvt*color7:       #d0d0d0
+!urxvt*color8:       #626262
+!urxvt*color9:       #d75f87
+!urxvt*color10:      #87af87
+!urxvt*color11:      #ffd787 
+!urxvt*color12:      #add4fb
+!urxvt*color13:      #ffafaf
+!urxvt*color14:      #87d7d7
+!urxvt*color15:      #e4e4e4
+!urxvt*cursorColor:  #d0d0d0
+!urxvt*cursorColor2: #3a3a3a
+!urxvt*colorBD:      #e4e4e4
 
 ! Text
 urxvt*font:         xft:SourceCodePro:pixelsize=14:antialias=true
