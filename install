@@ -142,6 +142,7 @@ function init_mac {
 
 # Initialize Arch Linux environment
 function install_arch_pkgs {
+    is_arch || return
     if ! pacman -Q $PACMAN_PKGS &>/dev/null; then
         if sudo pacman -Sy --needed $PACMAN_PKGS; then
             echo -e "done\n"
@@ -153,6 +154,7 @@ function install_arch_pkgs {
 
 # Initialize Ubuntu environment
 function install_ubuntu_pkgs {
+    is_ubuntu || return
     if sudo apt-get update && ! dpkg -l $APT_PKGS; then
         if sudo apt-get install $APT_PKGS; then
             echo -e "done\n"
@@ -164,14 +166,13 @@ function install_ubuntu_pkgs {
 
 # Install homebrew
 function install_homebrew {
-    if is_mac; then
-        if ! has brew; then
-            echo "Installing Homebrew..."
-            ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && \
-            brew install "$BREW_PKGS" && echo -e "done\n"
-        else
-            echo "Homebrew already installed, skipping..."
-        fi
+    is_mac || return
+    if ! has brew; then
+        echo "Installing Homebrew..."
+        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&
+        brew install "$BREW_PKGS" && echo -e "done\n"
+    else
+        echo "Homebrew already installed, skipping..."
     fi
 }
 
