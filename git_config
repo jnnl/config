@@ -1,6 +1,6 @@
 [user]
-	email = jnnl@users.noreply.github.com
-	name = Juho Junnila
+    email = jnnl@users.noreply.github.com
+    name = Juho Junnila
 [core]
     editor = vim
 [push]
@@ -13,8 +13,10 @@
     co = checkout
     cob = checkout -b
     d = diff
+    dr = diff @ @{u}
     gud = "!git add -A && git commit"
     l = log --oneline --decorate --graph
+    ri = rebase -i
     rh = reset HEAD
     rhh = reset --hard HEAD
     rso = remote show origin

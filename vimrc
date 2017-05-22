@@ -135,7 +135,7 @@ command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
     \ .shellescape(expand('%')) | :e!
 
 command! StripTrailingWhitespace :call s:StripTrailingWhitespace()
-command! MatchNonASCII :call s:MatchNonASCII()
+command! MatchNonASCII /[^\x00-\x7f]
 
 command! -bang -nargs=* Rg
     \ call fzf#vim#grep(
@@ -174,23 +174,6 @@ endf
 
 func! s:StripTrailingWhitespace()
     %s/\s\+$//e
-endf
-
-func! s:MatchNonASCII()
-    let ptrn = '[^\x00-\x7F]'
-    for m in getmatches()
-        if m.pattern == ptrn
-            let matched = 1
-            call matchdelete(m.id)
-        endif
-    endfor
-    if !exists('l:matched')
-        if search(ptrn)
-            call matchadd('Error', ptrn)
-        else
-            echomsg 'No non-ASCII characters found.'
-        endif
-    endif
 endf
 
 func! s:ApplyGUISettings()

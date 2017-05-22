@@ -12,7 +12,7 @@ function _git_br {
 
 # adapted from github.com/justinmk/config/blob/master/.bashrc
 function bd {
-    new_dir="$(pwd | sed "s|\(.*/$1[^/]*/\).*|\1|")"
+    local new_dir="$(pwd | sed "s|\(.*/$1[^/]*/\).*|\1|")"
     if [ -d "$new_dir" ]; then
         echo "$new_dir"
         cd "$new_dir"
