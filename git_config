@@ -1,10 +1,16 @@
 [user]
     email = jnnl@users.noreply.github.com
     name = Juho Junnila
+[github]
+    user = jnnl
 [core]
     editor = vim
 [push]
-    default = simple
+    default = current
+[merge]
+    tool = fugitive
+[mergetool "fugitive"]
+    cmd = vim -f -c "Gvdiff" "$MERGED"
 [alias]
     aa = add --all
     b = branch
@@ -16,8 +22,9 @@
     dr = diff @ @{u}
     gud = "!git add -A && git commit"
     l = log --oneline --decorate --graph
-    ri = rebase -i
     rh = reset HEAD
     rhh = reset --hard HEAD
+    ri = rebase -i
     rso = remote show origin
-    s = status
+    s = status -bs
+    squash = "!f(){ git reset --soft HEAD~${1} && git commit --edit -m\"$(git log --format=%B --reverse HEAD..HEAD@{1})\"; };f"
