@@ -109,6 +109,8 @@ map , <leader>
 nnoremap § :w<CR>
 nnoremap ö <C-o>
 nnoremap ä <C-i>
+nnoremap Ö g;
+nnoremap Ä g,
 nnoremap j gj
 nnoremap k gk
 nnoremap ZA :xa<CR>
