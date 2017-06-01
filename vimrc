@@ -4,6 +4,7 @@
 " Plugins
 call plug#begin()
 Plug 'jnnl/tantalum.vim'
+Plug 'jnnl/vim-gatling'
 
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
@@ -12,7 +13,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
-let g:surround_indent = 1
 
 Plug 'w0rp/ale'
 let g:ale_enabled = 0
@@ -107,13 +107,13 @@ let &undodir   = s:vimdir.'undo//'
 map , <leader>
 
 nnoremap § :w<CR>
+nnoremap ZA :xa<CR>
 nnoremap ö <C-o>
 nnoremap ä <C-i>
 nnoremap Ö g;
 nnoremap Ä g,
 nnoremap j gj
 nnoremap k gk
-nnoremap ZA :xa<CR>
 
 nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>t <C-]>
@@ -137,7 +137,7 @@ command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
     \ .shellescape(expand('%')) | :e!
 
 command! StripTrailingWhitespace :call s:StripTrailingWhitespace()
-command! MatchNonASCII /[^\x00-\x7f]
+command! MatchNonASCII :call s:MatchNonASCII()
 
 command! -bang -nargs=* Rg
     \ call fzf#vim#grep(
@@ -176,6 +176,23 @@ endf
 
 func! s:StripTrailingWhitespace()
     %s/\s\+$//e
+endf
+
+func! s:MatchNonASCII()
+    let ptrn = '[^\x00-\x7F]'
+    for m in getmatches()
+        if m.pattern == ptrn
+            let matched = 1
+            call matchdelete(m.id)
+        endif
+    endfor
+    if !exists('l:matched')
+        if search(ptrn)
+            call matchadd('Error', ptrn)
+        else
+            echomsg 'No non-ASCII characters found.'
+        endif
+    endif
 endf
 
 func! s:ApplyGUISettings()
