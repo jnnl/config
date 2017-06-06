@@ -123,7 +123,7 @@ nnoremap <silent> <leader>ll :ALEToggle<CR>
 nnoremap <silent> <leader>lä :ALENextWrap<CR>
 nnoremap <silent> <leader>lö :ALEPreviousWrap<CR>
 
-nnoremap <leader>fa :Rg<CR>
+nnoremap <leader>fa :Ag<CR>
 nnoremap <leader>fb :Buffers<CR>
 nnoremap <leader>fc :Commits<CR>
 nnoremap <leader>ff :Files<CR>
