@@ -4,7 +4,7 @@
 " Plugins
 call plug#begin()
 Plug 'jnnl/tantalum.vim'
-Plug 'jnnl/vim-gatling'
+Plug '~/code/git/vim-gatling'
 
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
@@ -14,27 +14,33 @@ Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 
-Plug 'w0rp/ale'
-let g:ale_enabled = 0
-let g:ale_history_enabled = 0
-
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
-Plug 'junegunn/fzf', { 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/vim-slash'
 
 Plug 'ajh17/vimcompletesme'
-Plug 'ludovicchabant/vim-gutentags'
+Plug 'michaeljsmith/vim-indent-object'
+" Plug 'ludovicchabant/vim-gutentags'
 
+Plug 'w0rp/ale'
+let g:ale_enabled = 0
+let g:ale_history_enabled = 0
+
+Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
 let g:sneak#s_next = 1
 let g:sneak#use_ic_scs = 1
 call plug#end()
+
+if executable('chrome.sh')
+    let g:netrw_browsex_viewer = 'chrome.sh'
+endif
 
 " General
 set encoding=utf-8
@@ -43,13 +49,15 @@ set hidden
 set noshowcmd
 set wildmenu
 set display+=lastline
-set laststatus=1
+
+set laststatus=2
+set statusline=%f\ %{empty(&ft)?'':'['.&ft.']'}%m%r%=%l/%L
 
 set ttimeout
 set ttimeoutlen=10
 
 " Performance tweaks
-set synmaxcol=1000
+set synmaxcol=500
 set lazyredraw
 
 if has('vim')
@@ -80,7 +88,7 @@ set number
 set noruler
 
 set background=dark
-colorscheme tantalum
+colorscheme seoul256
 
 " Auxiliary directories
 if has('nvim')
@@ -107,17 +115,19 @@ let &undodir   = s:vimdir.'undo//'
 map , <leader>
 
 nnoremap § :w<CR>
-nnoremap ZA :xa<CR>
 nnoremap ö <C-o>
 nnoremap ä <C-i>
 nnoremap Ö g;
 nnoremap Ä g,
 nnoremap j gj
 nnoremap k gk
+nnoremap ZA :xa<CR>
 
+nnoremap <leader>pp :echom expand("%:p")<CR>
 nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>t <C-]>
 nnoremap <leader>d :Dispatch<CR>
+nnoremap <leader>g :Gatling<CR>
 
 nnoremap <silent> <leader>ll :ALEToggle<CR>
 nnoremap <silent> <leader>lä :ALENextWrap<CR>
@@ -137,7 +147,7 @@ command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
     \ .shellescape(expand('%')) | :e!
 
 command! StripTrailingWhitespace :call s:StripTrailingWhitespace()
-command! MatchNonASCII :call s:MatchNonASCII()
+command! MatchNonASCII /[^\x00-\x7f]
 
 command! -bang -nargs=* Rg
     \ call fzf#vim#grep(
@@ -154,6 +164,7 @@ augroup misc
     au BufWritePre,FileWritePre * :call s:AutoMkDir()
     au GUIEnter * :call s:ApplyGUISettings()
     au FileType vim setlocal keywordprg=:help
+    au FileType help setlocal keywordprg=:help
 augroup END
 
 augroup exec
@@ -176,23 +187,6 @@ endf
 
 func! s:StripTrailingWhitespace()
     %s/\s\+$//e
-endf
-
-func! s:MatchNonASCII()
-    let ptrn = '[^\x00-\x7F]'
-    for m in getmatches()
-        if m.pattern == ptrn
-            let matched = 1
-            call matchdelete(m.id)
-        endif
-    endfor
-    if !exists('l:matched')
-        if search(ptrn)
-            call matchadd('Error', ptrn)
-        else
-            echomsg 'No non-ASCII characters found.'
-        endif
-    endif
 endf
 
 func! s:ApplyGUISettings()
