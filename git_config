@@ -27,4 +27,3 @@
     ri = rebase -i
     rso = remote show origin
     s = status -bs
-    squash = "!f(){ git reset --soft HEAD~${1} && git commit --edit -m\"$(git log --format=%B --reverse HEAD..HEAD@{1})\"; };f"
