@@ -49,9 +49,7 @@ set hidden
 set noshowcmd
 set wildmenu
 set display+=lastline
-
-set laststatus=2
-set statusline=%f\ %{empty(&ft)?'':'['.&ft.']'}%m%r%=%l/%L
+set noswapfile
 
 set ttimeout
 set ttimeoutlen=10
@@ -64,6 +62,10 @@ if has('vim')
     set ttyfast
     set ttyscroll=3
 endif
+
+" Statusline
+set laststatus=2
+set statusline=%f\ %{empty(&ft)?'':'['.&ft.']'}%m%=%l/%L
 
 " Indentation
 set autoindent
@@ -84,32 +86,11 @@ set ignorecase
 set smartcase
 
 " Styles
-set number
+set relativenumber
 set noruler
 
-set background=dark
-colorscheme seoul256
-
-" Auxiliary directories
-if has('nvim')
-    let s:vimdir = $HOME.'/.config/nvim/'
-else
-    let s:vimdir = $HOME.'/.vim/'
-endif
-
-if !isdirectory(s:vimdir.'swap')
-    silent call mkdir(s:vimdir.'swap', 'p')
-endif
-if !isdirectory(s:vimdir.'backup')
-    silent call mkdir(s:vimdir.'backup', 'p')
-endif
-if !isdirectory(s:vimdir.'undo')
-    silent call mkdir(s:vimdir.'undo', 'p')
-endif
-
-let &directory = s:vimdir.'swap//'
-let &backupdir = s:vimdir.'backup//'
-let &undodir   = s:vimdir.'undo//'
+" set background=dark
+try | colorscheme seoul256 | catch | endtry
 
 " Mappings
 map , <leader>
@@ -134,9 +115,11 @@ nnoremap <silent> <leader>lä :ALENextWrap<CR>
 nnoremap <silent> <leader>lö :ALEPreviousWrap<CR>
 
 nnoremap <leader>fa :Ag<CR>
+nnoremap <leader>fA :Ag!<CR>
 nnoremap <leader>fb :Buffers<CR>
 nnoremap <leader>fc :Commits<CR>
 nnoremap <leader>ff :Files<CR>
+nnoremap <leader>fF :Files!<CR>
 nnoremap <leader>fh :History<CR>
 nnoremap <leader>fl :Lines<CR>
 nnoremap <leader>ft :Tags<CR>
@@ -144,7 +127,7 @@ nnoremap <leader>fw :Windows<CR>
 
 " Commands
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
-    \ .shellescape(expand('%')) | :e!
+    \ . fnameescape(expand('%:p')) | :e!
 
 command! StripTrailingWhitespace :call s:StripTrailingWhitespace()
 command! MatchNonASCII /[^\x00-\x7f]
@@ -196,6 +179,6 @@ func! s:ApplyGUISettings()
         set go-=L
         set vb
         set t_vb=
-        set guifont=Source\ Code\ Pro:h14
+        set guifont=Source\ Code\ Pro:h14,Inconsolata:h14
     endif
 endf
