@@ -1,0 +1,9 @@
+set encoding=utf-8
+set hidden
+
+set backspace=indent,eol,start
+set autoindent
+set expandtab smarttab
+
+set shiftwidth=4 tabstop=4 softtabstop=4
+set nobackup noswapfile noundofile
