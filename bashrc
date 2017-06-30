@@ -48,8 +48,6 @@ if [[ $(uname -s) = Linux ]]; then
         alias q="pacman -Q"
         alias qi="pacman -Qi"
         alias qs="pacman -Qs"
-        alias sys="systemctl"
-        alias mpv="mpv --user-agent='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36'"
     fi
     alias gdb="gdb -q"
 fi
@@ -84,7 +82,6 @@ HISTIGNORE="bg:fg:exit:ls:ll:l:cd:z:f:v"
 if [ -d "$HOME/.cargo/bin" ] && [[ $PATH != *cargo/bin* ]]; then
     export PATH="$HOME/.cargo/bin:$PATH"
 fi
-export PATH="$HOME/projects/gatling/bin:$PATH"
 export PATH="$HOME/code/bin:$HOME/.gem/ruby/2.4.0/bin:$PATH"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
