@@ -8,6 +8,7 @@ function _git_br {
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
+
 # backwards cd
 function bd {
     new_dir="$(pwd | sed "s|\(.*/$1[^/]*/\).*|\1|")"
@@ -36,7 +37,7 @@ fi
 alias l="ls -lhF | sed '1d'"
 alias ll="ls -lahF"
 alias f=z
-alias v=vim
+has hub && alias git=hub
 
 # Linux-specific settings
 if [[ $(uname -s) = Linux ]]; then
@@ -47,6 +48,8 @@ if [[ $(uname -s) = Linux ]]; then
         alias q="pacman -Q"
         alias qi="pacman -Qi"
         alias qs="pacman -Qs"
+        alias sys="systemctl"
+        alias mpv="mpv --user-agent='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36'"
     fi
     alias gdb="gdb -q"
 fi
@@ -57,6 +60,7 @@ if [[ $(uname -s) = Darwin ]]; then
     alias br="brew remove"
     alias bu="brew update && brew upgrade && brew cleanup"
     alias gdb="sudo gdb -q"
+    alias python="python3"
 
     export HOMEBREW_NO_ANALYTICS=1
 fi
@@ -80,9 +84,10 @@ HISTIGNORE="bg:fg:exit:ls:ll:l:cd:z:f:v"
 if [ -d "$HOME/.cargo/bin" ] && [[ $PATH != *cargo/bin* ]]; then
     export PATH="$HOME/.cargo/bin:$PATH"
 fi
-export PATH="$HOME/code/bin:$PATH"
+export PATH="$HOME/projects/gatling/bin:$PATH"
+export PATH="$HOME/code/bin:$HOME/.gem/ruby/2.4.0/bin:$PATH"
 
-[ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 [ -f "$HOME/.config/z/z.sh" ] && source "$HOME/.config/z/z.sh"
 
 export FZF_DEFAULT_OPTS='--no-height --no-reverse'
