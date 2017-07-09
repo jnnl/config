@@ -18,7 +18,7 @@ Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
-Plug 'junegunn/fzf', { 'do': './install --all --no-update-rc' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/vim-slash'
