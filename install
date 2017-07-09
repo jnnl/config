@@ -5,6 +5,14 @@ function has {
     type -p "$1" &>/dev/null
 }
 
+function exists {
+    for file in $@; do
+        if ! [ -f $file ] && ! [ -d $file ]; then
+            return 1
+        fi
+    done
+}
+
 function is_arch {
     grep -qi archlinux /etc/os-release
 }
@@ -27,7 +35,7 @@ function is_root {
 
 function pkg_prompt {
     echo "Couldn't install packages. Continue? [Y/n]"
-    read -r -s -n 1 choice 
+    read -r -s -n 1 choice
     if echo "$choice" | grep -iq "^y" || [ -z "$choice" ]; then
         return
     else
@@ -49,20 +57,20 @@ function backup_config {
         fi
     done
 
-    if [ -f "$CONFIGDIR/git/config" ]; then
+    if exists "$CONFIGDIR/git/config"; then
         mv -v "$CONFIGDIR/git/config" "$BACKUPDIR/git_config"
     fi
-    if [ -f "$CONFIGDIR/git/ignore" ]; then
+    if exists "$CONFIGDIR/git/ignore"; then
         mv -v "$CONFIGDIR/git/ignore" "$BACKUPDIR/git_ignore"
     fi
 
-    if has i3 && [ -f "$CONFIGDIR/i3/config" ]; then
+    if has i3 && exists "$CONFIGDIR/i3/config"; then
         mv -v "$CONFIGDIR/i3/config" "$BACKUPDIR/i3_config"
     fi
-    if has i3status && [ -f "CONFIGDIR/i3status/config" ]; then
+    if has i3status && exists "CONFIGDIR/i3status/config"; then
         mv -v "$CONFIGDIR/i3status/config" "$BACKUPDIR/i3status_config"
     fi
-    if has i3blocks && [ -f "CONFIGDIR/i3blocks/config" ]; then
+    if has i3blocks && exists "CONFIGDIR/i3blocks/config"; then
         mv -v "$CONFIGDIR/i3blocks/config" "$BACKUPDIR/i3blocks_config"
     fi
 
@@ -104,7 +112,7 @@ function link_config {
     mkdir -vp "$CONFIGDIR/git"
     ln -vsf "$DOTFILEDIR/git_config" "$CONFIGDIR/git/config"
     ln -vsf "$DOTFILEDIR/git_ignore" "$CONFIGDIR/git/ignore"
-    
+
     if has i3; then
         mkdir -vp "$CONFIGDIR/i3"
         ln -vsf "$DOTFILEDIR/i3_config" "$CONFIGDIR/i3/config"
@@ -128,7 +136,7 @@ function install_config {
 
 # Initialize neovim environment
 function init_neovim {
-    if [ ! -d "$CONFIGDIR/nvim" ]; then
+    if ! exists "$CONFIGDIR/nvim"; then
         mkdir -vp "$CONFIGDIR"
         ln -vs "$HOME/.vim" "$CONFIGDIR/nvim" && \
 	ln -vsf "$HOME/.vimrc" "$CONFIGDIR/nvim/init.vim"
@@ -138,6 +146,16 @@ function init_neovim {
 # Initialize macOS environment
 function init_mac {
     install_homebrew
+}
+
+function install_brew_pkgs {
+    if ! brew ls --versions "$BREW_PKGS"; then
+        if brew install "$BREW_PKGS"; then
+            echo -e "done\n"
+        else
+            pkg_prompt
+        fi
+    fi
 }
 
 # Initialize Arch Linux environment
@@ -170,7 +188,7 @@ function install_homebrew {
     if ! has brew; then
         echo "Installing Homebrew..."
         ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&
-        brew install "$BREW_PKGS" && echo -e "done\n"
+        echo -e "done\n"
     else
         echo "Homebrew already installed, skipping..."
     fi
@@ -180,30 +198,25 @@ function install_homebrew {
 function install_vimplug {
     if (has vim || has nvim); then
         if has curl; then
-            echo "Installing vim-plug..."
-            curl -#fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
-            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
+            DL_CMD="curl -#fLo"
+        elif has wget; then
+            DL_CMD="wget --show-progress -qO"
+        else
+            echo "No curl or wget found, skipping vim-plug install."
+            return 1
+        fi
+
+        echo "Installing vim-plug..."
+        mkdir -vp "$HOME/.vim/autoload/"
+
+        if $DL_CMD "$HOME/.vim/autoload/plug.vim" \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
             if has vim; then
                 vim +PlugInstall +qa && echo -e "done\n"
             elif has nvim; then
                 nvim +PlugInstall +qa && echo -e "done\n"
             fi
-        elif has wget; then
-            echo "Installing vim-plug..."
-            mkdir -vp "$HOME/.vim/autoload/"
-            if wget --show-progress -qO "$HOME/.vim/autoload/plug.vim" \
-            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-                if has vim; then
-                    vim +PlugInstall +qa && echo -e "done\n"
-                elif has nvim; then
-                    nvim +PlugInstall +qa && echo -e "done\n"
-                fi
-            fi
-        else
-            echo "No curl or wget found, skipping vim-plug install."
         fi
-    else
-        echo "No vim or neovim found, skipping vim-plug install."
     fi
     echo ""
 }
@@ -228,20 +241,37 @@ function install_fzf {
 
 # Install z
 function install_z {
-    [ ! -d "$CONFIGDIR/z" ] && mkdir -v "$CONFIGDIR/z"
+    ! exists "$CONFIGDIR/z" && mkdir -pv "$CONFIGDIR/z"
     if has curl; then
-        echo "Installing z..."
-        curl -#fLo "$CONFIGDIR/z/z.sh" \
-        https://raw.githubusercontent.com/rupa/z/master/z.sh && \
-        echo "done"
+        DL_CMD="curl -#fLo"
     elif has wget; then
-        echo "Installing z..."
-        wget --show-progress -qO "$CONFIGDIR/z/z.sh" \
-        https://raw.githubusercontent.com/rupa/z/master/z.sh && \
-        echo "done"
+        DL_CMD="wget --show-progress -qO"
     else
         echo "No curl or wget found, skipping z install."
     fi
+
+    echo "Installing z..."
+    $DL_CMD "$CONFIGDIR/z/z.sh" \
+    https://raw.githubusercontent.com/rupa/z/master/z.sh && \
+    echo "done"
+}
+
+function install_v {
+    ! exists "$BINDIR" && mkdir -pv "$BINDIR"
+    if has curl; then
+        DL_CMD="curl -#fLo"
+    elif has wget; then
+        DL_CMD="wget --show-progress -qO"
+    else
+        echo "No curl or wget found, skipping v install."
+        return 1
+    fi
+
+    echo "Installing v..."
+    $DL_CMD "$BINDIR/v" \
+    https://raw.githubusercontent.com/rupa/v/master/v && \
+    chmod +x "$BINDIR/v" && \
+    echo "done"
 }
 
 # Config directory
@@ -255,9 +285,9 @@ SOURCEDIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Config files to install
 FILES="bash_profile bashrc vimrc tmux.conf"
-BREW_PKGS="bash bash_completion ctags neovim python3 ripgrep tmux tree vim"
-PACMAN_PKGS="adobe-source-code-pro-fonts bash-completion ctags git gvim neovim"
-PACMAN_PKGS+=" python3 ripgrep strace tmux tree unzip"
+BREW_PKGS="bash bash_completion ctags neovim python3 ripgrep the_silver_searcher tmux tree vim"
+PACMAN_PKGS="adobe-source-code-pro-fonts bash-completion ctags git gvim neovim "
+PACMAN_PKGS+="python3 ripgrep strace the_silver_searcher tmux tree unzip"
 APT_PKGS="curl python3 tree"
 
 if is_linux; then
@@ -269,6 +299,7 @@ fi
 # OS-specific configuration
 if is_mac; then
     init_mac
+    [ "$1" = pkg ] && install_brew_pkgs
 elif is_arch; then
     [ "$1" = pkg ] && install_arch_pkgs
 elif is_ubuntu; then
@@ -281,5 +312,6 @@ install_config
 install_vimplug
 install_fzf
 install_z
+install_v
 
 echo "done"
