@@ -22,6 +22,8 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/vim-slash'
+Plug 'junegunn/vim-peekaboo'
+let g:peekaboo_delay = 250
 
 Plug 'ajh17/vimcompletesme'
 Plug 'michaeljsmith/vim-indent-object'
@@ -114,6 +116,7 @@ nnoremap <silent> <leader>ll :ALEToggle<CR>
 nnoremap <silent> <leader>lä :ALENextWrap<CR>
 nnoremap <silent> <leader>lö :ALEPreviousWrap<CR>
 
+nnoremap <leader>, :Buffers<CR>
 nnoremap <leader>fa :Ag<CR>
 nnoremap <leader>fA :Ag!<CR>
 nnoremap <leader>fb :Buffers<CR>
