@@ -8,7 +8,6 @@ function _git_br {
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
-
 # backwards cd
 function bd {
     new_dir="$(pwd | sed "s|\(.*/$1[^/]*/\).*|\1|")"
@@ -63,14 +62,6 @@ if [[ $(uname -s) = Darwin ]]; then
     export HOMEBREW_NO_ANALYTICS=1
 fi
 
-if [ -f /usr/local/etc/bash_completion ]; then
-    source /usr/local/etc/bash_completion
-elif [ -f /usr/share/bash-completion/bash_completion ]; then
-    source /usr/share/bash-completion/bash_completion
-elif [ -f /etc/bash_completion ]; then
-    source /etc/bash_completion
-fi
-
 shopt -s histappend
 shopt -s cdspell
 
@@ -79,16 +70,24 @@ HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
 HISTIGNORE="bg:fg:exit:ls:ll:l:cd:z:f:v"
 
+if [ -f /usr/local/etc/bash_completion ]; then
+    source /usr/local/etc/bash_completion
+elif [ -f /usr/share/bash-completion/bash_completion ]; then
+    source /usr/share/bash-completion/bash_completion
+elif [ -f /etc/bash_completion ]; then
+    source /etc/bash_completion
+fi
+
 if [ -d "$HOME/.cargo/bin" ] && [[ $PATH != *cargo/bin* ]]; then
     export PATH="$HOME/.cargo/bin:$PATH"
 fi
-export PATH="$HOME/code/bin:$HOME/.gem/ruby/2.4.0/bin:$PATH"
+export PATH="$HOME/code/bin:$PATH"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-[ -f "$HOME/.config/z/z.sh" ] && source "$HOME/.config/z/z.sh"
-
 export FZF_DEFAULT_OPTS='--no-height --no-reverse'
+
+[ -f "$HOME/.config/z/z.sh" ] && source "$HOME/.config/z/z.sh"
+has z && export _Z_DATA="$HOME/.config/z/z"
 
 has vim && export EDITOR=vim
 has nvim && export EDITOR=nvim
-has z && export _Z_DATA="$HOME/.config/z/z"
