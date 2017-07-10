@@ -168,10 +168,11 @@ function init_mac {
     install_homebrew
 }
 
+# Install mac_pkgs
 function install_brew_pkgs {
     is_mac || return 1
-    if ! brew ls --versions "$mac_pkgs"; then
-        if brew install "$mac_pkgs"; then
+    if ! brew ls --versions $mac_pkgs; then
+        if brew install $mac_pkgs; then
             echo -e "done\n"
         else
             pkg_prompt
