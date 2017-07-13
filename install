@@ -260,6 +260,7 @@ function install_fzf {
         echo "done"
     else
         echo "Git not found, skipping FZF install."
+        return 1
     fi
     echo ""
 }
@@ -273,6 +274,7 @@ function install_z {
         dl_cmd="wget --show-progress -qO"
     else
         echo "No curl or wget found, skipping z install."
+        return 1
     fi
 
     echo "Installing z..."
