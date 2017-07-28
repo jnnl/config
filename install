@@ -246,6 +246,26 @@ function install_vimplug {
     echo ""
 }
 
+# Install vim colors
+function install_vim_colors {
+    echo "Installing Vim colorschemes..."
+    if has curl; then
+        dl_cmd="curl -#fLo"
+    elif has wget; then
+        dl_cmd="wget --show-progress -qO"
+    else
+        echo "No curl or wget found, skipping vim colorscheme install."
+        return 1
+    fi
+
+    $dl_cmd "$HOME/.vim/colors/tomorrow-night.vim" \
+    https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/vim/colors/Tomorrow-Night.vim
+    $dl_cmd "$HOME/.vim/colors/molokai.vim" \
+    https://raw.githubusercontent.com/tomasr/molokai/master/colors/molokai.vim
+
+    echo -e "done\n"
+}
+
 # Install fzf
 function install_fzf {
     if [ -x "$HOME"/.fzf/install ]; then
@@ -342,8 +362,9 @@ has nvim && init_neovim
 
 install_config
 install_vimplug
+install_vim_colors
 install_fzf
 install_z
 install_v
 
-echo "done"
+echo "all done"
