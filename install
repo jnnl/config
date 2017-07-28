@@ -340,7 +340,7 @@ backup=1
 files="bash_profile bashrc vimrc tmux.conf"
 mac_pkgs="bash bash_completion ctags neovim python3 ripgrep the_silver_searcher tmux tree vim"
 arch_pkgs="adobe-source-code-pro-fonts bash-completion ctags git gvim neovim "
-arch_pkgs+="python3 ripgrep strace the_silver_searcher tmux tree unzip"
+arch_pkgs+="python3 ripgrep rxvt-unicode strace the_silver_searcher tmux tree unzip"
 ubuntu_pkgs="curl python3 tree"
 
 if is_linux; then
