@@ -258,6 +258,7 @@ function install_vim_colors {
         return 1
     fi
 
+    mkdir -pv "$HOME/.vim/colors"
     $dl_cmd "$HOME/.vim/colors/tomorrow-night.vim" \
     https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/vim/colors/Tomorrow-Night.vim
     $dl_cmd "$HOME/.vim/colors/molokai.vim" \
@@ -287,7 +288,7 @@ function install_fzf {
 
 # Install z
 function install_z {
-    ! exists "$configdir/z" && mkdir -pv "$configdir/z"
+    mkdir -pv "$configdir/z"
     if has curl; then
         dl_cmd="curl -#fLo"
     elif has wget; then
