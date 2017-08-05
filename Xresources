@@ -29,6 +29,26 @@ urxvt*foreground:   #eeeeee
 !urxvt*cursorColor2: #3a3a3a
 !urxvt*colorBD:      #e4e4e4
 
+! Tomorrow Night
+!urxvt*background:   #262626
+!urxvt*foreground:   #eeeeee
+!urxvt*color0:       #000000
+!urxvt*color1:       #912226
+!urxvt*color2:       #778900
+!urxvt*color3:       #ae7b00
+!urxvt*color4:       #1d2594
+!urxvt*color5:       #682a9b
+!urxvt*color6:       #2b6651
+!urxvt*color7:       #929593
+!urxvt*color8:       #666666
+!urxvt*color9:       #cc6666
+!urxvt*color10:      #b5bd68
+!urxvt*color11:      #f0c674
+!urxvt*color12:      #81a2be
+!urxvt*color13:      #b294bb
+!urxvt*color14:      #8abeb7
+!urxvt*color15:      #ecebec
+
 ! Text
 urxvt*font:         xft:SourceCodePro:pixelsize=14:antialias=true
 
