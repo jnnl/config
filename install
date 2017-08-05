@@ -163,9 +163,41 @@ function init_neovim {
     fi
 }
 
-# Initialize macOS environment
-function init_mac {
-    install_homebrew
+# Configure macOS preferences
+function configure_mac {
+    is_mac || return 1
+
+    # Expand save panels
+    defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+    defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+
+    # Disable automatic text meddling
+    defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+    defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+    defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+    defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+    defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+
+    # Show filename extensions
+    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+    # Disable inverted scrolling
+    defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
+
+    # Disable Finder animations
+    defaults write com.apple.finder DisableAllAnimations -bool true
+
+    # Autohide Dock
+    defaults write com.apple.dock autohide -bool true
+
+    # Disable screenshot shadows
+    defaults write com.apple.screencapture disable-shadow -bool true
+
+    # Show ~/Library in Finder
+    chflags nohidden ~/Library
+
+    # Restart Dock and Finder
+    killall Dock Finder
 }
 
 # Install mac_pkgs
@@ -330,7 +362,8 @@ fi
 
 # OS-specific configuration
 if is_mac; then
-    init_mac
+    configure_mac
+    install_homebrew
     [ "$1" = pkg ] && install_brew_pkgs
 elif is_arch; then
     [ "$1" = pkg ] && install_arch_pkgs
