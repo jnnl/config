@@ -10,7 +10,6 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 
@@ -27,11 +26,7 @@ let g:peekaboo_delay = 250
 
 Plug 'ajh17/vimcompletesme'
 Plug 'michaeljsmith/vim-indent-object'
-" Plug 'ludovicchabant/vim-gutentags'
-
-Plug 'w0rp/ale'
-let g:ale_enabled = 0
-let g:ale_history_enabled = 0
+Plug 'ludovicchabant/vim-gutentags'
 
 Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-sneak'
@@ -88,11 +83,9 @@ set ignorecase
 set smartcase
 
 " Styles
-set relativenumber
-set noruler
+set number
 
-" set background=dark
-try | colorscheme seoul256 | catch | endtry
+try | colorscheme tomorrow-night | catch | endtry
 
 " Mappings
 map , <leader>
@@ -106,23 +99,17 @@ nnoremap j gj
 nnoremap k gk
 nnoremap ZA :xa<CR>
 
-nnoremap <leader>pp :echom expand("%:p")<CR>
 nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>t <C-]>
 nnoremap <leader>d :Dispatch<CR>
-nnoremap <leader>g :Gatling<CR>
-
-nnoremap <silent> <leader>ll :ALEToggle<CR>
-nnoremap <silent> <leader>lä :ALENextWrap<CR>
-nnoremap <silent> <leader>lö :ALEPreviousWrap<CR>
 
 nnoremap <leader>, :Buffers<CR>
+nnoremap <leader>. :Files<CR>
+nnoremap <leader>- :Ag<CR>
 nnoremap <leader>fa :Ag<CR>
-nnoremap <leader>fA :Ag!<CR>
 nnoremap <leader>fb :Buffers<CR>
 nnoremap <leader>fc :Commits<CR>
 nnoremap <leader>ff :Files<CR>
-nnoremap <leader>fF :Files!<CR>
 nnoremap <leader>fh :History<CR>
 nnoremap <leader>fl :Lines<CR>
 nnoremap <leader>ft :Tags<CR>
@@ -132,17 +119,8 @@ nnoremap <leader>fw :Windows<CR>
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
     \ . fnameescape(expand('%:p')) | :e!
 
-command! StripTrailingWhitespace :call s:StripTrailingWhitespace()
+command! StripTrailingWhitespace :%s/\s\+$//e
 command! MatchNonASCII /[^\x00-\x7f]
-
-command! -bang -nargs=* Rg
-    \ call fzf#vim#grep(
-    \     'rg --column --line-number --no-heading --color always '.
-    \     '--colors path:fg:green --colors line:fg:yellow '
-    \     .shellescape(<q-args>), 1,
-    \     <bang>0 ? fzf#vim#with_preview('up:60%')
-    \             : fzf#vim#with_preview('right:50%:hidden', '?'),
-    \     <bang>0)
 
 " Autocmds
 augroup misc
@@ -169,10 +147,6 @@ func! s:AutoMkDir()
     if !isdirectory(dir)
         call mkdir(dir, 'p')
     endif
-endf
-
-func! s:StripTrailingWhitespace()
-    %s/\s\+$//e
 endf
 
 func! s:ApplyGUISettings()

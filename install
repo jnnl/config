@@ -291,10 +291,13 @@ function install_vim_colors {
     fi
 
     mkdir -pv "$HOME/.vim/colors"
+
+    echo "Installing tomorrow-night..."
     $dl_cmd "$HOME/.vim/colors/tomorrow-night.vim" \
     https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/vim/colors/Tomorrow-Night.vim
-    $dl_cmd "$HOME/.vim/colors/molokai.vim" \
-    https://raw.githubusercontent.com/tomasr/molokai/master/colors/molokai.vim
+    echo "Installing immortals..."
+    $dl_cmd "$HOME/.vim/colors/immortals.vim" \
+    https://raw.githubusercontent.com/JarrodCTaylor/spartan/master/colors/immortals.vim
 
     echo -e "done\n"
 }
