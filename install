@@ -304,10 +304,15 @@ function install_vim_colors {
 
 # Install fzf
 function install_fzf {
-    if [ -x "$HOME"/.fzf/install ]; then
+    if [ -x "$HOME/.fzf/install" ]; then
         echo "Installing FZF..."
+        cd "$HOME/.fzf"
+        if ! git diff --quiet origin/master; then
+            git stash && git pull 
+        fi
         "$HOME/.fzf/install" --key-bindings --completion --no-update-rc 1>/dev/null && \
         echo "done"
+        cd "$sourcedir"
     elif has git; then
         echo "Installing FZF..."
         rm -rf "$HOME/.fzf"
@@ -383,6 +388,8 @@ if is_linux; then
 elif is_mac; then
     files+=" xvimrc"
 fi
+
+cd "$sourcedir"
 
 # OS-specific configuration
 if is_mac; then
