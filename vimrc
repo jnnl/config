@@ -118,8 +118,8 @@ nnoremap <leader>fw :Windows<CR>
 " Commands
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
     \ . fnameescape(expand('%:p')) | :e!
-
 command! StripTrailingWhitespace :%s/\s\+$//e
+command! StripANSI :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! MatchNonASCII /[^\x00-\x7f]
 
 " Autocmds
