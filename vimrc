@@ -13,37 +13,21 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 
-Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
-
-Plug 'junegunn/gv.vim', { 'on': 'GV' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/vim-slash'
-Plug 'junegunn/vim-peekaboo'
-let g:peekaboo_delay = 250
 
 Plug 'ajh17/vimcompletesme'
-Plug 'michaeljsmith/vim-indent-object'
 Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_ctags_exclude = ['node_modules']
 Plug 'vimwiki/vimwiki'
 let g:vimwiki_list = [{'path': '~/code/vimwiki', 'path_html': '~/code/vimwiki/html'}]
-
-Plug 'w0rp/ale'
-let g:ale_enabled = 0
-let g:ale_history_enabled = 0
 
 Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
 let g:sneak#s_next = 1
 let g:sneak#use_ic_scs = 1
 call plug#end()
-
-if executable('chrome.sh')
-    let g:netrw_browsex_viewer = 'chrome.sh'
-endif
 
 " General
 set encoding=utf-8
@@ -90,7 +74,6 @@ set smartcase
 
 " Styles
 set number
-
 try | colorscheme tomorrow-night | catch | endtry
 
 " Mappings
@@ -107,8 +90,8 @@ nnoremap ZA :xa<CR>
 
 nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>t <C-]>
-nnoremap <leader>d :Dispatch<CR>
 
+nnoremap <leader>d :Dispatch<CR>
 nnoremap <leader>, :Files<CR>
 nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>- :Ag<CR>
