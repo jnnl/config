@@ -135,6 +135,7 @@ augroup misc
     au GUIEnter * :call s:ApplyGUISettings()
     au FileType vim setlocal keywordprg=:help
     au FileType help setlocal keywordprg=:help
+    au FileType make setlocal noexpandtab
 augroup END
 
 augroup exec
