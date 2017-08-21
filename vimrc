@@ -27,8 +27,14 @@ let g:peekaboo_delay = 250
 Plug 'ajh17/vimcompletesme'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'ludovicchabant/vim-gutentags'
+let g:gutentags_ctags_exclude = ['node_modules']
+Plug 'vimwiki/vimwiki'
+let g:vimwiki_list = [{'path': '~/code/vimwiki', 'path_html': '~/code/vimwiki/html'}]
 
-Plug 'justinmk/vim-dirvish'
+Plug 'w0rp/ale'
+let g:ale_enabled = 0
+let g:ale_history_enabled = 0
+
 Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
 let g:sneak#s_next = 1
@@ -103,8 +109,8 @@ nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>t <C-]>
 nnoremap <leader>d :Dispatch<CR>
 
-nnoremap <leader>, :Buffers<CR>
-nnoremap <leader>. :Files<CR>
+nnoremap <leader>, :Files<CR>
+nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>- :Ag<CR>
 nnoremap <leader>fa :Ag<CR>
 nnoremap <leader>fb :Buffers<CR>
@@ -151,11 +157,15 @@ endf
 
 func! s:ApplyGUISettings()
     if has('gui_running')
-        set go-=T
-        set go-=r
-        set go-=L
-        set vb
-        set t_vb=
-        set guifont=Source\ Code\ Pro:h14,Inconsolata:h14
+        if filereadable(expand('~/.gvimrc'))
+            source expand('~/.gvimrc')
+        else
+            set go-=T
+            set go-=r
+            set go-=L
+            set vb
+            set t_vb=
+            set guifont=Source\ Code\ Pro:h14,Inconsolata:h14
+        endif
     endif
 endf
