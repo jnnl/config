@@ -48,7 +48,7 @@ if [[ $(uname -s) = Linux ]]; then
     # Arch-specific settings
     if grep -qi archlinux /etc/os-release; then
         alias s="sudo pacman -S"
-        alias ss="sudo pacman -Ss"
+        alias sss="sudo pacman -Ss"
         alias syu="sudo pacman -Syu"
         alias q="pacman -Q"
         alias qi="pacman -Qi"
