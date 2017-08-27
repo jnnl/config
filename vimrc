@@ -18,6 +18,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 
 Plug 'ajh17/vimcompletesme'
+Plug 'michaeljsmith/vim-indent-object'
 Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_ctags_exclude = ['node_modules']
 Plug 'vimwiki/vimwiki'
