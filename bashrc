@@ -62,7 +62,7 @@ fi
 if [[ $(uname -s) = Darwin ]]; then
     alias bi="brew install"
     alias br="brew remove"
-    alias bu="brew update && brew upgrade && brew cleanup"
+    alias bu="brew update && brew upgrade && brew cleanup --prune=7"
     alias gdb="sudo gdb -q"
     alias python="python3"
 
