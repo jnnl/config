@@ -15,6 +15,7 @@ Plug 'tpope/vim-surround'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/vim-slash'
 
 Plug 'ajh17/vimcompletesme'
