@@ -21,9 +21,7 @@ Plug 'junegunn/vim-slash'
 Plug 'ajh17/vimcompletesme'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'ludovicchabant/vim-gutentags'
-let g:gutentags_ctags_exclude = ['node_modules']
-Plug 'vimwiki/vimwiki'
-let g:vimwiki_list = [{'path': '~/code/vimwiki', 'path_html': '~/code/vimwiki/html'}]
+let g:gutentags_ctags_exclude = ['.git', 'node_modules', 'vendor', 'venv']
 
 Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
@@ -60,10 +58,6 @@ set statusline=%f\ %{empty(&ft)?'':'['.&ft.']'}%m%=%l/%L
 set autoindent
 set expandtab
 set smarttab
-
-set shiftwidth=4
-set tabstop=4
-set softtabstop=4
 
 " Splits
 set splitright
@@ -112,6 +106,7 @@ command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
 command! StripTrailingWhitespace :%s/\s\+$//e
 command! StripANSI :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! MatchNonASCII /[^\x00-\x7f]
+command! MatchSpecial /FIXME\|TODO\|XXX
 
 " Autocmds
 augroup misc
@@ -123,14 +118,14 @@ augroup misc
     au FileType make setlocal noexpandtab
 augroup END
 
-augroup exec
+augroup dispatch
     au!
-    au FileType c      nn <buffer> <leader>x :!clear; gcc -o %:p:r %:p && %:p:r<CR>
-    au FileType cpp    nn <buffer> <leader>x :!clear; g++ -o %:p:r %:p && %:p:r<CR>
-    au FileType python nn <buffer> <leader>x :!clear; python3 %:p<CR>
-    au FileType ruby   nn <buffer> <leader>x :!clear; ruby %:p<CR>
-    au FileType rust   nn <buffer> <leader>x :!clear; rustc -o %:p:r %:p && %:p:r<CR>
-    au FileType sh     nn <buffer> <leader>x :!clear; %:p<CR>
+    au FileType c      let b:dispatch = 'gcc -o "%:p:h" "%:p"'
+    au FileType cpp    let b:dispatch = 'g++ -o "%:p:h" "%:p"'
+    au FileType python let b:dispatch = 'python3 "%:p"'
+    au FileType ruby   let b:dispatch = 'ruby "%:p"'
+    au FileType rust   let b:dispatch = 'rustc -o "%:p:h" "%:p"'
+    au FileType sh     let b:dispatch = '"%:p"'
 augroup END
 
 " Functions
