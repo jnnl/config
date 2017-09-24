@@ -122,14 +122,14 @@ augroup misc
     au FileType make setlocal noexpandtab
 augroup END
 
-augroup dispatch
+augroup exec
     au!
-    au FileType c      let b:dispatch = 'gcc -o "%:p:h" "%:p"'
-    au FileType cpp    let b:dispatch = 'g++ -o "%:p:h" "%:p"'
-    au FileType python let b:dispatch = 'python3 "%:p"'
-    au FileType ruby   let b:dispatch = 'ruby "%:p"'
-    au FileType rust   let b:dispatch = 'rustc -o "%:p:h" "%:p"'
-    au FileType sh     let b:dispatch = '"%:p"'
+    au FileType c      nn <buffer> <leader>x :!clear; gcc -o "%:p:r" "%:p" && "%:p:r"<CR>
+    au FileType cpp    nn <buffer> <leader>x :!clear; g++ -o "%:p:r" "%:p" && "%:p:r"<CR>
+    au FileType python nn <buffer> <leader>x :!clear; python3 "%:p"<CR>
+    au FileType ruby   nn <buffer> <leader>x :!clear; ruby "%:p"<CR>
+    au FileType rust   nn <buffer> <leader>x :!clear; rustc -o "%:p:r" "%:p" && "%:p:r"<CR>
+    au FileType sh     nn <buffer> <leader>x :!clear; "%:p"<CR>
 augroup END
 
 " Functions
