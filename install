@@ -64,6 +64,7 @@ function backup_config {
     elif test $backup = 2; then
         mv_cmd="mv_backup"
     else
+        echo "Skipping backup..."
         return
     fi
 
@@ -336,7 +337,7 @@ function install_z {
 }
 
 function install_v {
-    ! exists "$bindir" && mkdir -pv "$bindir"
+    mkdir -pv "$bindir"
     if has curl; then
         dl_cmd="curl -#fLo"
     elif has wget; then
