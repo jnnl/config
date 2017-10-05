@@ -5,12 +5,12 @@
 [ -z "$BASH" ] && exit
 
 # get git branch
-function _git_br {
+_git_br() {
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
 # backwards cd
-function bd {
+bd() {
     local new_dir="$(pwd | sed "s|\(.*/$1[^/]*/\).*|\1|")"
     if [ -d "$new_dir" ]; then
         echo "$new_dir"
@@ -21,12 +21,12 @@ function bd {
 }
 
 # create directory and enter it
-function mcd {
+mcd() {
     mkdir -p "$@" && cd "$1"
 }
 
 # check if command exists
-function has {
+has() {
     type -p "$@" &>/dev/null
 }
 

@@ -89,6 +89,8 @@ nnoremap Ä g,
 nnoremap j gj
 nnoremap k gk
 nnoremap ZA :xa<CR>
+nnoremap Q @q<CR>
+vnoremap Q :normal @q<CR>
 
 nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>t <C-]>

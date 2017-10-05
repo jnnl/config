@@ -1,6 +1,7 @@
 Session.vim
 tags
 !tags/
+.tags
 .notags
 .DS_Store
 .Trashes
