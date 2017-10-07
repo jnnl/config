@@ -62,7 +62,6 @@ set expandtab
 set smarttab
 
 set shiftwidth=4
-set tabstop=4
 set softtabstop=4
 
 " Splits
@@ -76,7 +75,7 @@ set smartcase
 
 " Styles
 set number
-try | colorscheme tomorrow-night | catch | endtry
+colorscheme tomorrow-night
 
 " Mappings
 map , <leader>
@@ -110,23 +109,22 @@ nnoremap <leader>fw :Windows<CR>
 
 " Commands
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
-    \ . fnameescape(expand('%:p')) | :e!
+               \ . fnameescape(expand('%:p')) | :e!
 command! StripTrailingWhitespace :%s/\s\+$//e
 command! StripANSI :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! MatchNonASCII /[^\x00-\x7f]
 command! MatchSpecial /FIXME\|TODO\|XXX
 
 " Autocmds
-augroup misc
+augroup Miscellaneous
     au!
     au BufWritePre,FileWritePre * :call s:AutoMkDir()
-    au GUIEnter * :call s:ApplyGUISettings()
     au FileType vim setlocal keywordprg=:help
     au FileType help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab
 augroup END
 
-augroup exec
+augroup Execution
     au!
     au FileType c      nn <buffer> <leader>x :!clear; gcc -o "%:p:r" "%:p" && "%:p:r"<CR>
     au FileType cpp    nn <buffer> <leader>x :!clear; g++ -o "%:p:r" "%:p" && "%:p:r"<CR>
@@ -141,20 +139,5 @@ func! s:AutoMkDir()
     let dir = expand('<afile>:p:h')
     if !isdirectory(dir)
         call mkdir(dir, 'p')
-    endif
-endf
-
-func! s:ApplyGUISettings()
-    if has('gui_running')
-        if filereadable(expand('~/.gvimrc'))
-            source expand('~/.gvimrc')
-        else
-            set go-=T
-            set go-=r
-            set go-=L
-            set vb
-            set t_vb=
-            set guifont=Source\ Code\ Pro:h14,Inconsolata:h14
-        endif
     endif
 endf
