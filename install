@@ -397,8 +397,8 @@ fi
 has nvim && init_neovim
 
 install_config
-install_vimplug
 install_vim_colors
+install_vimplug
 install_fzf
 install_z
 install_v
