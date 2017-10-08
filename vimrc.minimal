@@ -1,9 +1,15 @@
 set encoding=utf-8
+set noswapfile
 set hidden
+set wildmenu
 
 set backspace=indent,eol,start
 set autoindent
-set expandtab smarttab
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set smarttab
 
-set shiftwidth=4 tabstop=4 softtabstop=4
-set nobackup noswapfile noundofile
+set incsearch
+set ignorecase
+set smartcase
