@@ -20,4 +20,4 @@ nnoremap ZA :xa<CR>
 nnoremap gcc :xcmenucmd Comment Selection<CR>
 vnoremap gc :xcmenucmd Comment Selection<CR>
 
-nmap ,ff :xccmd openQuickly<CR>
+nmap ,, :xccmd openQuickly<CR>
