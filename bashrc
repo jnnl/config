@@ -97,7 +97,7 @@ fi
 
 # source fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export FZF_DEFAULT_OPTS='--no-height --no-reverse'
+export FZF_DEFAULT_OPTS='--reverse --border'
 
 # source z
 [ -f "$HOME/.config/z/z.sh" ] && source "$HOME/.config/z/z.sh"
