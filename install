@@ -6,7 +6,7 @@ function has {
 }
 
 function exists {
-    for file in $@; do
+    for file in $*; do
         ([ -f $file ] || [ -d $file ]) || return 1
     done
 }
