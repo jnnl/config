@@ -87,7 +87,8 @@ nnoremap Ö g;
 nnoremap Ä g,
 nnoremap j gj
 nnoremap k gk
-nnoremap ZA :xa<CR>
+nnoremap <Tab> :bn<CR>
+nnoremap <S-Tab> :bp<CR>
 nnoremap Q @q<CR>
 vnoremap Q :normal @q<CR>
 
