@@ -1,20 +1,20 @@
 # bashrc
-# jnnl.net
 
 # exit if not bash
 [ -z "$BASH" ] && exit
 
 # get git branch
 _git_br() {
+    [ "$PWD" = "$HOME" ] && return
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
 # backwards cd
 bd() {
-    local new_dir="$(pwd | sed "s|\(.*/$1[^/]*/\).*|\1|")"
-    if [ -d "$new_dir" ]; then
-        echo "$new_dir"
-        cd "$new_dir"
+    local target="$(pwd | sed "s|\(.*/$1[^/]*/\).*|\1|")"
+    if [ -d "$target" ]; then
+        echo "$target"
+        cd "$target"
     else
         echo "No such occurrence."
     fi
@@ -38,36 +38,9 @@ else
 fi
 
 # aliases
-alias l="ls -lhF | sed '1d'"
+alias l="ls -lhF"
 alias ll="ls -lahF"
 alias f=z
-has hub && alias git=hub
-
-# Linux-specific settings
-if [[ $(uname -s) = Linux ]]; then
-    # Arch-specific settings
-    if grep -qi archlinux /etc/os-release; then
-        alias s="sudo pacman -S"
-        alias sss="sudo pacman -Ss"
-        alias syu="sudo pacman -Syu"
-        alias q="pacman -Q"
-        alias qi="pacman -Qi"
-        alias qs="pacman -Qs"
-    fi
-
-    alias gdb="gdb -q"
-fi
-
-# macOS-specific settings
-if [[ $(uname -s) = Darwin ]]; then
-    alias bi="brew install"
-    alias br="brew remove"
-    alias bu="brew update && brew upgrade && brew cleanup --prune=7"
-    alias gdb="sudo gdb -q"
-    alias python="python3"
-
-    export HOMEBREW_NO_ANALYTICS=1
-fi
 
 # shell options
 shopt -s histappend
@@ -79,12 +52,15 @@ HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
 HISTIGNORE="bg:cd:exit:f:fg:l:ll:ls:v:z"
 
-# add custom bin directory to path
+# add custom bin directory to PATH
 export PATH="$HOME/code/bin:$PATH"
 
-# set nvim (or vim) as editor
-has vim && export VISUAL=vim EDITOR=vim
-has nvim && export VISUAL=nvim EDITOR=nvim
+# set nvim/vim as EDITOR
+if has nvim; then
+    export VISUAL=nvim EDITOR=nvim
+elif has vim; then
+    export VISUAL=vim EDITOR=vim
+fi
 
 # source bash completion
 if [ -f /etc/bash_completion ]; then
@@ -95,11 +71,12 @@ elif [ -f /usr/local/etc/bash_completion ]; then
     source /usr/local/etc/bash_completion
 fi
 
-# source fzf
+# fzf config
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_OPTS='--reverse --border'
+has rg && export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
-# source z
+# z config
 [ -f "$HOME/.config/z/z.sh" ] && source "$HOME/.config/z/z.sh"
 has z && export _Z_DATA="$HOME/.config/z/z"
 
