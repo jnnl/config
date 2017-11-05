@@ -85,12 +85,12 @@ nnoremap ö <C-o>
 nnoremap ä <C-i>
 nnoremap Ö g;
 nnoremap Ä g,
-nnoremap j gj
-nnoremap k gk
+nnoremap <expr> j (v:count ? 'j' : 'gj')
+nnoremap <expr> k (v:count ? 'k' : 'gk')
 nnoremap <Tab> :bn<CR>
 nnoremap <S-Tab> :bp<CR>
 nnoremap Q @q<CR>
-vnoremap Q :normal @q<CR>
+xnoremap Q :normal @q<CR>
 
 nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>t <C-]>
@@ -101,7 +101,7 @@ nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>- :Ag<CR>
 nnoremap <leader>fa :Ag<CR>
 nnoremap <leader>fb :Buffers<CR>
-nnoremap <leader>fc :Commits<CR>
+nnoremap <leader>fc :BCommits<CR>
 nnoremap <leader>ff :Files<CR>
 nnoremap <leader>fh :History<CR>
 nnoremap <leader>fl :Lines<CR>
@@ -110,7 +110,7 @@ nnoremap <leader>fw :Windows<CR>
 
 " Commands
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
-               \ . fnameescape(expand('%:p')) | :e!
+            \ . fnameescape(expand('%:p')) | :e!
 command! StripTrailingWhitespace :%s/\s\+$//e
 command! StripANSI :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! MatchNonASCII /[^\x00-\x7f]
@@ -125,7 +125,7 @@ augroup Miscellaneous
     au FileType make setlocal noexpandtab
 augroup END
 
-augroup Execution
+augroup Execute
     au!
     au FileType c      nn <buffer> <leader>x :!clear; gcc -o "%:p:r" "%:p" && "%:p:r"<CR>
     au FileType cpp    nn <buffer> <leader>x :!clear; g++ -o "%:p:r" "%:p" && "%:p:r"<CR>
