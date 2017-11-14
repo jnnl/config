@@ -114,7 +114,6 @@ command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
 command! StripTrailingWhitespace :%s/\s\+$//e
 command! StripANSI :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! MatchNonASCII /[^\x00-\x7f]
-command! MatchSpecial /FIXME\|TODO\|XXX
 
 " Autocmds
 augroup Miscellaneous
