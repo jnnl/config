@@ -5,7 +5,6 @@
 
 # get git branch
 _git_br() {
-    [ "$PWD" = "$HOME" ] && return
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
@@ -27,7 +26,7 @@ mcd() {
 
 # check if command exists
 has() {
-    type -p "$@" &>/dev/null
+    type -p $* &>/dev/null
 }
 
 # show hostname in prompt if in ssh session
