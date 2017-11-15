@@ -12,19 +12,14 @@
 [mergetool "fugitive"]
     cmd = vim -f -c "Gvdiff" "$MERGED"
 [alias]
-    aa = add --all
     b = branch
-    bd = branch -d
-    cm = commit -m
     co = checkout
-    cob = checkout -b
     d = diff
     dr = diff @ @{u}
-    gud = "!git add -A && git commit"
+    gud = "!git add -A && git commit -m"
     l = log --oneline --decorate --graph
     pr = pull --rebase
-    rh = reset HEAD
-    rhh = reset --hard HEAD
+    rh = reset --hard HEAD
     ri = rebase -i
     rso = remote show origin
     s = status -bs
