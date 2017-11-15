@@ -4,6 +4,7 @@
 " Plugins
 call plug#begin()
 Plug 'jnnl/tantalum.vim'
+Plug 'jnnl/tomorrow-night-flight.vim'
 Plug '~/code/git/vim-gatling'
 
 Plug 'tpope/vim-commentary'
@@ -75,7 +76,7 @@ set smartcase
 
 " Styles
 set number
-colorscheme tomorrow-night
+colorscheme tomorrow-night-flight
 
 " Mappings
 map , <leader>
