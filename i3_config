@@ -139,20 +139,21 @@ bindsym $mod+o mode $systemmenu
 
 mode $systemmenu {
     bindsym e       exit
-    bindsym l       exec i3lock -ue -c 000000, mode "default"
+    bindsym l       exec i3lock -ec 000000, mode "default"
     bindsym p       exec systemctl poweroff
     bindsym r       exec systemctl reboot
-    bindsym s       exec i3lock -ue -c 000000, exec systemctl suspend, mode "default"
+    bindsym s       exec i3lock -ec 000000, exec systemctl suspend, mode "default"
     bindsym Return  mode "default"
     bindsym Escape  mode "default"
 }
 
 # Launch menu
-set $launchmenu "launch:  [c]hromium  [s]potify  [t]hunar  [u]rxvt"
+set $launchmenu "launch:  [c]hromium  [f]irefox  [s]potify  [t]hunar  [u]rxvt"
 bindsym $mod+i mode $launchmenu
 
 mode $launchmenu {
     bindsym c       exec chromium, mode "default" 
+    bindsym f       exec firefox, mode "default"
     bindsym s       exec spotify, mode "default" 
     bindsym t       exec thunar, mode "default"
     bindsym u       exec urxvt, mode "default"
