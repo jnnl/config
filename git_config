@@ -22,6 +22,7 @@
     dr = diff @ @{u}
     gud = "!git add -A && git commit"
     l = log --oneline --decorate --graph
+    pr = pull --rebase
     rh = reset HEAD
     rhh = reset --hard HEAD
     ri = rebase -i
