@@ -8,7 +8,6 @@ Plug 'jnnl/tomorrow-night-flight.vim'
 Plug '~/code/git/vim-gatling'
 
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
@@ -88,15 +87,12 @@ nnoremap Ö g;
 nnoremap Ä g,
 nnoremap <expr> j (v:count ? 'j' : 'gj')
 nnoremap <expr> k (v:count ? 'k' : 'gk')
-nnoremap <Tab> :bn<CR>
-nnoremap <S-Tab> :bp<CR>
 nnoremap Q @q<CR>
 xnoremap Q :normal @q<CR>
 
 nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>t <C-]>
 
-nnoremap <leader>d :Dispatch<CR>
 nnoremap <leader>, :Files<CR>
 nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>- :Ag<CR>
@@ -112,7 +108,7 @@ nnoremap <leader>fw :Windows<CR>
 " Commands
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
             \ . fnameescape(expand('%:p')) | :e!
-command! StripTrailingWhitespace :%s/\s\+$//e
+command! StripTrail :%s/\s\+$//e
 command! StripANSI :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! MatchNonASCII /[^\x00-\x7f]
 
@@ -120,9 +116,8 @@ command! MatchNonASCII /[^\x00-\x7f]
 augroup Miscellaneous
     au!
     au BufWritePre,FileWritePre * :call s:AutoMkDir()
-    au FileType vim setlocal keywordprg=:help
-    au FileType help setlocal keywordprg=:help
-    au FileType make setlocal noexpandtab
+    au FileType vim,help setlocal keywordprg=:help
+    au FileType make setlocal noexpandtab shiftwidth=8
 augroup END
 
 augroup Execute
