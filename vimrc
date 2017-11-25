@@ -16,8 +16,8 @@ Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/seoul256.vim'
-Plug 'junegunn/vim-slash'
 
+Plug 'romainl/vim-cool'
 Plug 'ajh17/vimcompletesme'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'ludovicchabant/vim-gutentags'
@@ -70,6 +70,7 @@ set splitbelow
 
 " Search
 set incsearch
+set hlsearch
 set ignorecase
 set smartcase
 
