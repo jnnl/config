@@ -15,10 +15,10 @@ Plug 'tpope/vim-surround'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/seoul256.vim'
+let g:fzf_tags_command = 'ctags -R .tags'
 
-Plug 'romainl/vim-cool'
 Plug 'ajh17/vimcompletesme'
+Plug 'romainl/vim-cool'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_ctags_tagfile = '.tags'
@@ -97,14 +97,9 @@ nnoremap <leader>t <C-]>
 nnoremap <leader>, :Files<CR>
 nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>- :Ag<CR>
-nnoremap <leader>fa :Ag<CR>
-nnoremap <leader>fb :Buffers<CR>
-nnoremap <leader>fc :BCommits<CR>
-nnoremap <leader>ff :Files<CR>
-nnoremap <leader>fh :History<CR>
-nnoremap <leader>fl :Lines<CR>
-nnoremap <leader>ft :Tags<CR>
-nnoremap <leader>fw :Windows<CR>
+nnoremap <leader>; :History<CR>
+nnoremap <leader>: :BCommits<CR>
+nnoremap <leader>_ :Tags<CR>
 
 " Commands
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
@@ -126,7 +121,6 @@ augroup Execute
     au FileType c      nn <buffer> <leader>x :!clear; gcc -o "%:p:r" "%:p" && "%:p:r"<CR>
     au FileType cpp    nn <buffer> <leader>x :!clear; g++ -o "%:p:r" "%:p" && "%:p:r"<CR>
     au FileType python nn <buffer> <leader>x :!clear; python3 "%:p"<CR>
-    au FileType ruby   nn <buffer> <leader>x :!clear; ruby "%:p"<CR>
     au FileType rust   nn <buffer> <leader>x :!clear; rustc -o "%:p:r" "%:p" && "%:p:r"<CR>
     au FileType sh     nn <buffer> <leader>x :!clear; "%:p"<CR>
 augroup END
