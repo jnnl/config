@@ -24,11 +24,6 @@ Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_ctags_tagfile = '.tags'
 let g:gutentags_ctags_exclude = ['node_modules', 'vendor', 'venv',
                                \ '*.css', '*.html', '*.js', '*.ts']
-
-Plug 'justinmk/vim-sneak'
-let g:sneak#label = 1
-let g:sneak#s_next = 1
-let g:sneak#use_ic_scs = 1
 call plug#end()
 
 " General
