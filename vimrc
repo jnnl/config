@@ -93,8 +93,8 @@ nnoremap <leader>t <C-]>
 nnoremap <leader>, :Files<CR>
 nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>- :Ag<CR>
-nnoremap <leader>; :BCommits<CR>
-nnoremap <leader>: :History<CR>
+nnoremap <leader>; :History<CR>
+nnoremap <leader>: :BCommits<CR>
 nnoremap <leader>_ :Tags<CR>
 
 " Commands
