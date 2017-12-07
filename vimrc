@@ -16,6 +16,7 @@ Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 let g:fzf_tags_command = 'ctags -R .tags'
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
 Plug 'ajh17/vimcompletesme'
 Plug 'romainl/vim-cool'
@@ -92,8 +93,8 @@ nnoremap <leader>t <C-]>
 nnoremap <leader>, :Files<CR>
 nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>- :Ag<CR>
-nnoremap <leader>; :History<CR>
-nnoremap <leader>: :BCommits<CR>
+nnoremap <leader>; :BCommits<CR>
+nnoremap <leader>: :History<CR>
 nnoremap <leader>_ :Tags<CR>
 
 " Commands
