@@ -7,19 +7,25 @@
     editor = vim
 [push]
     default = current
+[diff]
+    tool = vimdiff
 [merge]
-    tool = fugitive
-[mergetool "fugitive"]
-    cmd = vim -f -c "Gvdiff" "$MERGED"
+    tool = vimdiff
 [alias]
+    a = add -A
     b = branch
+    c = commit
+    ca = commit --amend
+    can = commit --amend --no-edit
     co = checkout
     d = diff
+    dt = difftool
     dr = diff @ @{u}
-    gud = "!git add -A && git commit -m"
     l = log --oneline --decorate --graph
     pr = pull --rebase
-    rh = reset --hard HEAD
+    rh = reset --hard
+    rs = reset --soft
+    rf = reflog
     ri = rebase -i
     rso = remote show origin
     s = status -bs
