@@ -88,6 +88,7 @@ nnoremap Q @q<CR>
 xnoremap Q :normal @q<CR>
 
 nnoremap <leader>r :source $MYVIMRC<CR>
+nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <leader>t <C-]>
 
 nnoremap <leader>, :Files<CR>
