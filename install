@@ -1,172 +1,131 @@
-#!/usr/bin/env bash
-# Installer script for dotfiles, configs and essential packages
+#!/bin/bash
+# dotfiles installer
 
-function has {
-    type -p "$1" &>/dev/null
+set -eu
+
+readonly kernel="$(uname -s)"
+readonly scriptdir="$(dirname ${BASH_SOURCE[0]})"
+readonly configdir="$HOME/.config"
+readonly dotfiledir="$configdir/dotfiles"
+readonly backupdir="$dotfiledir/backup"
+readonly bindir="$HOME/code/bin"
+
+die() {
+    echo "ERROR: $*"
+    exit 1
 }
 
-function exists {
+edone() {
+    echo "done"
+    echo ""
+}
+
+has() {
+    command -V "$1" &>/dev/null
+}
+
+exists() {
+    local file
     for file in $*; do
-        ([ -f $file ] || [ -d $file ]) || return 1
+        test -e "$file" \
+            || return 1
     done
 }
 
-function is_arch {
-    grep -qi archlinux /etc/os-release
+is_linux() {
+    test "$kernel" = Linux
 }
 
-function is_ubuntu {
-    grep -qi ubuntu /etc/os-release
+is_mac() {
+    test "$kernel" = Darwin
 }
 
-function is_linux {
-    test "$(uname -s)" = Linux
-}
-
-function is_mac {
-    test "$(uname -s)" = Darwin
-}
-
-function is_root {
-    test "$EUID" = 0
-}
-
-function pkg_prompt {
-    echo -n "Couldn't install packages. Continue? [Y/n] "
-    read choice
-    if echo "$choice" | grep -iq "^y" || [ -z "$choice" ]; then
-        return
+dl() {
+    if has curl; then
+        curl -#fLo $*
+    elif has wget; then
+        wget --show-progress -qO $*
     else
-        echo "Exiting..."
-        exit
+        die "no curl or wget found"
+        return 1
     fi
 }
 
-function mv_backup {
-    src="$1"
-    dest="$2"
+backup_config() {
+    echo "Backing up existing config files to $backupdir ..."
+    mkdir -p "$backupdir"
 
-    if [[ ! -e "$dest" ]]; then
-        mv -v "$src" "$dest"
-    else
-        num=2
-        while [[ -e "$dest.$num" ]]; do
-            (( num++ ))
-        done
-        mv -v "$src" "$dest.$num"
-    fi
-}
-
-# Backup config files to the backup directory
-function backup_config {
-    if test $backup = 1; then
-        mv_cmd="mv -v"
-    elif test $backup = 2; then
-        mv_cmd="mv_backup"
-    else
-        echo "Skipping backup..."
-        return
-    fi
-
-    echo "Backing up existing config files to $backupdir..."
-    mkdir -vp "$backupdir"
-
+    local file
     for file in $files; do
-        if [ -L "$HOME/.$file" ]; then
-            $mv_cmd "$(readlink "$HOME/.$file")" "$backupdir/$file"
-        elif [ -f "$HOME/.$file" ]; then
-            $mv_cmd "$HOME/.$file" "$backupdir/$file"
-        fi
+        exists "$HOME/.$file" \
+            && cp -v "$HOME/.$file" "$backupdir/$file"
     done
 
-    if exists "$configdir/git/config"; then
-        if [ -L "$configdir/git/config" ]; then
-            $mv_cmd "$(readlink "$configdir/git/config")" "$backupdir/git_config"
-        else
-            $mv_cmd "$configdir/git/config" "$backupdir/git_config"
-        fi
-    fi
-    if exists "$configdir/git/ignore"; then
-        if [ -L "$configdir/git/ignore" ]; then
-            $mv_cmd "$(readlink "$configdir/git/ignore")" "$backupdir/git_ignore"
-        else
-            $mv_cmd "$configdir/git/ignore" "$backupdir/git_ignore"
-        fi
-    fi
+    exists "$configdir/nvim/init.vim" \
+        && cp -v "$configdir/nvim/init.vim" "$backupdir/nvimrc"
+    exists "$configdir/git/config" \
+        && cp -v "$configdir/git/config" "$backupdir/git_config"
+    exists "$configdir/git/ignore" \
+        && cp -v "$configdir/git/ignore" "$backupdir/git_ignore"
+    exists "$configdir/i3/config" \
+        && cp -v "$configdir/i3/config" "$backupdir/i3_config"
+    exists "$configdir/i3status/config" \
+        && cp -v "$configdir/i3status/config" "$backupdir/i3status_config"
+    exists "$configdir/i3blocks/config" \
+        && cp -v "$configdir/i3blocks/config" "$backupdir/i3blocks_config"
 
-    has i3 && exists "$configdir/i3/config" && \
-        $mv_cmd "$configdir/i3/config" "$backupdir/i3_config"
-    has i3status && exists "configdir/i3status/config" && \
-        $mv_cmd "$configdir/i3status/config" "$backupdir/i3status_config"
-    has i3blocks && exists "configdir/i3blocks/config" && \
-        $mv_cmd "$configdir/i3blocks/config" "$backupdir/i3blocks_config"
-
-    echo -e "done\n"
+    edone
 }
 
-# Copy config files from the repo to the config file directory
-function copy_config {
+copy_config() {
     echo "Copying config files to $dotfiledir..."
+    mkdir -p "$dotfiledir"
 
+    local file
     for file in $files; do
-        cp -v "$sourcedir/$file" "$dotfiledir/"
+        cp -v "$scriptdir/$file" "$dotfiledir"
     done
 
-    cp -v "$sourcedir/git_config" "$dotfiledir/"
-    cp -v "$sourcedir/git_ignore" "$dotfiledir/"
+    local dirfiles="git_config git_ignore i3_config i3status_config i3blocks_config"
+    for file in $dirfiles; do
+        cp -v "$scriptdir/$file" "$dotfiledir"
+    done
 
-    has i3 && \
-        cp -v "$sourcedir/i3_config" "$dotfiledir/"
-    has i3status && \
-        cp -v "$sourcedir/i3status_config" "$dotfiledir/"
-    has i3blocks && \
-        cp -v "$sourcedir/i3blocks_config" "$dotfiledir/"
-
-    echo -e "done\n"
+    edone
 }
 
-# Create symlinks of the config files to home directory
-function link_config {
+link_config() {
     echo "Linking config files..."
 
+    local file
     for file in $files; do
         ln -vsf "$dotfiledir/$file" "$HOME/.$file"
     done
 
-    mkdir -vp "$configdir/git"
+    [ -h "$configdir/nvim" ] \
+        && rm "$configdir/nvim"
+    mkdir -p "$configdir/nvim"
+    cat > "$configdir/nvim/init.vim" <<EOF
+set runtimepath^=$HOME/.vim runtimepath+=$HOME/.vim/after
+let &packpath = &runtimepath
+source $HOME/.vimrc
+EOF
+
+    mkdir -p "$configdir/git"
     ln -vsf "$dotfiledir/git_config" "$configdir/git/config"
     ln -vsf "$dotfiledir/git_ignore" "$configdir/git/ignore"
 
-    has i3 && \
-        mkdir -vp "$configdir/i3" && \
-        ln -vsf "$dotfiledir/i3_config" "$configdir/i3/config"
-    has i3status && \
-        mkdir -vp "$configdir/i3status" && \
-        ln -vsf "$dotfiledir/i3status_config" "$configdir/i3status/config"
-    has i3blocks && \
-        mkdir -vp "$configdir/i3blocks" && \
-        ln -vsf "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
+    mkdir -p "$configdir/"{i3,i3status,i3blocks}
+    ln -vsf "$dotfiledir/i3_config" "$configdir/i3/config"
+    ln -vsf "$dotfiledir/i3status_config" "$configdir/i3status/config"
+    ln -vsf "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
 
-    echo -e "done\n"
+    edone
 }
 
-# Install config files
-function install_config {
-    backup_config && copy_config && link_config
-}
-
-# Initialize neovim environment
-function init_neovim {
-    if ! exists "$configdir/nvim"; then
-        mkdir -vp "$configdir"
-        ln -vs "$HOME/.vim" "$configdir/nvim" && \
-	ln -vsf "$HOME/.vimrc" "$configdir/nvim/init.vim"
-    fi
-}
-
-# Configure macOS preferences
-function configure_mac {
-    is_mac || return 1
+configure_mac() {
+    is_mac \
+        || return 1
 
     # Expand save panels
     defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
@@ -200,206 +159,114 @@ function configure_mac {
     killall Dock Finder
 }
 
-function install_brew_pkgs {
-    is_mac || return 1
-    if ! brew ls --versions $mac_pkgs; then
-        if brew install $mac_pkgs; then
-            echo -e "done\n"
-        else
-            pkg_prompt
-        fi
-    fi
+install_homebrew() {
+    is_mac \
+        || return 1
+
+    has brew \
+        && echo "Homebrew already installed, skipping..." \
+        && return
+
+    echo "Installing Homebrew..."
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    edone
 }
 
-function install_arch_pkgs {
-    is_arch || return 1
-    if ! pacman -Q $arch_pkgs &>/dev/null; then
-        if sudo pacman -Sy --needed $arch_pkgs; then
-            echo -e "done\n"
-        else
-            pkg_prompt
-        fi
-    fi
+install_vimplug() {
+    echo "Installing vim-plug..."
+
+    local plugdir="$HOME/.vim/autoload"
+    local url="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+
+    mkdir -p "$plugdir"
+    dl "$plugdir/plug.vim" "$url"
+
+    has vim \
+        && vim +PlugInstall +qa \
+        && edone \
+        && return
+
+    has nvim \
+        && nvim +PlugInstall +qa \
+        && edone \
+        && return
+
+    echo "No vim or neovim found, skipping vim-plug install."
 }
 
-function install_ubuntu_pkgs {
-    is_ubuntu || return 1
-    if sudo apt-get update && ! dpkg -l $ubuntu_pkgs; then
-        if sudo apt-get install $ubuntu_pkgs; then
-            echo -e "done\n"
-        else
-            pkg_prompt
-        fi
-    fi
-}
+install_fzf() {
+    echo "Installing fzf..."
 
-function install_homebrew {
-    is_mac || return 1
-    if ! has brew; then
-        echo "Installing Homebrew..."
-        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-        echo -e "done\n"
-    else
-        echo "Homebrew already installed, skipping..."
-    fi
-}
+    local url="https://github.com/junegunn/fzf.git"
 
-function install_vimplug {
-    if (has vim || has nvim); then
-        if has curl; then
-            dl_cmd="curl -#fLo"
-        elif has wget; then
-            dl_cmd="wget --show-progress -qO"
-        else
-            echo "No curl or wget found, skipping vim-plug install."
-            return 1
-        fi
-
-        echo "Installing vim-plug..."
-        mkdir -vp "$HOME/.vim/autoload/"
-
-        if $dl_cmd "$HOME/.vim/autoload/plug.vim" \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; then
-            if has vim; then
-                vim +PlugInstall +qa && echo -e "done\n"
-            elif has nvim; then
-                nvim +PlugInstall +qa && echo -e "done\n"
-            fi
-        fi
-    else
-        echo "No vim or neovim found, skipping vim-plug install."
-        return 1
-    fi
-    echo ""
-}
-
-function install_vim_colors {
-    echo "Installing Vim colorschemes..."
-    if has curl; then
-        dl_cmd="curl -#fLo"
-    elif has wget; then
-        dl_cmd="wget --show-progress -qO"
-    else
-        echo "No curl or wget found, skipping vim colorscheme install."
-        return 1
-    fi
-
-    mkdir -pv "$HOME/.vim/colors"
-
-    echo "Installing tomorrow-night..."
-    $dl_cmd "$HOME/.vim/colors/tomorrow-night.vim" \
-    https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/vim/colors/Tomorrow-Night.vim
-    echo "Installing immortals..."
-    $dl_cmd "$HOME/.vim/colors/immortals.vim" \
-    https://raw.githubusercontent.com/JarrodCTaylor/spartan/master/colors/immortals.vim
-
-    echo -e "done\n"
-}
-
-function install_fzf {
-    if [ -x "$HOME/.fzf/install" ]; then
-        echo "Installing FZF..."
+    if test -x "$HOME/.fzf/install"; then
+        (
         cd "$HOME/.fzf"
         if ! git diff --quiet origin/master; then
-            git stash && git pull 
+            git stash
+            git pull
         fi
-        "$HOME/.fzf/install" --key-bindings --completion --no-update-rc 1>/dev/null && \
-        echo "done"
-        cd "$sourcedir"
+        )
+
+        "$HOME/.fzf/install" --key-bindings --completion --no-update-rc 1>/dev/null
+        edone
     elif has git; then
-        echo "Installing FZF..."
         rm -rf "$HOME/.fzf"
-        git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf" && \
-        "$HOME/.fzf/install" --key-bindings --completion --no-update-rc 1>/dev/null && \
-        echo "done"
+        git clone --depth 1 "$url" "$HOME/.fzf"
+
+        "$HOME/.fzf/install" --key-bindings --completion --no-update-rc 1>/dev/null
+        edone
     else
-        echo "Git not found, skipping FZF install."
+        echo "Git not found, skipping fzf install."
         return 1
     fi
-    echo ""
 }
 
-function install_z {
-    mkdir -pv "$configdir/z"
-    if has curl; then
-        dl_cmd="curl -#fLo"
-    elif has wget; then
-        dl_cmd="wget --show-progress -qO"
-    else
-        echo "No curl or wget found, skipping z install."
-        return 1
-    fi
-
+install_z() {
     echo "Installing z..."
-    $dl_cmd "$configdir/z/z.sh" \
-    https://raw.githubusercontent.com/rupa/z/master/z.sh && \
-    echo "done"
+
+    local url="https://raw.githubusercontent.com/rupa/z/master/z.sh"
+
+    mkdir -p "$configdir/z"
+    dl "$configdir/z/z.sh" "$url"
+
+    edone
 }
 
-function install_v {
-    mkdir -pv "$bindir"
-    if has curl; then
-        dl_cmd="curl -#fLo"
-    elif has wget; then
-        dl_cmd="wget --show-progress -qO"
-    else
-        echo "No curl or wget found, skipping v install."
-        return 1
-    fi
-
+install_v() {
     echo "Installing v..."
-    $dl_cmd "$bindir/v" \
-    https://raw.githubusercontent.com/rupa/v/master/v && \
-    chmod +x "$bindir/v" && \
-    echo "done"
+
+    local url="https://raw.githubusercontent.com/rupa/v/master/v"
+
+    mkdir -pv "$bindir"
+
+    dl "$bindir/v" "$url"
+    chmod ug+x "$bindir/v"
+
+    edone
 }
 
-# Config directory
-configdir="$HOME/.config"
-# Dotfile directory
-dotfiledir="$configdir/dotfiles"
-# Dotfile backup directory
-backupdir="$dotfiledir/backup"
-# Directory of this script
-sourcedir="$(cd "$(dirname "$0")" && pwd)"
-# Executable directory
-bindir="$HOME/code/bin"
+main() {
+    local files="bash_profile bashrc vimrc tmux.conf"
 
-# 0: no backup, 1: backup original configs, 2: also backup existing backups
-backup=1
+    is_mac \
+        && files+=" xvimrc" \
+        && configure_mac \
+        && install_homebrew
 
-# Config files to install
-files="bash_profile bashrc vimrc tmux.conf"
-mac_pkgs="bash bash_completion ctags neovim python3 ripgrep the_silver_searcher tmux tree vim"
-arch_pkgs="adobe-source-code-pro-fonts bash-completion ctags git gvim neovim "
-arch_pkgs+="python3 ripgrep rxvt-unicode strace the_silver_searcher tmux tree unzip"
-ubuntu_pkgs="curl python3 tree"
+    is_linux \
+        && files+=" xinitrc Xmodmap Xresources"
 
-if is_linux; then
-    files+=" xinitrc Xmodmap Xresources"
-elif is_mac; then
-    files+=" xvimrc"
-fi
+    backup_config
+    copy_config
+    link_config
 
-cd "$sourcedir"
+    install_vimplug
+    install_fzf
+    install_z
+    install_v
 
-# OS-specific configuration
-if is_mac; then
-    configure_mac
-    install_homebrew
-    [ "$1" = pkg ] && install_brew_pkgs
-elif is_arch; then
-    [ "$1" = pkg ] && install_arch_pkgs
-elif is_ubuntu; then
-    [ "$1" = pkg ] && install_ubuntu_pkgs
-fi
+    echo "all done"
+}
 
-install_config
-init_neovim
-install_vim_colors
-install_vimplug
-install_fzf
-install_z
-install_v
-
-echo "all done"
+main

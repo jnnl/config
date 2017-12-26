@@ -16,15 +16,19 @@ Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 let g:fzf_tags_command = 'ctags -R .tags'
-command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+command! -bang -nargs=* Ag
+    \ call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+
+if executable('ctags')
+    Plug 'ludovicchabant/vim-gutentags'
+    let g:gutentags_ctags_tagfile = '.tags'
+    let g:gutentags_ctags_exclude = ['node_modules', 'vendor', 'venv',
+                                   \ '*.css', '*.html', '*.js', '*.ts']
+endif
 
 Plug 'ajh17/vimcompletesme'
 Plug 'romainl/vim-cool'
 Plug 'michaeljsmith/vim-indent-object'
-Plug 'ludovicchabant/vim-gutentags'
-let g:gutentags_ctags_tagfile = '.tags'
-let g:gutentags_ctags_exclude = ['node_modules', 'vendor', 'venv',
-                               \ '*.css', '*.html', '*.js', '*.ts']
 call plug#end()
 
 " General
@@ -50,7 +54,7 @@ endif
 
 " Statusline
 set laststatus=2
-set statusline=%f\ %{empty(&ft)?'':'['.&ft.']'}%m%=%l/%L
+set statusline=%f\ %y%m%=%v:%l/%L
 
 " Indentation
 set autoindent
@@ -72,7 +76,7 @@ set smartcase
 
 " Styles
 set number
-colorscheme tomorrow-night-flight
+try | colorscheme tomorrow-night-flight | catch | colorscheme default | endtry
 
 " Mappings
 map , <leader>
