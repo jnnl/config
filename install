@@ -197,24 +197,25 @@ install_vimplug() {
 install_fzf() {
     echo "Installing fzf..."
 
+    local fzfdir="$HOME/.fzf"
     local url="https://github.com/junegunn/fzf.git"
 
-    if test -x "$HOME/.fzf/install"; then
+    if test -x "$fzfdir/install"; then
         (
-        cd "$HOME/.fzf"
+        cd "$fzfdir"
         if ! git diff --quiet origin/master; then
             git stash
             git pull
         fi
         )
 
-        "$HOME/.fzf/install" --key-bindings --completion --no-update-rc 1>/dev/null
+        "$fzfdir/install" --key-bindings --completion --no-update-rc 1>/dev/null
         edone
     elif has git; then
-        rm -rf "$HOME/.fzf"
-        git clone --depth 1 "$url" "$HOME/.fzf"
+        rm -rf "$fzfdir"
+        git clone --depth 1 "$url" "$fzfdir"
 
-        "$HOME/.fzf/install" --key-bindings --completion --no-update-rc 1>/dev/null
+        "$fzfdir/install" --key-bindings --completion --no-update-rc 1>/dev/null
         edone
     else
         echo "Git not found, skipping fzf install."
@@ -225,10 +226,11 @@ install_fzf() {
 install_z() {
     echo "Installing z..."
 
+    local zdir="$configdir/z"
     local url="https://raw.githubusercontent.com/rupa/z/master/z.sh"
 
-    mkdir -p "$configdir/z"
-    dl "$configdir/z/z.sh" "$url"
+    mkdir -p "$zdir"
+    dl "$zdir/z.sh" "$url"
 
     edone
 }
