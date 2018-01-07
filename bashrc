@@ -1,10 +1,11 @@
 # bashrc
 
 # exit if not bash
-[ -z "$BASH" ] && exit
+[ -n "$BASH" ] || exit
 
 # get git branch
 _git_br() {
+    [ -d .git ] || return 1
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
@@ -19,10 +20,10 @@ has() {
 }
 
 # show hostname in prompt if in ssh session
-if [ -z "$SSH_CONNECTION" ]; then
-    PS1="\u:\W\$(_git_br) $ "
-else
+if [ -n "$SSH_CONNECTION" ]; then
     PS1="\u@\h:\W\$(_git_br) $ "
+else
+    PS1="\u:\W\$(_git_br) $ "
 fi
 
 # aliases
