@@ -8,20 +8,9 @@ _git_br() {
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
-# backwards cd
-bd() {
-    local target="$(pwd | sed "s|\(.*/$1[^/]*/\).*|\1|")"
-    if [ -d "$target" ]; then
-        echo "$target"
-        cd "$target"
-    else
-        echo "No such occurrence."
-    fi
-}
-
-# create directory and enter it
+# create a directory and enter it
 mcd() {
-    mkdir -p "$@" && cd "$1"
+    mkdir -p "$1" && cd "$1"
 }
 
 # check if command exists
@@ -75,6 +64,7 @@ fi
 # fzf config
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_OPTS='--reverse --border'
+has ag && export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -f -g ""'
 has rg && export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 # z config
