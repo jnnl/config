@@ -54,7 +54,7 @@ endif
 
 " Statusline
 set laststatus=2
-set statusline=%f\ %y%m%=%v:%l/%L
+set statusline=%f\ %y%m%=%l/%L
 
 " Indentation
 set autoindent

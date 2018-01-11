@@ -207,7 +207,12 @@ install_fzf() {
         fi
         )
 
-        "$fzfdir/install" --key-bindings --completion --no-update-rc 1>/dev/null
+        "$fzfdir/install" --key-bindings \
+                          --completion \
+                          --no-update-rc \
+                          --no-zsh \
+                          --no-fish \
+                          1>/dev/null
         edone
     elif has git; then
         rm -rf "$fzfdir"
