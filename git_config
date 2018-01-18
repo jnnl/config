@@ -1,5 +1,5 @@
 [user]
-    email = jnnl@users.noreply.github.com
+    email = x@jnnl.net
     name = Juho Junnila
 [github]
     user = jnnl
@@ -13,10 +13,10 @@
     tool = vimdiff
 [alias]
     a = add -A
+    ap = add --patch
     b = branch
     c = commit
     ca = commit --amend
-    can = commit --amend --no-edit
     co = checkout
     d = diff
     dt = difftool
