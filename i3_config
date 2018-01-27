@@ -18,7 +18,7 @@ bindsym $mod+Return exec urxvt
 bindsym $mod+Shift+q kill
 
 # Start dmenu
-bindsym $mod+d exec dmenu_run
+bindsym $mod+Shift+d exec dmenu_run
 bindsym Super_L exec dmenu_run
 
 # Change focus
@@ -37,7 +37,7 @@ bindsym $mod+Shift+l move right
 bindsym $mod+t split toggle
 
 # Enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+f fullscreen toggle
 
 # Change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
@@ -176,4 +176,4 @@ bindsym XF86MonBrightnessDown exec light -U 1
 
 # Startup programs
 exec urxvt
-exec redshift -b 0.95:0.75 -t 5800:5000 &
+exec redshift -l 65.0:25.3 -b 0.95:0.80 -t 4500:4000 &
