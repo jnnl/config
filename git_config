@@ -19,11 +19,13 @@
     ca = commit --amend
     co = checkout
     d = diff
+    dc = diff --cached
     dt = difftool
     dr = diff @ @{u}
     l = log --oneline --decorate --graph
     pr = pull --rebase
     rh = reset --hard
+    rr = !git stash && git stash drop
     rs = reset --soft
     rf = reflog
     ri = rebase -i
