@@ -9,11 +9,6 @@ _git_br() {
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
-# create a directory and enter it
-mcd() {
-    mkdir -p "$1" && cd "$1"
-}
-
 # check if command exists
 has() {
     type -p $* &>/dev/null
@@ -33,7 +28,6 @@ alias f=z
 
 # shell options
 shopt -s histappend
-shopt -s cdspell
 
 # command history options
 HISTSIZE=5000
