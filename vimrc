@@ -5,7 +5,6 @@
 call plug#begin()
 Plug 'jnnl/tantalum.vim'
 Plug 'jnnl/tomorrow-night-flight.vim'
-Plug '~/code/git/vim-gatling'
 
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -25,6 +24,10 @@ if executable('ctags')
     let g:gutentags_ctags_exclude = ['node_modules', 'vendor', 'venv',
                                    \ '*.css', '*.html', '*.js', '*.ts']
 endif
+
+Plug 'tommcdo/vim-exchange'
+Plug 'tommcdo/vim-lion'
+let g:lion_squeeze_spaces = 1
 
 Plug 'ajh17/vimcompletesme'
 Plug 'romainl/vim-cool'
