@@ -23,7 +23,7 @@ fi
 
 # aliases
 alias l="ls -lhF"
-alias ll="ls -lahF"
+alias ll="ls -lhAF"
 alias f=z
 
 # shell options
