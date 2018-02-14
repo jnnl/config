@@ -13,6 +13,7 @@
     tool = vimdiff
 [alias]
     a = add -A
+    ac = "!git add -A && git commit"
     ap = add --patch
     b = branch
     c = commit
@@ -23,11 +24,10 @@
     dt = difftool
     dr = diff @ @{u}
     l = log --oneline --decorate --graph
+    nuke = "!git stash && git stash drop; git clean -fdx"
     pr = pull --rebase
+    rb = rebase
     rh = reset --hard
-    rr = !git stash && git stash drop
     rs = reset --soft
-    rf = reflog
-    ri = rebase -i
     rso = remote show origin
     s = status -bs
