@@ -91,7 +91,7 @@ nnoremap Ö g;
 nnoremap Ä g,
 nnoremap <expr> j (v:count ? 'j' : 'gj')
 nnoremap <expr> k (v:count ? 'k' : 'gk')
-nnoremap Q @q<CR>
+nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
 nnoremap <leader>r :source $MYVIMRC<CR>
