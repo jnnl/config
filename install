@@ -27,8 +27,7 @@ has() {
 exists() {
     local file
     for file in $*; do
-        test -e "$file" \
-            || return 1
+        test -e "$file" || return 1
     done
 }
 
@@ -56,8 +55,7 @@ backup_config() {
 
     local file
     for file in $files; do
-        exists "$HOME/.$file" \
-            && cp -v "$HOME/.$file" "$backupdir/$file"
+        exists "$HOME/.$file" && cp -v "$HOME/.$file" "$backupdir/$file"
     done
 
     exists "$configdir/nvim/init.vim" \
@@ -101,8 +99,7 @@ link_config() {
         ln -vsf "$dotfiledir/$file" "$HOME/.$file"
     done
 
-    [ -h "$configdir/nvim" ] \
-        && rm "$configdir/nvim"
+    test -h "$configdir/nvim" && rm "$configdir/nvim"
     mkdir -p "$configdir/nvim"
     cat > "$configdir/nvim/init.vim" <<EOF
 set runtimepath^=$HOME/.vim runtimepath+=$HOME/.vim/after
@@ -123,8 +120,7 @@ EOF
 }
 
 configure_mac() {
-    is_mac \
-        || return 1
+    is_mac || return 1
 
     # Expand save panels
     defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
@@ -159,12 +155,12 @@ configure_mac() {
 }
 
 install_homebrew() {
-    is_mac \
-        || return 1
+    is_mac || return 1
 
-    has brew \
-        && echo "Homebrew already installed, skipping..." \
-        && return
+    if has brew; then
+        echo "Homebrew already installed, skipping..."
+        return
+    fi
 
     echo "Installing Homebrew..."
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -254,13 +250,13 @@ install_v() {
 main() {
     local files="bash_profile bashrc vimrc tmux.conf"
 
-    is_mac \
-        && files+=" xvimrc" \
-        && configure_mac \
-        && install_homebrew
-
-    is_linux \
-        && files+=" xinitrc Xmodmap Xresources"
+    if is_mac; then
+        files+=" xvimrc"
+        configure_mac
+        install_homebrew
+    elif is_linux; then
+        files+=" xinitrc Xmodmap Xresources"
+    fi
 
     backup_config
     copy_config
