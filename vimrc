@@ -14,7 +14,6 @@ Plug 'tpope/vim-surround'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
-let g:fzf_tags_command = 'ctags -R .tags'
 command! -bang -nargs=* Ag
     \ call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
@@ -23,6 +22,7 @@ if executable('ctags')
     let g:gutentags_ctags_tagfile = '.tags'
     let g:gutentags_ctags_exclude = ['node_modules', 'vendor', 'venv',
                                    \ '*.css', '*.html', '*.js', '*.ts']
+    let g:fzf_tags_command = 'ctags -R .tags'
 endif
 
 Plug 'tommcdo/vim-exchange'
@@ -89,8 +89,15 @@ nnoremap ö <C-o>
 nnoremap ä <C-i>
 nnoremap Ö g;
 nnoremap Ä g,
+
 nnoremap <expr> j (v:count ? 'j' : 'gj')
 nnoremap <expr> k (v:count ? 'k' : 'gk')
+
+nnoremap <C-j> }
+nnoremap <C-k> {
+xnoremap <C-j> }
+xnoremap <C-k> {
+
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
