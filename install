@@ -5,10 +5,10 @@ set -eu
 
 readonly kernel="$(uname -s)"
 readonly scriptdir="$(dirname ${BASH_SOURCE[0]})"
-readonly configdir="$HOME/.config"
+readonly configdir="~/.config"
 readonly dotfiledir="$configdir/dotfiles"
 readonly backupdir="$dotfiledir/backup"
-readonly bindir="$HOME/code/bin"
+readonly bindir="~/code/bin"
 
 die() {
     echo "ERROR: $*"
@@ -55,7 +55,7 @@ backup_config() {
 
     local file
     for file in $files; do
-        exists "$HOME/.$file" && cp -v "$HOME/.$file" "$backupdir/$file"
+        exists "~/.$file" && cp -v "~/.$file" "$backupdir/$file"
     done
 
     exists "$configdir/nvim/init.vim" \
@@ -98,15 +98,15 @@ link_config() {
 
     local file
     for file in $files; do
-        ln -vsf "$dotfiledir/$file" "$HOME/.$file"
+        ln -vsf "$dotfiledir/$file" "~/.$file"
     done
 
     test -h "$configdir/nvim" && rm "$configdir/nvim"
     mkdir -p "$configdir/nvim"
     cat > "$configdir/nvim/init.vim" <<EOF
-set runtimepath^=$HOME/.vim runtimepath+=$HOME/.vim/after
+set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
-source $HOME/.vimrc
+source ~/.vimrc
 EOF
 
     mkdir -p "$configdir/git"
@@ -146,6 +146,8 @@ configure_mac() {
 
     # Disable Finder animations
     defaults write com.apple.finder DisableAllAnimations -bool true
+    # Show full paths
+    defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 
     # Autohide Dock
     defaults write com.apple.dock autohide -bool true
@@ -175,7 +177,7 @@ install_homebrew() {
 install_vimplug() {
     echo "Installing vim-plug..."
 
-    local plugdir="$HOME/.vim/autoload"
+    local plugdir="~/.vim/autoload"
     local url="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 
     mkdir -p "$plugdir"
@@ -196,7 +198,7 @@ install_vimplug() {
 install_fzf() {
     echo "Installing fzf..."
 
-    local fzfdir="$HOME/.fzf"
+    local fzfdir="~/.fzf"
     local url="https://github.com/junegunn/fzf.git"
 
     if test -x "$fzfdir/install"; then

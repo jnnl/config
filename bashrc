@@ -41,7 +41,7 @@ HISTCONTROL=ignoreboth:erasedups
 HISTIGNORE="bg:cd:exit:f:fg:l:ll:ls:v:z"
 
 # add custom bin directory to PATH
-export PATH="$HOME/code/bin:$PATH"
+export PATH="~/code/bin:$PATH"
 
 # set nvim/vim as EDITOR
 if has nvim; then
@@ -68,8 +68,8 @@ has ag && export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -f -g ""'
 has rg && export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 # z config
-[ -f "$HOME/.config/z/z.sh" ] && source "$HOME/.config/z/z.sh"
-has z && export _Z_DATA="$HOME/.config/z/z"
+[ -f "~/.config/z/z.sh" ] && source "~/.config/z/z.sh"
+has z && export _Z_DATA="~/.config/z/z"
 
 # source local bashrc
-[ -f "$HOME/.bashrc.local" ] && source "$HOME/.bashrc.local"
+[ -f "~/.bashrc.local" ] && source "~/.bashrc.local"
