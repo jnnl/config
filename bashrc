@@ -14,6 +14,11 @@ has() {
     type -p $* &>/dev/null
 }
 
+# cd with dirname
+cdd() {
+    cd "$(dirname $1)"
+}
+
 # show hostname in prompt if in ssh session
 if [ -n "$SSH_CONNECTION" ]; then
     PS1="\u@\h:\W\$(_git_br) $ "
