@@ -177,10 +177,10 @@ install_vimplug() {
     dl "$plugdir/plug.vim" "$url"
 
     if has vim; then
-        vim +PlugInstall +qa
+        vim +PlugUpdate +qa
         edone
     elif has nvim; then
-        nvim +PlugInstall +qa
+        nvim +PlugUpdate +qa
         edone
     else
         echo "No vim or neovim found, skipping vim-plug install."
