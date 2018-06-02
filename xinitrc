@@ -1,3 +1,5 @@
+# .xinitrc
+
 setxkbmap fi
 
 if ! type -p caps2esc &>/dev/null; then

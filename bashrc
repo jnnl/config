@@ -1,4 +1,4 @@
-# bashrc
+# .bashrc
 
 # exit if not bash
 [ -n "$BASH" ] || exit

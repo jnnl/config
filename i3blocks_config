@@ -1,4 +1,4 @@
-# i3blocks config file
+# .config/i3blocks/config
 
 # Global properties
 command=/usr/lib/i3blocks/$BLOCK_NAME

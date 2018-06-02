@@ -1,5 +1,4 @@
-# i3config
-# jnnl.net
+# .config/i3/config
 
 # Set mod to Alt
 set $mod Mod1

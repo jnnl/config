@@ -1,5 +1,4 @@
-" vimrc
-" jnnl.net
+" .vimrc
 
 " Plugins
 call plug#begin()
