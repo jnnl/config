@@ -70,6 +70,8 @@ backup_config() {
         && cp -v "$configdir/i3status/config" "$backupdir/i3status_config"
     exists "$configdir/i3blocks/config" \
         && cp -v "$configdir/i3blocks/config" "$backupdir/i3blocks_config"
+    exists "$configdir/kitty/kitty.conf" \
+        && cp -v "$configdir/kitty/kitty.conf" "$backupdir/kitty.conf"
 
     edone
 }
@@ -83,7 +85,7 @@ copy_config() {
         cp -v "$scriptdir/$file" "$dotfiledir"
     done
 
-    local dirfiles="git_config git_ignore i3_config i3status_config i3blocks_config"
+    local dirfiles="git_config git_ignore i3_config i3status_config i3blocks_config kitty.conf"
     for file in $dirfiles; do
         cp -v "$scriptdir/$file" "$dotfiledir"
     done
@@ -115,6 +117,9 @@ EOF
     ln -vsf "$dotfiledir/i3_config" "$configdir/i3/config"
     ln -vsf "$dotfiledir/i3status_config" "$configdir/i3status/config"
     ln -vsf "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
+
+    mkdir -p "$configdir/kitty"
+    ln -vsf "$dotfiledir/kitty.conf" "$configdir/kitty/kitty.conf"
 
     edone
 }

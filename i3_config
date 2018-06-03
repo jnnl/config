@@ -11,7 +11,7 @@ floating_modifier $mod
 
 # Start terminal
 bindsym $mod+Return exec urxvt
-# bindsym $mod+Return exec alacritty
+# bindsym $mod+Return exec kitty
 
 # Kill focused window
 bindsym $mod+Shift+q kill
