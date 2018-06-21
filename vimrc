@@ -21,7 +21,7 @@ if executable('ctags')
     let g:gutentags_ctags_tagfile = '.tags'
     let g:gutentags_ctags_exclude = ['node_modules', 'vendor', 'venv',
                                    \ '*.css', '*.html', '*.js', '*.ts']
-    let g:fzf_tags_command = 'ctags -R .tags'
+    let g:fzf_tags_command = 'ctags -Rf .tags'
 endif
 
 Plug 'tommcdo/vim-exchange'
