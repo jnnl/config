@@ -5,8 +5,16 @@
 
 # get git branch
 _git_br() {
-    [ -d .git ] || return 1
-    git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+    (
+    until [[ "$PWD" == / ]]; do
+        if [ -d .git ]; then
+            git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+            return
+        else
+            cd .. 2>/dev/null || return 1
+        fi
+    done
+    )
 }
 
 # check if command exists
@@ -14,7 +22,7 @@ has() {
     type -p $* &>/dev/null
 }
 
-# cd with dirname
+# cd to dirname
 cdd() {
     cd "$(dirname $1)"
 }
