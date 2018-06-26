@@ -1,3 +1,3 @@
 # .bash_profile
 
-[ -f "~/.bashrc" ] && source "~/.bashrc"
+test -f ~/.bashrc && source ~/.bashrc

@@ -1,13 +1,13 @@
 # .bashrc
 
 # exit if not bash
-[ -n "$BASH" ] || exit
+test -n "$BASH" || exit
 
 # get git branch
 _git_br() {
     (
-    until [[ "$PWD" == / ]]; do
-        if [ -d .git ]; then
+    until test "$PWD" = /; do
+        if test -d .git; then
             git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
             return
         else
@@ -28,7 +28,7 @@ cdd() {
 }
 
 # show hostname in prompt if in ssh session
-if [ -n "$SSH_CONNECTION" ]; then
+if test -n "$SSH_CONNECTION"; then
     PS1="\u@\h:\W\$(_git_br) $ "
 else
     PS1="\u:\W\$(_git_br) $ "
@@ -46,7 +46,7 @@ shopt -s histappend
 HISTSIZE=5000
 HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
-HISTIGNORE="bg:cd:exit:f:fg:l:ll:ls:v:z"
+HISTIGNORE=bg:cd:exit:f:fg:l:ll:ls:v:z
 
 # add custom bin directory to PATH
 export PATH="~/code/bin:$PATH"
@@ -59,25 +59,25 @@ elif has vim; then
 fi
 
 # source bash completion
-if [ -f /etc/bash_completion ]; then
+if test -f /etc/bash_completion; then
     source /etc/bash_completion
-elif [ -f /usr/local/share/bash-completion/bash_completion ]; then
+elif test -f /usr/local/share/bash-completion/bash_completion; then
     source /usr/local/share/bash-completion/bash_completion
-elif [ -f /usr/share/bash-completion/bash_completion ]; then
+elif test -f /usr/share/bash-completion/bash_completion; then
     source /usr/share/bash-completion/bash_completion
-elif [ -f /usr/local/etc/bash_completion ]; then
+elif test -f /usr/local/etc/bash_completion; then
     source /usr/local/etc/bash_completion
 fi
 
 # fzf config
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export FZF_DEFAULT_OPTS='--reverse --border'
-has ag && export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -f -g ""'
-has rg && export FZF_DEFAULT_COMMAND='rg --files --hidden'
+test -f ~/.fzf.bash && source ~/.fzf.bash
+export FZF_DEFAULT_OPTS="--reverse --border"
+has ag && export FZF_DEFAULT_COMMAND="ag --hidden --ignore .git -f -g ''"
+has rg && export FZF_DEFAULT_COMMAND="rg --files --hidden"
 
 # z config
-[ -f "~/.config/z/z.sh" ] && source "~/.config/z/z.sh"
+test -f ~/.config/z/z.sh && source ~/.config/z/z.sh
 has z && export _Z_DATA="~/.config/z/z"
 
 # source local bashrc
-[ -f "~/.bashrc.local" ] && source "~/.bashrc.local"
+test -f ~/.bashrc.local && source ~/.bashrc.local

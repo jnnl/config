@@ -11,8 +11,8 @@ if ! type -p caps2esc &>/dev/null; then
     fi
 fi
 
-[[ -f ~/.Xmodmap ]] && xmodmap ~/.Xmodmap
-[[ -f ~/.Xresources ]] && xrdb -merge -I~ ~/.Xresources
+test -f ~/.Xmodmap && xmodmap ~/.Xmodmap
+test -f ~/.Xresources && xrdb -merge -I~ ~/.Xresources
 
 xset r rate 250 35
 

@@ -5,19 +5,18 @@ set -eu
 
 readonly kernel="$(uname -s)"
 readonly scriptdir="$(dirname ${BASH_SOURCE[0]})"
-readonly configdir="~/.config"
+readonly configdir="$HOME/.config"
 readonly dotfiledir="$configdir/dotfiles"
 readonly backupdir="$dotfiledir/backup"
-readonly bindir="~/code/bin"
+readonly bindir="$HOME/code/bin"
 
 die() {
-    echo "ERROR: $*"
+    printf "ERROR: $*\n"
     exit 1
 }
 
 edone() {
-    echo "done"
-    echo ""
+    printf "done\n\n"
 }
 
 has() {
@@ -50,12 +49,12 @@ dl() {
 }
 
 backup_config() {
-    echo "Backing up existing config files to $backupdir ..."
+    printf "Backing up existing config files to $backupdir ...\n"
     mkdir -p "$backupdir"
 
     local file
     for file in $files; do
-        exists "~/.$file" && cp -v "~/.$file" "$backupdir/$file"
+        exists "$HOME/.$file" && cp -v "$HOME/.$file" "$backupdir/$file"
     done
 
     exists "$configdir/nvim/init.vim" \
@@ -77,7 +76,7 @@ backup_config() {
 }
 
 copy_config() {
-    echo "Copying config files to $dotfiledir..."
+    printf "Copying config files to $dotfiledir...\n"
     mkdir -p "$dotfiledir"
 
     local file
@@ -94,11 +93,11 @@ copy_config() {
 }
 
 link_config() {
-    echo "Linking config files..."
+    printf "Linking config files...\n"
 
     local file
     for file in $files; do
-        ln -vsf "$dotfiledir/$file" "~/.$file"
+        ln -vsf "$dotfiledir/$file" "$HOME/.$file"
     done
 
     test -h "$configdir/nvim" && rm "$configdir/nvim"
@@ -165,19 +164,19 @@ install_homebrew() {
     is_mac || return 1
 
     if has brew; then
-        echo "Homebrew already installed, skipping..."
+        printf "Homebrew already installed, skipping...\n"
         return
     fi
 
-    echo "Installing Homebrew..."
+    printf "Installing Homebrew...\n"
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     edone
 }
 
 install_vimplug() {
-    echo "Installing vim-plug..."
+    printf "Installing vim-plug...\n"
 
-    local plugdir="~/.vim/autoload"
+    local plugdir="$HOME/.vim/autoload"
     local url="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 
     mkdir -p "$plugdir"
@@ -190,15 +189,15 @@ install_vimplug() {
         nvim +PlugUpdate +qa
         edone
     else
-        echo "No vim or neovim found, skipping vim-plug install."
+        printf "No vim or neovim found, skipping vim-plug install.\n"
         return
     fi
 }
 
 install_fzf() {
-    echo "Installing fzf..."
+    printf "Installing fzf...\n"
 
-    local fzfdir="~/.fzf"
+    local fzfdir="$HOME/.fzf"
     local url="https://github.com/junegunn/fzf.git"
 
     if test -x "$fzfdir/install"; then
@@ -224,13 +223,13 @@ install_fzf() {
         "$fzfdir/install" --key-bindings --completion --no-update-rc 1>/dev/null
         edone
     else
-        echo "Git not found, skipping fzf install."
+        printf "Git not found, skipping fzf install.\n"
         return
     fi
 }
 
 install_z() {
-    echo "Installing z..."
+    printf "Installing z...\n"
 
     local zdir="$configdir/z"
     local url="https://raw.githubusercontent.com/rupa/z/master/z.sh"
@@ -242,7 +241,7 @@ install_z() {
 }
 
 install_v() {
-    echo "Installing v..."
+    printf "Installing v...\n"
 
     local url="https://raw.githubusercontent.com/rupa/v/master/v"
 
@@ -274,7 +273,7 @@ main() {
     install_z
     install_v
 
-    echo "all done"
+    printf "all done\n"
 }
 
 main
