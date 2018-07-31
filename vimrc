@@ -28,7 +28,7 @@ Plug 'tommcdo/vim-exchange'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
-Plug 'ajh17/vimcompletesme'
+Plug 'lifepillar/vim-mucomplete'
 Plug 'romainl/vim-cool'
 Plug 'michaeljsmith/vim-indent-object'
 call plug#end()
