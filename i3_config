@@ -10,8 +10,7 @@ font pango:Terminus 8
 floating_modifier $mod
 
 # Start terminal
-bindsym $mod+Return exec urxvt
-# bindsym $mod+Return exec kitty
+bindsym $mod+Return exec alacritty
 
 # Kill focused window
 bindsym $mod+Shift+q kill
@@ -126,11 +125,11 @@ bar {
     }
 }
 
-# Color class               border  bg      text    child border
-client.focused              #333f4d #232f3d #eeeeee #434f5d
-client.focused_inactive     #0c0c0c #0f1b29 #888888 #2f3b49
-client.unfocused            #111111 #101c2a #888888 #303c4a
-client.urgent               #555555 #434f5d #ffffff #636f7d
+# Color class               border  bg      text    indicator child border
+client.focused              #333f4d #232f3d #eeeeee #636f7d   #434f5d
+client.focused_inactive     #0c0c0c #0f1b29 #888888 #636f7d   #2f3b49
+client.unfocused            #111111 #101c2a #888888 #636f7d   #303c4a
+client.urgent               #555555 #434f5d #ffffff #636f7d   #636f7d
 
 # System menu
 set $systemmenu "system:  [e]xit  [l]ock  [p]oweroff  [r]eboot  [s]uspend"
@@ -174,5 +173,5 @@ bindsym XF86MonBrightnessUp exec light -A 1
 bindsym XF86MonBrightnessDown exec light -U 1
 
 # Startup programs
-exec urxvt
+exec alacritty
 exec redshift -l 65.0:25.3 -b 0.95:0.80 -t 4500:4000 &
