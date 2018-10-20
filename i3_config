@@ -127,9 +127,9 @@ bar {
 
 # Color class               border  bg      text    indicator child border
 client.focused              #333f4d #232f3d #eeeeee #636f7d   #434f5d
-client.focused_inactive     #0c0c0c #0f1b29 #888888 #636f7d   #2f3b49
-client.unfocused            #111111 #101c2a #888888 #636f7d   #303c4a
-client.urgent               #555555 #434f5d #ffffff #636f7d   #636f7d
+client.focused_inactive     #0c0c0c #0f1b29 #888888 #333f4d   #2f3b49
+client.unfocused            #111111 #101c2a #888888 #333f4d   #303c4a
+client.urgent               #555555 #434f5d #ffffff #333f4d   #636f7d
 
 # System menu
 set $systemmenu "system:  [e]xit  [l]ock  [p]oweroff  [r]eboot  [s]uspend"
