@@ -2,6 +2,7 @@
 
 " Plugins
 call plug#begin()
+
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
@@ -15,10 +16,12 @@ command! -bang -nargs=* Ag
 
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'jnnl/tomorrow-night-flight.vim'
-Plug 'sheerun/vim-polyglot'
 Plug 'romainl/vim-cool'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
+
+Plug 'sheerun/vim-polyglot'
+let g:python_highlight_space_errors = 0
 
 Plug 'mbbill/undotree'
 if has('persistent_undo')
