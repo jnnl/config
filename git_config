@@ -12,8 +12,8 @@
 [merge]
     tool = vimdiff
 [alias]
-    a = add -A
-    ac = "!git add -A && git commit"
+    a = add --all
+    ac = "!git add --all && git commit"
     ap = add --patch
     b = branch
     c = commit
@@ -24,6 +24,7 @@
     dt = difftool
     dr = diff @ @{u}
     l = log --oneline --decorate --graph
+    lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(blue)%an%Creset' --abbrev-commit
     nuke = "!git stash && git stash drop; git clean -fdx"
     pr = pull --rebase
     rb = rebase
