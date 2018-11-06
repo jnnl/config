@@ -15,11 +15,28 @@ command! -bang -nargs=* Ag
 
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'jnnl/tomorrow-night-flight.vim'
-Plug 'lifepillar/vim-mucomplete'
 Plug 'sheerun/vim-polyglot'
 Plug 'romainl/vim-cool'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
+
+Plug 'mbbill/undotree'
+if has('persistent_undo')
+    set undodir=~/.vim/undo/
+    set undofile
+endif
+
+Plug 'w0rp/ale'
+let g:ale_enabled = 0
+
+Plug 'lifepillar/vim-mucomplete'
+let g:mucomplete#delayed_completion = 1
+let g:mucomplete#can_complete = {}
+let g:mucomplete#can_complete.default = { 'omni': { t -> t =~# '\m\k\%(\k\|\.\|::\)$' } }
+set shortmess+=c
+set completeopt-=preview
+set completeopt+=longest,menuone,noselect
+
 call plug#end()
 
 " General
@@ -88,8 +105,9 @@ xnoremap <C-k> {
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
-nnoremap <leader>r :source $MYVIMRC<CR>
+nnoremap <leader>a :ALEToggle<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
+nnoremap <leader>d :UndotreeToggle<CR>
 
 nnoremap <leader>, :Files<CR>
 nnoremap <leader>. :Buffers<CR>
@@ -104,6 +122,14 @@ command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
 command! StripTrail :%s/\s\+$//e
 command! StripANSI :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! MatchNonASCII /[^\x00-\x7f]
+
+" Angular navigation commands
+command! ET :e %:p:r.html
+command! EC :e %:p:r.ts
+command! ES :e %:p:r.scss
+command! VT :vs %:p:r.html
+command! VC :vs %:p:r.ts
+command! VS :vs %:p:r.scss
 
 " Autocmds
 augroup Miscellaneous
