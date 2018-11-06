@@ -2,12 +2,9 @@
 
 " Plugins
 call plug#begin()
-Plug 'jnnl/tantalum.vim'
-Plug 'jnnl/tomorrow-night-flight.vim'
-
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 
@@ -16,21 +13,13 @@ Plug 'junegunn/fzf.vim'
 command! -bang -nargs=* Ag
     \ call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
-if executable('ctags')
-    Plug 'ludovicchabant/vim-gutentags'
-    let g:gutentags_ctags_tagfile = '.tags'
-    let g:gutentags_ctags_exclude = ['node_modules', 'vendor', 'venv',
-                                   \ '*.css', '*.html', '*.js', '*.ts']
-    let g:fzf_tags_command = 'ctags -Rf .tags'
-endif
-
-Plug 'tommcdo/vim-exchange'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'jnnl/tomorrow-night-flight.vim'
+Plug 'lifepillar/vim-mucomplete'
+Plug 'sheerun/vim-polyglot'
+Plug 'romainl/vim-cool'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
-
-Plug 'lifepillar/vim-mucomplete'
-Plug 'romainl/vim-cool'
-Plug 'michaeljsmith/vim-indent-object'
 call plug#end()
 
 " General
@@ -83,7 +72,6 @@ try | colorscheme tomorrow-night-flight | catch | colorscheme default | endtry
 " Mappings
 map , <leader>
 
-nnoremap § :w<CR>
 nnoremap ö <C-o>
 nnoremap ä <C-i>
 nnoremap Ö g;
@@ -102,14 +90,13 @@ xnoremap Q :normal @q<CR>
 
 nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
-nnoremap <leader>t <C-]>
 
 nnoremap <leader>, :Files<CR>
 nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>- :Ag<CR>
 nnoremap <leader>; :History<CR>
 nnoremap <leader>: :BCommits<CR>
-nnoremap <leader>_ :Tags<CR>
+nnoremap <leader>_ :BLines<CR>
 
 " Commands
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
@@ -124,6 +111,7 @@ augroup Miscellaneous
     au BufWritePre,FileWritePre * :call s:AutoMkDir()
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
+    au FileType html runtime macros/matchit.vim
 augroup END
 
 augroup Execute
