@@ -228,31 +228,6 @@ install_fzf() {
     fi
 }
 
-install_z() {
-    printf "Installing z...\n"
-
-    local zdir="$configdir/z"
-    local url="https://raw.githubusercontent.com/rupa/z/master/z.sh"
-
-    mkdir -p "$zdir"
-    dl "$zdir/z.sh" "$url"
-
-    edone
-}
-
-install_v() {
-    printf "Installing v...\n"
-
-    local url="https://raw.githubusercontent.com/rupa/v/master/v"
-
-    mkdir -pv "$bindir"
-
-    dl "$bindir/v" "$url"
-    chmod ug+x "$bindir/v"
-
-    edone
-}
-
 main() {
     local files="bash_profile bashrc vimrc tmux.conf"
 
@@ -270,8 +245,6 @@ main() {
 
     install_vimplug
     install_fzf
-    install_z
-    install_v
 
     printf "all done\n"
 }

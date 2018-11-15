@@ -37,7 +37,6 @@ fi
 # aliases
 alias l="ls -lhF"
 alias ll="ls -lhAF"
-alias f=z
 
 # shell options
 shopt -s histappend
@@ -46,7 +45,7 @@ shopt -s histappend
 HISTSIZE=5000
 HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
-HISTIGNORE=bg:cd:exit:f:fg:l:ll:ls:v:z
+HISTIGNORE=bg:cd:exit:f:fg:j:l:ll:ls:v
 
 # add custom bin directory to PATH
 export PATH="~/code/bin:$PATH"
@@ -75,9 +74,12 @@ export FZF_DEFAULT_OPTS="--reverse --border"
 has ag && export FZF_DEFAULT_COMMAND="ag --hidden --ignore .git -f -g ''"
 has rg && export FZF_DEFAULT_COMMAND="rg --files --hidden"
 
-# z config
-test -f ~/.config/z/z.sh && source ~/.config/z/z.sh
-has z && export _Z_DATA="~/.config/z/z"
+# fasd config
+if has fasd; then
+    eval "$(fasd --init auto)"
+    alias j="fasd_cd -d"
+    alias v="fasd -e vim"
+fi
 
 # source local bashrc
 test -f ~/.bashrc.local && source ~/.bashrc.local
