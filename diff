@@ -1,0 +1,21 @@
+#!/bin/bash
+# dotfiles diff script
+
+set -eu
+
+readonly scriptdir="$(dirname ${BASH_SOURCE[0]})"
+readonly configdir="$HOME/.config"
+readonly dotfiledir="$configdir/dotfiles"
+
+_diff() {
+    [ -f "$dotfiledir/$1" ] || return
+    diff --suppress-common-lines ${@:2} "$scriptdir/$1" "$dotfiledir/$1" || true
+}
+
+files="bash_profile bashrc git_config git_ignore "
+files+="i3blocks_config i3_config i3status_config "
+files+="kitty.conf vimrc tmux.conf xinitrc Xmodmap Xresources"
+
+for file in $files; do
+    _diff "$file" $*
+done

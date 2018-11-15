@@ -16,7 +16,10 @@ command! -bang -nargs=* Ag
 
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'jnnl/tomorrow-night-flight.vim'
+
 Plug 'romainl/vim-cool'
+let g:CoolTotalMatches = 1
+
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
@@ -33,7 +36,6 @@ Plug 'w0rp/ale'
 let g:ale_enabled = 0
 
 Plug 'lifepillar/vim-mucomplete'
-let g:mucomplete#delayed_completion = 1
 let g:mucomplete#can_complete = {}
 let g:mucomplete#can_complete.default = { 'omni': { t -> t =~# '\m\k\%(\k\|\.\|::\)$' } }
 set shortmess+=c

@@ -174,4 +174,4 @@ bindsym XF86MonBrightnessDown exec light -U 1
 
 # Startup programs
 exec alacritty
-exec redshift -l 65.0:25.3 -b 0.95:0.80 -t 4500:4000 &
+exec redshift -l 65.0:25.3 -b 0.95:0.80 -t 4200:3600 &
