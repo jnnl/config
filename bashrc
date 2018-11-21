@@ -77,7 +77,7 @@ has rg && export FZF_DEFAULT_COMMAND="rg --files --hidden"
 # fasd config
 if has fasd; then
     eval "$(fasd --init auto)"
-    alias j="fasd_cd -d"
+    alias f="fasd_cd -d"
     alias v="fasd -e vim"
 fi
 

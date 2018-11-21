@@ -9,31 +9,22 @@ Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 
+Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 command! -bang -nargs=* Ag
     \ call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
-Plug 'michaeljsmith/vim-indent-object'
 Plug 'jnnl/tomorrow-night-flight.vim'
-
+Plug 'machakann/vim-highlightedyank'
+Plug 'sgur/vim-editorconfig'
+Plug 'michaeljsmith/vim-indent-object'
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
-
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
-
 Plug 'sheerun/vim-polyglot'
 let g:python_highlight_space_errors = 0
-
-Plug 'mbbill/undotree'
-if has('persistent_undo')
-    set undodir=~/.vim/undo/
-    set undofile
-endif
-
-Plug 'w0rp/ale'
-let g:ale_enabled = 0
 
 Plug 'lifepillar/vim-mucomplete'
 let g:mucomplete#can_complete = {}
@@ -43,6 +34,8 @@ set completeopt-=preview
 set completeopt+=longest,menuone,noselect
 
 call plug#end()
+
+runtime macros/matchit.vim
 
 " General
 set encoding=utf-8
@@ -56,14 +49,18 @@ set noswapfile
 set ttimeout
 set ttimeoutlen=10
 
-" Performance tweaks
-set synmaxcol=500
-set lazyredraw
-
+" Vim/neovim specific
 if has('vim')
     set ttyfast
     set ttyscroll=3
 endif
+if has('nvim')
+    set inccommand=nosplit
+endif
+
+" Performance tweaks
+set synmaxcol=500
+set lazyredraw
 
 " Statusline
 set laststatus=2
@@ -142,16 +139,7 @@ augroup Miscellaneous
     au BufWritePre,FileWritePre * :call s:AutoMkDir()
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
-    au FileType html runtime macros/matchit.vim
-augroup END
-
-augroup Execute
-    au!
-    au FileType c      nn <buffer> <leader>x :!clear; gcc -o "%:p:r" "%:p" && "%:p:r"<CR>
-    au FileType cpp    nn <buffer> <leader>x :!clear; g++ -o "%:p:r" "%:p" && "%:p:r"<CR>
-    au FileType python nn <buffer> <leader>x :!clear; python3 "%:p"<CR>
-    au FileType rust   nn <buffer> <leader>x :!clear; rustc -o "%:p:r" "%:p" && "%:p:r"<CR>
-    au FileType sh     nn <buffer> <leader>x :!clear; "%:p"<CR>
+    au QuickFixCmdPost [^l]* cwindow
 augroup END
 
 " Functions
