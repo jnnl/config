@@ -13,22 +13,21 @@
     tool = vimdiff
 [alias]
     a = add --all
-    ac = "!git add --all && git commit"
     ap = add --patch
     b = branch
     c = commit
     ca = commit --amend
     co = checkout
+    cp = cherry-pick
     d = diff
     dc = diff --cached
-    dt = difftool
-    dr = diff @ @{u}
     l = log --oneline --decorate --graph
     lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(blue)%an%Creset' --abbrev-commit
     nuke = "!git stash && git stash drop; git clean -fdx"
     pr = pull --rebase
     rb = rebase
+    rp = reset --patch
     rh = reset --hard
     rs = reset --soft
     rso = remote show origin
-    s = status -bs
+    s = status -bsu
