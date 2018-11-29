@@ -11,6 +11,8 @@
     tool = vimdiff
 [merge]
     tool = vimdiff
+[pull]
+    rebase = true
 [alias]
     a = add --all
     ap = add --patch
@@ -21,9 +23,11 @@
     cp = cherry-pick
     d = diff
     dc = diff --cached
+    dh = diff HEAD^ HEAD
     l = log --oneline --decorate --graph
     lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(blue)%an%Creset' --abbrev-commit
     nuke = "!git stash && git stash drop; git clean -fdx"
+    pp = "!git pull --rebase && git push"
     pr = pull --rebase
     rb = rebase
     rp = reset --patch
