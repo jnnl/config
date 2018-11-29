@@ -13,7 +13,28 @@ Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 command! -bang -nargs=* Ag
-    \ call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
+    \ call fzf#vim#ag(<q-args>,
+    \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+    \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+    \   <bang>0)
+command! -bang -nargs=* Rg
+    \ call fzf#vim#grep(
+    \   'rg --column --line-number --no-heading --smart-case '
+    \   . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
+    \   . shellescape(<q-args>), 1,
+    \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+    \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+    \   <bang>0)
+func! s:build_quickfix_list(lines)
+    call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+    copen
+    cc
+endf
+let g:fzf_action = {
+    \ 'ctrl-q': function('s:build_quickfix_list'),
+    \ 'ctrl-x': 'split',
+    \ 'ctrl-v': 'vsplit'
+\}
 
 Plug 'jnnl/tomorrow-night-flight.vim'
 Plug 'machakann/vim-highlightedyank'
@@ -23,12 +44,12 @@ Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
-Plug 'sheerun/vim-polyglot'
-let g:python_highlight_space_errors = 0
 
 Plug 'lifepillar/vim-mucomplete'
 let g:mucomplete#can_complete = {}
-let g:mucomplete#can_complete.default = { 'omni': { t -> t =~# '\m\k\%(\k\|\.\|::\)$' } }
+let g:mucomplete#can_complete.default = {
+    \ 'omni': { t -> t =~# '\m\k\%(\k\|\.\|::\)$' }
+\}
 set shortmess+=c
 set completeopt-=preview
 set completeopt+=longest,menuone,noselect
@@ -68,6 +89,7 @@ set statusline=%f\ %y%m%=%l/%L
 
 " Indentation
 set autoindent
+set breakindent
 set expandtab
 set smarttab
 
@@ -86,15 +108,13 @@ set smartcase
 
 " Styles
 set number
-try | colorscheme tomorrow-night-flight | catch | colorscheme default | endtry
+try | colorscheme seoul256 | catch | colorscheme default | endtry
 
 " Mappings
 map , <leader>
 
 nnoremap ö <C-o>
 nnoremap ä <C-i>
-nnoremap Ö g;
-nnoremap Ä g,
 
 nnoremap <expr> j (v:count ? 'j' : 'gj')
 nnoremap <expr> k (v:count ? 'k' : 'gk')
@@ -107,13 +127,11 @@ xnoremap <C-k> {
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
-nnoremap <leader>a :ALEToggle<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
-nnoremap <leader>d :UndotreeToggle<CR>
 
 nnoremap <leader>, :Files<CR>
 nnoremap <leader>. :Buffers<CR>
-nnoremap <leader>- :Ag<CR>
+nnoremap <leader>- :call Search()<CR>
 nnoremap <leader>; :History<CR>
 nnoremap <leader>: :BCommits<CR>
 nnoremap <leader>_ :BLines<CR>
@@ -136,14 +154,20 @@ command! VS :vs %:p:r.scss
 " Autocmds
 augroup Miscellaneous
     au!
-    au BufWritePre,FileWritePre * :call s:AutoMkDir()
+    au BufWritePre,FileWritePre * :call s:auto_mkdir()
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
     au QuickFixCmdPost [^l]* cwindow
 augroup END
 
 " Functions
-func! s:AutoMkDir()
+func! Search()
+    try | Rg
+    catch | Ag
+    endtry
+endf
+
+func! s:auto_mkdir()
     let dir = expand('<afile>:p:h')
     if !isdirectory(dir)
         call mkdir(dir, 'p')
