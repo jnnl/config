@@ -9,7 +9,6 @@ Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 
-Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 command! -bang -nargs=* Ag
@@ -36,12 +35,14 @@ let g:fzf_action = {
     \ 'ctrl-v': 'vsplit'
 \}
 
-Plug 'jnnl/tomorrow-night-flight.vim'
-Plug 'machakann/vim-highlightedyank'
+Plug 'jnnl/vim-tonight'
 Plug 'sgur/vim-editorconfig'
+Plug 'machakann/vim-highlightedyank'
 Plug 'michaeljsmith/vim-indent-object'
+
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
+
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
@@ -108,7 +109,13 @@ set smartcase
 
 " Styles
 set number
-try | colorscheme seoul256 | catch | colorscheme default | endtry
+try | colorscheme tonight | catch | colorscheme default | endtry
+
+if exists('+termguicolors')
+  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
 
 " Mappings
 map , <leader>
