@@ -45,10 +45,10 @@ shopt -s histappend
 HISTSIZE=5000
 HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
-HISTIGNORE=bg:cd:exit:f:fg:j:l:ll:ls:v
+HISTIGNORE=bg:cd:exit:f:fg:l:ll:ls:v:z
 
 # add custom bin directory to PATH
-export PATH="~/code/bin:$PATH"
+export PATH="$HOME/code/bin:$PATH"
 
 # set nvim/vim as EDITOR
 if has nvim; then
@@ -74,11 +74,11 @@ export FZF_DEFAULT_OPTS="--reverse --border"
 has ag && export FZF_DEFAULT_COMMAND="ag --hidden --ignore .git -f -g ''"
 has rg && export FZF_DEFAULT_COMMAND="rg --files --hidden"
 
-# fasd config
-if has fasd; then
-    eval "$(fasd --init auto)"
-    alias f="fasd_cd -d"
-    alias v="fasd -e vim"
+# z config
+if test -f ~/.config/z/z.sh; then
+    _Z_DATA="$HOME/.config/z/z"
+    _Z_CMD=f
+    source ~/.config/z/z.sh
 fi
 
 # source local bashrc
