@@ -1,5 +1,3 @@
-" .vimrc
-
 " Plugins
 call plug#begin()
 
@@ -37,8 +35,12 @@ let g:fzf_action = {
 
 Plug 'jnnl/vim-tonight'
 Plug 'sgur/vim-editorconfig'
-Plug 'machakann/vim-highlightedyank'
 Plug 'michaeljsmith/vim-indent-object'
+
+Plug 'andymass/vim-matchup'
+let g:matchup_matchparen_enabled = 0
+let g:matchup_transmute_enabled = 1
+let g:matchup_matchparen_status_offscreen = 0
 
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
@@ -47,17 +49,19 @@ Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
 Plug 'lifepillar/vim-mucomplete'
-let g:mucomplete#can_complete = {}
-let g:mucomplete#can_complete.default = {
-    \ 'omni': { t -> t =~# '\m\k\%(\k\|\.\|::\)$' }
-\}
+
 set shortmess+=c
 set completeopt-=preview
 set completeopt+=longest,menuone,noselect
 
+if v:version >= 800
+  let g:mucomplete#can_complete = {}
+  let g:mucomplete#can_complete.default = {
+      \ 'omni': { t -> t =~# '\m\k\%(\k\|\.\|::\)$' }
+  \}
+  Plug 'machakann/vim-highlightedyank'
+endif
 call plug#end()
-
-runtime macros/matchit.vim
 
 " General
 set encoding=utf-8
