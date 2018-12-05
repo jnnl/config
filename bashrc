@@ -72,7 +72,7 @@ fi
 test -f ~/.fzf.bash && source ~/.fzf.bash
 export FZF_DEFAULT_OPTS="--reverse --border"
 has ag && export FZF_DEFAULT_COMMAND="ag --hidden --ignore .git -f -g ''"
-has rg && export FZF_DEFAULT_COMMAND="rg --files --hidden"
+has rg && export FZF_DEFAULT_COMMAND="rg --files --hidden -g'!.git/'"
 
 # z config
 if test -f ~/.config/z/z.sh; then
