@@ -2,31 +2,33 @@
 call plug#begin()
 
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
+
+let s:preview_opts = {'options': '--delimiter : --nth 4..'}
+let s:rg_cmd = 'rg --column --line-number --no-heading --smart-case '
+    \        . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
+
 command! -bang -nargs=* Ag
     \ call fzf#vim#ag(<q-args>,
-    \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
-    \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+    \   <bang>0 ? fzf#vim#with_preview(s:preview_opts, 'up:60%')
+    \           : fzf#vim#with_preview(s:preview_opts, 'right:50%:hidden', '?'),
     \   <bang>0)
 command! -bang -nargs=* Rg
-    \ call fzf#vim#grep(
-    \   'rg --column --line-number --no-heading --smart-case '
-    \   . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
-    \   . shellescape(<q-args>), 1,
-    \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
-    \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+    \ call fzf#vim#grep(s:rg_cmd . shellescape(<q-args>), 1,
+    \   <bang>0 ? fzf#vim#with_preview(s:preview_opts, 'up:60%')
+    \           : fzf#vim#with_preview(s:preview_opts, 'right:50%:hidden', '?'),
     \   <bang>0)
+
 func! s:build_quickfix_list(lines)
-    call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
-    copen
-    cc
+    call setqflist(map(copy(a:lines), '{ "filename": v:val }')) | copen | cc
 endf
+
 let g:fzf_action = {
     \ 'ctrl-q': function('s:build_quickfix_list'),
     \ 'ctrl-x': 'split',
@@ -37,11 +39,6 @@ Plug 'jnnl/vim-tonight'
 Plug 'sgur/vim-editorconfig'
 Plug 'michaeljsmith/vim-indent-object'
 
-Plug 'andymass/vim-matchup'
-let g:matchup_matchparen_enabled = 0
-let g:matchup_transmute_enabled = 1
-let g:matchup_matchparen_status_offscreen = 0
-
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
 
@@ -49,7 +46,6 @@ Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
 Plug 'lifepillar/vim-mucomplete'
-
 set shortmess+=c
 set completeopt-=preview
 set completeopt+=longest,menuone,noselect
@@ -62,6 +58,8 @@ if v:version >= 800
   Plug 'machakann/vim-highlightedyank'
 endif
 call plug#end()
+
+runtime macros/matchit.vim
 
 " General
 set encoding=utf-8
