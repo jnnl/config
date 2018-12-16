@@ -10,20 +10,12 @@ Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 
-let s:preview_opts = {'options': '--delimiter : --nth 4..'}
-let s:rg_cmd = 'rg --column --line-number --no-heading --smart-case '
-    \        . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
-
-command! -bang -nargs=* Ag
-    \ call fzf#vim#ag(<q-args>,
-    \   <bang>0 ? fzf#vim#with_preview(s:preview_opts, 'up:60%')
-    \           : fzf#vim#with_preview(s:preview_opts, 'right:50%:hidden', '?'),
-    \   <bang>0)
-command! -bang -nargs=* Rg
-    \ call fzf#vim#grep(s:rg_cmd . shellescape(<q-args>), 1,
-    \   <bang>0 ? fzf#vim#with_preview(s:preview_opts, 'up:60%')
-    \           : fzf#vim#with_preview(s:preview_opts, 'right:50%:hidden', '?'),
-    \   <bang>0)
+command! -nargs=* Rg
+    \ call fzf#vim#grep(
+    \ 'rg --column --line-number --no-heading --smart-case '
+    \ . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
+    \ . shellescape(<q-args>), 1,
+    \ fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'))
 
 func! s:build_quickfix_list(lines)
     call setqflist(map(copy(a:lines), '{ "filename": v:val }')) | copen | cc
@@ -65,13 +57,14 @@ runtime macros/matchit.vim
 set encoding=utf-8
 set backspace=indent,eol,start
 set hidden
-set noshowcmd
+set showcmd
 set wildmenu
 set display+=lastline
 set noswapfile
+set nojoinspaces
+set clipboard=unnamed
 
-set ttimeout
-set ttimeoutlen=10
+set timeoutlen=500
 
 " Vim/neovim specific
 if has('vim')
@@ -138,19 +131,20 @@ xnoremap Q :normal @q<CR>
 
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 
-nnoremap <leader>, :Files<CR>
-nnoremap <leader>. :Buffers<CR>
-nnoremap <leader>- :call Search()<CR>
-nnoremap <leader>; :History<CR>
-nnoremap <leader>: :BCommits<CR>
-nnoremap <leader>_ :BLines<CR>
+nnoremap <silent> <leader>, :Files<CR>
+nnoremap <silent> <leader>. :Buffers<CR>
+nnoremap <silent> <leader>- :call Search()<CR>
+nnoremap <silent> <leader>; :History<CR>
+nnoremap <silent> <leader>: :BCommits<CR>
+nnoremap <silent> <leader>_ :BLines<CR>
 
 " Commands
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
             \ . fnameescape(expand('%:p')) | :e!
-command! StripTrail :%s/\s\+$//e
-command! StripANSI :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
-command! MatchNonASCII /[^\x00-\x7f]
+command! Chomp :%s/\s\+$//e
+command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
+command! NonASCII /[^\x00-\x7f]
+command! Groot :call s:groot()
 
 " Angular navigation commands
 command! ET :e %:p:r.html
@@ -174,6 +168,10 @@ func! Search()
     try | Rg
     catch | Ag
     endtry
+endf
+
+func! s:groot()
+    execute 'lcd' system('git rev-parse --show-toplevel')
 endf
 
 func! s:auto_mkdir()
