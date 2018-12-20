@@ -57,20 +57,14 @@ backup_config() {
         exists "$HOME/.$file" && cp -v "$HOME/.$file" "$backupdir/$file"
     done
 
-    exists "$configdir/nvim/init.vim" \
-        && cp -v "$configdir/nvim/init.vim" "$backupdir/nvimrc"
-    exists "$configdir/git/config" \
-        && cp -v "$configdir/git/config" "$backupdir/git_config"
-    exists "$configdir/git/ignore" \
-        && cp -v "$configdir/git/ignore" "$backupdir/git_ignore"
-    exists "$configdir/i3/config" \
-        && cp -v "$configdir/i3/config" "$backupdir/i3_config"
-    exists "$configdir/i3status/config" \
-        && cp -v "$configdir/i3status/config" "$backupdir/i3status_config"
-    exists "$configdir/i3blocks/config" \
-        && cp -v "$configdir/i3blocks/config" "$backupdir/i3blocks_config"
-    exists "$configdir/kitty/kitty.conf" \
-        && cp -v "$configdir/kitty/kitty.conf" "$backupdir/kitty.conf"
+    exists "$configdir/nvim/init.vim" && cp -v "$_" "$backupdir/init.vim"
+    exists "$configdir/git/config" && cp -v "$_" "$backupdir/git_config"
+    exists "$configdir/git/ignore" && cp -v "$_" "$backupdir/git_ignore"
+    exists "$configdir/i3/config" && cp -v "$_" "$backupdir/i3_config"
+    exists "$configdir/i3status/config" && cp -v "$_" "$backupdir/i3status_config"
+    exists "$configdir/i3blocks/config" && cp -v "$_" "$backupdir/i3blocks_config"
+    exists "$configdir/kitty/kitty.conf" && cp -v "$_" "$backupdir/kitty.conf"
+    exists "$configdir/alacritty/alacritty.yml" && cp -v "$_" "$backupdir/alacritty.yml"
 
     edone
 }
@@ -84,7 +78,9 @@ copy_config() {
         cp -v "$scriptdir/$file" "$dotfiledir"
     done
 
-    local dirfiles="git_config git_ignore i3_config i3status_config i3blocks_config kitty.conf"
+    local dirfiles="git_config git_ignore "
+    dirfiles+="i3_config i3status_config i3blocks_config "
+    dirfiles+="kitty.conf alacritty.yml"
     for file in $dirfiles; do
         cp -v "$scriptdir/$file" "$dotfiledir"
     done
@@ -119,6 +115,9 @@ EOF
 
     mkdir -p "$configdir/kitty"
     ln -vsf "$dotfiledir/kitty.conf" "$configdir/kitty/kitty.conf"
+
+    mkdir -p "$configdir/alacritty"
+    ln -vsf "$dotfiledir/alacritty.yml" "$configdir/alacritty/alacritty.yml"
 
     edone
 }
@@ -234,6 +233,31 @@ install_fzf() {
     fi
 }
 
+install_z() {
+    printf "Installing z...\n"
+
+    local zdir="$configdir/z"
+    local url="https://raw.githubusercontent.com/rupa/z/master/z.sh"
+
+    mkdir -p "$zdir"
+    dl "$zdir/z.sh" "$url"
+
+    edone
+}
+
+install_v() {
+    printf "Installing v...\n"
+
+    local url="https://raw.githubusercontent.com/rupa/v/master/v"
+
+    mkdir -p "$bindir"
+
+    dl "$bindir/v" "$url"
+    chmod ug+x "$bindir/v"
+
+    edone
+}
+
 main() {
     local files="bash_profile bashrc vimrc tmux.conf"
 
@@ -251,6 +275,8 @@ main() {
 
     install_vimplug
     install_fzf
+    install_z
+    install_v
 
     printf "all done\n"
 }
