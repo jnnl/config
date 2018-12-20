@@ -30,6 +30,7 @@ let g:fzf_action = {
 Plug 'jnnl/vim-tonight'
 Plug 'sgur/vim-editorconfig'
 Plug 'michaeljsmith/vim-indent-object'
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
 
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
@@ -130,6 +131,7 @@ nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
+nnoremap <silent> <leader>u :UndotreeToggle<CR>
 
 nnoremap <silent> <leader>, :Files<CR>
 nnoremap <silent> <leader>. :Buffers<CR>
