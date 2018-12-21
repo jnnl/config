@@ -1,7 +1,7 @@
 # .bashrc
 
 # exit if not bash
-test -n "$BASH" || exit
+test -n "$BASH" || exit 1
 
 # get git branch
 _git_br() {
@@ -52,27 +52,35 @@ export PATH="$HOME/code/bin:$PATH"
 
 # set nvim/vim as EDITOR
 if has nvim; then
+    alias vim=nvim
     export VISUAL=nvim EDITOR=nvim
 elif has vim; then
     export VISUAL=vim EDITOR=vim
+elif has vi; then
+    export VISUAL=vi EDITOR=vi
 fi
 
 # source bash completion
-if test -f /etc/bash_completion; then
-    source /etc/bash_completion
+if test -f /usr/share/bash-completion/bash_completion; then
+    source "$_"
 elif test -f /usr/local/share/bash-completion/bash_completion; then
-    source /usr/local/share/bash-completion/bash_completion
-elif test -f /usr/share/bash-completion/bash_completion; then
-    source /usr/share/bash-completion/bash_completion
+    source "$_"
 elif test -f /usr/local/etc/bash_completion; then
-    source /usr/local/etc/bash_completion
+    source "$_"
+elif test -f /etc/bash_completion; then
+    source "$_"
 fi
 
 # fzf config
-test -f ~/.fzf.bash && source ~/.fzf.bash
-export FZF_DEFAULT_OPTS="--reverse --border"
-has ag && export FZF_DEFAULT_COMMAND="ag --hidden --ignore .git -f -g ''"
-has rg && export FZF_DEFAULT_COMMAND="rg --files --hidden -g'!.git/'"
+test -f ~/.fzf.bash && source "$_"
+if has fzf; then
+    export FZF_DEFAULT_OPTS="--reverse --border"
+    if has rg; then
+        export FZF_DEFAULT_COMMAND="rg --files --hidden -g'!.git/'"
+    elif has ag; then
+        export FZF_DEFAULT_COMMAND="ag --hidden --ignore .git -f -g ''"
+    fi
+fi
 
 # z config
 if test -f ~/.config/z/z.sh; then
@@ -82,4 +90,4 @@ if test -f ~/.config/z/z.sh; then
 fi
 
 # source local bashrc
-test -f ~/.bashrc.local && source ~/.bashrc.local
+test -f ~/.bashrc.local && source "$_"
