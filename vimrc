@@ -88,8 +88,7 @@ set timeoutlen=500
 if has('vim')
     set ttyfast
     set ttyscroll=3
-endif
-if has('nvim')
+elseif has('nvim')
     set inccommand=nosplit
 endif
 
@@ -108,7 +107,7 @@ set expandtab
 set smarttab
 
 set shiftwidth=4
-set softtabstop=4
+set softtabstop=-1
 
 " Splits
 set splitright
@@ -136,8 +135,15 @@ map , <leader>
 nnoremap ö <C-o>
 nnoremap ä <C-i>
 
-nnoremap <expr> j (v:count ? 'j' : 'gj')
-nnoremap <expr> k (v:count ? 'k' : 'gk')
+nmap å [
+nmap åå [[
+nmap å¨ []
+nmap ¨ ]
+nmap ¨¨ ]]
+nmap ¨å ][
+
+nnoremap <expr> j v:count ? 'j' : 'gj'
+nnoremap <expr> k v:count ? 'k' : 'gk'
 
 nnoremap <C-j> }
 nnoremap <C-k> {
@@ -147,6 +153,7 @@ xnoremap <C-k> {
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
+nnoremap <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
 
