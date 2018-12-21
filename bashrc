@@ -8,7 +8,7 @@ _git_br() {
     (
     until test "$PWD" = /; do
         if test -d .git; then
-            git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+            git rev-parse --abbrev-ref HEAD 2>/dev/null | sed 's/.*/ (&)/'
             return
         else
             cd .. 2>/dev/null || return 1
