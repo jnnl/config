@@ -141,6 +141,12 @@ nmap å¨ []
 nmap ¨ ]
 nmap ¨¨ ]]
 nmap ¨å ][
+xmap å [
+xmap åå [[
+xmap å¨ []
+xmap ¨ ]
+xmap ¨¨ ]]
+xmap ¨å ][
 
 nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
