@@ -1,11 +1,15 @@
 " Plugins
 call plug#begin()
 
-Plug 'tpope/vim-commentary'
+" Git plugins
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-surround'
+Plug 'tpope/vim-rhubarb'
+Plug 'tommcdo/vim-fubitive'
+Plug 'shumphrey/fugitive-gitlab.vim'
+
+" Navigation plugins
+Plug 'romainl/vim-cool'
+let g:CoolTotalMatches = 1
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
@@ -27,17 +31,19 @@ let g:fzf_action = {
     \ 'ctrl-v': 'vsplit'
 \}
 
-Plug 'jnnl/vim-tonight'
-Plug 'sgur/vim-editorconfig'
-Plug 'michaeljsmith/vim-indent-object'
-Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
-
-Plug 'romainl/vim-cool'
-let g:CoolTotalMatches = 1
+" Manipulation plugins
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
 
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
+" Language plugins
+Plug 'cespare/vim-toml'
+Plug 'rust-lang/rust.vim'
+Plug 'leafgarland/typescript-vim'
+
+" Completion plugins
 Plug 'lifepillar/vim-mucomplete'
 set shortmess+=c
 set completeopt-=preview
@@ -48,8 +54,19 @@ if v:version >= 800
   let g:mucomplete#can_complete.default = {
       \ 'omni': { t -> t =~# '\m\k\%(\k\|\.\|::\)$' }
   \}
-  Plug 'machakann/vim-highlightedyank'
 endif
+
+" Colorschemes
+Plug 'jnnl/vim-tonight'
+
+" Miscellaneous plugins
+Plug 'tpope/vim-repeat'
+Plug 'mhinz/vim-startify'
+Plug 'sgur/vim-editorconfig'
+Plug 'machakann/vim-highlightedyank'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
+
 call plug#end()
 
 runtime macros/matchit.vim
