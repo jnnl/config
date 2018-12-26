@@ -127,9 +127,6 @@ try | colorscheme tonight | catch | colorscheme default | endtry
 " Mappings
 map , <leader>
 
-nnoremap ö <C-o>
-nnoremap ä <C-i>
-
 nmap å [
 nmap åå [[
 nmap å¨ []
@@ -142,6 +139,9 @@ xmap å¨ []
 xmap ¨ ]
 xmap ¨¨ ]]
 xmap ¨å ][
+
+nnoremap ö <C-o>
+nnoremap ä <C-i>
 
 nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
@@ -156,6 +156,7 @@ xnoremap Q :normal @q<CR>
 
 nnoremap <silent> <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
+nnoremap <silent> <leader>t <C-]>
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
 
 nnoremap <silent> <leader>, :Files<CR>
@@ -170,6 +171,7 @@ command! Chomp :%s/\s\+$//e
 command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! NonASCII /[^\x00-\x7f]
 
+command! -bang CD :call s:ch_dir(<bang>0)
 command! Groot :exec 'lcd' system('git rev-parse --show-toplevel')
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
             \ . fnameescape(expand('%:p')) | :e!
@@ -196,6 +198,11 @@ func! Search()
     try | Rg
     catch | Ag
     endtry
+endf
+
+func! s:ch_dir(bang)
+    let a:cmd = a:bang ? 'lcd' : 'cd'
+    exec a:cmd . ' %:p:h'
 endf
 
 func! s:auto_mkdir()
