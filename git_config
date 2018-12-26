@@ -14,7 +14,8 @@
 [pull]
     rebase = true
 [alias]
-    a = add --all
+    aa = add --all
+    ac = "!git add --all && git commit"
     ap = add --patch
     b = branch
     c = commit
