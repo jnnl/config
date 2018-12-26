@@ -46,9 +46,6 @@ Plug 'leafgarland/typescript-vim'
 
 " Completion plugins
 Plug 'lifepillar/vim-mucomplete'
-set shortmess+=c
-set completeopt-=preview
-set completeopt+=longest,menuone,noselect
 
 if v:version >= 800
   let g:mucomplete#can_complete = {}
@@ -96,6 +93,11 @@ endif
 " Performance tweaks
 set synmaxcol=500
 set lazyredraw
+
+" Completion
+set shortmess+=c
+set completeopt-=preview
+set completeopt+=longest,menuone,noselect
 
 " Statusline
 set laststatus=2
