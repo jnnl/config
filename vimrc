@@ -2,15 +2,12 @@
 call plug#begin()
 
 " Git plugins
+Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
-Plug 'tommcdo/vim-fubitive'
 Plug 'shumphrey/fugitive-gitlab.vim'
 
 " Navigation plugins
-Plug 'romainl/vim-cool'
-let g:CoolTotalMatches = 1
-
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 
@@ -27,11 +24,15 @@ endf
 
 let g:fzf_action = {
     \ 'ctrl-q': function('s:build_quickfix_list'),
-    \ 'ctrl-x': 'split',
-    \ 'ctrl-v': 'vsplit'
+    \ 'ctrl-v': 'vsplit',
+    \ 'ctrl-x': 'split'
 \}
 
+Plug 'romainl/vim-cool'
+let g:CoolTotalMatches = 1
+
 " Manipulation plugins
+Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 
@@ -58,10 +59,10 @@ endif
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
+Plug 'junegunn/seoul256.vim'
 
 " Miscellaneous plugins
 Plug 'tpope/vim-repeat'
-Plug 'mhinz/vim-startify'
 Plug 'sgur/vim-editorconfig'
 Plug 'machakann/vim-highlightedyank'
 Plug 'michaeljsmith/vim-indent-object'
@@ -75,7 +76,7 @@ runtime macros/matchit.vim
 set encoding=utf-8
 set backspace=indent,eol,start
 set hidden
-set showcmd
+set noshowcmd
 set wildmenu
 set display+=lastline
 set noswapfile
@@ -123,12 +124,6 @@ set smartcase
 set number
 try | colorscheme tonight | catch | colorscheme default | endtry
 
-if exists('+termguicolors')
-  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
-endif
-
 " Mappings
 map , <leader>
 
@@ -159,7 +154,7 @@ xnoremap <C-k> {
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
-nnoremap <leader>r :source $MYVIMRC<CR>
+nnoremap <silent> <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
 
@@ -171,12 +166,13 @@ nnoremap <silent> <leader>: :BCommits<CR>
 nnoremap <silent> <leader>_ :BLines<CR>
 
 " Commands
-command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
-            \ . fnameescape(expand('%:p')) | :e!
 command! Chomp :%s/\s\+$//e
 command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! NonASCII /[^\x00-\x7f]
-command! Groot :call s:groot()
+
+command! Groot :exec 'lcd' system('git rev-parse --show-toplevel')
+command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
+            \ . fnameescape(expand('%:p')) | :e!
 
 " Angular navigation commands
 command! ET :e %:p:r.html
@@ -200,10 +196,6 @@ func! Search()
     try | Rg
     catch | Ag
     endtry
-endf
-
-func! s:groot()
-    execute 'lcd' system('git rev-parse --show-toplevel')
 endf
 
 func! s:auto_mkdir()
