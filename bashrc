@@ -27,6 +27,12 @@ cdd() {
     cd "$(dirname $1)"
 }
 
+# selectively cd to shell wd
+cdf() {
+    local dir
+    dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | sort -u | fzf +s +m)" && cd "$dir"
+}
+
 # show hostname in prompt if in ssh session
 if test -n "$SSH_CONNECTION"; then
     PS1="\u@\h:\W\$(_git_br) $ "
