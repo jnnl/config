@@ -36,6 +36,7 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 
+Plug 'tommcdo/vim-exchange'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
@@ -152,6 +153,8 @@ nnoremap <C-j> }
 nnoremap <C-k> {
 xnoremap <C-j> }
 xnoremap <C-k> {
+cnoremap <C-j> <Down>
+cnoremap <C-k> <Up>
 
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
@@ -203,13 +206,13 @@ func! Search()
 endf
 
 func! s:ch_dir(bang)
-    let a:cmd = a:bang ? 'lcd' : 'cd'
+    let a:cmd = a:bang ? 'cd' : 'lcd'
     exec a:cmd . ' %:p:h'
 endf
 
 func! s:auto_mkdir()
-    let dir = expand('<afile>:p:h')
-    if !isdirectory(dir)
-        call mkdir(dir, 'p')
+    let a:dir = expand('<afile>:p:h')
+    if !isdirectory(a:dir)
+        call mkdir(a:dir, 'p')
     endif
 endf
