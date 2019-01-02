@@ -28,10 +28,17 @@ cdd() {
 }
 
 # selectively cd to shell wd
-cdf() {
-    local dir
-    dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | sort -u | fzf +s +m)" && cd "$dir"
+d() {
+    dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
+        sort -u | fzf +s --height 40% --reverse)" && cd "$dir"
 }
+
+# selectively open man page by description
+m() {
+    apropos "" | fzf --height 40% --reverse -m | \
+        tr -d "()" | awk '{print $2, $1}' | xargs -r man
+}
+
 
 # show hostname in prompt if in ssh session
 if test -n "$SSH_CONNECTION"; then
@@ -93,8 +100,14 @@ fi
 # z config
 if test -f ~/.config/z/z.sh; then
     _Z_DATA="$HOME/.config/z/z"
-    _Z_CMD=f
     source ~/.config/z/z.sh
+    f() {
+        [ $# -gt 0 ] && _z "$*" && return
+        cd "$(_z -l 2>&1 | \
+            fzf --height 40% --nth 2.. --reverse --inline-info \
+            +s --tac --query "${*##-* }" | \
+            sed 's/^[0-9,.]* *//')"
+    }
 fi
 
 # source local bashrc
