@@ -34,7 +34,7 @@ d() {
 }
 
 # selectively open man page by description
-m() {
+h() {
     apropos "" | fzf --height 40% --reverse -m | \
         tr -d "()" | awk '{print $2, $1}' | xargs -r man
 }
@@ -60,7 +60,7 @@ shopt -s histappend
 HISTSIZE=5000
 HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
-HISTIGNORE=bg:cd:exit:f:fg:l:ll:ls:v:z
+HISTIGNORE=bg:cd:cdd:exit:d:f:fg:h:l:ll:ls:v:z
 
 # add custom bin directory to PATH
 export PATH="$HOME/code/bin:$PATH"
