@@ -3,9 +3,19 @@
 set -u
 
 readonly scriptdir="$(dirname ${BASH_SOURCE[0]})"
-readonly configdir="$HOME/.config"
+readonly configdir="${XDG_CONFIG_HOME:-$HOME/.config}"
 readonly dotfiledir="$configdir/dotfiles"
 
-for file in $*; do
+diff_file() {
     diff -u "$dotfiledir/$file" "$scriptdir/$file"
+}
+
+if test $# -eq 0; then
+    files=*
+else
+    files=$*
+fi
+
+for file in $files; do
+    diff_file "$file"
 done

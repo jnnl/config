@@ -5,7 +5,7 @@ set -eu
 
 readonly kernel="$(uname -s)"
 readonly scriptdir="$(dirname ${BASH_SOURCE[0]})"
-readonly configdir="$HOME/.config"
+readonly configdir="${XDG_CONFIG_HOME:-$HOME/.config}"
 readonly dotfiledir="$configdir/dotfiles"
 readonly backupdir="$dotfiledir/backup"
 readonly bindir="$HOME/code/bin"
@@ -49,7 +49,7 @@ dl() {
 }
 
 backup_config() {
-    printf "Backing up existing config files to $backupdir ...\n"
+    printf "Backing up existing config files to $backupdir...\n"
     mkdir -p "$backupdir"
 
     local file
@@ -79,8 +79,8 @@ copy_config() {
     done
 
     local dirfiles="git_config git_ignore "
-    dirfiles+="i3_config i3status_config i3blocks_config "
-    dirfiles+="kitty.conf alacritty.yml"
+    dirfiles+="kitty.conf alacritty.yml "
+    is_linux && dirfiles+="i3_config i3status_config i3blocks_config"
     for file in $dirfiles; do
         cp -v "$scriptdir/$file" "$dotfiledir"
     done
@@ -108,14 +108,15 @@ EOF
     ln -vsf "$dotfiledir/git_config" "$configdir/git/config"
     ln -vsf "$dotfiledir/git_ignore" "$configdir/git/ignore"
 
-    mkdir -p "$configdir/"{i3,i3status,i3blocks}
-    ln -vsf "$dotfiledir/i3_config" "$configdir/i3/config"
-    ln -vsf "$dotfiledir/i3status_config" "$configdir/i3status/config"
-    ln -vsf "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
+    if is_linux; then
+        mkdir -p "$configdir/"{i3,i3status,i3blocks}
+        ln -vsf "$dotfiledir/i3_config" "$configdir/i3/config"
+        ln -vsf "$dotfiledir/i3status_config" "$configdir/i3status/config"
+        ln -vsf "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
+    fi
 
     mkdir -p "$configdir/kitty"
     ln -vsf "$dotfiledir/kitty.conf" "$configdir/kitty/kitty.conf"
-
     mkdir -p "$configdir/alacritty"
     ln -vsf "$dotfiledir/alacritty.yml" "$configdir/alacritty/alacritty.yml"
 
@@ -224,6 +225,7 @@ install_fzf() {
     elif has git; then
         rm -rf "$fzfdir"
         git clone --depth 1 "$url" "$fzfdir"
+        chmod g+x "$fzfdir/install"
 
         "$fzfdir/install" --key-bindings --completion --no-update-rc 1>/dev/null
         edone
@@ -273,8 +275,8 @@ main() {
     copy_config
     link_config
 
-    install_vimplug
     install_fzf
+    install_vimplug
     install_z
     install_v
 
