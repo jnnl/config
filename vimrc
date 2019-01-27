@@ -71,7 +71,6 @@ call plug#end()
 runtime macros/matchit.vim
 
 " General
-set encoding=utf-8
 set backspace=indent,eol,start
 set hidden
 set noshowcmd
