@@ -30,7 +30,7 @@ cdd() {
 # selectively cd to shell wd
 d() {
     dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
-        sort -u | fzf +s --height 40% --reverse)" && cd "$dir"
+        sort -u | grep -Fvx "$(pwd)" | fzf +s --height 40% --reverse)" && cd "$dir"
 }
 
 # selectively open man page by description
