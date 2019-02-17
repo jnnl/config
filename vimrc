@@ -36,11 +36,6 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 
-Plug 'tmsvg/pear-tree'
-let g:pear_tree_smart_openers = 0
-let g:pear_tree_smart_closers = 0
-let g:pear_tree_smart_backspace = 0
-
 Plug 'tommcdo/vim-exchange'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
