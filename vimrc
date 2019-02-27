@@ -132,19 +132,6 @@ try | colorscheme tonight | catch | colorscheme default | endtry
 " Mappings
 map , <leader>
 
-nmap å [
-nmap åå [[
-nmap å¨ []
-nmap ¨ ]
-nmap ¨¨ ]]
-nmap ¨å ][
-xmap å [
-xmap åå [[
-xmap å¨ []
-xmap ¨ ]
-xmap ¨¨ ]]
-xmap ¨å ][
-
 nnoremap ö <C-o>
 nnoremap ä <C-i>
 
