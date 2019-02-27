@@ -40,20 +40,23 @@ Plug 'tommcdo/vim-exchange'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
+" Writing plugins
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+let g:limelight_default_coefficient = 0.3
+
 " Language plugins
 Plug 'cespare/vim-toml'
 Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'
 
+Plug 'davidhalter/jedi-vim', { 'for': 'python' }
+let g:jedi#popup_on_dot = 0
+let g:jedi#show_call_signatures = "0"
+let g:jedi#use_splits_not_buffers = "right"
+
 " Completion plugins
 Plug 'lifepillar/vim-mucomplete'
-
-if v:version >= 800
-  let g:mucomplete#can_complete = {}
-  let g:mucomplete#can_complete.default = {
-      \ 'omni': { t -> t =~# '\m\k\%(\k\|\.\|::\)$' }
-  \}
-endif
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
@@ -164,6 +167,7 @@ nnoremap <silent> <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>t <C-]>
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
+nnoremap <silent> <leader>w :Goyo \| Limelight!!<CR>
 
 nnoremap <silent> <leader>, :Files<CR>
 nnoremap <silent> <leader>. :Buffers<CR>
