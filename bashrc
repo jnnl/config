@@ -30,7 +30,8 @@ cdd() {
 # selectively cd to shell wd
 d() {
     dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
-        sort -u | grep -Fvx "$(pwd)" | fzf +s --height 40% --reverse)" && cd "$dir"
+        sort -u | grep -Fvx "$(pwd)" | \
+        fzf +s --height 40% --reverse)" && cd "$dir"
 }
 
 # selectively open man page by description
@@ -39,13 +40,8 @@ h() {
         tr -d "()" | awk '{print $2, $1}' | xargs -r man
 }
 
-
-# show hostname in prompt if in ssh session
-if test -n "$SSH_CONNECTION"; then
-    PS1="\u@\h:\W\$(_git_br) $ "
-else
-    PS1="\u:\W\$(_git_br) $ "
-fi
+# prompt
+PS1="\u:\W\$(_git_br) $ "
 
 # aliases
 alias l="ls -lhF"
