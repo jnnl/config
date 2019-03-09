@@ -5,7 +5,6 @@ call plug#begin()
 Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
-Plug 'shumphrey/fugitive-gitlab.vim'
 
 " Navigation plugins
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
@@ -24,8 +23,8 @@ endf
 
 let g:fzf_action = {
     \ 'ctrl-q': function('s:build_quickfix_list'),
-    \ 'ctrl-v': 'vsplit',
-    \ 'ctrl-x': 'split'
+    \ 'ctrl-s': 'split',
+    \ 'ctrl-v': 'vsplit'
 \}
 
 Plug 'romainl/vim-cool'
@@ -50,13 +49,17 @@ Plug 'cespare/vim-toml'
 Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'
 
-Plug 'davidhalter/jedi-vim', { 'for': 'python' }
+Plug 'posva/vim-vue'
+let g:vue_disable_pre_processors=1
+
+Plug 'davidhalter/jedi-vim'
 let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = "0"
-let g:jedi#use_splits_not_buffers = "right"
+let g:jedi#smart_auto_mappings = 0
+let g:jedi#show_call_signatures = 0
 
 " Completion plugins
 Plug 'lifepillar/vim-mucomplete'
+let g:mucomplete#completion_delay = 100
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
@@ -148,8 +151,6 @@ cnoremap <C-k> <Up>
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
-inoremap ;; <C-o>A;
-
 nnoremap <silent> <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>t <C-]>
@@ -158,7 +159,7 @@ nnoremap <silent> <leader>w :Goyo \| Limelight!!<CR>
 
 nnoremap <silent> <leader>, :Files<CR>
 nnoremap <silent> <leader>. :Buffers<CR>
-nnoremap <silent> <leader>- :call Search()<CR>
+nnoremap <silent> <leader>- :call <SID>search()<CR>
 nnoremap <silent> <leader>; :History<CR>
 nnoremap <silent> <leader>: :BCommits<CR>
 nnoremap <silent> <leader>_ :BLines<CR>
@@ -191,7 +192,7 @@ augroup Miscellaneous
 augroup END
 
 " Functions
-func! Search()
+func! s:search()
     try | Rg
     catch | Ag
     endtry
