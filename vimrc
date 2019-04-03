@@ -52,10 +52,16 @@ Plug 'leafgarland/typescript-vim'
 Plug 'posva/vim-vue'
 let g:vue_disable_pre_processors=1
 
+if has('nvim')
+    let g:python3_host_prog = '/usr/bin/python'
+endif
 Plug 'davidhalter/jedi-vim'
 let g:jedi#popup_on_dot = 0
 let g:jedi#smart_auto_mappings = 0
 let g:jedi#show_call_signatures = 0
+
+Plug 'quramy/tsuquyomi'
+let g:tsuquyomi_disable_quickfix = 1
 
 " Completion plugins
 Plug 'lifepillar/vim-mucomplete'
@@ -103,7 +109,7 @@ set lazyredraw
 " Completion
 set shortmess+=c
 set completeopt-=preview
-set completeopt+=longest,menuone,noselect
+set completeopt+=longest,menuone
 
 " Statusline
 set laststatus=2
@@ -164,6 +170,7 @@ nnoremap <silent> <leader>; :History<CR>
 nnoremap <silent> <leader>: :BCommits<CR>
 nnoremap <silent> <leader>_ :BLines<CR>
 
+
 " Commands
 command! Chomp :%s/\s\+$//e
 command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
@@ -188,6 +195,8 @@ augroup Miscellaneous
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
+    au FileType typescript nnoremap <silent> <buffer> <leader>d :TsuDefinition<CR>
+    au BufWritePost *.ts call tsuquyomi#asyncGeterr()
     au QuickFixCmdPost [^l]* cwindow
 augroup END
 
@@ -199,13 +208,13 @@ func! s:search()
 endf
 
 func! s:ch_dir(bang)
-    let a:cmd = a:bang ? 'cd' : 'lcd'
-    exec a:cmd . ' %:p:h'
+    let l:cmd = a:bang ? 'cd' : 'lcd'
+    exec l:cmd . ' %:p:h'
 endf
 
 func! s:auto_mkdir()
-    let a:dir = expand('<afile>:p:h')
-    if !isdirectory(a:dir)
-        call mkdir(a:dir, 'p')
+    let l:dir = expand('<afile>:p:h')
+    if !isdirectory(l:dir)
+        call mkdir(l:dir, 'p')
     endif
 endf
