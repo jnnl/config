@@ -63,6 +63,9 @@ let g:jedi#show_call_signatures = 0
 Plug 'quramy/tsuquyomi'
 let g:tsuquyomi_disable_quickfix = 1
 
+Plug 'rip-rip/clang_complete'
+let g:clang_library_path='/usr/lib/llvm-3.8/lib'
+
 " Completion plugins
 Plug 'lifepillar/vim-mucomplete'
 let g:mucomplete#completion_delay = 100
