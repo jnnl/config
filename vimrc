@@ -45,12 +45,8 @@ Plug 'junegunn/limelight.vim'
 let g:limelight_default_coefficient = 0.3
 
 " Language plugins
-Plug 'cespare/vim-toml'
 Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'
-
-Plug 'posva/vim-vue'
-let g:vue_disable_pre_processors=1
 
 if has('nvim')
     let g:python3_host_prog = '/usr/bin/python'
