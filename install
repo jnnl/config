@@ -48,23 +48,36 @@ dl() {
     fi
 }
 
+copy() {
+    cp -v "$1" "$2"
+}
+
+backup() {
+    exists "$1" && copy "$1" "$2"
+}
+
+add() {
+    mkdir -vp "$(dirname $2)"
+    ln -vsf "$1" "$2"
+}
+
 backup_config() {
     printf "Backing up existing config files to $backupdir...\n"
     mkdir -p "$backupdir"
 
     local file
     for file in $files; do
-        exists "$HOME/.$file" && cp -v "$HOME/.$file" "$backupdir/$file"
+        backup "$HOME/.$file" "$backupdir/$file"
     done
 
-    exists "$configdir/nvim/init.vim" && cp -v "$_" "$backupdir/init.vim"
-    exists "$configdir/git/config" && cp -v "$_" "$backupdir/git_config"
-    exists "$configdir/git/ignore" && cp -v "$_" "$backupdir/git_ignore"
-    exists "$configdir/i3/config" && cp -v "$_" "$backupdir/i3_config"
-    exists "$configdir/i3status/config" && cp -v "$_" "$backupdir/i3status_config"
-    exists "$configdir/i3blocks/config" && cp -v "$_" "$backupdir/i3blocks_config"
-    exists "$configdir/kitty/kitty.conf" && cp -v "$_" "$backupdir/kitty.conf"
-    exists "$configdir/alacritty/alacritty.yml" && cp -v "$_" "$backupdir/alacritty.yml"
+    backup "$configdir/git/config" "$backupdir/git_config"
+    backup "$configdir/git/ignore" "$backupdir/git_ignore"
+    backup "$configdir/nvim/init.vim" "$backupdir/init.vim"
+    backup "$configdir/alacritty/alacritty.yml" "$backupdir/alacritty.yml"
+    backup "$configdir/kitty/kitty.conf" "$backupdir/kitty.conf"
+    backup "$configdir/i3/config" "$backupdir/i3_config"
+    backup "$configdir/i3status/config" "$backupdir/i3status_config"
+    backup "$configdir/i3blocks/config" "$backupdir/i3blocks_config"
 
     edone
 }
@@ -75,14 +88,13 @@ copy_config() {
 
     local file
     for file in $files; do
-        cp -v "$scriptdir/$file" "$dotfiledir"
+        copy "$scriptdir/$file" "$dotfiledir"
     done
 
-    local dirfiles="git_config git_ignore "
-    dirfiles+="kitty.conf alacritty.yml "
+    local dirfiles="git_config git_ignore init.vim alacritty.yml kitty.conf "
     is_linux && dirfiles+="i3_config i3status_config i3blocks_config"
     for file in $dirfiles; do
-        cp -v "$scriptdir/$file" "$dotfiledir"
+        copy "$scriptdir/$file" "$dotfiledir"
     done
 
     edone
@@ -92,33 +104,23 @@ link_config() {
     printf "Linking config files...\n"
 
     local file
-    for file in $files; do
-        ln -vsf "$dotfiledir/$file" "$HOME/.$file"
+    for f in $files; do
+        add "$dotfiledir/$file" "$HOME/.$file"
     done
 
-    test -h "$configdir/nvim" && rm "$configdir/nvim"
-    mkdir -p "$configdir/nvim"
-    cat > "$configdir/nvim/init.vim" <<EOF
-set runtimepath^=~/.vim runtimepath+=~/.vim/after
-let &packpath = &runtimepath
-source ~/.vimrc
-EOF
+    add "$dotfiledir/git_config" "$configdir/git/config"
+    add "$dotfiledir/git_ignore" "$configdir/git/ignore"
 
-    mkdir -p "$configdir/git"
-    ln -vsf "$dotfiledir/git_config" "$configdir/git/config"
-    ln -vsf "$dotfiledir/git_ignore" "$configdir/git/ignore"
+    add "$dotfiledir/init.vim" "$configdir/nvim/init.vim"
+    add "$dotfiledir/alacritty.yml" "$configdir/alacritty/alacritty.yml"
 
     if is_linux; then
-        mkdir -p "$configdir/"{i3,i3status,i3blocks}
-        ln -vsf "$dotfiledir/i3_config" "$configdir/i3/config"
-        ln -vsf "$dotfiledir/i3status_config" "$configdir/i3status/config"
-        ln -vsf "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
+        add "$dotfiledir/kitty.conf" "$configdir/kitty/kitty.conf"
+        add "$dotfiledir/i3_config" "$configdir/i3/config"
+        add "$dotfiledir/i3status_config" "$configdir/i3status/config"
+        add "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
     fi
 
-    mkdir -p "$configdir/kitty"
-    ln -vsf "$dotfiledir/kitty.conf" "$configdir/kitty/kitty.conf"
-    mkdir -p "$configdir/alacritty"
-    ln -vsf "$dotfiledir/alacritty.yml" "$configdir/alacritty/alacritty.yml"
 
     edone
 }
@@ -176,6 +178,7 @@ install_homebrew() {
 
     printf "Installing Homebrew...\n"
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
     edone
 }
 
@@ -190,14 +193,14 @@ install_vimplug() {
 
     if has vim; then
         vim +PlugUpdate +qa
-        edone
     elif has nvim; then
         nvim +PlugUpdate +qa
-        edone
     else
         printf "No vim or neovim found, skipping vim-plug install.\n"
         return
     fi
+
+    edone
 }
 
 install_fzf() {
@@ -221,18 +224,18 @@ install_fzf() {
                           --no-zsh \
                           --no-fish \
                           1>/dev/null
-        edone
     elif has git; then
         rm -rf "$fzfdir"
         git clone --depth 1 "$url" "$fzfdir"
-        chmod g+x "$fzfdir/install"
+        chmod ug+x "$fzfdir/install"
 
         "$fzfdir/install" --key-bindings --completion --no-update-rc 1>/dev/null
-        edone
     else
         printf "Git not found, skipping fzf install.\n"
         return
     fi
+
+    edone
 }
 
 install_z() {
@@ -263,17 +266,18 @@ install_v() {
 main() {
     local files="bash_profile bashrc vimrc tmux.conf"
 
-    if is_mac; then
-        files+=" xvimrc"
-        configure_mac
-        install_homebrew
-    elif is_linux; then
+    if is_linux; then
         files+=" xinitrc Xmodmap Xresources"
     fi
 
     backup_config
     copy_config
     link_config
+
+    if is_mac; then
+        configure_mac
+        install_homebrew
+    fi
 
     install_fzf
     install_vimplug
