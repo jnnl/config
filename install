@@ -63,10 +63,10 @@ add() {
 
 backup_config() {
     printf "Backing up existing config files to $backupdir...\n"
-    mkdir -p "$backupdir"
+    mkdir -vp "$backupdir"
 
     local file
-    for file in $files; do
+    for file in $homefiles; do
         backup "$HOME/.$file" "$backupdir/$file"
     done
 
@@ -84,16 +84,10 @@ backup_config() {
 
 copy_config() {
     printf "Copying config files to $dotfiledir...\n"
-    mkdir -p "$dotfiledir"
+    mkdir -vp "$dotfiledir"
 
     local file
-    for file in $files; do
-        copy "$scriptdir/$file" "$dotfiledir"
-    done
-
-    local dirfiles="git_config git_ignore init.vim alacritty.yml kitty.conf "
-    is_linux && dirfiles+="i3_config i3status_config i3blocks_config"
-    for file in $dirfiles; do
+    for file in $homefiles $configfiles; do
         copy "$scriptdir/$file" "$dotfiledir"
     done
 
@@ -104,13 +98,12 @@ link_config() {
     printf "Linking config files...\n"
 
     local file
-    for f in $files; do
+    for f in $homefiles; do
         add "$dotfiledir/$file" "$HOME/.$file"
     done
 
     add "$dotfiledir/git_config" "$configdir/git/config"
     add "$dotfiledir/git_ignore" "$configdir/git/ignore"
-
     add "$dotfiledir/init.vim" "$configdir/nvim/init.vim"
     add "$dotfiledir/alacritty.yml" "$configdir/alacritty/alacritty.yml"
 
@@ -120,7 +113,6 @@ link_config() {
         add "$dotfiledir/i3status_config" "$configdir/i3status/config"
         add "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
     fi
-
 
     edone
 }
@@ -188,7 +180,7 @@ install_vimplug() {
     local plugdir="$HOME/.vim/autoload"
     local url="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 
-    mkdir -p "$plugdir"
+    mkdir -vp "$plugdir"
     dl "$plugdir/plug.vim" "$url"
 
     if has vim; then
@@ -225,7 +217,7 @@ install_fzf() {
                           --no-fish \
                           1>/dev/null
     elif has git; then
-        rm -rf "$fzfdir"
+        rm -vrf "$fzfdir"
         git clone --depth 1 "$url" "$fzfdir"
         chmod ug+x "$fzfdir/install"
 
@@ -244,7 +236,7 @@ install_z() {
     local zdir="$configdir/z"
     local url="https://raw.githubusercontent.com/rupa/z/master/z.sh"
 
-    mkdir -p "$zdir"
+    mkdir -vp "$zdir"
     dl "$zdir/z.sh" "$url"
 
     edone
@@ -255,7 +247,7 @@ install_v() {
 
     local url="https://raw.githubusercontent.com/rupa/v/master/v"
 
-    mkdir -p "$bindir"
+    mkdir -vp "$bindir"
 
     dl "$bindir/v" "$url"
     chmod ug+x "$bindir/v"
@@ -264,10 +256,12 @@ install_v() {
 }
 
 main() {
-    local files="bash_profile bashrc vimrc tmux.conf"
+    local homefiles="bash_profile bashrc vimrc tmux.conf"
+    local configfiles="git_config git_ignore init.vim alacritty.yml"
 
     if is_linux; then
-        files+=" xinitrc Xmodmap Xresources"
+        homefiles+=" xinitrc Xmodmap Xresources"
+        configfiles+=" kitty.conf i3_config i3status_config i3blocks_config"
     fi
 
     backup_config
