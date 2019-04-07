@@ -49,7 +49,11 @@ Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'
 
 if has('nvim')
-    let g:python3_host_prog = '/usr/bin/python'
+    if executable('/usr/bin/python3')
+        let g:python3_host_prog = '/usr/bin/python3'
+    else
+        let g:python3_host_prog = '/usr/bin/python'
+    endif
 endif
 Plug 'davidhalter/jedi-vim'
 let g:jedi#popup_on_dot = 0
