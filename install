@@ -98,7 +98,7 @@ link_config() {
     printf "Linking config files...\n"
 
     local file
-    for f in $homefiles; do
+    for file in $homefiles; do
         add "$dotfiledir/$file" "$HOME/.$file"
     done
 
