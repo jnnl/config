@@ -15,7 +15,7 @@ command! -nargs=* Rg
     \ 'rg --column --line-number --no-heading --smart-case '
     \ . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
     \ . shellescape(<q-args>), 1,
-    \ fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'))
+    \ fzf#vim#with_preview({ 'options': '--delimiter : --nth 4..' }, 'right:50%:hidden', '?'))
 
 func! s:build_quickfix_list(lines)
     call setqflist(map(copy(a:lines), '{ "filename": v:val }')) | copen | cc
@@ -45,25 +45,21 @@ Plug 'junegunn/limelight.vim'
 let g:limelight_default_coefficient = 0.3
 
 " Language plugins
-Plug 'rust-lang/rust.vim'
-Plug 'leafgarland/typescript-vim'
+Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
 
 if has('nvim')
-    if executable('/usr/bin/python3')
-        let g:python3_host_prog = '/usr/bin/python3'
-    else
-        let g:python3_host_prog = '/usr/bin/python'
-    endif
+    let g:python3_host_prog = '/usr/bin/python'
 endif
-Plug 'davidhalter/jedi-vim'
+Plug 'davidhalter/jedi-vim', {'for': 'python'}
 let g:jedi#popup_on_dot = 0
 let g:jedi#smart_auto_mappings = 0
 let g:jedi#show_call_signatures = 0
 
-Plug 'quramy/tsuquyomi'
+Plug 'quramy/tsuquyomi', { 'for': 'typescript' }
 let g:tsuquyomi_disable_quickfix = 1
 
-Plug 'rip-rip/clang_complete'
+Plug 'rip-rip/clang_complete', { 'for': ['c', 'cpp'] }
 let g:clang_library_path='/usr/lib/llvm-3.8/lib'
 
 " Completion plugins
@@ -79,7 +75,7 @@ Plug 'tpope/vim-repeat'
 Plug 'sgur/vim-editorconfig'
 Plug 'machakann/vim-highlightedyank'
 Plug 'michaeljsmith/vim-indent-object'
-Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 
 call plug#end()
 
@@ -160,6 +156,7 @@ cnoremap <C-k> <Up>
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
+nnoremap <silent> <leader>q mQgggqG`Q
 nnoremap <silent> <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>t <C-]>
@@ -196,11 +193,16 @@ command! VS :vs %:p:r.scss
 augroup Miscellaneous
     au!
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
+    au QuickFixCmdPost [^l]* cwindow
+augroup END
+
+augroup FileSpecific
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
+    au FileType c,cpp setlocal formatprg=clang-format
+    au FileType python setlocal formatprg=yapf
     au FileType typescript nnoremap <silent> <buffer> <leader>d :TsuDefinition<CR>
     au BufWritePost *.ts call tsuquyomi#asyncGeterr()
-    au QuickFixCmdPost [^l]* cwindow
 augroup END
 
 " Functions
