@@ -4,7 +4,7 @@
 set -eu
 
 readonly kernel="$(uname -s)"
-readonly scriptdir="$(dirname ${BASH_SOURCE[0]})"
+readonly scriptdir="$(realpath $(dirname ${BASH_SOURCE[0]}))"
 readonly configdir="${XDG_CONFIG_HOME:-$HOME/.config}"
 readonly dotfiledir="$configdir/dotfiles"
 readonly backupdir="$dotfiledir/backup"
