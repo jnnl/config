@@ -138,7 +138,7 @@ set number
 try | colorscheme tonight | catch | colorscheme default | endtry
 
 " Mappings
-map , <leader>
+let mapleader = ','
 
 nnoremap ö <C-o>
 nnoremap ä <C-i>
