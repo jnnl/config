@@ -64,7 +64,6 @@ let g:clang_library_path='/usr/lib/llvm-3.8/lib'
 
 " Completion plugins
 Plug 'lifepillar/vim-mucomplete'
-let g:mucomplete#completion_delay = 100
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
@@ -140,21 +139,27 @@ try | colorscheme tonight | catch | colorscheme default | endtry
 " Mappings
 let mapleader = ','
 
-nmap å [
-nmap åå [[
-nmap å¨ []
-nmap ¨ ]
-nmap ¨¨ ]]
-nmap ¨å ][
-xmap å [
-xmap åå [[
-xmap å¨ []
-xmap ¨ ]
-xmap ¨¨ ]]
-xmap ¨å ][
+nnoremap å [
+nnoremap åå [[
+nnoremap å¨ []
+nnoremap ¨ ]
+nnoremap ¨¨ ]]
+nnoremap ¨å ][
+xnoremap å [
+xnoremap åå [[
+xnoremap å¨ []
+xnoremap ¨ ]
+xnoremap ¨¨ ]]
+xnoremap ¨å ][
+inoremap å [
+inoremap ¨ ]
+inoremap Å {
+inoremap ^ }
 
 nnoremap ö <C-o>
 nnoremap ä <C-i>
+nnoremap <silent> Ö :bprevious<CR>
+nnoremap <silent> Ä :bnext<CR>
 
 nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
@@ -170,7 +175,6 @@ nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
 nnoremap <silent> <leader>q mQgggqG`Q
-nnoremap <silent> <leader>r :source $MYVIMRC<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>t <C-]>
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
@@ -189,7 +193,7 @@ command! Chomp :%s/\s\+$//e
 command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! NonASCII /[^\x00-\x7f]
 
-command! -bang CD :call s:ch_dir(<bang>0)
+command! CD :exec 'lcd %:p:h'
 command! Groot :exec 'lcd' system('git rev-parse --show-toplevel')
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
             \ . fnameescape(expand('%:p')) | :e!
@@ -223,11 +227,6 @@ func! s:search()
     try | Rg
     catch | Ag
     endtry
-endf
-
-func! s:ch_dir(bang)
-    let l:cmd = a:bang ? 'cd' : 'lcd'
-    exec l:cmd . ' %:p:h'
 endf
 
 func! s:auto_mkdir()
