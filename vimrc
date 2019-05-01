@@ -74,7 +74,7 @@ Plug 'tpope/vim-repeat'
 Plug 'sgur/vim-editorconfig'
 Plug 'machakann/vim-highlightedyank'
 Plug 'michaeljsmith/vim-indent-object'
-Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+Plug 'mbbill/undotree'
 
 call plug#end()
 
