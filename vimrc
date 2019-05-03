@@ -211,10 +211,10 @@ command! VS :vs %:p:r.scss
 augroup Miscellaneous
     au!
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
-    au QuickFixCmdPost [^l]* cwindow
 augroup END
 
 augroup FileSpecific
+    au!
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
     au FileType c,cpp setlocal formatprg=clang-format
