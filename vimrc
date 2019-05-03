@@ -4,7 +4,6 @@ call plug#begin()
 " Git plugins
 Plug 'junegunn/gv.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rhubarb'
 
 " Navigation plugins
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
@@ -75,6 +74,7 @@ Plug 'sgur/vim-editorconfig'
 Plug 'machakann/vim-highlightedyank'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mbbill/undotree'
+Plug 'romainl/vim-qf'
 
 call plug#end()
 
@@ -86,6 +86,7 @@ set hidden
 set noshowcmd
 set wildmenu
 set display+=lastline
+set shortmess+=c
 set noswapfile
 set nojoinspaces
 set clipboard=unnamed
@@ -105,7 +106,6 @@ set synmaxcol=500
 set lazyredraw
 
 " Completion
-set shortmess+=c
 set completeopt-=preview
 set completeopt+=longest,menuone
 
@@ -158,8 +158,6 @@ inoremap ^ }
 
 nnoremap ö <C-o>
 nnoremap ä <C-i>
-nnoremap <silent> Ö :bprevious<CR>
-nnoremap <silent> Ä :bnext<CR>
 
 nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
@@ -173,6 +171,9 @@ cnoremap <C-k> <Up>
 
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
+
+nmap Ö <Plug>(qf_qf_previous)
+nmap Ä <Plug>(qf_qf_next)
 
 nnoremap <silent> <leader>q mQgggqG`Q
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
