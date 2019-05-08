@@ -35,7 +35,7 @@ d() {
 }
 
 # selectively open man page by description
-h() {
+m() {
     apropos "" | fzf --height 40% --reverse -m | \
         tr -d "()" | awk '{print $2, $1}' | xargs -r man
 }
