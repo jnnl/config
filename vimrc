@@ -175,9 +175,12 @@ xnoremap Q :normal @q<CR>
 nmap Ö <Plug>(qf_qf_previous)
 nmap Ä <Plug>(qf_qf_next)
 
+nnoremap <silent> <leader>m :make<CR>
+nnoremap <leader>M :make<Space>
 nnoremap <silent> <leader>q mQgggqG`Q
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>t <C-]>
+xnoremap <silent> <leader>t <C-]>
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
 nnoremap <silent> <leader>w :Goyo \| Limelight!!<CR>
 
@@ -188,13 +191,10 @@ nnoremap <silent> <leader>; :History<CR>
 nnoremap <silent> <leader>: :BCommits<CR>
 nnoremap <silent> <leader>_ :BLines<CR>
 
-
 " Commands
 command! Chomp :%s/\s\+$//e
 command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! NonASCII /[^\x00-\x7f]
-
-command! CD :exec 'lcd %:p:h'
 command! Groot :exec 'lcd' system('git rev-parse --show-toplevel')
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
             \ . fnameescape(expand('%:p')) | :e!
