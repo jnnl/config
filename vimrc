@@ -105,6 +105,13 @@ endif
 set synmaxcol=500
 set lazyredraw
 
+" Undo
+if !isdirectory($HOME.'/.vim/undo')
+    call mkdir($HOME.'/.vim/undo', '', 0700)
+endif
+set undodir=~/.vim/undo
+set undofile
+
 " Completion
 set completeopt-=preview
 set completeopt+=longest,menuone
@@ -191,10 +198,12 @@ nnoremap <silent> <leader>; :History<CR>
 nnoremap <silent> <leader>: :BCommits<CR>
 nnoremap <silent> <leader>_ :BLines<CR>
 
+
 " Commands
 command! Chomp :%s/\s\+$//e
 command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! NonASCII /[^\x00-\x7f]
+
 command! Groot :exec 'lcd' system('git rev-parse --show-toplevel')
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
             \ . fnameescape(expand('%:p')) | :e!
