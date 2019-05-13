@@ -1,10 +1,6 @@
 " Plugins
 call plug#begin()
 
-" Git plugins
-Plug 'junegunn/gv.vim'
-Plug 'tpope/vim-fugitive'
-
 " Navigation plugins
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
@@ -183,7 +179,6 @@ nmap Ö <Plug>(qf_qf_previous)
 nmap Ä <Plug>(qf_qf_next)
 
 nnoremap <silent> <leader>m :make<CR>
-nnoremap <leader>M :make<Space>
 nnoremap <silent> <leader>q mQgggqG`Q
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>t <C-]>
@@ -193,11 +188,10 @@ nnoremap <silent> <leader>w :Goyo \| Limelight!!<CR>
 
 nnoremap <silent> <leader>, :Files<CR>
 nnoremap <silent> <leader>. :Buffers<CR>
-nnoremap <silent> <leader>- :call <SID>search()<CR>
+nnoremap <silent> <leader>- :Rg<CR>
 nnoremap <silent> <leader>; :History<CR>
-nnoremap <silent> <leader>: :BCommits<CR>
+nnoremap <silent> <leader>: :Lines<CR>
 nnoremap <silent> <leader>_ :BLines<CR>
-
 
 " Commands
 command! Chomp :%s/\s\+$//e
@@ -233,12 +227,6 @@ augroup FileSpecific
 augroup END
 
 " Functions
-func! s:search()
-    try | Rg
-    catch | Ag
-    endtry
-endf
-
 func! s:auto_mkdir()
     let l:dir = expand('<afile>:p:h')
     if !isdirectory(l:dir)
