@@ -154,10 +154,6 @@ xnoremap å¨ []
 xnoremap ¨ ]
 xnoremap ¨¨ ]]
 xnoremap ¨å ][
-inoremap å [
-inoremap ¨ ]
-inoremap Å {
-inoremap ^ }
 
 nnoremap ö <C-o>
 nnoremap ä <C-i>
@@ -178,7 +174,6 @@ xnoremap Q :normal @q<CR>
 nmap Ö <Plug>(qf_qf_previous)
 nmap Ä <Plug>(qf_qf_next)
 
-nnoremap <silent> <leader>m :make<CR>
 nnoremap <silent> <leader>q mQgggqG`Q
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>t <C-]>
