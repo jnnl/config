@@ -142,19 +142,6 @@ try | colorscheme tonight | catch | colorscheme default | endtry
 " Mappings
 let mapleader = ','
 
-nnoremap å [
-nnoremap åå [[
-nnoremap å¨ []
-nnoremap ¨ ]
-nnoremap ¨¨ ]]
-nnoremap ¨å ][
-xnoremap å [
-xnoremap åå [[
-xnoremap å¨ []
-xnoremap ¨ ]
-xnoremap ¨¨ ]]
-xnoremap ¨å ][
-
 nnoremap ö <C-o>
 nnoremap ä <C-i>
 
