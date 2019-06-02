@@ -4,65 +4,37 @@ call plug#begin()
 " Navigation plugins
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
-
-command! -nargs=* Rg
-    \ call fzf#vim#grep(
-    \ 'rg --column --line-number --no-heading --smart-case '
-    \ . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
-    \ . shellescape(<q-args>), 1,
-    \ fzf#vim#with_preview({ 'options': '--delimiter : --nth 4..' }, 'right:50%:hidden', '?'))
-
-func! s:build_quickfix_list(lines)
-    call setqflist(map(copy(a:lines), '{ "filename": v:val }')) | copen | cc
-endf
-
-let g:fzf_action = {
-    \ 'ctrl-q': function('s:build_quickfix_list'),
-    \ 'ctrl-s': 'split',
-    \ 'ctrl-v': 'vsplit'
-\}
-
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
 
 " Manipulation plugins
-Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-
 Plug 'tommcdo/vim-exchange'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
-" Writing plugins
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
-let g:limelight_default_coefficient = 0.3
-
 " Language plugins
-Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
-
 if has('nvim')
     let g:python3_host_prog = '/usr/bin/python'
 endif
-Plug 'davidhalter/jedi-vim', {'for': 'python'}
+Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 let g:jedi#popup_on_dot = 0
 let g:jedi#smart_auto_mappings = 0
 let g:jedi#show_call_signatures = 0
 
+Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+Plug 'racer-rust/vim-racer', { 'for': 'rust' }
+
+Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
 Plug 'quramy/tsuquyomi', { 'for': 'typescript' }
 let g:tsuquyomi_disable_quickfix = 1
-
-Plug 'rip-rip/clang_complete', { 'for': ['c', 'cpp'] }
-let g:clang_library_path='/usr/lib/llvm-3.8/lib'
 
 " Completion plugins
 Plug 'lifepillar/vim-mucomplete'
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
-Plug 'junegunn/seoul256.vim'
 
 " Miscellaneous plugins
 Plug 'tpope/vim-repeat'
@@ -86,8 +58,9 @@ set shortmess+=c
 set noswapfile
 set nojoinspaces
 set clipboard=unnamed
-
 set timeoutlen=500
+set synmaxcol=500
+set lazyredraw
 
 " Vim/neovim specific
 if has('vim')
@@ -97,13 +70,9 @@ elseif has('nvim')
     set inccommand=nosplit
 endif
 
-" Performance tweaks
-set synmaxcol=500
-set lazyredraw
-
 " Undo
 if !isdirectory($HOME.'/.vim/undo')
-    call mkdir($HOME.'/.vim/undo', '', 0700)
+    call mkdir($HOME.'/.vim/undo', 'p', 0700)
 endif
 set undodir=~/.vim/undo
 set undofile
@@ -166,7 +135,6 @@ nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>t <C-]>
 xnoremap <silent> <leader>t <C-]>
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
-nnoremap <silent> <leader>w :Goyo \| Limelight!!<CR>
 
 nnoremap <silent> <leader>, :Files<CR>
 nnoremap <silent> <leader>. :Buffers<CR>
@@ -177,12 +145,14 @@ nnoremap <silent> <leader>_ :BLines<CR>
 
 " Commands
 command! Chomp :%s/\s\+$//e
-command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
-command! NonASCII /[^\x00-\x7f]
-
-command! Groot :exec 'lcd' system('git rev-parse --show-toplevel')
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
-            \ . fnameescape(expand('%:p')) | :e!
+    \ . fnameescape(expand('%:p')) | :e!
+command! -nargs=* Rg
+    \ call fzf#vim#grep(
+    \ 'rg --column --line-number --no-heading --smart-case '
+    \ . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
+    \ . shellescape(<q-args>), 1,
+    \ fzf#vim#with_preview({ 'options': '--delimiter : --nth 4..' }, 'right:50%:hidden', '?'))
 
 " Angular navigation commands
 command! ET :e %:p:r.html
@@ -193,19 +163,13 @@ command! VC :vs %:p:r.ts
 command! VS :vs %:p:r.scss
 
 " Autocmds
-augroup Miscellaneous
-    au!
-    au BufWritePre,FileWritePre * :call s:auto_mkdir()
-augroup END
-
-augroup FileSpecific
+augroup Autocmds
     au!
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
-    au FileType c,cpp setlocal formatprg=clang-format
-    au FileType python setlocal formatprg=yapf
     au FileType typescript nnoremap <silent> <buffer> <leader>d :TsuDefinition<CR>
     au BufWritePost *.ts call tsuquyomi#asyncGeterr()
+    au BufWritePre,FileWritePre * :call s:auto_mkdir()
 augroup END
 
 " Functions
