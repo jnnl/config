@@ -57,6 +57,7 @@ set display+=lastline
 set shortmess+=c
 set noswapfile
 set nojoinspaces
+set nomodeline
 set clipboard=unnamed
 set timeoutlen=500
 set synmaxcol=500
