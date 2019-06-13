@@ -45,9 +45,7 @@ PS1="\u:\W\$(_git_br) $ "
 
 # aliases
 alias l="ls -lhF"
-alias lx="ls -lhFX"
 alias ll="ls -lhAF"
-alias llx="ls -lhAFX"
 
 # shell options
 shopt -s histappend
