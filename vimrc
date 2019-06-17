@@ -112,6 +112,8 @@ try | colorscheme tonight | catch | colorscheme default | endtry
 " Mappings
 let mapleader = ','
 
+nnoremap <Space> /
+
 nnoremap ö <C-o>
 nnoremap ä <C-i>
 
@@ -128,14 +130,13 @@ cnoremap <C-k> <Up>
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
-nmap Ö <Plug>(qf_qf_previous)
-nmap Ä <Plug>(qf_qf_next)
-
 nnoremap <silent> <leader>q mQgggqG`Q
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>t <C-]>
 xnoremap <silent> <leader>t <C-]>
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
+nmap Ö <Plug>(qf_qf_previous)
+nmap Ä <Plug>(qf_qf_next)
 
 nnoremap <silent> <leader>, :Files<CR>
 nnoremap <silent> <leader>. :Buffers<CR>
