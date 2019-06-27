@@ -146,7 +146,7 @@ nnoremap <silent> <leader>: :Lines<CR>
 nnoremap <silent> <leader>_ :BLines<CR>
 
 " Commands
-command! Chomp :%s/\s\+$//e
+command! Rstrip :%s/\s\+$//e
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
     \ . fnameescape(expand('%:p')) | :e!
 command! -nargs=* Rg
