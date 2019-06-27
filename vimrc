@@ -113,6 +113,7 @@ try | colorscheme tonight | catch | colorscheme default | endtry
 let mapleader = ','
 
 nnoremap <Space> /
+nnoremap <BS> <C-^>
 
 nnoremap ö <C-o>
 nnoremap ä <C-i>
