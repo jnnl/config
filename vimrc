@@ -2,7 +2,7 @@
 call plug#begin()
 
 " Navigation plugins
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
+Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
@@ -10,7 +10,6 @@ let g:CoolTotalMatches = 1
 " Manipulation plugins
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-Plug 'tommcdo/vim-exchange'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
@@ -50,24 +49,20 @@ runtime macros/matchit.vim
 
 " General
 set backspace=indent,eol,start
-set hidden
-set noshowcmd
-set wildmenu
+set clipboard=unnamed
 set display+=lastline
-set shortmess+=c
-set noswapfile
+set hidden
 set nojoinspaces
 set nomodeline
-set clipboard=unnamed
-set timeoutlen=500
+set noshowcmd
+set noswapfile
+set shortmess+=c
 set synmaxcol=500
-set lazyredraw
+set timeoutlen=500
+set wildmenu
 
-" Vim/neovim specific
-if has('vim')
-    set ttyfast
-    set ttyscroll=3
-elseif has('nvim')
+" Neovim specific
+if has('nvim')
     set inccommand=nosplit
 endif
 
@@ -114,6 +109,7 @@ let mapleader = ','
 
 nnoremap <Space> /
 nnoremap <BS> <C-^>
+nnoremap ' `
 
 nnoremap ö <C-o>
 nnoremap ä <C-i>
