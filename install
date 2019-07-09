@@ -11,12 +11,20 @@ readonly backupdir="$dotfiledir/backup"
 readonly bindir="$HOME/code/bin"
 
 die() {
-    printf "ERROR: $*\n"
+    printf "!!! ERROR: $*\n"
     exit 1
 }
 
-edone() {
-    printf "done\n\n"
+warn() {
+    printf "=== $*\n"
+}
+
+msg() {
+    printf ">>> $*\n"
+}
+
+msg_done() {
+    printf "<<< done\n\n"
 }
 
 has() {
@@ -56,7 +64,7 @@ backup() {
     if exists "$1"; then
         copy "$1" "$2"
     else
-        printf "$1 doesn't exist, skipping...\n"
+        warn "$1 doesn't exist, skipping..."
     fi
 }
 
@@ -66,7 +74,7 @@ add() {
 }
 
 backup_config() {
-    printf "Backing up existing config files to $backupdir...\n"
+    msg "Backing up existing config files to $backupdir..."
     mkdir -vp "$backupdir"
 
     local file
@@ -83,11 +91,11 @@ backup_config() {
     backup "$configdir/i3status/config" "$backupdir/i3status_config"
     backup "$configdir/i3blocks/config" "$backupdir/i3blocks_config"
 
-    edone
+    msg_done
 }
 
 copy_config() {
-    printf "Copying config files to $dotfiledir...\n"
+    msg "Copying config files to $dotfiledir..."
     mkdir -vp "$dotfiledir"
 
     local file
@@ -95,11 +103,11 @@ copy_config() {
         copy "$scriptdir/$file" "$dotfiledir"
     done
 
-    edone
+    msg_done
 }
 
 link_config() {
-    printf "Linking config files...\n"
+    msg "Linking config files..."
 
     local file
     for file in $homefiles; do
@@ -118,7 +126,7 @@ link_config() {
         add "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
     fi
 
-    edone
+    msg_done
 }
 
 configure_mac() {
@@ -168,18 +176,18 @@ install_homebrew() {
     is_mac || return 1
 
     if has brew; then
-        printf "Homebrew already installed, skipping...\n"
+        warn "Homebrew already installed, skipping..."
         return
     fi
 
-    printf "Installing Homebrew...\n"
+    msg "Installing Homebrew..."
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-    edone
+    msg_done
 }
 
 install_vimplug() {
-    printf "Installing vim-plug...\n"
+    msg "Installing vim-plug..."
 
     local plugdir="$HOME/.vim/autoload"
     local url="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
@@ -192,15 +200,15 @@ install_vimplug() {
     elif has nvim; then
         nvim +PlugUpdate +qa
     else
-        printf "No vim or neovim found, skipping vim-plug install.\n"
+        warn "No vim or neovim found, skipping vim-plug install."
         return
     fi
 
-    edone
+    msg_done
 }
 
 install_fzf() {
-    printf "Installing fzf...\n"
+    msg "Installing fzf..."
 
     local fzfdir="$HOME/.fzf"
     local url="https://github.com/junegunn/fzf.git"
@@ -227,15 +235,15 @@ install_fzf() {
 
         "$fzfdir/install" --key-bindings --completion --no-update-rc 1>/dev/null
     else
-        printf "Git not found, skipping fzf install.\n"
+        warn "Git not found, skipping fzf install."
         return
     fi
 
-    edone
+    msg_done
 }
 
 install_z() {
-    printf "Installing z...\n"
+    msg "Installing z..."
 
     local zdir="$configdir/z"
     local url="https://raw.githubusercontent.com/rupa/z/master/z.sh"
@@ -243,11 +251,11 @@ install_z() {
     mkdir -vp "$zdir"
     dl "$zdir/z.sh" "$url"
 
-    edone
+    msg_done
 }
 
 install_v() {
-    printf "Installing v...\n"
+    msg "Installing v..."
 
     local url="https://raw.githubusercontent.com/rupa/v/master/v"
 
@@ -256,7 +264,7 @@ install_v() {
     dl "$bindir/v" "$url"
     chmod ug+x "$bindir/v"
 
-    edone
+    msg_done
 }
 
 main() {
@@ -282,7 +290,7 @@ main() {
     install_z
     install_v
 
-    printf "all done\n"
+    printf "<<< all done\n"
 }
 
 main
