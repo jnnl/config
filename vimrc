@@ -129,8 +129,6 @@ xnoremap Q :normal @q<CR>
 
 nnoremap <silent> <leader>q mQgggqG`Q
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
-nnoremap <silent> <leader>t <C-]>
-xnoremap <silent> <leader>t <C-]>
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
 nmap Ö <Plug>(qf_qf_previous)
 nmap Ä <Plug>(qf_qf_next)
@@ -144,8 +142,7 @@ nnoremap <silent> <leader>_ :BLines<CR>
 
 " Commands
 command! Rstrip :%s/\s\+$//e
-command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null '
-    \ . fnameescape(expand('%:p')) | :e!
+command! W :exec ':silent !sudo /usr/bin/tee > /dev/null ' . shellescape(expand('%:p')) | :e!
 command! -nargs=* Rg
     \ call fzf#vim#grep(
     \ 'rg --column --line-number --no-heading --smart-case '
