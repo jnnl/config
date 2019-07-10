@@ -17,16 +17,16 @@ let g:lion_squeeze_spaces = 1
 if has('nvim')
     let g:python3_host_prog = '/usr/bin/python'
 endif
-Plug 'davidhalter/jedi-vim', { 'for': 'python' }
+Plug 'davidhalter/jedi-vim'
 let g:jedi#popup_on_dot = 0
 let g:jedi#smart_auto_mappings = 0
 let g:jedi#show_call_signatures = 0
 
-Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-Plug 'racer-rust/vim-racer', { 'for': 'rust' }
+Plug 'rust-lang/rust.vim'
+Plug 'racer-rust/vim-racer'
 
-Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
-Plug 'quramy/tsuquyomi', { 'for': 'typescript' }
+Plug 'leafgarland/typescript-vim'
+Plug 'quramy/tsuquyomi'
 let g:tsuquyomi_disable_quickfix = 1
 
 " Completion plugins
@@ -42,6 +42,7 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mbbill/undotree'
 Plug 'romainl/vim-qf'
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
