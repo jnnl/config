@@ -138,7 +138,7 @@ nnoremap <silent> <leader>, :Files<CR>
 nnoremap <silent> <leader>. :Buffers<CR>
 nnoremap <silent> <leader>- :Rg<CR>
 nnoremap <silent> <leader>; :History<CR>
-nnoremap <silent> <leader>: :Lines<CR>
+nnoremap <silent> <leader>: :BCommits<CR>
 nnoremap <silent> <leader>_ :BLines<CR>
 
 " Commands
