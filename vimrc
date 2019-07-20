@@ -10,6 +10,7 @@ let g:CoolTotalMatches = 1
 " Manipulation plugins
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
+Plug 'tommcdo/vim-exchange'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
