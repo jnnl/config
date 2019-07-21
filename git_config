@@ -14,14 +14,12 @@
 [pull]
     rebase = true
 [alias]
-    aa = add --all
     ac = "!git add --all && git commit"
     ap = add --patch
-    b = branch
+    br = branch
     c = commit
     ca = commit --amend
     co = checkout
-    cp = cherry-pick
     d = diff
     dc = diff --cached
     dh = diff HEAD^ HEAD
