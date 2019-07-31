@@ -2,7 +2,7 @@
 
 # Global properties
 command=/usr/lib/i3blocks/$BLOCK_NAME
-separator_block_width=15
+separator_block_width=20
 markup=none
 
 # Media player
@@ -17,11 +17,6 @@ label=🔊
 instance=Master
 interval=once
 signal=10
-
-# Network interface monitoring
-[iface]
-color=#00FF00
-interval=10
 
 # Memory usage
 [memory]
@@ -38,6 +33,11 @@ interval=30
 [battery]
 label=🗲
 interval=30
+
+# Network interface monitoring
+[iface]
+color=#00FF00
+interval=10
 
 # Time
 [time]
