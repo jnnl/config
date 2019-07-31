@@ -1,4 +1,4 @@
-# .config/i3blocks/config
+# i3blocks config file
 
 # Global properties
 command=/usr/lib/i3blocks/$BLOCK_NAME
@@ -7,12 +7,13 @@ markup=none
 
 # Media player
 [mediaplayer]
+label=♪
 interval=3
 signal=10
-separator=false
 
 # Volume indicator
 [volume]
+label=🔊
 instance=Master
 interval=once
 signal=10
@@ -24,18 +25,18 @@ interval=10
 
 # Memory usage
 [memory]
-label=MEM
+label=☢
 interval=30
 
 # Disk usage
 [disk]
-label=DISK
+label=🖴
 instance=/
 interval=30
 
 # Battery indicator
 [battery]
-label=BAT
+label=🗲
 interval=30
 
 # Time
