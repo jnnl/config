@@ -34,6 +34,13 @@ let g:tsuquyomi_disable_quickfix = 1
 
 " Completion plugins
 Plug 'lifepillar/vim-mucomplete'
+let g:mucomplete#chains = {}
+let g:mucomplete#chains.default = ['ulti', 'path', 'omni', 'keyn', 'dict', 'uspl']
+
+Plug 'sirver/ultisnips'
+let g:UltiSnipsExpandTrigger='<C-k>'
+let g:UltiSnipsSnippetsDir = '~/.vim/snips'
+let g:UltiSnipsSnippetDirectories = [$HOME.'/.vim/snips']
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
@@ -131,6 +138,7 @@ cnoremap <C-k> <Up>
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
+inoremap <expr> <CR> mucomplete#ultisnips#expand_snippet("\<CR>")
 nnoremap <silent> <leader>q mQgggqG`Q
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
