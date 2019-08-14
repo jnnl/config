@@ -7,7 +7,7 @@ markup=none
 
 # Media player
 [mediaplayer]
-label=♪
+# label=♪
 interval=3
 signal=10
 
