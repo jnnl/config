@@ -1,6 +1,7 @@
 [user]
-    email = juho@jnnl.net
     name = Juho Junnila
+    email = jnnl.git@pm.me
+    useConfigOnly = true
 [github]
     user = jnnl
 [core]
