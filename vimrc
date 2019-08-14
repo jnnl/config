@@ -38,7 +38,7 @@ let g:mucomplete#chains = {}
 let g:mucomplete#chains.default = ['ulti', 'path', 'omni', 'keyn', 'dict', 'uspl']
 
 Plug 'sirver/ultisnips'
-let g:UltiSnipsExpandTrigger='<C-k>'
+let g:UltiSnipsExpandTrigger='<C-h>'
 let g:UltiSnipsSnippetsDir = '~/.vim/snips'
 let g:UltiSnipsSnippetDirectories = [$HOME.'/.vim/snips']
 
