@@ -211,7 +211,7 @@ install_snippets() {
     local snipdir="$HOME/.vim/snips"
 
     mkdir -vp "$snipdir"
-    cp -v "$scriptdir/vim_snippets/*" "$snipdir"
+    cp -v "$scriptdir/vim_snippets/"* "$snipdir"
 }
 
 install_fzf() {
