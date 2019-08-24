@@ -208,10 +208,14 @@ install_vimplug() {
 }
 
 install_snippets() {
+    msg "Installing vim snippets..."
+
     local snipdir="$HOME/.vim/snips"
 
     mkdir -vp "$snipdir"
     cp -v "$scriptdir/vim_snippets/"* "$snipdir"
+
+    msg_done
 }
 
 install_fzf() {
