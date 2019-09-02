@@ -16,7 +16,7 @@ let g:lion_squeeze_spaces = 1
 
 " Language plugins
 if has('nvim')
-    let g:python3_host_prog = '/usr/bin/python'
+    let g:python3_host_prog = '/usr/bin/python3'
 endif
 Plug 'davidhalter/jedi-vim'
 let g:jedi#force_py_version = 3
