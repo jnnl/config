@@ -16,7 +16,7 @@ die() {
 }
 
 warn() {
-    printf "=== $*\n"
+    printf "~~~ $*\n"
 }
 
 msg() {
@@ -29,13 +29,6 @@ msg_done() {
 
 has() {
     type -p $* &>/dev/null
-}
-
-exists() {
-    local file
-    for file in $*; do
-        test -e "$file" || return 1
-    done
 }
 
 is_linux() {
@@ -61,7 +54,7 @@ copy() {
 }
 
 backup() {
-    if exists "$1"; then
+    if test -e "$1"; then
         copy "$1" "$2"
     else
         warn "$1 doesn't exist, skipping..."
@@ -130,8 +123,6 @@ link_config() {
 }
 
 configure_mac() {
-    is_mac || return 1
-
     # Expand save panels
     defaults write -g NSNavPanelExpandedStateForSaveMode -bool true
     defaults write -g NSNavPanelExpandedStateForSaveMode2 -bool true
@@ -173,8 +164,6 @@ configure_mac() {
 }
 
 install_homebrew() {
-    is_mac || return 1
-
     if has brew; then
         warn "Homebrew already installed, skipping..."
         return
