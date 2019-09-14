@@ -26,9 +26,6 @@ let g:jedi#smart_auto_mappings = 0
 let g:jedi#show_call_signatures = 0
 let g:jedi#auto_vim_configuration = 0
 
-Plug 'rust-lang/rust.vim'
-Plug 'racer-rust/vim-racer'
-
 Plug 'leafgarland/typescript-vim'
 Plug 'quramy/tsuquyomi'
 let g:tsuquyomi_disable_quickfix = 1
@@ -39,7 +36,7 @@ let g:mucomplete#chains = {}
 let g:mucomplete#chains.default = ['ulti', 'path', 'omni', 'keyn', 'dict', 'uspl']
 
 Plug 'sirver/ultisnips'
-let g:UltiSnipsExpandTrigger='<C-x>'
+let g:UltiSnipsExpandTrigger = '<C-x>'
 let g:UltiSnipsSnippetsDir = '~/.vim/snips'
 let g:UltiSnipsSnippetDirectories = [$HOME.'/.vim/snips']
 
@@ -47,13 +44,17 @@ let g:UltiSnipsSnippetDirectories = [$HOME.'/.vim/snips']
 Plug 'jnnl/vim-tonight'
 
 " Miscellaneous plugins
+Plug 'romainl/vim-qf'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-fugitive'
 Plug 'sgur/vim-editorconfig'
 Plug 'machakann/vim-highlightedyank'
 Plug 'michaeljsmith/vim-indent-object'
+
 Plug 'mbbill/undotree'
-Plug 'romainl/vim-qf'
-Plug 'tpope/vim-fugitive'
+let g:undotree_SetFocusWhenToggle = 1
+let g:undotree_ShortIndicators = 1
+let g:undotree_HelpLine = 0
 
 call plug#end()
 
