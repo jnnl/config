@@ -87,24 +87,24 @@ bindsym $mod+Shift+c reload
 # Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # Exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec i3-msg exit
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -b 'Yes' 'i3-msg exit'"
 
 # Resize mode
 bindsym $mod+r mode "resize"
 
 mode "resize" {
-        bindsym h resize grow width 10 px or 10 ppt
-        bindsym j resize shrink height 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink width 10 px or 10 ppt
+    bindsym h resize grow width 1 px or 1 ppt
+    bindsym j resize shrink height 1 px or 1 ppt
+    bindsym k resize grow height 1 px or 1 ppt
+    bindsym l resize shrink width 1 px or 1 ppt
 
-        bindsym Left resize grow width 10 px or 10 ppt
-        bindsym Down resize shrink height 10 px or 10 ppt
-        bindsym Up resize grow height 10 px or 10 ppt
-        bindsym Right resize shrink width 10 px or 10 ppt
+    bindsym Left resize grow width 10 px or 10 ppt
+    bindsym Down resize shrink height 10 px or 10 ppt
+    bindsym Up resize grow height 10 px or 10 ppt
+    bindsym Right resize shrink width 10 px or 10 ppt
 
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
 }
 
 # i3bar
@@ -146,23 +146,34 @@ mode $systemmenu {
 }
 
 # Launch menu
-set $launchmenu "launch:  [f]irefox  [p]rivate  [s]potify  [t]hunar  [u]rxvt"
+set $launchmenu "launch:  [c]hromium  [f]irefox  [i]dea  [p]rivate  [s]potify  [t]hunar"
 bindsym $mod+i mode $launchmenu
 
 mode $launchmenu {
+    bindsym c       exec chromium, mode "default"
     bindsym f       exec firefox, mode "default"
+    bindsym i       exec idea, mode "default"
     bindsym p       exec firefox --private-window, mode "default"
     bindsym s       exec spotify, mode "default" 
     bindsym t       exec thunar, mode "default"
-    bindsym u       exec urxvt, mode "default"
+    bindsym Return  mode "default"
+    bindsym Escape  mode "default"
+}
+
+# Action menu
+set $actionmenu "launch:  [m]aim"
+bindsym $mod+u mode $actionmenu
+
+mode $actionmenu {
+    bindsym m       exec bash -c "maim -s $(date +%s).png", mode "default"
     bindsym Return  mode "default"
     bindsym Escape  mode "default"
 }
 
 # Audio controls
-bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume 1 +2% && pkill -RTMIN+10 i3blocks"
-bindsym XF86AudioLowerVolume exec "pactl set-sink-volume 1 -2% && pkill -RTMIN+10 i3blocks"
-bindsym XF86AudioMute exec pactl set-sink-mute 1 toggle
+bindsym XF86AudioRaiseVolume exec "amixer -q sset Master 2%+ && pkill -RTMIN+10 i3blocks"
+bindsym XF86AudioLowerVolume exec "amixer -q sset Master 2%- && pkill -RTMIN+10 i3blocks"
+bindsym XF86AudioMute exec "amixer -q sset Master toggle && pkill -RTMIN+10 i3blocks"
 
 bindsym XF86AudioPause exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
@@ -174,5 +185,6 @@ bindsym XF86MonBrightnessUp exec light -A 1
 bindsym XF86MonBrightnessDown exec light -U 1
 
 # Startup programs
+exec amixer -q sset Master 0%
 exec alacritty
-exec redshift -l 65.0:25.3 -b 0.95:0.80 -t 4200:3600 &
+exec redshift -l 65.0:25.3 -t 4200:3600 &

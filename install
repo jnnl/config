@@ -10,7 +10,7 @@ readonly dotfiledir="$configdir/dotfiles"
 readonly backupdir="$dotfiledir/backup"
 readonly bindir="$HOME/code/bin"
 
-die() {
+err() {
     printf "!!! ERROR: $*\n"
     exit 1
 }
@@ -35,6 +35,10 @@ is_linux() {
     test "$kernel" = Linux
 }
 
+is_distro() {
+    grep -qsx ID="$1" /etc/os-release
+}
+
 is_mac() {
     test "$kernel" = Darwin
 }
@@ -45,7 +49,7 @@ dl() {
     elif has wget; then
         wget --show-progress -qO $*
     else
-        die "no curl or wget found"
+        err "no curl or wget found"
     fi
 }
 
@@ -114,9 +118,11 @@ link_config() {
 
     if is_linux; then
         add "$dotfiledir/kitty.conf" "$configdir/kitty/kitty.conf"
-        add "$dotfiledir/i3_config" "$configdir/i3/config"
-        add "$dotfiledir/i3status_config" "$configdir/i3status/config"
-        add "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
+        if is_distro "arch"; then
+            add "$dotfiledir/i3_config" "$configdir/i3/config"
+            add "$dotfiledir/i3status_config" "$configdir/i3status/config"
+            add "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
+        fi
     fi
 
     msg_done
@@ -207,6 +213,24 @@ install_snippets() {
     msg_done
 }
 
+install_blocklets() {
+    msg "Installing i3blocks blocklets..."
+
+    local blockletdir="$configdir/i3blocks/blocklets"
+    local url="https://github.com/vivien/i3blocks-contrib"
+
+    mkdir -vp "$blockletdir"
+    (
+    cd "$blockletdir"
+    git init
+    git remote | grep -qx origin && git remote rm origin
+    git remote add origin "$url"
+    git pull -q origin master
+    )
+
+    msg_done
+}
+
 install_fzf() {
     msg "Installing fzf..."
 
@@ -273,7 +297,10 @@ main() {
 
     if is_linux; then
         homefiles+=" xinitrc Xmodmap Xresources"
-        configfiles+=" kitty.conf i3_config i3status_config i3blocks_config"
+        configfiles+=" kitty.conf"
+        if is_distro "arch"; then
+            configfiles+=" i3_config i3status_config i3blocks_config"
+        fi
     fi
 
     backup_config
@@ -283,6 +310,8 @@ main() {
     if is_mac; then
         configure_mac
         install_homebrew
+    elif is_linux && is_distro "arch"; then
+        install_blocklets
     fi
 
     install_fzf
