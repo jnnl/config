@@ -19,5 +19,6 @@ xset r rate 250 35
 eval $(ssh-agent)
 
 export LESSHISTFILE=/dev/null
+export WINIT_HIDPI_FACTOR=1
 
 exec i3
