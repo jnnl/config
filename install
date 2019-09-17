@@ -83,7 +83,6 @@ backup_config() {
     backup "$configdir/git/ignore" "$backupdir/git_ignore"
     backup "$configdir/nvim/init.vim" "$backupdir/init.vim"
     backup "$configdir/alacritty/alacritty.yml" "$backupdir/alacritty.yml"
-    backup "$configdir/kitty/kitty.conf" "$backupdir/kitty.conf"
     backup "$configdir/i3/config" "$backupdir/i3_config"
     backup "$configdir/i3status/config" "$backupdir/i3status_config"
     backup "$configdir/i3blocks/config" "$backupdir/i3blocks_config"
@@ -117,7 +116,6 @@ link_config() {
     add "$dotfiledir/alacritty.yml" "$configdir/alacritty/alacritty.yml"
 
     if is_linux; then
-        add "$dotfiledir/kitty.conf" "$configdir/kitty/kitty.conf"
         if is_distro "arch"; then
             add "$dotfiledir/i3_config" "$configdir/i3/config"
             add "$dotfiledir/i3status_config" "$configdir/i3status/config"
@@ -292,12 +290,11 @@ install_v() {
 }
 
 main() {
-    local homefiles="bash_profile bashrc vimrc tmux.conf"
+    local homefiles="bash_profile bashrc vimrc"
     local configfiles="git_config git_ignore init.vim alacritty.yml"
 
     if is_linux; then
         homefiles+=" xinitrc Xmodmap Xresources"
-        configfiles+=" kitty.conf"
         if is_distro "arch"; then
             configfiles+=" i3_config i3status_config i3blocks_config"
         fi

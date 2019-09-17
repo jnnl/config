@@ -141,7 +141,7 @@ cnoremap <C-k> <Up>
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
-inoremap <expr> <CR> mucomplete#ultisnips#expand_snippet("\<CR>")
+inoremap <expr> <CR> mucomplete#ultisnips#expand_snippet('<CR>')
 nnoremap <silent> <leader>q mQgggqG`Q
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
