@@ -113,10 +113,10 @@ link_config() {
     add "$dotfiledir/git_config" "$configdir/git/config"
     add "$dotfiledir/git_ignore" "$configdir/git/ignore"
     add "$dotfiledir/init.vim" "$configdir/nvim/init.vim"
-    add "$dotfiledir/alacritty.yml" "$configdir/alacritty/alacritty.yml"
 
     if is_linux; then
         if is_distro "arch"; then
+            add "$dotfiledir/alacritty.yml" "$configdir/alacritty/alacritty.yml"
             add "$dotfiledir/i3_config" "$configdir/i3/config"
             add "$dotfiledir/i3status_config" "$configdir/i3status/config"
             add "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
@@ -291,12 +291,12 @@ install_v() {
 
 main() {
     local homefiles="bash_profile bashrc vimrc"
-    local configfiles="git_config git_ignore init.vim alacritty.yml"
+    local configfiles="git_config git_ignore init.vim"
 
     if is_linux; then
-        homefiles+=" xinitrc Xmodmap Xresources"
+        homefiles+=" xinitrc"
         if is_distro "arch"; then
-            configfiles+=" i3_config i3status_config i3blocks_config"
+            configfiles+=" alacritty.yml i3_config i3status_config i3blocks_config"
         fi
     fi
 
