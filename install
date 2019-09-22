@@ -84,7 +84,6 @@ backup_config() {
     backup "$configdir/nvim/init.vim" "$backupdir/init.vim"
     backup "$configdir/alacritty/alacritty.yml" "$backupdir/alacritty.yml"
     backup "$configdir/i3/config" "$backupdir/i3_config"
-    backup "$configdir/i3status/config" "$backupdir/i3status_config"
     backup "$configdir/i3blocks/config" "$backupdir/i3blocks_config"
 
     msg_done
@@ -118,7 +117,6 @@ link_config() {
         if is_distro "arch"; then
             add "$dotfiledir/alacritty.yml" "$configdir/alacritty/alacritty.yml"
             add "$dotfiledir/i3_config" "$configdir/i3/config"
-            add "$dotfiledir/i3status_config" "$configdir/i3status/config"
             add "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
         fi
     fi
@@ -284,7 +282,7 @@ main() {
     if is_linux; then
         homefiles+=" xinitrc"
         if is_distro "arch"; then
-            configfiles+=" alacritty.yml i3_config i3status_config i3blocks_config"
+            configfiles+=" alacritty.yml i3_config i3blocks_config"
         fi
     fi
 
