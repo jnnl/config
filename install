@@ -276,18 +276,6 @@ install_z() {
     msg_done
 }
 
-install_v() {
-    msg "Installing v..."
-
-    local url="https://raw.githubusercontent.com/rupa/v/master/v"
-
-    mkdir -vp "$bindir"
-
-    dl "$bindir/v" "$url"
-    chmod ug+x "$bindir/v"
-
-    msg_done
-}
 
 main() {
     local homefiles="bash_profile bashrc vimrc"
@@ -315,7 +303,6 @@ main() {
     install_vimplug
     install_snippets
     install_z
-    install_v
 
     printf "<<< all done\n"
 }
