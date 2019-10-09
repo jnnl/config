@@ -136,11 +136,11 @@ set $systemmenu "system:  [e]xit  [l]ock  [p]oweroff  [r]eboot  [s]uspend"
 bindsym $mod+o mode $systemmenu
 
 mode $systemmenu {
-    bindsym e       exit
-    bindsym l       exec i3lock -e -c 000000, mode "default"
-    bindsym p       exec systemctl poweroff
-    bindsym r       exec systemctl reboot
-    bindsym s       exec i3lock -e -c 000000, exec systemctl suspend, mode "default"
+    bindsym Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'"
+    bindsym Shift+l exec i3lock -e -c 000000, mode "default"
+    bindsym Shift+p exec systemctl poweroff
+    bindsym Shift+r exec systemctl reboot
+    bindsym Shift+s exec i3lock -e -c 000000, exec systemctl suspend, mode "default"
     bindsym Return  mode "default"
     bindsym Escape  mode "default"
 }
