@@ -132,7 +132,7 @@ client.unfocused            #111111 #101c2a #888888 #333f4d   #303c4a
 client.urgent               #555555 #434f5d #ffffff #333f4d   #636f7d
 
 # System menu
-set $systemmenu "system:  [e]xit  [l]ock  [p]oweroff  [r]eboot  [s]uspend"
+set $systemmenu "system:  [E]xit  [L]ock  [P]oweroff  [R]eboot  [S]uspend"
 bindsym $mod+o mode $systemmenu
 
 mode $systemmenu {
