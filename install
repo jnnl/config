@@ -7,7 +7,6 @@ readonly kernel="$(uname -s)"
 readonly scriptdir="$(realpath $(dirname ${BASH_SOURCE[0]}))"
 readonly filedir="$scriptdir/files"
 readonly configdir="${XDG_CONFIG_HOME:-$HOME/.config}"
-readonly bindir="$HOME/code/bin"
 
 err() {
     printf "!!! ERROR: $*\n"
@@ -126,17 +125,6 @@ install_vimplug() {
     msg_done
 }
 
-install_snippets() {
-    msg "Installing vim snippets..."
-
-    local snipdir="$HOME/.vim/snips"
-
-    mkdir -vp "$snipdir"
-    cp -v "$scriptdir/vim_snippets/"* "$snipdir"
-
-    msg_done
-}
-
 install_blocklets() {
     msg "Installing i3blocks blocklets..."
 
@@ -230,7 +218,6 @@ main() {
 
     install_fzf
     install_vimplug
-    install_snippets
     install_z
 
     printf "<<< all done\n"
