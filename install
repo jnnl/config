@@ -32,6 +32,10 @@ is_mac() {
     test "$(uname -s)" = Darwin
 }
 
+is_linux() {
+    test "$(uname -s)" = Linux
+}
+
 dl() {
     if has curl; then
         curl -#fLo $*
@@ -40,6 +44,33 @@ dl() {
     else
         err "no curl or wget found"
     fi
+}
+
+create_dirs() {
+    msg "Creating directories..."
+
+    directories="$(find $scriptdir/files -type d | tail -n+2 | sed 's|^'$scriptdir/files'/||')"
+
+    local directory
+    for directory in $directories; do
+        mkdir -vp "$HOME/$directory"
+    done
+
+    msg_done
+
+}
+
+copy_files() {
+    msg "Copying files..."
+
+    files="$(find $scriptdir/files -type f | sed 's|^'$scriptdir/files'/||')"
+
+    local file
+    for file in $files; do
+        cp -v "$filedir/$file" "$HOME/$file"
+    done
+
+    msg_done
 }
 
 configure_mac() {
@@ -122,14 +153,13 @@ install_blocklets() {
     local blockletdir="$configdir/i3blocks/blocklets"
     local url="https://github.com/vivien/i3blocks-contrib"
 
-    mkdir -vp "$blockletdir"
-    (
-    cd "$blockletdir"
-    git init
-    git remote | grep -qx origin && git remote rm origin
-    git remote add origin "$url"
-    git pull -q origin master
-    )
+    if has git; then
+        rm -rf "$blockletdir"
+        git clone --depth 1 "$url" "$blockletdir"
+    else
+        warn "Git not found, skipping blocklets install."
+        return
+    fi
 
     msg_done
 }
@@ -140,27 +170,17 @@ install_fzf() {
     local fzfdir="$HOME/.fzf"
     local url="https://github.com/junegunn/fzf.git"
 
-    if test -x "$fzfdir/install"; then
-        (
-        cd "$fzfdir"
-        if ! git diff --quiet origin/master; then
-            git stash
-            git pull
-        fi
-        )
+    if has git; then
+        rm -rf "$fzfdir"
+        git clone --depth 1 "$url" "$fzfdir"
 
+        chmod ug+x "$fzfdir/install"
         "$fzfdir/install" --key-bindings \
                           --completion \
-                          --no-update-rc \
                           --no-zsh \
                           --no-fish \
+                          --no-update-rc \
                           1>/dev/null
-    elif has git; then
-        rm -vrf "$fzfdir"
-        git clone --depth 1 "$url" "$fzfdir"
-        chmod ug+x "$fzfdir/install"
-
-        "$fzfdir/install" --key-bindings --completion --no-update-rc 1>/dev/null
     else
         warn "Git not found, skipping fzf install."
         return
@@ -183,26 +203,14 @@ install_z() {
 
 
 main() {
-    dirs="$(find $scriptdir/files -type d | tail -n+2 | sed 's|^'$scriptdir/files'/||')"
-    files="$(find $scriptdir/files -type f | sed 's|^'$scriptdir/files'/||')"
-
-    msg "Creating directories..."
-    local dir
-    for dir in $dirs; do
-        mkdir -vp "$HOME/$dir"
-    done
-    msg_done
-
-    msg "Copying files..."
-    local file
-    for file in $files; do
-        cp -v "$filedir/$file" "$HOME/$file"
-    done
-    msg_done
+    create_dirs
+    copy_files
 
     if is_mac; then
         configure_mac
         install_homebrew
+    elif is_linux; then
+        install_blocklets
     fi
 
     install_fzf
