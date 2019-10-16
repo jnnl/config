@@ -49,9 +49,9 @@ dl() {
 create_dirs() {
     msg "Creating directories..."
 
-    directories="$(find $scriptdir/files -type d | tail -n+2 | sed 's|^'$scriptdir/files'/||')"
-
+    local directories="$(find $scriptdir/files -type d | tail -n+2 | sed 's|^'$scriptdir/files'/||')"
     local directory
+
     for directory in $directories; do
         mkdir -vp "$HOME/$directory"
     done
@@ -63,9 +63,9 @@ create_dirs() {
 copy_files() {
     msg "Copying files..."
 
-    files="$(find $scriptdir/files -type f | sed 's|^'$scriptdir/files'/||')"
-
+    local files="$(find $scriptdir/files -type f | sed 's|^'$scriptdir/files'/||')"
     local file
+
     for file in $files; do
         cp -v "$filedir/$file" "$HOME/$file"
     done
