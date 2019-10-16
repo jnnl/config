@@ -5,9 +5,8 @@ set -eu
 
 readonly kernel="$(uname -s)"
 readonly scriptdir="$(realpath $(dirname ${BASH_SOURCE[0]}))"
+readonly filedir="$scriptdir/files"
 readonly configdir="${XDG_CONFIG_HOME:-$HOME/.config}"
-readonly dotfiledir="$configdir/dotfiles"
-readonly backupdir="$dotfiledir/backup"
 readonly bindir="$HOME/code/bin"
 
 err() {
@@ -51,77 +50,6 @@ dl() {
     else
         err "no curl or wget found"
     fi
-}
-
-copy() {
-    cp -v "$1" "$2"
-}
-
-backup() {
-    if test -e "$1"; then
-        copy "$1" "$2"
-    else
-        warn "$1 doesn't exist, skipping..."
-    fi
-}
-
-add() {
-    mkdir -vp "$(dirname $2)"
-    ln -vsf "$1" "$2"
-}
-
-backup_config() {
-    msg "Backing up existing config files to $backupdir..."
-    mkdir -vp "$backupdir"
-
-    local file
-    for file in $homefiles; do
-        backup "$HOME/.$file" "$backupdir/$file"
-    done
-
-    backup "$configdir/git/config" "$backupdir/git_config"
-    backup "$configdir/git/ignore" "$backupdir/git_ignore"
-    backup "$configdir/nvim/init.vim" "$backupdir/init.vim"
-    backup "$configdir/alacritty/alacritty.yml" "$backupdir/alacritty.yml"
-    backup "$configdir/i3/config" "$backupdir/i3_config"
-    backup "$configdir/i3blocks/config" "$backupdir/i3blocks_config"
-
-    msg_done
-}
-
-copy_config() {
-    msg "Copying config files to $dotfiledir..."
-    mkdir -vp "$dotfiledir"
-
-    local file
-    for file in $homefiles $configfiles; do
-        copy "$scriptdir/$file" "$dotfiledir"
-    done
-
-    msg_done
-}
-
-link_config() {
-    msg "Linking config files..."
-
-    local file
-    for file in $homefiles; do
-        add "$dotfiledir/$file" "$HOME/.$file"
-    done
-
-    add "$dotfiledir/git_config" "$configdir/git/config"
-    add "$dotfiledir/git_ignore" "$configdir/git/ignore"
-    add "$dotfiledir/init.vim" "$configdir/nvim/init.vim"
-
-    if is_linux; then
-        if is_distro "arch"; then
-            add "$dotfiledir/alacritty.yml" "$configdir/alacritty/alacritty.yml"
-            add "$dotfiledir/i3_config" "$configdir/i3/config"
-            add "$dotfiledir/i3blocks_config" "$configdir/i3blocks/config"
-        fi
-    fi
-
-    msg_done
 }
 
 configure_mac() {
@@ -276,19 +204,22 @@ install_z() {
 
 
 main() {
-    local homefiles="bash_profile bashrc vimrc"
-    local configfiles="git_config git_ignore init.vim"
+    dirs="$(find $scriptdir/files -type d | tail -n+2 | sed 's|^'$scriptdir/files'/||')"
+    files="$(find $scriptdir/files -type f | sed 's|^'$scriptdir/files'/||')"
 
-    if is_linux; then
-        homefiles+=" xinitrc"
-        if is_distro "arch"; then
-            configfiles+=" alacritty.yml i3_config i3blocks_config"
-        fi
-    fi
+    msg "Creating directories..."
+    local dir
+    for dir in $dirs; do
+        mkdir -vp "$HOME/$dir"
+    done
+    msg_done
 
-    backup_config
-    copy_config
-    link_config
+    msg "Copying files..."
+    local file
+    for file in $files; do
+        cp -v "$filedir/$file" "$HOME/$file"
+    done
+    msg_done
 
     if is_mac; then
         configure_mac
