@@ -3,7 +3,6 @@
 
 set -eu
 
-readonly kernel="$(uname -s)"
 readonly scriptdir="$(realpath $(dirname ${BASH_SOURCE[0]}))"
 readonly filedir="$scriptdir/files"
 readonly configdir="${XDG_CONFIG_HOME:-$HOME/.config}"
@@ -26,19 +25,11 @@ msg_done() {
 }
 
 has() {
-    type -p $* &>/dev/null
-}
-
-is_linux() {
-    test "$kernel" = Linux
-}
-
-is_distro() {
-    grep -qsx ID="$1" /etc/os-release
+    type -p "$1" &>/dev/null
 }
 
 is_mac() {
-    test "$kernel" = Darwin
+    test "$(uname -s)" = Darwin
 }
 
 dl() {
@@ -212,8 +203,6 @@ main() {
     if is_mac; then
         configure_mac
         install_homebrew
-    elif is_linux && is_distro "arch"; then
-        install_blocklets
     fi
 
     install_fzf
