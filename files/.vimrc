@@ -157,6 +157,7 @@ nnoremap <silent> <leader>_ :BLines<CR>
 
 " Commands
 command! Rstrip :%s/\s\+$//e
+command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null ' . expand('%:p') | :e!
 command! -nargs=* Rg
     \ call fzf#vim#grep(
