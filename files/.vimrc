@@ -45,6 +45,7 @@ Plug 'jnnl/vim-tonight'
 
 " Miscellaneous plugins
 Plug 'romainl/vim-qf'
+Plug 'neomake/neomake'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'sgur/vim-editorconfig'
@@ -58,6 +59,8 @@ let g:undotree_HelpLine = 0
 
 call plug#end()
 
+silent call neomake#cmd#disable(g:)
+silent call neomake#configure#automake('nw', 500)
 runtime macros/matchit.vim
 
 " General
@@ -142,7 +145,7 @@ nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
 inoremap <expr> <CR> mucomplete#ultisnips#expand_snippet('<CR>')
-nnoremap <silent> <leader>q mQgggqG`Q
+nnoremap <silent> <leader>m :NeomakeToggle<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
 nmap Ö <Plug>(qf_qf_previous)
