@@ -1,0 +1,52 @@
+#!/bin/bash
+# utility functions
+
+set -eu
+
+readonly scriptdir="$(realpath $(dirname ${BASH_SOURCE[0]}))"
+readonly filedir="$scriptdir/files"
+readonly configdir="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+err() {
+    printf "!!! ERROR: $*\n"
+    exit 1
+}
+
+warn() {
+    printf "~~~ $*\n"
+}
+
+msg() {
+    printf ">>> $*\n"
+}
+
+msg_done() {
+    printf "<<< done\n\n"
+}
+
+has() {
+    type -p "$1" &>/dev/null
+}
+
+is_mac() {
+    test "$(uname -s)" = Darwin
+}
+
+is_linux() {
+    test "$(uname -s)" = Linux
+}
+
+is_distro() {
+    grep -qsx ID="$1" /etc/os-release
+}
+
+dl() {
+    if has curl; then
+        curl -#fLo $*
+    elif has wget; then
+        wget --show-progress -qO $*
+    else
+        err "no curl or wget found"
+    fi
+}
+

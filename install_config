@@ -1,0 +1,43 @@
+#!/bin/bash
+# install config files
+
+set -eu
+
+source utils
+
+create_dirs() {
+    msg "Creating directories..."
+
+    local directories="$(find $scriptdir/files -type d | tail -n+2 | sed 's|^'$scriptdir/files'/||')"
+    local directory
+
+    for directory in $directories; do
+        mkdir -vp "$HOME/$directory"
+    done
+
+    msg_done
+
+}
+
+copy_files() {
+    msg "Copying files..."
+
+    local files="$(find $scriptdir/files -type f | sed 's|^'$scriptdir/files'/||')"
+    local file
+
+    for file in $files; do
+        cp -v "$filedir/$file" "$HOME/$file"
+    done
+
+    msg_done
+}
+
+
+main() {
+    create_dirs
+    copy_files
+
+    printf "<<< all done\n"
+}
+
+main
