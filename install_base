@@ -73,7 +73,7 @@ install_arch_pkgs() {
 
     pkgs="adobe-source-code-pro-fonts fd git neovim openssh python ripgrep"
 
-    sudo pacman -Syu $pkgs
+    sudo pacman -Syyu --needed $pkgs
 
     msg_done
 }
@@ -170,7 +170,7 @@ main() {
     install_vimplug
     install_z
 
-    printf "<<< all done\n"
+    printf "<<< base install complete\n\n"
 }
 
 main

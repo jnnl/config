@@ -37,7 +37,7 @@ main() {
     create_dirs
     copy_files
 
-    printf "<<< all done\n"
+    printf "<<< config install complete\n\n"
 }
 
 main
