@@ -61,9 +61,11 @@ install_homebrew() {
 install_ubuntu_pkgs() {
     msg "Installing packages for Ubuntu..."
 
-    pkgs="fd ripgrep"
+    pkgs="fd neovim renameutils ripgrep"
 
     sudo apt install $pkgs
+
+    python3 -m pip install --user pynvim
 
     msg_done
 }
@@ -71,9 +73,12 @@ install_ubuntu_pkgs() {
 install_arch_pkgs() {
     msg "Installing packages for Arch Linux..."
 
-    pkgs="adobe-source-code-pro-fonts fd git neovim openssh python ripgrep"
+    pkgs="adobe-source-code-pro-fonts bc fd git htop hyperfine jq"
+    pkgs+=" neovim openssh python renameutils ripgrep"
 
     sudo pacman -Syyu --needed $pkgs
+
+    python3 -m pip install --user pynvim
 
     msg_done
 }
