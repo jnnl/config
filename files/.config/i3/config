@@ -10,7 +10,7 @@ font pango:Terminus 8
 floating_modifier $mod
 
 # Start terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec WINIT_HIDPI_FACTOR=1 alacritty
 
 # Kill focused window
 bindsym $mod+Shift+q kill
@@ -186,5 +186,5 @@ bindsym XF86MonBrightnessDown exec light -U 1
 
 # Startup programs
 exec amixer -q sset Master 0%
-exec alacritty
+exec WINIT_HIDPI_FACTOR=1 alacritty
 exec redshift -l 65.0:25.3 -t 4200:3600 &
