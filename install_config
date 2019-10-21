@@ -2,7 +2,6 @@
 # install config files
 
 set -eu
-
 source utils
 
 create_dirs() {

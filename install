@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -eu
-
 source utils
 
 msg "Starting install..."
