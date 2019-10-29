@@ -37,7 +37,7 @@ is_linux() {
 }
 
 is_distro() {
-    grep -qsx ID="$1" /etc/os-release
+    grep -qsx "ID=\"*$1\"*" /etc/os-release
 }
 
 dl() {
