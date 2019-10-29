@@ -59,9 +59,11 @@ let g:undotree_HelpLine = 0
 
 call plug#end()
 
-silent call neomake#cmd#disable(g:)
-silent call neomake#configure#automake('nw', 500)
 runtime macros/matchit.vim
+if exists('g:neomake')
+    silent call neomake#cmd#disable(g:)
+    silent call neomake#configure#automake('nw', 500)
+endif
 
 " General
 set backspace=indent,eol,start
