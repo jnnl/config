@@ -15,9 +15,6 @@ Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
 " Language plugins
-if has('nvim')
-    let g:python3_host_prog = '/usr/bin/python3'
-endif
 Plug 'davidhalter/jedi-vim'
 let g:jedi#force_py_version = 3
 let g:jedi#popup_on_dot = 0
@@ -29,6 +26,8 @@ let g:jedi#auto_vim_configuration = 0
 Plug 'leafgarland/typescript-vim'
 Plug 'quramy/tsuquyomi'
 let g:tsuquyomi_disable_quickfix = 1
+
+Plug 'fatih/vim-go'
 
 " Completion plugins
 Plug 'lifepillar/vim-mucomplete'
@@ -82,6 +81,24 @@ set wildmenu
 " Neovim specific
 if has('nvim')
     set inccommand=nosplit
+
+    " Open fzf in a floating window
+    let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
+
+    function! FloatingFZF()
+        let width = float2nr(&columns * 0.8)
+        let height = float2nr(&lines * 0.6)
+        let opts = { 'relative': 'editor',
+                    \ 'row': (&lines - height) / 2,
+                    \ 'col': (&columns - width) / 2,
+                    \ 'width': width,
+                    \ 'height': height }
+
+        let win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+        call setwinvar(win, '&winhighlight', 'NormalFloat:Normal')
+    endfunction
+
+    let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 endif
 
 " Undo
@@ -92,8 +109,7 @@ set undodir=~/.vim/undo
 set undofile
 
 " Completion
-set completeopt-=preview
-set completeopt+=longest,menuone
+set completeopt=menu,menuone,longest
 
 " Statusline
 set laststatus=2
@@ -129,6 +145,7 @@ let mapleader = ','
 nnoremap <Space> /
 nnoremap <BS> <C-^>
 nnoremap ' `
+nnoremap <silent> S :keeppatterns substitute/\s*\%#\s*/\r/e <bar> normal! ==<CR>
 
 nnoremap ö <C-o>
 nnoremap ä <C-i>
