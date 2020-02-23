@@ -6,15 +6,17 @@ test -n "$BASH" || exit 1
 # get git branch
 _git_br() {
     (
-    until test "$PWD" = /; do
+    set -eu
+    i=0; maxdepth=50
+    while test "$PWD" != / -a $i -lt $maxdepth; do
         if test -d .git; then
-            git rev-parse --abbrev-ref HEAD 2>/dev/null | sed 's/.*/ (&)/'
+            git rev-parse --abbrev-ref HEAD | sed 's/.*/ (&)/'
             return
-        else
-            cd .. 2>/dev/null || return 1
         fi
+        cd .. || return 1
+        (( i=$i+1 ))
     done
-    )
+    ) 2>/dev/null
 }
 
 # check if command exists
