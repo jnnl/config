@@ -9,9 +9,15 @@
 [push]
     default = current
 [diff]
-    tool = vimdiff
+    tool = nvimdiff
 [merge]
-    tool = vimdiff
+    tool = nvimdiff
+    conflictStyle = diff3
+[mergetool]
+    prompt = false
+    keepBackup = false
+[mergetool "nvimdiff"]
+    cmd = nvim -d $LOCAL $MERGED $REMOTE
 [pull]
     rebase = true
 [alias]
