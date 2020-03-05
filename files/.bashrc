@@ -7,7 +7,7 @@ test -n "$BASH" || exit 1
 _git_br() {
     (
     set -eu
-    i=0; maxdepth=50
+    i=0 maxdepth=50
     while test "$PWD" != / -a $i -lt $maxdepth; do
         if test -d .git; then
             git rev-parse --abbrev-ref HEAD | sed 's/.*/ (&)/'

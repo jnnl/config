@@ -72,8 +72,7 @@ install_ubuntu_pkgs() {
 install_arch_pkgs() {
     msg "Installing packages for Arch Linux..."
 
-    pkgs="adobe-source-code-pro-fonts bc fd git htop hyperfine jq"
-    pkgs+=" neovim openssh python renameutils ripgrep"
+    pkgs="bc fd git htop jq neovim openssh python renameutils ripgrep"
 
     sudo pacman -Syyu --needed $pkgs
 
