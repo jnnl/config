@@ -15,22 +15,26 @@ Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
 " Language plugins
-Plug 'davidhalter/jedi-vim'
-let g:jedi#force_py_version = 3
-let g:jedi#popup_on_dot = 0
-let g:jedi#goto_stubs_command = ''
-let g:jedi#smart_auto_mappings = 0
-let g:jedi#show_call_signatures = 0
-let g:jedi#auto_vim_configuration = 0
+if has('nvim-0.5')
+    Plug 'neovim/nvim-lsp'
+else
+    Plug 'davidhalter/jedi-vim'
+    let g:jedi#force_py_version = 3
+    let g:jedi#popup_on_dot = 0
+    let g:jedi#goto_stubs_command = ''
+    let g:jedi#smart_auto_mappings = 0
+    let g:jedi#show_call_signatures = 0
+    let g:jedi#auto_vim_configuration = 0
 
-Plug 'leafgarland/typescript-vim'
-Plug 'quramy/tsuquyomi'
-let g:tsuquyomi_disable_quickfix = 1
-
-Plug 'fatih/vim-go'
+    Plug 'leafgarland/typescript-vim'
+    Plug 'quramy/tsuquyomi'
+    let g:tsuquyomi_disable_quickfix = 1
+endif
 
 " Completion plugins
 Plug 'lifepillar/vim-mucomplete'
+let g:mucomplete#can_complete = {}
+let g:mucomplete#can_complete.default = { 'omni': { t -> t =~# '\m\k\%(\k\|\.\|::\)$' } }
 let g:mucomplete#chains = {}
 let g:mucomplete#chains.default = ['ulti', 'path', 'omni', 'keyn', 'dict', 'uspl']
 
@@ -44,7 +48,6 @@ Plug 'jnnl/vim-tonight'
 
 " Miscellaneous plugins
 Plug 'romainl/vim-qf'
-Plug 'neomake/neomake'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'sgur/vim-editorconfig'
@@ -59,10 +62,6 @@ let g:undotree_HelpLine = 0
 call plug#end()
 
 runtime macros/matchit.vim
-if exists('g:neomake')
-    silent call neomake#cmd#disable(g:)
-    silent call neomake#configure#automake('nw', 500)
-endif
 
 " General
 set backspace=indent,eol,start
@@ -99,6 +98,29 @@ if has('nvim')
     endfunction
 
     let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+endif
+
+if has('nvim-0.5')
+:lua << EOF
+    local nvim_lsp = require('nvim_lsp')
+    vim.lsp.callbacks['textDocument/publishDiagnostics'] = nil
+
+    local on_attach = function(_, bufnr)
+        local buf_set_keymap = vim.api.nvim_buf_set_keymap
+        local opts = { noremap=true, silent=true }
+        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+        buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+        buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+        buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+        buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+        buf_set_keymap(bufnr, 'n', ',e', '<cmd>lua vim.lsp.buf.show_line_diagnostics()<CR>', opts)
+        buf_set_keymap(bufnr, 'n', '<c-h>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    end
+
+    for _, server in ipairs{'bashls', 'gopls', 'pyls', 'rls', 'tsserver'} do
+        nvim_lsp[server].setup { on_attach = on_attach }
+    end
+EOF
 endif
 
 " Undo
@@ -164,7 +186,6 @@ nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
 inoremap <expr> <CR> mucomplete#ultisnips#expand_snippet('<CR>')
-nnoremap <silent> <leader>m :NeomakeToggle<CR>
 nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
 nmap Ö <Plug>(qf_qf_previous)
@@ -201,10 +222,15 @@ augroup Autocmds
     au!
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
-    au FileType typescript nnoremap <silent> <buffer> <leader>d :TsuDefinition<CR>
-    au BufWritePost *.ts call tsuquyomi#asyncGeterr()
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
 augroup END
+
+if !has('nvim-0.5')
+    augroup Legacy
+        au FileType typescript nnoremap <silent> <buffer> <leader>d :TsuDefinition<CR>
+        au BufWritePost *.ts call tsuquyomi#asyncGeterr()
+    augroup END
+endif
 
 " Functions
 func! s:auto_mkdir()
