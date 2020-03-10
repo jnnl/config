@@ -3,22 +3,6 @@
 # exit if not bash
 test -n "$BASH" || exit 1
 
-# get git branch
-_git_br() {
-    (
-    set -eu
-    i=0 maxdepth=50
-    while test "$PWD" != / -a $i -lt $maxdepth; do
-        if test -d .git; then
-            git rev-parse --abbrev-ref HEAD | sed 's/.*/ (&)/'
-            return
-        fi
-        cd .. || return 1
-        (( i=$i+1 ))
-    done
-    ) 2>/dev/null
-}
-
 # check if command exists
 has() {
     type -p $* &>/dev/null
@@ -43,7 +27,11 @@ m() {
 }
 
 # prompt
-PS1="\u:\W\$(_git_br) $ "
+if has __git_ps1; then
+    PS1="\u:\W\$(__git_ps1) $ "
+else
+    PS1="\u:\W\ $ "
+fi
 
 # aliases
 alias l="ls -lhF"
@@ -58,7 +46,8 @@ HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
 HISTIGNORE=bg:cd:cdd:exit:d:f:fg:h:l:ll:ls:v:z
 
-# add custom bin directory to PATH
+# configure environment
+export GIT_PS1_SHOWDIRTYSTATE=1
 export PATH="$HOME/code/bin:$PATH"
 
 # set nvim/vim as EDITOR
