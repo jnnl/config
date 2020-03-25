@@ -27,10 +27,11 @@ m() {
 }
 
 # prompt
+test -f /usr/share/git/completion/git-prompt.sh && source $_
 if has __git_ps1; then
     PS1="\u:\W\$(__git_ps1) $ "
 else
-    PS1="\u:\W\ $ "
+    PS1="\u:\W $ "
 fi
 
 # aliases
