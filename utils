@@ -3,6 +3,8 @@
 
 set -eu
 
+test -n "$BASH" || { printf "This script requires bash to run."; exit 1; }
+
 readonly scriptdir="$(realpath $(dirname ${BASH_SOURCE[0]}))"
 readonly filedir="$scriptdir/files"
 readonly configdir="${XDG_CONFIG_HOME:-$HOME/.config}"

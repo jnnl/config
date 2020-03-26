@@ -1,20 +1,20 @@
 " Plugins
 call plug#begin()
 
-" Navigation plugins
+" Navigation
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
 
-" Manipulation plugins
+" Manipulation
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tommcdo/vim-exchange'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
-" Language plugins
+" Language
 if has('nvim-0.5')
     Plug 'neovim/nvim-lsp'
 else
@@ -31,7 +31,7 @@ else
     let g:tsuquyomi_disable_quickfix = 1
 endif
 
-" Completion plugins
+" Completion
 Plug 'lifepillar/vim-mucomplete'
 let g:mucomplete#can_complete = {}
 let g:mucomplete#can_complete.default = { 'omni': { t -> t =~# '\m\k\%(\k\|\.\|::\)$' } }
@@ -46,7 +46,7 @@ let g:UltiSnipsSnippetDirectories = [$HOME.'/.vim/snips']
 " Colorschemes
 Plug 'jnnl/vim-tonight'
 
-" Miscellaneous plugins
+" Miscellaneous
 Plug 'romainl/vim-qf'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
@@ -108,13 +108,14 @@ if has('nvim-0.5')
     local on_attach = function(_, bufnr)
         local buf_set_keymap = vim.api.nvim_buf_set_keymap
         local opts = { noremap=true, silent=true }
+
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
         buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
         buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
         buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
         buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        buf_set_keymap(bufnr, 'n', ',e', '<cmd>lua vim.lsp.buf.show_line_diagnostics()<CR>', opts)
-        buf_set_keymap(bufnr, 'n', '<c-h>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+        buf_set_keymap(bufnr, 'n', ',R', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+        buf_set_keymap(bufnr, 'n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
     end
 
     for _, server in ipairs{'bashls', 'gopls', 'pyls', 'rls', 'tsserver'} do
@@ -164,7 +165,6 @@ try | colorscheme tonight | catch | colorscheme default | endtry
 " Mappings
 let mapleader = ','
 
-nnoremap <Space> /
 nnoremap <BS> <C-^>
 nnoremap ' `
 nnoremap <silent> S :keeppatterns substitute/\s*\%#\s*/\r/e <bar> normal! ==<CR>
@@ -186,7 +186,7 @@ nnoremap Q @q
 xnoremap Q :normal @q<CR>
 
 inoremap <expr> <CR> mucomplete#ultisnips#expand_snippet('<CR>')
-nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
+nnoremap <leader>r :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
 nmap Ö <Plug>(qf_qf_previous)
 nmap Ä <Plug>(qf_qf_next)
