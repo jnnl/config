@@ -10,12 +10,12 @@ readonly filedir="$scriptdir/files"
 readonly configdir="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 err() {
-    printf "!!! ERROR: $*\n"
+    printf "!!! ERROR: $*\n" >&2
     exit 1
 }
 
 warn() {
-    printf "~~~ $*\n"
+    printf "~~~ $*\n" >&2
 }
 
 msg() {

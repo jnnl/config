@@ -47,7 +47,7 @@ HISTFILESIZE=5000
 HISTCONTROL=ignoreboth:erasedups
 HISTIGNORE=bg:cd:cdd:exit:d:f:fg:h:l:ll:ls:v:z
 
-# configure environment
+# environment variables
 export GIT_PS1_SHOWDIRTYSTATE=1
 export PATH="$HOME/code/bin:$PATH"
 
@@ -61,7 +61,7 @@ elif has vi; then
     export VISUAL=vi EDITOR=vi
 fi
 
-# source bash completion
+# bash completion
 if test -f /usr/share/bash-completion/bash_completion; then
     source "$_"
 elif test -f /usr/local/share/bash-completion/bash_completion; then
@@ -72,18 +72,18 @@ elif test -f /etc/bash_completion; then
     source "$_"
 fi
 
-# fzf config
+# fzf
 test -f ~/.fzf.bash && source "$_"
 if has fzf; then
     export FZF_DEFAULT_OPTS="--reverse --border"
-    if has rg; then
+    if has fd; then
+        export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
+    elif has rg; then
         export FZF_DEFAULT_COMMAND="rg --files --hidden -g'!.git/'"
-    elif has ag; then
-        export FZF_DEFAULT_COMMAND="ag --hidden --ignore .git -f -g ''"
     fi
 fi
 
-# z config
+# z
 if test -f ~/.config/z/z.sh; then
     _Z_DATA="$HOME/.config/z/z"
     source ~/.config/z/z.sh
