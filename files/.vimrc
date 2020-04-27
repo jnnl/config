@@ -1,3 +1,6 @@
+let g:loaded_python_provider = 0
+let g:python3_host_prog = '/usr/bin/python3'
+
 " Plugins
 call plug#begin()
 
@@ -103,7 +106,7 @@ endif
 if has('nvim-0.5')
 :lua << EOF
     local nvim_lsp = require('nvim_lsp')
-    vim.lsp.callbacks['textDocument/publishDiagnostics'] = nil
+    function vim.lsp.util.buf_diagnostics_virtual_text() end
 
     local on_attach = function(_, bufnr)
         local buf_set_keymap = vim.api.nvim_buf_set_keymap
@@ -116,11 +119,23 @@ if has('nvim-0.5')
         buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
         buf_set_keymap(bufnr, 'n', ',R', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
         buf_set_keymap(bufnr, 'n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+        buf_set_keymap(bufnr, 'n', '<C-Space>', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
     end
 
-    for _, server in ipairs{'bashls', 'gopls', 'pyls', 'rls', 'tsserver'} do
-        nvim_lsp[server].setup { on_attach = on_attach }
+    for _, server in ipairs{'bashls', 'gopls', 'rls', 'tsserver'} do
+        nvim_lsp[server].setup { on_attach=on_attach }
     end
+    nvim_lsp.pyls_ms.setup {
+        on_attach=on_attach,
+        init_options = {
+            interpreter = {
+                properties = {
+                    InterpreterPath = '/usr/bin/python3',
+                    Version = '3.8'
+                }
+            }
+        }
+    }
 EOF
 endif
 
