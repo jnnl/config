@@ -53,7 +53,7 @@ Plug 'jnnl/vim-tonight'
 Plug 'romainl/vim-qf'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
-Plug 'sgur/vim-editorconfig'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'michaeljsmith/vim-indent-object'
 
