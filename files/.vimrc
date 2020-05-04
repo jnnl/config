@@ -1,6 +1,3 @@
-let g:loaded_python_provider = 0
-let g:python3_host_prog = '/usr/bin/python3'
-
 " Plugins
 call plug#begin()
 
@@ -29,11 +26,11 @@ else
     let g:jedi#show_call_signatures = 0
     let g:jedi#auto_vim_configuration = 0
 
-    Plug 'leafgarland/typescript-vim'
     Plug 'quramy/tsuquyomi'
     let g:tsuquyomi_disable_quickfix = 1
 endif
 Plug 'ziglang/zig.vim'
+Plug 'leafgarland/typescript-vim'
 
 " Completion
 Plug 'lifepillar/vim-mucomplete'
@@ -86,9 +83,7 @@ set wildmenu
 if has('nvim')
     set inccommand=nosplit
 
-    " Open fzf in a floating window
     let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
-
     function! FloatingFZF()
         let width = float2nr(&columns * 0.8)
         let height = float2nr(&lines * 0.6)
@@ -233,7 +228,7 @@ augroup END
 
 if !has('nvim-0.5')
     augroup Legacy
-        au FileType typescript nnoremap <silent> <buffer> <leader>d :TsuDefinition<CR>
+        au FileType typescript nnoremap <silent> <buffer> gd :TsuDefinition<CR>
         au BufWritePost *.ts call tsuquyomi#asyncGeterr()
     augroup END
 endif
