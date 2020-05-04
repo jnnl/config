@@ -33,6 +33,7 @@ else
     Plug 'quramy/tsuquyomi'
     let g:tsuquyomi_disable_quickfix = 1
 endif
+Plug 'ziglang/zig.vim'
 
 " Completion
 Plug 'lifepillar/vim-mucomplete'
@@ -48,6 +49,7 @@ let g:UltiSnipsSnippetDirectories = [$HOME.'/.vim/snips']
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
+Plug 'lifepillar/vim-gruvbox8'
 
 " Miscellaneous
 Plug 'romainl/vim-qf'
