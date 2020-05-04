@@ -124,20 +124,9 @@ if has('nvim-0.5')
         buf_set_keymap(bufnr, 'n', '<C-Space>', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
     end
 
-    for _, server in ipairs{'bashls', 'gopls', 'rls', 'tsserver'} do
+    for _, server in ipairs{'bashls', 'gopls', 'pyls_ms', 'rls', 'tsserver'} do
         nvim_lsp[server].setup { on_attach=on_attach }
     end
-    nvim_lsp.pyls_ms.setup {
-        on_attach=on_attach,
-        init_options = {
-            interpreter = {
-                properties = {
-                    InterpreterPath = '/usr/bin/python3',
-                    Version = '3.8'
-                }
-            }
-        }
-    }
 EOF
 endif
 
