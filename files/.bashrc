@@ -8,6 +8,14 @@ has() {
     type -p $* &>/dev/null
 }
 
+# show number of stopped jobs for prompt
+nstopjobs() {
+    n_stopped="$(jobs -ps 2>/dev/null | wc -l)"
+    if [ "$n_stopped" -gt 0 ]; then
+        printf " [%s]" "$n_stopped"
+    fi
+}
+
 # cd to dirname
 cdd() {
     cd "$(dirname $1)"
@@ -29,9 +37,9 @@ m() {
 # prompt
 test -f /usr/share/git/completion/git-prompt.sh && source $_
 if has __git_ps1; then
-    PS1="\u:\W\$(__git_ps1) $ "
+    PS1="\u:\W\$(__git_ps1)\$(nstopjobs) $ "
 else
-    PS1="\u:\W $ "
+    PS1="\u:\W\$(nstopjobs) $ "
 fi
 
 # aliases
