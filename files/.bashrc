@@ -1,19 +1,17 @@
 # .bashrc
 
-# exit if not bash
-test -n "$BASH" || exit 1
+# skip if not running interactively
+[[ $- != *i* ]] && return
 
 # check if command exists
 has() {
     type -p $* &>/dev/null
 }
 
-# show number of stopped jobs for prompt
+# print number of stopped jobs
 nstopjobs() {
     n_stopped="$(jobs -ps 2>/dev/null | wc -l)"
-    if [ "$n_stopped" -gt 0 ]; then
-        printf " [%s]" "$n_stopped"
-    fi
+    [ "$n_stopped" -gt 0 ] && printf " [%s]" "$n_stopped"
 }
 
 # cd to dirname
@@ -22,16 +20,15 @@ cdd() {
 }
 
 # selectively cd to shell wd
-d() {
+shd() {
     dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
         sort -u | grep -Fvx "$(pwd)" | \
         fzf +s --height 40% --reverse)" && cd "$dir"
 }
 
 # selectively open man page by description
-m() {
-    apropos "" | fzf --height 40% --reverse -m | \
-        tr -d "()" | awk '{print $2, $1}' | xargs -r man
+mano() {
+    man -k . | fzf | awk '{print $1}' | xargs -r man
 }
 
 # prompt
@@ -50,10 +47,10 @@ alias ll="ls -lhAF"
 shopt -s histappend
 
 # command history options
-HISTSIZE=5000
-HISTFILESIZE=5000
+HISTSIZE=10000
+HISTFILESIZE=10000
 HISTCONTROL=ignoreboth:erasedups
-HISTIGNORE=bg:cd:cdd:exit:d:f:fg:h:l:ll:ls:v:z
+HISTIGNORE=bg:cd:cdd:exit:shd:f:fg:l:ll:ls:v:z
 
 # environment variables
 export GIT_PS1_SHOWDIRTYSTATE=1
@@ -65,8 +62,6 @@ if has nvim; then
     export VISUAL=nvim EDITOR=nvim
 elif has vim; then
     export VISUAL=vim EDITOR=vim
-elif has vi; then
-    export VISUAL=vi EDITOR=vi
 fi
 
 # bash completion
