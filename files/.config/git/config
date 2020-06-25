@@ -41,3 +41,5 @@
     rs = reset --soft
     rso = remote show origin
     s = status -bsu
+    sps = "!git stash && git pull && git stash pop"
+    spps = "!git stash && git pull && git push && git stash pop"
