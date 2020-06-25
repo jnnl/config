@@ -18,6 +18,11 @@ let g:lion_squeeze_spaces = 1
 Plug 'neovim/nvim-lsp'
 Plug 'ziglang/zig.vim'
 Plug 'leafgarland/typescript-vim'
+Plug 'prettier/vim-prettier'
+let g:prettier#autoformat_require_pragma = 0
+let g:prettier#autoformat_config_present = 1
+let g:prettier#autoformat_config_files = ['.prettierrc.json']
+let g:prettier#quickfix_enabled = 0
 
 " Completion
 Plug 'haorenw1025/completion-nvim'
