@@ -161,11 +161,15 @@ mode $launchmenu {
 }
 
 # Action menu
-set $actionmenu "launch:  [m]aim"
+set $actionmenu "action:  [h]:ext-left  [j]:primary  [k]:mirror  [l]:ext-right  [s]creenshot"
 bindsym $mod+u mode $actionmenu
 
 mode $actionmenu {
-    bindsym m       exec bash -c "maim -s $(date +%s).png", mode "default"
+    bindsym h       exec bash -c "mons -e left", mode "default"
+    bindsym j       exec bash -c "mons -o", mode "default"
+    bindsym k       exec bash -c "mons -m", mode "default"
+    bindsym l       exec bash -c "mons -e right", mode "default"
+    bindsym s       exec bash -c "maim -s $(date +%s).png", mode "default"
     bindsym Return  mode "default"
     bindsym Escape  mode "default"
 }
