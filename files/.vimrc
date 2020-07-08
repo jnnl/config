@@ -28,6 +28,10 @@ let g:prettier#quickfix_enabled = 0
 Plug 'haorenw1025/completion-nvim'
 let g:completion_enable_auto_popup = 0
 
+" Diagnostics
+Plug 'haorenw1025/diagnostic-nvim'
+let g:diagnostic_insert_delay = 1
+
 " Colorschemes
 Plug 'jnnl/vim-tonight'
 Plug 'lifepillar/vim-gruvbox8'
@@ -53,11 +57,12 @@ let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
 :lua << EOF
-    local nvim_lsp = require('nvim_lsp')
+    local nvim_lsp = require'nvim_lsp'
     function vim.lsp.util.buf_diagnostics_virtual_text() end
 
     local on_attach = function(_, bufnr)
         require'completion'.on_attach()
+        require'diagnostic'.on_attach()
 
         local mapkey = vim.api.nvim_buf_set_keymap
         local opts = { noremap=true, silent=true }
@@ -67,12 +72,12 @@ let g:fzf_layout = { 'window': 'call FloatingFZF()' }
         mapkey(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
         mapkey(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
         mapkey(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        mapkey(bufnr, 'n', ',R', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+        mapkey(bufnr, 'n', '<leader>R', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
         mapkey(bufnr, 'n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
         mapkey(bufnr, 'n', '<C-Space>', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
     end
 
-    for _, server in ipairs{'gopls', 'pyls_ms', 'rls', 'tsserver'} do
+    for _, server in ipairs{'gopls', 'jedi_language_server', 'rls', 'tsserver'} do
         nvim_lsp[server].setup { on_attach=on_attach }
     end
 EOF
@@ -165,6 +170,8 @@ xnoremap . :normal .<CR>
 
 nnoremap <leader>r :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
+nnoremap <silent> gö :PrevDiagnosticCycle<CR>
+nnoremap <silent> gä :NextDiagnosticCycle<CR>
 nmap Ö <Plug>(qf_qf_previous)
 nmap Ä <Plug>(qf_qf_next)
 
@@ -212,7 +219,7 @@ augroup Autocmds
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
-    au TextYankPost * silent! lua require'vim.highlight'.on_yank("IncSearch", 1000)
+    au TextYankPost * lua require'vim.highlight'.on_yank { higroup="IncSearch", timeout=1000, on_visual=false }
 augroup END
 
 
