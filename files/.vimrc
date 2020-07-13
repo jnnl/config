@@ -4,6 +4,9 @@ call plug#begin()
 " Navigation
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
+let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
 
@@ -25,11 +28,11 @@ let g:prettier#autoformat_config_files = ['.prettierrc.json']
 let g:prettier#quickfix_enabled = 0
 
 " Completion
-Plug 'haorenw1025/completion-nvim'
+Plug 'nvim-lua/completion-nvim'
 let g:completion_enable_auto_popup = 0
 
 " Diagnostics
-Plug 'haorenw1025/diagnostic-nvim'
+Plug 'nvim-lua/diagnostic-nvim'
 let g:diagnostic_insert_delay = 1
 
 " Colorschemes
@@ -52,9 +55,6 @@ call plug#end()
 
 runtime macros/matchit.vim
 let g:loaded_rrhelper = 1
-
-let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
-let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
 :lua << EOF
     local nvim_lsp = require'nvim_lsp'
