@@ -20,11 +20,9 @@ let g:lion_squeeze_spaces = 1
 " Language
 Plug 'neovim/nvim-lsp'
 Plug 'ziglang/zig.vim'
+Plug 'ap/vim-css-color'
 Plug 'leafgarland/typescript-vim'
 Plug 'prettier/vim-prettier'
-let g:prettier#autoformat_require_pragma = 0
-let g:prettier#autoformat_config_present = 1
-let g:prettier#autoformat_config_files = ['.prettierrc.json']
 let g:prettier#quickfix_enabled = 0
 
 " Completion
@@ -185,7 +183,7 @@ nnoremap <silent> <leader>_ :BLines<CR>
 
 inoremap <silent><expr> <Tab>
     \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_backspace() ? "\<Tab>" :
+    \ <SID>check_space_before() ? "\<Tab>" :
     \ completion#trigger_completion()
 inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
@@ -219,6 +217,7 @@ augroup Autocmds
     au!
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
+    au FileType html,css,scss,javascript,typescript :call s:register_prettier()
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
     au TextYankPost * lua require'vim.highlight'.on_yank { higroup="IncSearch", timeout=1000, on_visual=false }
 augroup END
@@ -232,9 +231,15 @@ func! s:auto_mkdir()
     endif
 endf
 
-func! s:check_backspace() abort
+func! s:check_space_before() abort
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
+endf
+
+func! s:register_prettier()
+    if filereadable(findfile('.prettierrc.json', '.;'))
+        au BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.scss,*.html PrettierAsync
+    endif
 endf
 
 func! FloatingFZF()
