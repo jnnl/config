@@ -42,6 +42,7 @@ fi
 # aliases
 alias l="ls -lhF"
 alias ll="ls -lhAF"
+alias lx="ls -lhAFX"
 
 # shell options
 shopt -s histappend
