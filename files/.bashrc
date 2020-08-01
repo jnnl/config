@@ -32,7 +32,11 @@ mano() {
 }
 
 # prompt
-test -f /usr/share/git/completion/git-prompt.sh && source $_
+if test -f /usr/share/git/completion/git-prompt.sh; then
+    source "$_"
+elif test -f /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh; then
+    source "$_"
+fi
 if has __git_ps1; then
     PS1="\u:\W\$(__git_ps1)\$(nstopjobs) $ "
 else
