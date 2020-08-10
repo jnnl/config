@@ -43,6 +43,7 @@ Plug 'lifepillar/vim-gruvbox8'
 Plug 'romainl/vim-qf'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
+Plug 'whiteinge/diffconflicts'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'michaeljsmith/vim-indent-object'
 
