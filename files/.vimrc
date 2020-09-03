@@ -5,7 +5,6 @@ call plug#begin()
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
-let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
@@ -240,16 +239,4 @@ func! s:register_prettier()
     if filereadable(findfile('.prettierrc.json', '.;'))
         au BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.scss,*.html PrettierAsync
     endif
-endf
-
-func! FloatingFZF()
-    let width = float2nr(&columns * 0.8)
-    let height = float2nr(&lines * 0.6)
-    let opts = { 'relative': 'editor',
-                \ 'row': (&lines - height) / 2,
-                \ 'col': (&columns - width) / 2,
-                \ 'width': width,
-                \ 'height': height }
-    let win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
-    call setwinvar(win, '&winhighlight', 'NormalFloat:Normal')
 endf
