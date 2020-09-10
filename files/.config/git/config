@@ -5,19 +5,18 @@
 [github]
     user = jnnl
 [core]
-    editor = vim
+    editor = nvim
 [push]
     default = current
-[diff]
-    tool = nvimdiff
 [merge]
-    tool = nvimdiff
+    tool = diffconflicts
     conflictStyle = diff3
 [mergetool]
     prompt = false
     keepBackup = false
-[mergetool "nvimdiff"]
-    cmd = nvim -d $LOCAL $MERGED $REMOTE
+[mergetool "diffconflicts"]
+    cmd = nvim -c DiffConflicts \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
+    trustExitCode = true
 [pull]
     rebase = true
 [alias]
@@ -30,6 +29,7 @@
     d = diff
     dc = diff --cached
     dh = diff HEAD^ HEAD
+    dr = "!git fetch && git diff FETCH_HEAD"
     l = log --oneline --decorate --graph
     lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(blue)%an%Creset' --abbrev-commit
     nuke = "!git stash && git stash drop; git clean -fdx"
@@ -43,3 +43,4 @@
     s = status -bsu
     sps = "!git stash && git pull && git stash pop"
     spps = "!git stash && git pull && git push && git stash pop"
+    s = status -bsu
