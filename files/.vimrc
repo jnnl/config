@@ -17,20 +17,17 @@ Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
 " Language
-Plug 'neovim/nvim-lsp'
+Plug 'neovim/nvim-lspconfig'
 Plug 'ziglang/zig.vim'
 Plug 'ap/vim-css-color'
 Plug 'leafgarland/typescript-vim'
 Plug 'prettier/vim-prettier'
-let g:prettier#quickfix_enabled = 0
+let g:prettier#autoformat_config_present = 1
+let g:prettier#autoformat_require_pragma = 0
 
 " Completion
 Plug 'nvim-lua/completion-nvim'
 let g:completion_enable_auto_popup = 0
-
-" Diagnostics
-Plug 'nvim-lua/diagnostic-nvim'
-let g:diagnostic_insert_delay = 1
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
@@ -55,15 +52,20 @@ runtime macros/matchit.vim
 let g:loaded_rrhelper = 1
 
 :lua << EOF
-    local nvim_lsp = require'nvim_lsp'
-    function vim.lsp.util.buf_diagnostics_virtual_text() end
-
+    local lsp = require('lspconfig')
     local on_attach = function(_, bufnr)
-        require'completion'.on_attach()
-        require'diagnostic'.on_attach()
+        vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
+            vim.lsp.diagnostic.on_publish_diagnostics, {
+                virtual_text = false,
+                signs = true,
+                update_in_insert = false,
+            }
+        )
+
+        require('completion').on_attach()
 
         local mapkey = vim.api.nvim_buf_set_keymap
-        local opts = { noremap=true, silent=true }
+        local opts = { noremap = true, silent = true }
 
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
         mapkey(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
@@ -72,11 +74,13 @@ let g:loaded_rrhelper = 1
         mapkey(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
         mapkey(bufnr, 'n', '<leader>R', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
         mapkey(bufnr, 'n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-        mapkey(bufnr, 'n', '<C-Space>', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
+        mapkey(bufnr, 'n', '<C-Space>', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+        mapkey(bufnr, 'n', 'gö', '<cmd>lua vim.lsp.diagnostic.goto_prev({severity_limit = "Warning"})<CR>', opts)
+        mapkey(bufnr, 'n', 'gä', '<cmd>lua vim.lsp.diagnostic.goto_next({severity_limit = "Warning"})<CR>', opts)
     end
 
-    for _, server in ipairs{'gopls', 'jedi_language_server', 'rls', 'tsserver'} do
-        nvim_lsp[server].setup { on_attach=on_attach }
+    for _, server in ipairs{'jedi_language_server', 'rls', 'tsserver'} do
+        lsp[server].setup { on_attach = on_attach }
     end
 EOF
 
@@ -168,8 +172,6 @@ xnoremap . :normal .<CR>
 
 nnoremap <leader>r :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
-nnoremap <silent> gö :PrevDiagnosticCycle<CR>
-nnoremap <silent> gä :NextDiagnosticCycle<CR>
 nmap Ö <Plug>(qf_qf_previous)
 nmap Ä <Plug>(qf_qf_next)
 
@@ -216,7 +218,6 @@ augroup Autocmds
     au!
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
-    au FileType html,css,scss,javascript,typescript :call s:register_prettier()
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
     au TextYankPost * lua require'vim.highlight'.on_yank { higroup="IncSearch", timeout=1000, on_visual=false }
 augroup END
@@ -233,10 +234,4 @@ endf
 func! s:check_space_before() abort
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
-endf
-
-func! s:register_prettier()
-    if filereadable(findfile('.prettierrc.json', '.;'))
-        au BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.scss,*.html PrettierAsync
-    endif
 endf
