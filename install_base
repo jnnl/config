@@ -107,11 +107,13 @@ install_blocklets() {
     msg "Installing i3blocks blocklets..."
 
     local blockletdir="$configdir/i3blocks/blocklets"
+    local tmpdir="/tmp/i3blocks-blocklets"
     local url="https://github.com/vivien/i3blocks-contrib"
 
     if has git; then
+        git clone --depth 1 "$url" "$tmpdir"
         rm -rf "$blockletdir"
-        git clone --depth 1 "$url" "$blockletdir"
+        mv "$tmpdir" "$blockletdir"
     else
         warn "Git not found, skipping blocklets install."
         return
@@ -124,11 +126,13 @@ install_fzf() {
     msg "Installing fzf..."
 
     local fzfdir="$HOME/.fzf"
+    local tmpdir="/tmp/fzf"
     local url="https://github.com/junegunn/fzf.git"
 
     if has git; then
+        git clone --depth 1 "$url" "$tmpdir"
         rm -rf "$fzfdir"
-        git clone --depth 1 "$url" "$fzfdir"
+        mv "$tmpdir" "$fzfdir"
 
         chmod ug+x "$fzfdir/install"
         "$fzfdir/install" --key-bindings \
