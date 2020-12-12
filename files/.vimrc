@@ -2,9 +2,10 @@
 call plug#begin()
 
 " Navigation
-Plug '~/.fzf'
+Plug 'junegunn/fzf', {'do': {-> fzf#install()}}
 Plug 'junegunn/fzf.vim'
 let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
+Plug 'ojroques/nvim-lspfuzzy', {'branch': 'main'}
 
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
@@ -52,6 +53,7 @@ runtime macros/matchit.vim
 let g:loaded_rrhelper = 1
 
 :lua << EOF
+    require('lspfuzzy').setup {}
     local lsp = require('lspconfig')
     local on_attach = function(_, bufnr)
         vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
