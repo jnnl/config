@@ -8,12 +8,6 @@ has() {
     type -p $* &>/dev/null
 }
 
-# print number of stopped jobs
-nstopjobs() {
-    n_stopped="$(jobs -ps 2>/dev/null | wc -l)"
-    [ "$n_stopped" -gt 0 ] && printf " [%s]" "$n_stopped"
-}
-
 # cd to dirname
 cdd() {
     cd "$(dirname $1)"
@@ -31,6 +25,12 @@ mano() {
     man -k . | fzf | awk '{print $1}' | xargs -r man
 }
 
+# print number of stopped jobs
+__nstopjobs() {
+    n_stopped="$(jobs -ps 2>/dev/null | wc -l)"
+    [ "$n_stopped" -gt 0 ] && printf " [%s]" "${n_stopped#${n_stopped%%[![:space:]]*}}"
+}
+
 # prompt
 if test -f /usr/share/git/completion/git-prompt.sh; then
     source "$_"
@@ -38,9 +38,9 @@ elif test -f /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.s
     source "$_"
 fi
 if has __git_ps1; then
-    PS1="\u:\W\$(__git_ps1)\$(nstopjobs) $ "
+    PS1="\u:\W\$(__git_ps1)\$(__nstopjobs) $ "
 else
-    PS1="\u:\W\$(nstopjobs) $ "
+    PS1="\u:\W\$(__nstopjobs) $ "
 fi
 
 # aliases
