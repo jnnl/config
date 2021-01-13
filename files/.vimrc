@@ -87,7 +87,7 @@ let g:loaded_rrhelper = 1
         mapkey(bufnr, 'n', '<leader>d', '<cmd>:LspDiagnosticsAll<CR>', opts)
     end
 
-    for _, server in ipairs{'jedi_language_server', 'rls', 'tsserver'} do
+    for _, server in ipairs{'cssls', 'pyright', 'rls', 'tsserver', 'vimls', 'zls'} do
         lsp[server].setup { on_attach = on_attach }
     end
 EOF
