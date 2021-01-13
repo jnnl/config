@@ -7,6 +7,11 @@ Plug 'junegunn/fzf.vim'
 let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
 Plug 'ojroques/nvim-lspfuzzy', {'branch': 'main'}
 
+Plug 'justinmk/vim-sneak'
+let g:sneak#label = 1
+let g:sneak#s_next = 1
+let g:sneak#use_ic_scs = 1
+
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
 
@@ -152,7 +157,7 @@ let mapleader = ','
 
 nnoremap <BS> <C-^>
 nnoremap ' `
-nnoremap <silent> S :keeppatterns substitute/\s*\%#\s*/\r/e <bar> normal! ==<CR>
+nnoremap _ ,
 
 nnoremap ö <C-o>
 nnoremap ä <C-i>
