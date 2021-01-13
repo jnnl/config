@@ -64,7 +64,7 @@ install_homebrew() {
 install_ubuntu_pkgs() {
     msg "Installing packages for Ubuntu..."
 
-    local pkgs="fd-find neovim python3-pip renameutils ripgrep"
+    local pkgs="fd-find neovim nodejs python3-pip renameutils ripgrep"
     sudo apt update
     sudo apt install $pkgs
     python3 -m pip install --user pynvim jedi-language-server
@@ -75,7 +75,7 @@ install_ubuntu_pkgs() {
 install_arch_pkgs() {
     msg "Installing packages for Arch Linux..."
 
-    local pkgs="bc fd git htop jq neovim openssh python renameutils ripgrep"
+    local pkgs="bc fd git htop jq neovim nodejs openssh python renameutils ripgrep"
     sudo pacman -Syyu --needed $pkgs
     python3 -m pip install --user pynvim jedi-language-server
 
@@ -161,6 +161,15 @@ install_z() {
     msg_done
 }
 
+install_langservers() {
+    msg "Installing language servers..."
+
+    local servers="pyright typescript-language-server vim-language-server vscode-css-languageserver-bin"
+    sudo npm i -g "$langservers"
+
+    msg_done
+}
+
 main() {
     if is_mac; then
         configure_mac
@@ -177,6 +186,7 @@ main() {
     install_fzf
     install_vimplug
     install_z
+    #install_langservers
 
     printf "<<< base install complete\n\n"
 }
