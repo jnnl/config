@@ -107,7 +107,7 @@ install_blocklets() {
     msg "Installing i3blocks blocklets..."
 
     local blockletdir="$configdir/i3blocks/blocklets"
-    local tmpdir="/tmp/i3blocks-blocklets"
+    local tmpdir="$(mktemp -d /tmp/i3blocks-blocklets-XXX)"
     local url="https://github.com/vivien/i3blocks-contrib"
 
     if has git; then
@@ -126,7 +126,7 @@ install_fzf() {
     msg "Installing fzf..."
 
     local fzfdir="$HOME/.fzf"
-    local tmpdir="/tmp/fzf"
+    local tmpdir="$(mktemp -d /tmp/fzf-XXX)"
     local url="https://github.com/junegunn/fzf.git"
 
     if has git; then
