@@ -84,6 +84,7 @@ let g:loaded_rrhelper = 1
         mapkey(bufnr, 'n', '<C-Space>', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
         mapkey(bufnr, 'n', 'gö', '<cmd>lua vim.lsp.diagnostic.goto_prev({severity_limit = "Warning"})<CR>', opts)
         mapkey(bufnr, 'n', 'gä', '<cmd>lua vim.lsp.diagnostic.goto_next({severity_limit = "Warning"})<CR>', opts)
+        mapkey(bufnr, 'n', '<leader>d', '<cmd>:LspDiagnosticsAll<CR>', opts)
     end
 
     for _, server in ipairs{'jedi_language_server', 'rls', 'tsserver'} do
@@ -199,6 +200,7 @@ inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Commands
 command! Rstrip :%s/\s\+$//e
 command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
+command! NonAscii /[^\x00-\x7F]
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null ' . expand('%:p') | :e!
 command! -nargs=* Rg
     \ call fzf#vim#grep(
