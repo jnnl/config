@@ -165,7 +165,7 @@ install_langservers() {
     msg "Installing language servers..."
 
     local servers="pyright typescript-language-server vim-language-server vscode-css-languageserver-bin"
-    sudo npm i -g "$langservers"
+    sudo npm i -g "$servers"
 
     msg_done
 }
