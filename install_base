@@ -67,7 +67,7 @@ install_ubuntu_pkgs() {
     local pkgs="fd-find neovim nodejs python3-pip renameutils ripgrep"
     sudo apt update
     sudo apt install $pkgs
-    python3 -m pip install --user pynvim jedi-language-server
+    install_python_pkgs
 
     msg_done
 }
@@ -77,7 +77,16 @@ install_arch_pkgs() {
 
     local pkgs="bc fd git htop jq neovim nodejs openssh python renameutils ripgrep"
     sudo pacman -Syyu --needed $pkgs
-    python3 -m pip install --user pynvim jedi-language-server
+    install_python_pkgs
+
+    msg_done
+}
+
+install_python_pkgs() {
+    msg "Installing Python packages..."
+
+    local pkgs="pynvim jedi-language-server"
+    python3 -m pip install --user $pkgs
 
     msg_done
 }
