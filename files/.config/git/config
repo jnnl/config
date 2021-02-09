@@ -33,7 +33,7 @@
     l = log --oneline --decorate --graph
     lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(blue)%an%Creset' --abbrev-commit
     nuke = "!git stash && git stash drop; git clean -fdx"
-    pp = "!git pull --rebase && git push"
+    pp = "!git pull && git push"
     pr = pull --rebase
     rb = rebase
     rp = reset --patch
@@ -41,6 +41,6 @@
     rs = reset --soft
     rso = remote show origin
     s = status -bsu
-    sps = "!git stash && git pull && git stash pop"
-    spps = "!git stash && git pull && git push && git stash pop"
+    sps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git stash pop; else git pull; fi'"
+    spps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git push && git stash pop; else git pull && git push; fi'"
     s = status -bsu
