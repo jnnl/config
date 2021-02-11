@@ -34,6 +34,12 @@ let g:prettier#autoformat_require_pragma = 0
 " Completion
 Plug 'nvim-lua/completion-nvim'
 let g:completion_enable_auto_popup = 0
+let g:completion_auto_change_source = 1
+let g:completion_chain_complete_list = [
+    \ { 'complete_items': ['lsp', 'snippet'] },
+    \ { 'mode': '<c-p>' },
+    \ { 'mode': '<c-n>' }
+\]
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
@@ -69,8 +75,6 @@ let g:loaded_rrhelper = 1
             }
         )
 
-        require('completion').on_attach()
-
         local mapkey = vim.api.nvim_buf_set_keymap
         local opts = { noremap = true, silent = true }
 
@@ -79,11 +83,13 @@ let g:loaded_rrhelper = 1
         mapkey(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
         mapkey(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
         mapkey(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        mapkey(bufnr, 'n', '<leader>R', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-        mapkey(bufnr, 'n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-        mapkey(bufnr, 'n', '<C-Space>', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
         mapkey(bufnr, 'n', 'gö', '<cmd>lua vim.lsp.diagnostic.goto_prev({severity_limit = "Warning"})<CR>', opts)
         mapkey(bufnr, 'n', 'gä', '<cmd>lua vim.lsp.diagnostic.goto_next({severity_limit = "Warning"})<CR>', opts)
+        mapkey(bufnr, 'n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+        mapkey(bufnr, 'n', '<C-Space>', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+        mapkey(bufnr, 'n', '<leader><Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+        mapkey(bufnr, 'x', '<leader><Space>', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
+        mapkey(bufnr, 'n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
         mapkey(bufnr, 'n', '<leader>d', '<cmd>:LspDiagnosticsAll<CR>', opts)
     end
 
@@ -180,6 +186,7 @@ xnoremap . :normal .<CR>
 
 nnoremap <leader>r :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
+nnoremap <silent> <leader>p :Prettier<CR>
 nmap Ö <Plug>(qf_qf_previous)
 nmap Ä <Plug>(qf_qf_next)
 
@@ -228,7 +235,8 @@ augroup Autocmds
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
-    au TextYankPost * lua require'vim.highlight'.on_yank { higroup="IncSearch", timeout=1000, on_visual=false }
+    au TextYankPost * lua require'vim.highlight'.on_yank({ higroup="IncSearch", timeout=1000, on_visual=false })
+    au BufEnter * lua require'completion'.on_attach()
 augroup END
 
 
