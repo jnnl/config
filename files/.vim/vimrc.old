@@ -2,8 +2,14 @@
 call plug#begin()
 
 " Navigation
-Plug '~/.fzf'
+Plug 'junegunn/fzf', {'do': {-> fzf#install()}}
 Plug 'junegunn/fzf.vim'
+
+Plug 'justinmk/vim-sneak'
+let g:sneak#label = 1
+let g:sneak#s_next = 1
+let g:sneak#use_ic_scs = 1
+
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
 
@@ -14,21 +20,17 @@ Plug 'tommcdo/vim-exchange'
 Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
-" Language
-if has('nvim-0.5')
-    Plug 'neovim/nvim-lsp'
-else
-    Plug 'davidhalter/jedi-vim'
-    let g:jedi#force_py_version = 3
-    let g:jedi#popup_on_dot = 0
-    let g:jedi#goto_stubs_command = ''
-    let g:jedi#smart_auto_mappings = 0
-    let g:jedi#show_call_signatures = 0
-    let g:jedi#auto_vim_configuration = 0
+Plug 'davidhalter/jedi-vim'
+let g:jedi#force_py_version = 3
+let g:jedi#popup_on_dot = 0
+let g:jedi#goto_stubs_command = ''
+let g:jedi#smart_auto_mappings = 0
+let g:jedi#show_call_signatures = 0
+let g:jedi#auto_vim_configuration = 0
 
-    Plug 'quramy/tsuquyomi'
-    let g:tsuquyomi_disable_quickfix = 1
-endif
+Plug 'quramy/tsuquyomi'
+let g:tsuquyomi_disable_quickfix = 1
+
 Plug 'ziglang/zig.vim'
 Plug 'leafgarland/typescript-vim'
 
@@ -79,52 +81,6 @@ set synmaxcol=500
 set timeoutlen=500
 set wildmenu
 
-" Neovim specific
-if has('nvim')
-    set inccommand=nosplit
-
-    let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
-    function! FloatingFZF()
-        let width = float2nr(&columns * 0.8)
-        let height = float2nr(&lines * 0.6)
-        let opts = { 'relative': 'editor',
-                    \ 'row': (&lines - height) / 2,
-                    \ 'col': (&columns - width) / 2,
-                    \ 'width': width,
-                    \ 'height': height }
-
-        let win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
-        call setwinvar(win, '&winhighlight', 'NormalFloat:Normal')
-    endfunction
-
-    let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-endif
-
-if has('nvim-0.5')
-:lua << EOF
-    local nvim_lsp = require('nvim_lsp')
-    function vim.lsp.util.buf_diagnostics_virtual_text() end
-
-    local on_attach = function(_, bufnr)
-        local buf_set_keymap = vim.api.nvim_buf_set_keymap
-        local opts = { noremap=true, silent=true }
-
-        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-        buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-        buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-        buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-        buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        buf_set_keymap(bufnr, 'n', ',R', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-        buf_set_keymap(bufnr, 'n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-        buf_set_keymap(bufnr, 'n', '<C-Space>', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
-    end
-
-    for _, server in ipairs{'bashls', 'gopls', 'pyls_ms', 'rls', 'tsserver'} do
-        nvim_lsp[server].setup { on_attach=on_attach }
-    end
-EOF
-endif
-
 " Undo
 if !isdirectory($HOME.'/.vim/undo')
     call mkdir($HOME.'/.vim/undo', 'p', 0700)
@@ -168,7 +124,7 @@ let mapleader = ','
 
 nnoremap <BS> <C-^>
 nnoremap ' `
-nnoremap <silent> S :keeppatterns substitute/\s*\%#\s*/\r/e <bar> normal! ==<CR>
+nnoremap _ ,
 
 nnoremap ö <C-o>
 nnoremap ä <C-i>
@@ -185,6 +141,8 @@ cnoremap <C-k> <Up>
 
 nnoremap Q @q
 xnoremap Q :normal @q<CR>
+xnoremap @ :normal @
+xnoremap . :normal .<CR>
 
 inoremap <expr> <CR> mucomplete#ultisnips#expand_snippet('<CR>')
 nnoremap <leader>r :%s/\<<C-r>=expand('<cword>')<CR>\>/
@@ -202,6 +160,7 @@ nnoremap <silent> <leader>_ :BLines<CR>
 " Commands
 command! Rstrip :%s/\s\+$//e
 command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
+command! NonAscii /[^\x00-\x7F]
 command! W :exec ':silent w !sudo /usr/bin/tee > /dev/null ' . expand('%:p') | :e!
 command! -nargs=* Rg
     \ call fzf#vim#grep(
@@ -217,6 +176,9 @@ command! ES :e %:p:r.scss
 command! VT :vs %:p:r.html
 command! VC :vs %:p:r.ts
 command! VS :vs %:p:r.scss
+command! ST :sp %:p:r.html
+command! SC :sp %:p:r.ts
+command! SS :sp %:p:r.scss
 
 " Autocmds
 augroup Autocmds
@@ -225,13 +187,6 @@ augroup Autocmds
     au FileType make setlocal noexpandtab shiftwidth=8
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
 augroup END
-
-if !has('nvim-0.5')
-    augroup Legacy
-        au FileType typescript nnoremap <silent> <buffer> gd :TsuDefinition<CR>
-        au BufWritePost *.ts call tsuquyomi#asyncGeterr()
-    augroup END
-endif
 
 " Functions
 func! s:auto_mkdir()
