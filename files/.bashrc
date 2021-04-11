@@ -25,10 +25,30 @@ mano() {
     man -k . | fzf | awk '{print $1}' | xargs -r man
 }
 
+# print compacted wd path
+compact_pwd() {
+    pathsep="/"
+    trunclen="1"
+    triglen="20"
+
+    if test "${#PWD}" -lt "$triglen"; then
+        printf "$PWD"
+        return
+    fi
+
+    path=""
+    mapfile -td "$pathsep" wd_parts < <(printf "%s\0" "$PWD")
+    for part in "${wd_parts[@]:1:${#wd_parts[@]}-2}"; do
+        path="$path$pathsep${part::trunclen}"
+    done
+    path="$path$pathsep${wd_parts[-1]}"
+    printf "$path"
+}
+
 # print number of stopped jobs
 __nstopjobs() {
     n_stopped="$(jobs -ps 2>/dev/null | wc -l)"
-    [ "$n_stopped" -gt 0 ] && printf " [%s]" "${n_stopped#${n_stopped%%[![:space:]]*}}"
+    test "$n_stopped" -gt 0 && printf " [%s]" "${n_stopped#${n_stopped%%[![:space:]]*}}"
 }
 
 # prompt
@@ -96,7 +116,7 @@ if test -f ~/.config/z/z.sh; then
     _Z_DATA="$HOME/.config/z/z"
     source ~/.config/z/z.sh
     f() {
-        [ $# -gt 0 ] && _z "$*" && return
+        test $# -gt 0 && _z "$*" && return
         cd "$(_z -l 2>&1 | \
             fzf --height 40% --nth 2.. --reverse --inline-info \
             +s --tac --query "${*##-* }" | \
