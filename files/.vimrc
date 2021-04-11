@@ -5,7 +5,6 @@ call plug#begin()
 Plug 'junegunn/fzf', {'do': {-> fzf#install()}}
 Plug 'junegunn/fzf.vim'
 let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
-Plug 'ojroques/nvim-lspfuzzy', {'branch': 'main'}
 
 Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
@@ -13,7 +12,6 @@ let g:sneak#s_next = 1
 let g:sneak#use_ic_scs = 1
 
 Plug 'romainl/vim-cool'
-let g:CoolTotalMatches = 1
 
 " Manipulation
 Plug 'tpope/vim-commentary'
@@ -24,6 +22,7 @@ let g:lion_squeeze_spaces = 1
 
 " Language
 Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'ziglang/zig.vim'
 Plug 'ap/vim-css-color'
 Plug 'leafgarland/typescript-vim'
@@ -32,18 +31,21 @@ let g:prettier#autoformat_config_present = 1
 let g:prettier#autoformat_require_pragma = 0
 
 " Completion
-Plug 'nvim-lua/completion-nvim'
-let g:completion_enable_auto_popup = 0
-let g:completion_auto_change_source = 1
-let g:completion_chain_complete_list = [
-    \ { 'complete_items': ['lsp', 'snippet'] },
-    \ { 'mode': '<c-p>' },
-    \ { 'mode': '<c-n>' }
-\]
+Plug 'ray-x/lsp_signature.nvim'
+Plug 'hrsh7th/nvim-compe'
+let g:compe = {}
+let g:compe.enabled = v:true
+let g:compe.autocomplete = v:false
+let g:compe.source = {
+    \ 'nvim_lsp': v:true,
+    \ 'nvim_lua': v:true,
+    \ 'buffer': v:true,
+    \ 'path': v:true,
+\ }
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
-Plug 'lifepillar/vim-gruvbox8'
+Plug 'fnune/base16-vim'
 
 " Miscellaneous
 Plug 'romainl/vim-qf'
@@ -64,9 +66,17 @@ runtime macros/matchit.vim
 let g:loaded_rrhelper = 1
 
 :lua << EOF
-    require('lspfuzzy').setup {}
+    require('nvim-treesitter.configs').setup {
+        ensure_installed = 'maintained',
+        highlight = {
+          enable = true,
+        },
+    }
+
     local lsp = require('lspconfig')
     local on_attach = function(_, bufnr)
+        require('lsp_signature').on_attach()
+
         vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
             vim.lsp.diagnostic.on_publish_diagnostics, {
                 virtual_text = false,
@@ -124,7 +134,7 @@ set undofile
 
 
 " Completion
-set completeopt=menuone,noinsert,noselect
+set completeopt=menuone,noselect
 
 
 " Statusline
@@ -156,8 +166,12 @@ set smartcase
 
 " Styles
 set number
-try | colorscheme tonight | catch | colorscheme default | endtry
 
+if has('termguicolors')
+  set termguicolors
+endif
+
+try | colorscheme base16-eighties | catch | colorscheme default | endtry
 
 " Mappings
 let mapleader = ','
@@ -200,9 +214,8 @@ nnoremap <silent> <leader>_ :BLines<CR>
 inoremap <silent><expr> <Tab>
     \ pumvisible() ? "\<C-n>" :
     \ <SID>check_space_before() ? "\<Tab>" :
-    \ completion#trigger_completion()
+    \ compe#complete()
 inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
 
 " Commands
 command! Rstrip :%s/\s\+$//e
@@ -236,7 +249,6 @@ augroup Autocmds
     au FileType make setlocal noexpandtab shiftwidth=8
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
     au TextYankPost * lua require'vim.highlight'.on_yank({ higroup="IncSearch", timeout=1000, on_visual=false })
-    au BufEnter * lua require'completion'.on_attach()
 augroup END
 
 
