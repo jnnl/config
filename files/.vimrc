@@ -14,6 +14,7 @@ let g:sneak#use_ic_scs = 1
 Plug 'romainl/vim-cool'
 
 " Manipulation
+Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tommcdo/vim-exchange'
