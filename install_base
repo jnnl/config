@@ -100,10 +100,10 @@ install_vimplug() {
     mkdir -vp "$plugdir"
     dl "$plugdir/plug.vim" "$url"
 
-    if has vim; then
-        vim +PlugUpdate +qa
-    elif has nvim; then
+    if has nvim; then
         nvim +PlugUpdate +qa
+    elif has vim; then
+        vim +PlugUpdate +qa
     else
         warn "No vim or neovim found, skipping vim-plug install."
         return
