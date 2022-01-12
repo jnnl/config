@@ -6,11 +6,6 @@ Plug 'junegunn/fzf', {'do': {-> fzf#install()}}
 Plug 'junegunn/fzf.vim'
 let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
 
-Plug 'justinmk/vim-sneak'
-let g:sneak#label = 1
-let g:sneak#s_next = 1
-let g:sneak#use_ic_scs = 1
-
 Plug 'romainl/vim-cool'
 
 " Manipulation
@@ -23,26 +18,22 @@ let g:lion_squeeze_spaces = 1
 
 " Language
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-lua/plenary.nvim'
 Plug 'ziglang/zig.vim'
 Plug 'ap/vim-css-color'
 Plug 'leafgarland/typescript-vim'
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'prettier/vim-prettier'
 let g:prettier#autoformat_config_present = 1
 let g:prettier#autoformat_require_pragma = 0
 
 " Completion
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'l3mon4d3/LuaSnip'
 Plug 'ray-x/lsp_signature.nvim'
-Plug 'hrsh7th/nvim-compe'
-let g:compe = {}
-let g:compe.enabled = v:true
-let g:compe.autocomplete = v:false
-let g:compe.source = {
-    \ 'nvim_lsp': v:true,
-    \ 'nvim_lua': v:true,
-    \ 'buffer': v:true,
-    \ 'path': v:true,
-\ }
 
 " Colorschemes
 Plug 'jnnl/vim-tonight'
@@ -66,17 +57,66 @@ call plug#end()
 runtime macros/matchit.vim
 let g:loaded_rrhelper = 1
 
+" Lua setup
 :lua << EOF
-    require('nvim-treesitter.configs').setup {
-        ensure_installed = 'maintained',
-        highlight = {
-          enable = true,
-        },
-    }
-
+    local cmp = require('cmp')
+    local cmp_nvim_lsp = require('cmp_nvim_lsp')
+    local luasnip = require('luasnip')
     local lsp = require('lspconfig')
-    local on_attach = function(_, bufnr)
-        require('lsp_signature').on_attach()
+    local lsp_signature = require('lsp_signature')
+
+    lsp_signature.setup({
+        bind = true,
+        handler_opts = {
+            border = 'single',
+        },
+    })
+
+    cmp.setup({
+        snippet = {
+            expand = function(args)
+                luasnip.lsp_expand(args.body)
+            end
+        },
+        mapping = {
+            ['<C-p>'] = cmp.mapping.select_prev_item(),
+            ['<C-n>'] = cmp.mapping.select_next_item(),
+            ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+            ['<C-f>'] = cmp.mapping.scroll_docs(4),
+            ['<C-Space>'] = cmp.mapping.complete(),
+            ['<C-e>'] = cmp.mapping.close(),
+            ['<CR>'] = cmp.mapping.confirm {
+                behavior = cmp.ConfirmBehavior.Replace,
+                select = true,
+            },
+            ['<Tab>'] = function(fallback)
+                if cmp.visible() then
+                    cmp.select_next_item()
+                elseif luasnip.expand_or_jumpable() then
+                    luasnip.expand_or_jump()
+                else
+                    fallback()
+                end
+            end,
+            ['<S-Tab>'] = function(fallback)
+                if cmp.visible() then
+                    cmp.select_prev_item()
+                elseif luasnip.jumpable(-1) then
+                    luasnip.jump(-1)
+                else
+                    fallback()
+                end
+            end,
+        },
+        sources = {
+            { name = 'nvim_lsp' },
+            { name = 'luasnip' },
+            { name = 'path' },
+        }
+    })
+
+    local local_on_attach = function(_, bufnr)
+        lsp_signature.on_attach()
 
         vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
             vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -86,27 +126,49 @@ let g:loaded_rrhelper = 1
             }
         )
 
+        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
         local mapkey = vim.api.nvim_buf_set_keymap
         local opts = { noremap = true, silent = true }
 
-        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+        vim.cmd([[ command! Format execute 'lua vim.lsp.buf.formatting()' ]])
+
         mapkey(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
         mapkey(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
         mapkey(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
         mapkey(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        mapkey(bufnr, 'n', 'gö', '<cmd>lua vim.lsp.diagnostic.goto_prev({severity_limit = "Warning"})<CR>', opts)
-        mapkey(bufnr, 'n', 'gä', '<cmd>lua vim.lsp.diagnostic.goto_next({severity_limit = "Warning"})<CR>', opts)
+        mapkey(bufnr, 'n', 'gö', '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.WARN}})<CR>', opts)
+        mapkey(bufnr, 'n', 'gä', '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.WARN}})<CR>', opts)
         mapkey(bufnr, 'n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-        mapkey(bufnr, 'n', '<C-Space>', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+        mapkey(bufnr, 'n', '<C-Space>', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
         mapkey(bufnr, 'n', '<leader><Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
         mapkey(bufnr, 'x', '<leader><Space>', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
         mapkey(bufnr, 'n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
         mapkey(bufnr, 'n', '<leader>d', '<cmd>:LspDiagnosticsAll<CR>', opts)
+        mapkey(bufnr, 'n', '<leader>f', '<cmd>:Format<CR>', opts)
     end
 
-    for _, server in ipairs{'bashls', 'cssls', 'pyright', 'rls', 'tsserver', 'vimls', 'zls'} do
-        lsp[server].setup { on_attach = on_attach }
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+
+    local servers = { 'bashls', 'cssls', 'pyright', 'rust_analyzer' }
+
+    for _, server in ipairs(servers) do
+        lsp[server].setup {
+            capabilities = capabilities,
+            on_attach = local_on_attach,
+        }
     end
+
+    lsp.tsserver.setup {
+        init_options = require('nvim-lsp-ts-utils').init_options,
+        on_attach = function(client, bufnr)
+            local_on_attach(client, bufnr)
+            local ts_utils = require("nvim-lsp-ts-utils")
+            ts_utils.setup({})
+            ts_utils.setup_client(client)
+        end
+    }
 EOF
 
 
@@ -118,8 +180,8 @@ set hidden
 set inccommand=nosplit
 set nojoinspaces
 set nomodeline
-set noshowcmd
 set noswapfile
+set showcmd
 set shortmess+=c
 set synmaxcol=500
 set timeoutlen=500
@@ -135,7 +197,7 @@ set undofile
 
 
 " Completion
-set completeopt=menuone,noselect
+set completeopt=menu,menuone,noselect
 
 
 " Statusline
@@ -172,7 +234,7 @@ if has('termguicolors')
   set termguicolors
 endif
 
-try | colorscheme base16-eighties | catch | colorscheme default | endtry
+try | colorscheme tonight | catch | colorscheme default | endtry
 
 " Mappings
 let mapleader = ','
@@ -199,7 +261,7 @@ xnoremap Q :normal @q<CR>
 xnoremap @ :normal @
 xnoremap . :normal .<CR>
 
-nnoremap <leader>r :%s/\<<C-r>=expand('<cword>')<CR>\>/
+nnoremap <leader>s :%s/\<<C-r>=expand('<cword>')<CR>\>/
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
 nnoremap <silent> <leader>p :Prettier<CR>
 nmap Ö <Plug>(qf_qf_previous)
@@ -211,12 +273,6 @@ nnoremap <silent> <leader>- :Rg<CR>
 nnoremap <silent> <leader>; :History<CR>
 nnoremap <silent> <leader>: :BCommits<CR>
 nnoremap <silent> <leader>_ :BLines<CR>
-
-inoremap <silent><expr> <Tab>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_space_before() ? "\<Tab>" :
-    \ compe#complete()
-inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Commands
 command! Rstrip :%s/\s\+$//e
@@ -259,9 +315,4 @@ func! s:auto_mkdir()
     if !isdirectory(l:dir)
         call mkdir(l:dir, 'p')
     endif
-endf
-
-func! s:check_space_before() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
 endf
