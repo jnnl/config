@@ -118,13 +118,9 @@ let g:loaded_rrhelper = 1
     local local_on_attach = function(_, bufnr)
         lsp_signature.on_attach()
 
-        vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
-            vim.lsp.diagnostic.on_publish_diagnostics, {
-                virtual_text = false,
-                signs = true,
-                update_in_insert = false,
-            }
-        )
+        vim.diagnostic.config({
+            virtual_text = false,
+        })
 
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -165,7 +161,9 @@ let g:loaded_rrhelper = 1
         on_attach = function(client, bufnr)
             local_on_attach(client, bufnr)
             local ts_utils = require("nvim-lsp-ts-utils")
-            ts_utils.setup({})
+            ts_utils.setup({
+                auto_inlay_hints = false,
+            })
             ts_utils.setup_client(client)
         end
     }
