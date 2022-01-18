@@ -173,8 +173,8 @@ install_z() {
 install_langservers() {
     msg "Installing language servers..."
 
-    local servers="pyright typescript-language-server vim-language-server vscode-css-languageserver-bin"
-    sudo npm i -g "$servers"
+    local npm_servers="bash-language-server pyright typescript typescript-language-server vscode-langservers-extracted"
+    sudo npm i -g "$npm_servers"
 
     msg_done
 }
