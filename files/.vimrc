@@ -23,7 +23,7 @@ Plug 'ziglang/zig.vim'
 Plug 'ap/vim-css-color'
 Plug 'leafgarland/typescript-vim'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
-Plug 'prettier/vim-prettier'
+Plug 'prettier/vim-prettier', { 'for': ['javascript', 'typescript', 'vue', 'svelte', 'css', 'scss', 'html'] }
 let g:prettier#autoformat_config_present = 1
 let g:prettier#autoformat_require_pragma = 0
 
