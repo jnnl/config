@@ -2,11 +2,12 @@
 # install packages and setup os config
 
 set -eu
-source utils
 
 script_name="$(basename $BASH_SOURCE)"
 is_interactive=0
 [ "$#" -gt 0 ] && [[ "$@" =~ "-i" ]] && is_interactive=1
+
+source utils
 
 configure_mac() {
     msg "Configuring macOS defaults..."
@@ -185,19 +186,6 @@ install_langservers() {
     fi
 
     msg_done
-}
-
-exec_step() {
-    if [ "$is_interactive" = "1" ]; then
-        read -p "> $*? [Y/n/q] " choice
-        case "$choice" in
-            y|Y|"") $*;;
-            q) printf "\n<<< Skipping rest of $script_name...\n\n"; exit 0;;
-            n|N|*) ;;
-        esac
-    else
-        $*
-    fi
 }
 
 main() {

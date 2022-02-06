@@ -2,11 +2,12 @@
 # install config files
 
 set -eu
-source utils
 
 script_name="$(basename $BASH_SOURCE)"
 is_interactive=0
 [ "$#" -gt 0 ] && [[ "$@" =~ "-i" ]] && is_interactive=1
+
+source utils
 
 create_dirs() {
     msg "Creating directories..."
@@ -35,19 +36,6 @@ copy_files() {
     done
 
     msg_done
-}
-
-exec_step() {
-    if [ "$is_interactive" = "1" ]; then
-        read -p "> $*? [Y/n/q] " choice
-        case "$choice" in
-            y|Y|"") $*;;
-            q) printf "\n<<< Skipping rest of $script_name...\n\n"; exit 0;;
-            n|N|*) ;;
-        esac
-    else
-        $*
-    fi
 }
 
 main() {
