@@ -61,7 +61,16 @@ install_homebrew() {
     fi
 
     msg "Installing Homebrew..."
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    msg_done
+}
+
+install_mac_pkgs() {
+    msg "Installing packages for macOS..."
+
+    local pkgs="fd neovim node python3 renameutils ripgrep"
+    brew install $pkgs
 
     msg_done
 }
@@ -194,6 +203,7 @@ main() {
     if is_mac; then
         exec_step configure_mac
         exec_step install_homebrew
+        exec_step instalL_mac_pkgs
     elif is_linux; then
         if is_distro arch; then
             exec_step install_arch_pkgs
