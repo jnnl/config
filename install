@@ -3,9 +3,7 @@
 set -eu
 source utils
 
-msg "Starting install..."
-
-"$scriptdir/install_base"
-"$scriptdir/install_config"
+"$scriptdir/install_base" "$*"
+"$scriptdir/install_config" "$*"
 
 printf "<<< all done!\n"

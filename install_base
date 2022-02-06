@@ -4,6 +4,10 @@
 set -eu
 source utils
 
+script_name="$(basename $BASH_SOURCE)"
+is_interactive=0
+[ "$#" -gt 0 ] && [[ "$@" =~ "-i" ]] && is_interactive=1
+
 configure_mac() {
     msg "Configuring macOS defaults..."
 
@@ -174,30 +178,49 @@ install_langservers() {
     msg "Installing language servers..."
 
     local npm_servers="bash-language-server pyright typescript typescript-language-server vscode-langservers-extracted"
-    sudo npm i -g "$npm_servers"
+    if has npm; then
+        npm i -g "$npm_servers"
+    else
+        warn "Npm not found, skipping language server install."
+    fi
 
     msg_done
 }
 
+exec_step() {
+    if [ "$is_interactive" = "1" ]; then
+        read -p "> $*? [Y/n/q] " choice
+        case "$choice" in
+            y|Y|"") $*;;
+            q) printf "\n<<< Skipping rest of $script_name...\n\n"; exit 0;;
+            n|N|*) ;;
+        esac
+    else
+        $*
+    fi
+}
+
 main() {
+    msg "Starting $script_name...\n"
+
     if is_mac; then
-        configure_mac
-        install_homebrew
+        exec_step configure_mac
+        exec_step install_homebrew
     elif is_linux; then
         if is_distro arch; then
-            install_arch_pkgs
-            install_blocklets
+            exec_step install_arch_pkgs
+            exec_step install_blocklets
         elif is_distro ubuntu; then
-            install_ubuntu_pkgs
+            exec_step install_ubuntu_pkgs
         fi
     fi
 
-    install_fzf
-    install_vimplug
-    install_z
-    #install_langservers
+    exec_step install_fzf
+    exec_step install_vimplug
+    exec_step install_z
+    #exec_step install_langservers
 
-    printf "<<< base install complete\n\n"
+    printf "\n<<< Completed $script_name.\n\n"
 }
 
 main

@@ -4,6 +4,10 @@
 set -eu
 source utils
 
+script_name="$(basename $BASH_SOURCE)"
+is_interactive=0
+[ "$#" -gt 0 ] && [[ "$@" =~ "-i" ]] && is_interactive=1
+
 create_dirs() {
     msg "Creating directories..."
 
@@ -19,6 +23,8 @@ create_dirs() {
 }
 
 copy_files() {
+    create_dirs
+
     msg "Copying files..."
 
     local files="$(find $scriptdir/files -type f | sed 's|^'$scriptdir/files'/||')"
@@ -31,12 +37,25 @@ copy_files() {
     msg_done
 }
 
+exec_step() {
+    if [ "$is_interactive" = "1" ]; then
+        read -p "> $*? [Y/n/q] " choice
+        case "$choice" in
+            y|Y|"") $*;;
+            q) printf "\n<<< Skipping rest of $script_name...\n\n"; exit 0;;
+            n|N|*) ;;
+        esac
+    else
+        $*
+    fi
+}
 
 main() {
-    create_dirs
-    copy_files
+    msg "Starting $script_name...\n"
 
-    printf "<<< config install complete\n\n"
+    exec_step copy_files
+
+    printf "\n<<< Completed $script_name.\n\n"
 }
 
 main
