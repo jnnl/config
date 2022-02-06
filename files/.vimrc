@@ -5,8 +5,11 @@ call plug#begin()
 Plug 'junegunn/fzf', {'do': {-> fzf#install()}}
 Plug 'junegunn/fzf.vim'
 let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
-
 Plug 'romainl/vim-cool'
+Plug 'justinmk/vim-sneak'
+let g:sneak#label = 1
+let g:sneak#s_next = 1
+let g:sneak#use_ic_scs = 1
 
 " Manipulation
 Plug 'tpope/vim-abolish'
@@ -147,7 +150,7 @@ let g:loaded_rrhelper = 1
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
 
-    local servers = { 'bashls', 'cssls', 'pyright', 'rust_analyzer' }
+    local servers = { 'bashls', 'cssls', 'gopls', 'pyright', 'rust_analyzer' }
 
     for _, server in ipairs(servers) do
         lsp[server].setup {
