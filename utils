@@ -61,7 +61,7 @@ exec_step() {
             n|N|*) ;;
         esac
     else
-        echo $*
+        $*
     fi
 }
 
