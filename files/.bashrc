@@ -10,33 +10,62 @@ has() {
 
 # cd to dirname
 cdd() {
-    cd "$(dirname $1)"
+    cd "$(dirname ${1:-$PWD})"
 }
 
-# selectively cd to shell wd
-shd() {
-    dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
+# cd to selected shell wd
+cdsh() {
+    local dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
         sort -u | grep -Fvx "$(pwd)" | \
-        fzf +s --height 40% --reverse)" && cd "$dir"
+        fzf +s --reverse)" && cd "$dir"
 }
 
-# selectively open man page by description
-mano() {
+# cd to git root
+cdgr() {
+    local dir="$(git rev-parse --show-toplevel)" && cd "$dir"
+}
+
+# browse man pages by name and description
+mana() {
     man -k . | fzf | awk '{print $1}' | xargs -r man
+}
+
+# browse git commits
+gcb() {
+  git log --graph --color=always --date=short \
+      --format="%C(yellow)%h %Cgreen%ad %Cblue%aN%Cred%d %Creset%s" "$@" |
+  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+FZF-EOF"
+}
+
+# kill selected process
+fkill() {
+    local pid
+    if [ "$UID" != "0" ]; then
+        pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
+    else
+        pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+    fi
+
+    [ -n "$pid" ] && echo $pid | xargs kill -${1:-9}
 }
 
 # print compacted wd path
 compact_pwd() {
-    pathsep="/"
-    trunclen="1"
-    triglen="20"
+    local pathsep="/"
+    local trunclen="1"
+    local triglen="20"
 
     if test "${#PWD}" -lt "$triglen"; then
         printf "$PWD"
         return
     fi
 
-    path=""
+    local path=""
     mapfile -td "$pathsep" wd_parts < <(printf "%s\0" "$PWD")
     for part in "${wd_parts[@]:1:${#wd_parts[@]}-2}"; do
         path="$path$pathsep${part::trunclen}"
