@@ -288,23 +288,13 @@ command! -nargs=* Rg
     \ fzf#vim#with_preview({ 'options': '--delimiter : --nth 4..' }, 'right:50%:hidden', '?'))
 
 
-" Angular navigation commands
-command! ET :e %:p:r.html
-command! EC :e %:p:r.ts
-command! ES :e %:p:r.scss
-command! VT :vs %:p:r.html
-command! VC :vs %:p:r.ts
-command! VS :vs %:p:r.scss
-command! ST :sp %:p:r.html
-command! SC :sp %:p:r.ts
-command! SS :sp %:p:r.scss
-
-
 " Autocmds
 augroup Autocmds
     au!
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
+    au FileType css,html,typescript :call s:set_angular_commands()
+    au FileType go :call s:set_go_commands()
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
     au TextYankPost * lua require'vim.highlight'.on_yank({ higroup="IncSearch", timeout=1000, on_visual=false })
 augroup END
@@ -316,4 +306,25 @@ func! s:auto_mkdir()
     if !isdirectory(l:dir)
         call mkdir(l:dir, 'p')
     endif
+endf
+
+func! s:set_angular_commands()
+    command! ET :e %:p:r.html
+    command! EC :e %:p:r.ts
+    command! ES :e %:p:r.scss
+    command! VT :vs %:p:r.html
+    command! VC :vs %:p:r.ts
+    command! VS :vs %:p:r.scss
+    command! ST :sp %:p:r.html
+    command! SC :sp %:p:r.ts
+    command! SS :sp %:p:r.scss
+endf
+
+func! s:set_go_commands()
+    command! EC :e %:p:s?_test.go?.go?
+    command! VC :vs %:p:s?_test.go?.go?
+    command! SC :sp %:p:s?_test.go?.go?
+    command! ET :e %:p:r_test.go
+    command! VT :vs %:p:r_test.go
+    command! ST :sp %:p:r_test.go
 endf
