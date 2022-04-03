@@ -34,7 +34,6 @@
     lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(blue)%an%Creset' --abbrev-commit
     nuke = "!git stash && git stash drop; git clean -fdx"
     pp = "!git pull && git push"
-    pr = pull --rebase
     rb = rebase
     rp = reset --patch
     rh = reset --hard
@@ -43,4 +42,3 @@
     s = status -bsu
     sps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git stash pop; else git pull; fi'"
     spps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git push && git stash pop; else git pull && git push; fi'"
-    s = status -bsu
