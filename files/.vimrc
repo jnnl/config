@@ -34,8 +34,8 @@ let g:prettier#autoformat_require_pragma = 0
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/nvim-cmp'
-Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'l3mon4d3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'ray-x/lsp_signature.nvim'
 
 " Colorschemes
@@ -85,23 +85,23 @@ let g:loaded_rrhelper = 1
             ['<C-p>'] = cmp.mapping.select_prev_item(),
             ['<C-n>'] = cmp.mapping.select_next_item(),
             ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-            ['<C-f>'] = cmp.mapping.scroll_docs(4),
+            ['<C-u>'] = cmp.mapping.scroll_docs(4),
             ['<C-Space>'] = cmp.mapping.complete(),
             ['<C-e>'] = cmp.mapping.close(),
             ['<CR>'] = cmp.mapping.confirm {
                 behavior = cmp.ConfirmBehavior.Replace,
                 select = true,
             },
-            ['<Tab>'] = function(fallback)
+            ['<Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
-                elseif luasnip.expand_or_jumpable() then
+                elseif luasnip.expand_or_locally_jumpable() then
                     luasnip.expand_or_jump()
                 else
                     fallback()
                 end
-            end,
-            ['<S-Tab>'] = function(fallback)
+            end, { 'i', 's' }),
+            ['<S-Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_prev_item()
                 elseif luasnip.jumpable(-1) then
@@ -109,7 +109,7 @@ let g:loaded_rrhelper = 1
                 else
                     fallback()
                 end
-            end,
+            end, { 'i', 's' }),
         },
         sources = {
             { name = 'nvim_lsp' },
@@ -321,6 +321,7 @@ func! s:set_angular_commands()
 endf
 
 func! s:set_go_commands()
+    setlocal noexpandtab shiftwidth=8
     command! EC :e %:p:s?_test.go?.go?
     command! VC :vs %:p:s?_test.go?.go?
     command! SC :sp %:p:s?_test.go?.go?
