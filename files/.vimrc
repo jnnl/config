@@ -293,7 +293,7 @@ augroup Autocmds
     au!
     au FileType vim,help setlocal keywordprg=:help
     au FileType make setlocal noexpandtab shiftwidth=8
-    au FileType css,html,typescript :call s:set_angular_commands()
+    au FileType css,scss,html,typescript :call s:set_angular_commands()
     au FileType go :call s:set_go_commands()
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
     au TextYankPost * lua require'vim.highlight'.on_yank({ higroup="IncSearch", timeout=1000, on_visual=false })
