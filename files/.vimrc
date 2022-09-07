@@ -79,8 +79,8 @@ call plug#end()
             end
         },
         mapping = {
-            ['<C-p>'] = cmp.mapping.select_prev_item(),
-            ['<C-n>'] = cmp.mapping.select_next_item(),
+            ['<C-k>'] = cmp.mapping.select_prev_item(),
+            ['<C-j>'] = cmp.mapping.select_next_item(),
             ['<C-d>'] = cmp.mapping.scroll_docs(-4),
             ['<C-u>'] = cmp.mapping.scroll_docs(4),
             ['<C-Space>'] = cmp.mapping.complete(),
