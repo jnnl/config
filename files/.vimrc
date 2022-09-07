@@ -144,8 +144,7 @@ call plug#end()
         mapkey(bufnr, 'n', '<leader>f', '<cmd>:Format<CR>', opts)
     end
 
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+    local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
     local servers = { 'bashls', 'cssls', 'gopls', 'pyright', 'rust_analyzer' }
 
@@ -158,6 +157,7 @@ call plug#end()
 
     lsp.tsserver.setup {
         init_options = require('nvim-lsp-ts-utils').init_options,
+        capabilities = capabilities,
         on_attach = function(client, bufnr)
             local_on_attach(client, bufnr)
             local ts_utils = require("nvim-lsp-ts-utils")
