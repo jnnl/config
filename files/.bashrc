@@ -16,7 +16,7 @@ cdd() {
 # cd to selected shell wd
 cdsh() {
     local dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
-        sort -u | grep -Fvx "$(pwd)" | \
+        sort -u | grep -Fvx "$PWD" | \
         fzf +s --reverse)" && cd "$dir"
 }
 
