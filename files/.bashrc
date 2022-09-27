@@ -101,8 +101,8 @@ alias lx="ls -lhAFX"
 shopt -s histappend
 
 # command history options
-HISTSIZE=10000
-HISTFILESIZE=10000
+HISTSIZE=100000
+HISTFILESIZE=100000
 HISTCONTROL=ignoreboth:erasedups
 HISTIGNORE=bg:cd:cdd:exit:shd:f:fg:l:ll:ls:v:z
 
