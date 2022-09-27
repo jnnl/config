@@ -12,7 +12,7 @@ source utils
 create_dirs() {
     msg "Creating directories..."
 
-    local directories="$(find $scriptdir/files -type d | tail -n+2 | sed 's|^'$scriptdir/files'/||')"
+    local directories="$(find $scriptdir/files -mindepth 1 -type d | sed 's|^'$scriptdir/files'/||')"
     local directory
 
     for directory in $directories; do
