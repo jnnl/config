@@ -24,6 +24,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'ziglang/zig.vim'
 Plug 'ap/vim-css-color'
+Plug 'hashivim/vim-terraform'
 Plug 'leafgarland/typescript-vim'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'prettier/vim-prettier', { 'for': ['javascript', 'typescript', 'vue', 'svelte', 'css', 'scss', 'html'] }
@@ -229,7 +230,7 @@ set smartcase
 set number
 
 if has('termguicolors')
-  set termguicolors
+    set termguicolors
 endif
 
 try | colorscheme tonight | catch | colorscheme default | endtry
