@@ -145,7 +145,7 @@ call plug#end()
         mapkey(bufnr, 'n', '<leader>f', '<cmd>:Format<CR>', opts)
     end
 
-    local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    local capabilities = cmp_nvim_lsp.default_capabilities()
 
     local servers = { 'bashls', 'cssls', 'gopls', 'pyright', 'rust_analyzer' }
 
@@ -182,7 +182,7 @@ set nomodeline
 set noswapfile
 set showcmd
 set shortmess+=c
-set synmaxcol=500
+set synmaxcol=1000
 set timeoutlen=500
 set wildmenu
 
