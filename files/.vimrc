@@ -1,17 +1,17 @@
 " Plugins
+
 call plug#begin()
 
 " Navigation
+
 Plug 'junegunn/fzf', {'do': {-> fzf#install()}}
 Plug 'junegunn/fzf.vim'
 let $FZF_DEFAULT_OPTS .= ' --border --margin=0,1'
 Plug 'romainl/vim-cool'
-Plug 'justinmk/vim-sneak'
-let g:sneak#label = 1
-let g:sneak#s_next = 1
-let g:sneak#use_ic_scs = 1
+Plug 'ggandor/leap.nvim'
 
 " Manipulation
+
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
@@ -20,8 +20,10 @@ Plug 'tommcdo/vim-lion'
 let g:lion_squeeze_spaces = 1
 
 " Language
+
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/plenary.nvim'
+Plug 'folke/trouble.nvim'
 Plug 'ziglang/zig.vim'
 Plug 'ap/vim-css-color'
 Plug 'hashivim/vim-terraform'
@@ -32,6 +34,7 @@ let g:prettier#autoformat_config_present = 1
 let g:prettier#autoformat_require_pragma = 0
 
 " Completion
+
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/nvim-cmp'
@@ -40,10 +43,12 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'ray-x/lsp_signature.nvim'
 
 " Colorschemes
+
 Plug 'jnnl/vim-tonight'
 Plug 'fnune/base16-vim'
 
 " Miscellaneous
+
 Plug 'romainl/vim-qf'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
@@ -58,13 +63,32 @@ let g:undotree_HelpLine = 0
 
 call plug#end()
 
-" Lua setup
+
+" Lua-based configurations
+
 :lua << EOF
     local cmp = require('cmp')
     local cmp_nvim_lsp = require('cmp_nvim_lsp')
     local luasnip = require('luasnip')
     local lsp = require('lspconfig')
     local lsp_signature = require('lsp_signature')
+
+    require('leap').add_default_mappings()
+
+    require('trouble').setup({
+        icons = false,
+        fold_open = 'v',
+        fold_closed = '>',
+        indent_lines = false,
+        signs = {
+            error = "[error]",
+            warn = "[warn]",
+            hint = "[hint]",
+            information = "[info]",
+            other = "[other]",
+        },
+        use_diagnostic_signs = false
+    })
 
     lsp_signature.setup({
         bind = true,
@@ -141,7 +165,8 @@ call plug#end()
         mapkey(bufnr, 'n', '<leader><Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
         mapkey(bufnr, 'x', '<leader><Space>', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
         mapkey(bufnr, 'n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-        mapkey(bufnr, 'n', '<leader>d', '<cmd>:LspDiagnosticsAll<CR>', opts)
+        mapkey(bufnr, 'n', '<leader>tt', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
+        mapkey(bufnr, 'n', '<leader>tr', '<cmd>TroubleToggle lsp_references<CR>', opts)
         mapkey(bufnr, 'n', '<leader>f', '<cmd>:Format<CR>', opts)
     end
 
@@ -172,6 +197,7 @@ EOF
 
 
 " General
+
 set backspace=indent,eol,start
 set clipboard=unnamed
 set display+=lastline
@@ -188,6 +214,7 @@ set wildmenu
 
 
 " Undo
+
 if !isdirectory($HOME.'/.vim/undo')
     call mkdir($HOME.'/.vim/undo', 'p', 0700)
 endif
@@ -196,15 +223,18 @@ set undofile
 
 
 " Completion
+
 set completeopt=menu,menuone,noselect
 
 
 " Statusline
+
 set laststatus=2
 set statusline=%f\ %y%m%=%l/%L
 
 
 " Indentation
+
 set autoindent
 set breakindent
 set expandtab
@@ -215,11 +245,13 @@ set softtabstop=-1
 
 
 " Splits
+
 set splitright
 set splitbelow
 
 
 " Search
+
 set incsearch
 set hlsearch
 set ignorecase
@@ -227,6 +259,7 @@ set smartcase
 
 
 " Styles
+
 set number
 
 if has('termguicolors')
@@ -235,7 +268,9 @@ endif
 
 try | colorscheme tonight | catch | colorscheme default | endtry
 
+
 " Mappings
+
 let mapleader = ','
 
 nnoremap <BS> <C-^>
@@ -273,7 +308,9 @@ nnoremap <silent> <leader>; :History<CR>
 nnoremap <silent> <leader>: :BCommits<CR>
 nnoremap <silent> <leader>_ :BLines<CR>
 
+
 " Commands
+
 command! Rstrip :%s/\s\+$//e
 command! Unansify :%s/\%x1b\[[0-9;]*[a-zA-Z]//ge
 command! NonAscii /[^\x00-\x7F]
@@ -286,6 +323,7 @@ command! -nargs=* Rg
 
 
 " Autocmds
+
 augroup Autocmds
     au!
     au FileType vim,help setlocal keywordprg=:help
@@ -298,6 +336,7 @@ augroup END
 
 
 " Functions
+
 func! s:auto_mkdir()
     let l:dir = expand('<afile>:p:h')
     if !isdirectory(l:dir)
