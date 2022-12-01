@@ -55,7 +55,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'whiteinge/diffconflicts'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'michaeljsmith/vim-indent-object'
-
 Plug 'mbbill/undotree'
 let g:undotree_SetFocusWhenToggle = 1
 let g:undotree_ShortIndicators = 1
@@ -72,20 +71,22 @@ call plug#end()
     local luasnip = require('luasnip')
     local lsp = require('lspconfig')
     local lsp_signature = require('lsp_signature')
+    local trouble = require('trouble')
+    local leap = require('leap')
 
-    require('leap').add_default_mappings()
+    leap.add_default_mappings()
 
-    require('trouble').setup({
+    trouble.setup({
         icons = false,
         fold_open = 'v',
         fold_closed = '>',
         indent_lines = false,
         signs = {
-            error = "[error]",
-            warn = "[warn]",
-            hint = "[hint]",
-            information = "[info]",
-            other = "[other]",
+            error = '[error]',
+            warn = '[warn]',
+            hint = '[hint]',
+            information = '[info]',
+            other = '[other]',
         },
         use_diagnostic_signs = false
     })
@@ -186,7 +187,7 @@ call plug#end()
         capabilities = capabilities,
         on_attach = function(client, bufnr)
             local_on_attach(client, bufnr)
-            local ts_utils = require("nvim-lsp-ts-utils")
+            local ts_utils = require('nvim-lsp-ts-utils')
             ts_utils.setup({
                 auto_inlay_hints = false,
             })
@@ -331,7 +332,7 @@ augroup Autocmds
     au FileType css,scss,html,typescript :call s:set_angular_commands()
     au FileType go :call s:set_go_commands()
     au BufWritePre,FileWritePre * :call s:auto_mkdir()
-    au TextYankPost * lua require'vim.highlight'.on_yank({ higroup="IncSearch", timeout=1000, on_visual=false })
+    au TextYankPost * lua require'vim.highlight'.on_yank({ higroup='IncSearch', timeout=1000, on_visual=false })
 augroup END
 
 
