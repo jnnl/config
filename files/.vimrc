@@ -143,7 +143,7 @@ call plug#end()
         local mapkey = vim.api.nvim_buf_set_keymap
         local opts = { noremap = true, silent = true }
 
-        vim.cmd([[ command! Format execute 'lua vim.lsp.buf.formatting()' ]])
+        vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format({ async = true })' ]])
 
         mapkey(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
         mapkey(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
