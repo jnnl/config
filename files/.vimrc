@@ -194,6 +194,7 @@ set clipboard=unnamed
 set display+=lastline
 set hidden
 set inccommand=nosplit
+set mouse=
 set nojoinspaces
 set nomodeline
 set noswapfile
