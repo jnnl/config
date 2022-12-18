@@ -38,8 +38,6 @@ let g:prettier#autoformat_require_pragma = 0
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/nvim-cmp'
-Plug 'l3mon4d3/LuaSnip'
-Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'ray-x/lsp_signature.nvim'
 
 " Colorschemes
@@ -68,7 +66,6 @@ call plug#end()
 :lua << EOF
     local cmp = require('cmp')
     local cmp_nvim_lsp = require('cmp_nvim_lsp')
-    local luasnip = require('luasnip')
     local lsp = require('lspconfig')
     local lsp_signature = require('lsp_signature')
     local trouble = require('trouble')
@@ -100,9 +97,7 @@ call plug#end()
 
     cmp.setup({
         snippet = {
-            expand = function(args)
-                luasnip.lsp_expand(args.body)
-            end
+            expand = function(args) end
         },
         mapping = {
             ['<C-k>'] = cmp.mapping.select_prev_item(),
@@ -118,8 +113,6 @@ call plug#end()
             ['<Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
-                elseif luasnip.expand_or_locally_jumpable() then
-                    luasnip.expand_or_jump()
                 else
                     fallback()
                 end
@@ -127,8 +120,6 @@ call plug#end()
             ['<S-Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_prev_item()
-                elseif luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
                 else
                     fallback()
                 end
@@ -136,7 +127,6 @@ call plug#end()
         },
         sources = {
             { name = 'nvim_lsp' },
-            { name = 'luasnip' },
             { name = 'path' },
         }
     })
