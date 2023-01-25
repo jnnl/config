@@ -203,9 +203,9 @@ main() {
     fi
 
     exec_step install_fzf
-    exec_step install_vimplug
+    # exec_step install_vimplug
     exec_step install_z
-    #exec_step install_langservers
+    # exec_step install_langservers
 
     printf "\n<<< Completed $script_name.\n\n"
 }
