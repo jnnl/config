@@ -22,7 +22,13 @@ cdsh() {
 
 # cd to git root
 cdgr() {
-    local dir="$(git rev-parse --show-toplevel)" && cd "$dir"
+    if [ $# -gt 0 ]; then
+        local gitdir="$(realpath $1)"
+        [ -d "$gitdir" ] || gitdir="$(dirname $gitdir)"
+        local dir="$(git -C $gitdir rev-parse --show-toplevel)" && cd "$dir"
+    else
+        local dir="$(git rev-parse --show-toplevel)" && cd "$dir"
+    fi
 }
 
 # browse man pages by name and description
