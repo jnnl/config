@@ -1,11 +1,13 @@
 return {
     -- Navigation
     { 'andymass/vim-matchup',
+      event = 'BufReadPost',
       config = function()
           vim.g.matchup_matchparen_offscreen = { method = 'popup' }
       end
     },
     { 'ggandor/leap.nvim',
+      event = 'BufReadPost',
       config = function()
           require('leap').add_default_mappings()
       end
@@ -41,26 +43,25 @@ return {
           ]])
       end
     },
-    { 'romainl/vim-cool' },
+    { 'romainl/vim-cool', event = 'BufReadPost' },
 
     -- Manipulation
-    { 'tommcdo/vim-exchange' },
+    { 'tommcdo/vim-exchange', event = 'BufReadPost' },
     { 'tommcdo/vim-lion',
+      event = 'BufReadPost',
       config = function()
         vim.g.lion_squeeze_spaces = 1
       end
     },
     { 'tpope/vim-abolish' },
-    { 'tpope/vim-commentary' },
-    { 'tpope/vim-surround' },
+    { 'tpope/vim-commentary', event = 'BufReadPost' },
+    { 'tpope/vim-surround', event = 'BufReadPost' },
 
     -- Colorschemes
     { 'jnnl/vim-tonight' },
 
     -- Language
-    { 'ap/vim-css-color',
-      ft = { 'css', 'scss' },
-    },
+    { 'ap/vim-css-color', ft = { 'css', 'scss' } },
     { 'hashivim/vim-terraform' },
     { 'leafgarland/typescript-vim' },
     { 'prettier/vim-prettier',
@@ -71,10 +72,14 @@ return {
           vim.g['prettier#autoformat_require_pragma'] = 0
       end
     },
-    { 'ziglang/zig.vim' },
+    { 'ziglang/zig.vim', ft = { 'zig' } },
 
     -- LSP
     { 'neovim/nvim-lspconfig',
+      event = 'BufReadPre',
+      dependencies = {
+          'folke/trouble.nvim'
+      },
       config = function()
           local cmp_nvim_lsp = require('cmp_nvim_lsp')
           local lsp = require('lspconfig')
@@ -128,6 +133,7 @@ return {
       end
     },
     { 'folke/trouble.nvim',
+      lazy = true,
       config = function()
           require('trouble').setup({
               icons = false,
@@ -148,18 +154,23 @@ return {
     { 'jose-elias-alvarez/typescript.nvim' },
 
     -- Completion
-    { 'hrsh7th/cmp-nvim-lsp' },
-    { 'hrsh7th/cmp-nvim-lua' },
-    { 'hrsh7th/cmp-path' },
-    { 'hrsh7th/cmp-vsnip' },
+    { 'hrsh7th/cmp-nvim-lsp', lazy = true },
+    { 'hrsh7th/cmp-nvim-lua', lazy = true },
+    { 'hrsh7th/cmp-path', lazy = true },
+    { 'hrsh7th/cmp-vsnip', lazy = true },
     { 'hrsh7th/vim-vsnip',
+      lazy = true,
       config = function()
           -- vim.g.vsnip_filetypes = { 'html' }
           vim.g.vsnip_snippet_dir = vim.fn.stdpath('config') .. '/snippets'
       end
     },
-    { 'hrsh7th/vim-vsnip-integ' },
+    { 'hrsh7th/vim-vsnip-integ',
+      lazy = true,
+      dependencies = { 'hrsh7th/vim-vsnip' },
+    },
     { 'hrsh7th/nvim-cmp',
+      event = 'InsertEnter',
       dependencies = {
           'hrsh7th/cmp-nvim-lsp',
           'hrsh7th/cmp-path',
