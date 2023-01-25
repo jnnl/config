@@ -20,8 +20,12 @@
 [pull]
     rebase = true
 [alias]
-    ac = "!git add --all && git commit"
+    ac = "!git add -A && git commit"
     ap = add --patch
+    ad = "!bash -c 'git add -A $(git diff --name-only --diff-filter=D)'"
+    an = "!bash -c 'git add -A $(git diff --name-only --diff-filter=A)'"
+    ar = "!bash -c 'git add -A $(git diff --name-only --diff-filter=R)'"
+    au = "!bash -c 'git add -A $(git diff --name-only --diff-filter=M)'"
     br = branch
     c = commit
     ca = commit --amend
@@ -29,6 +33,7 @@
     d = diff
     dc = diff --cached
     dh = diff HEAD^ HEAD
+    dw = diff --word-diff
     dr = "!git fetch && git diff FETCH_HEAD"
     l = log --oneline --decorate --graph
     lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(blue)%an%Creset' --abbrev-commit
@@ -40,5 +45,7 @@
     rs = reset --soft
     rso = remote show origin
     s = status -bsu
+    sp = stash pop
+    spm = stash push -m
     sps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git stash pop; else git pull; fi'"
     spps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git push && git stash pop; else git pull && git push; fi'"
