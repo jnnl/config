@@ -53,7 +53,7 @@ dl() {
 }
 
 exec_step() {
-    if [ "$is_interactive" = "1" ]; then
+    if test "$is_interactive" = "1"; then
         read -p "> $*? [Y/n/q] " choice
         case "$choice" in
             y|Y|"") $*;;

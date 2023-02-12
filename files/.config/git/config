@@ -6,6 +6,8 @@
     user = jnnl
 [core]
     editor = nvim
+[diff]
+    colorMoved = default
 [push]
     default = current
 [merge]
@@ -35,6 +37,8 @@
     dh = diff HEAD^ HEAD
     dw = diff --word-diff
     dr = "!git fetch && git diff FETCH_HEAD"
+    dt = "!git diff | delta"
+    dts = "!git diff | delta --side-by-side"
     l = log --oneline --decorate --graph
     lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(blue)%an%Creset' --abbrev-commit
     nuke = "!git stash && git stash drop; git clean -fdx"
