@@ -18,11 +18,11 @@ return {
           vim.keymap.set('n', '<Leader>,', '<cmd>Files<CR>', { silent = true })
           vim.keymap.set('n', '<Leader>.', '<cmd>Buffers<CR>', { silent = true })
           vim.keymap.set('n', '<Leader>-', '<cmd>Ripgrep<CR>', { silent = true })
-          vim.keymap.set('n', '<Leader>;', '<cmd>History<CR>', { silent = true })
+          vim.keymap.set('n', '<Leader>;', '<cmd>GitFiles<CR>', { silent = true })
           vim.keymap.set('n', '<Leader>:', '<cmd>BCommits<CR>', { silent = true })
           vim.keymap.set('n', '<Leader>_', '<cmd>GitRipgrep<CR>', { silent = true })
-          vim.keymap.set('n', '<Leader>\'', '<cmd>Files ~<CR>', { silent = true })
-          vim.keymap.set('n', '<Leader>*', '<cmd>GitFiles<CR>', { silent = true })
+          vim.keymap.set('n', '<Leader>\'', '<cmd>History<CR>', { silent = true })
+          vim.keymap.set('n', '<Leader>*', '<cmd>Files ~<CR>', { silent = true })
           vim.cmd([[ command! -nargs=* Ripgrep
               \ call fzf#vim#grep(
               \ 'rg --column --line-number --no-heading --smart-case '
@@ -36,7 +36,7 @@ return {
               \ . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
               \ . shellescape(<q-args>), 1,
               \ fzf#vim#with_preview(
-              \ { 'options': '--delimiter : --nth 4..',
+              \ { 'options': '--prompt="GitRg> " --delimiter : --nth 4..',
               \   'dir': system('git -C ' . expand('%:p:h') . ' rev-parse --show-toplevel 2>/dev/null')[:-2]
               \ }, 'right:50%:hidden', 'ctrl-/'),
               \ <bang>0)
@@ -54,8 +54,8 @@ return {
       end
     },
     { 'tpope/vim-abolish' },
-    { 'tpope/vim-commentary', event = 'BufReadPost' },
-    { 'tpope/vim-surround', event = 'BufReadPost' },
+    { 'tpope/vim-commentary', event = 'BufReadPre' },
+    { 'tpope/vim-surround', event = 'BufReadPre' },
 
     -- Colorschemes
     { 'jnnl/vim-tonight' },
