@@ -119,6 +119,11 @@ vim.keymap.set('x', 'Q', '<cmd>normal @q<CR>')
 vim.keymap.set('x', '@', '<cmd>normal @')
 vim.keymap.set('x', '.', '<cmd>normal .<CR>')
 
+vim.keymap.set('n', '<Up>', '<cmd>resize -1<CR>')
+vim.keymap.set('n', '<Down>', '<cmd>resize +1<CR>')
+vim.keymap.set('n', '<Left>', '<cmd>vertical resize +1<CR>')
+vim.keymap.set('n', '<Right>', '<cmd>vertical resize -1<CR>')
+
 vim.keymap.set('n', '<Leader>s', function()
     return ':%s/' .. vim.call('expand', '<cword>') .. '/'
 end, { expr = true })
@@ -184,7 +189,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.api.nvim_create_autocmd('TextYankPost', {
     callback = function()
-        require('vim.highlight').on_yank({ higroup = 'IncSearch', timeout = 1000, on_visual = false })
+        require('vim.highlight').on_yank({ higroup = 'IncSearch', timeout = 500, on_visual = false })
     end
 })
 
