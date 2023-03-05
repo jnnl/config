@@ -135,7 +135,7 @@ vim.api.nvim_create_user_command('NonAscii', '/[^\\x00-\\x7F]', { bang = true })
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'make',
     callback = function()
-        vim.opt_local.noexpandtab = true
+        vim.opt_local.expandtab = false
         vim.opt_local.shiftwidth = 8
     end
 })
@@ -168,7 +168,7 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'go',
     callback = function()
-        vim.opt_local.noexpandtab = true
+        vim.opt_local.expandtab = false
         vim.opt_local.shiftwidth = 8
         local create_cmd = function(name, command)
             vim.api.nvim_create_user_command(name, command, { bang = true })
