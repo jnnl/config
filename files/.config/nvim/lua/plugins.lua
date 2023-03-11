@@ -46,7 +46,6 @@ return {
     { 'romainl/vim-cool', event = 'BufReadPost' },
 
     -- Manipulation
-    { 'tommcdo/vim-exchange', event = 'BufReadPost' },
     { 'tommcdo/vim-lion',
       event = 'BufReadPost',
       config = function()
@@ -110,7 +109,16 @@ return {
           local capabilities = cmp_nvim_lsp.default_capabilities()
           capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-          local servers = { 'bashls', 'cssls', 'gopls', 'html', 'pyright', 'rust_analyzer', 'tsserver' }
+          local servers = {
+              'angularls',
+              'bashls',
+              'cssls',
+              'gopls',
+              'html',
+              'pyright',
+              'rust_analyzer',
+              'tsserver'
+          }
 
           for _, server in ipairs(servers) do
               if server == 'tsserver' then
@@ -121,6 +129,18 @@ return {
                               local_on_attach(client, bufnr)
                           end
                       }
+                  })
+              elseif server == 'angularls' then
+                  local lsPath = vim.fn.expand('$HOME/.local/lib/node_modules')
+                  local cmd = { 'ngserver', '--stdio', '--tsProbeLocations', lsPath, '--ngProbeLocations', lsPath }
+                  lsp.angularls.setup({
+                      on_attach = on_attach,
+                      capabilities = capabilities,
+                      cmd = cmd,
+                      filetypes = { 'html' },
+                      on_new_config = function(new_config, new_root_dir)
+                          new_config.cmd = cmd
+                      end,
                   })
               else
                   lsp[server].setup({
@@ -170,7 +190,7 @@ return {
       dependencies = { 'hrsh7th/vim-vsnip' },
     },
     { 'hrsh7th/nvim-cmp',
-      event = 'InsertEnter',
+      event = 'BufReadPost',
       dependencies = {
           'hrsh7th/cmp-nvim-lsp',
           'hrsh7th/cmp-path',
@@ -189,6 +209,8 @@ return {
                   end
               },
               mapping = {
+                  ['<Up>'] = cmp.mapping.select_prev_item(),
+                  ['<Down>'] = cmp.mapping.select_next_item(),
                   ['<C-k>'] = cmp.mapping.select_prev_item(),
                   ['<C-j>'] = cmp.mapping.select_next_item(),
                   ['<C-d>'] = cmp.mapping.scroll_docs(-4),
