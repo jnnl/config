@@ -135,9 +135,20 @@ end, { expr = true })
 
 -- Commands
 
-vim.api.nvim_create_user_command('Rstrip', ':%s/\\s\\+$//e', { bang = true })
-vim.api.nvim_create_user_command('Unansify', ':%s/\\%x1b\\[[0-9;]*[a-zA-Z]//ge', { bang = true })
 vim.api.nvim_create_user_command('NonAscii', '/[^\\x00-\\x7F]', { bang = true })
+vim.api.nvim_create_user_command('Unansify', ':%s/\\%x1b\\[[0-9;]*[a-zA-Z]//ge', { bang = true })
+vim.api.nvim_create_user_command('Rstrip', function()
+    vim.cmd(':%s/\\s\\+$//e')
+    vim.cmd(':%s/\r//g')
+end, { bang = true })
+vim.api.nvim_create_user_command('CloseFloatingWindows', function()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_config(win).relative ~= "" then
+            vim.api.nvim_win_close(win, false)
+        end
+    end
+end, { bang = true })
+
 
 -- Autocommands
 
