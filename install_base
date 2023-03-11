@@ -78,9 +78,18 @@ install_mac_pkgs() {
 install_ubuntu_pkgs() {
     msg "Installing packages for Ubuntu..."
 
-    local pkgs="fd-find neovim nodejs python3-pip renameutils ripgrep"
+    (
+        set -eu
+        local bindir="$HOME/code/bin"
+        mkdir -vp "$bindir"
+        cd "$bindir"
+        dl - "https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz" | tar -xz
+        ln -vsnf "$bindir/nvim-linux64/bin/nvim" "$bindir/nvim"
+    )
+
+    local apt_pkgs="fd-find nodejs python3-pip renameutils ripgrep"
     sudo apt update
-    sudo apt install $pkgs
+    sudo apt install $apt_pkgs
 
     msg_done
 }
@@ -88,7 +97,7 @@ install_ubuntu_pkgs() {
 install_arch_pkgs() {
     msg "Installing packages for Arch Linux..."
 
-    local pkgs="bc fd git htop jq neovim nodejs openssh python renameutils ripgrep"
+    local pkgs="fd git htop jq neovim nodejs openssh python renameutils ripgrep"
     sudo pacman -Syyu --needed $pkgs
 
     msg_done
