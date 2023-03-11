@@ -123,6 +123,10 @@ vim.keymap.set('n', '<Up>', '<cmd>resize -1<CR>')
 vim.keymap.set('n', '<Down>', '<cmd>resize +1<CR>')
 vim.keymap.set('n', '<Left>', '<cmd>vertical resize +1<CR>')
 vim.keymap.set('n', '<Right>', '<cmd>vertical resize -1<CR>')
+vim.keymap.set('n', '<C-Up>', '<cmd>resize -10<CR>')
+vim.keymap.set('n', '<C-Down>', '<cmd>resize +10<CR>')
+vim.keymap.set('n', '<C-Left>', '<cmd>vertical resize +10<CR>')
+vim.keymap.set('n', '<C-Right>', '<cmd>vertical resize -10<CR>')
 
 vim.keymap.set('n', '<Leader>s', function()
     return ':%s/' .. vim.call('expand', '<cword>') .. '/'
