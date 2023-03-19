@@ -87,6 +87,15 @@ install_ubuntu_pkgs() {
         ln -vsnf "$bindir/nvim-linux64/bin/nvim" "$bindir/nvim"
     )
 
+    (
+        set -eu
+        local bindir="$HOME/code/bin"
+        mkdir -vp "$bindir"
+        cd "$bindir"
+        dl direnv "https://github.com/direnv/direnv/releases/download/v2.32.2/direnv.linux-amd64"
+        chmod ug+x direnv
+    )
+
     local apt_pkgs="fd-find nodejs python3-pip renameutils ripgrep"
     sudo apt update
     sudo apt install $apt_pkgs
