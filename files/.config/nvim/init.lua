@@ -36,6 +36,7 @@ require('lazy').setup('plugins', {
 })
 
 
+
 -- General
 
 vim.opt.backspace = 'indent,eol,start'
@@ -119,18 +120,19 @@ vim.keymap.set('x', 'Q', '<cmd>normal @q<CR>')
 vim.keymap.set('x', '@', '<cmd>normal @')
 vim.keymap.set('x', '.', '<cmd>normal .<CR>')
 
-vim.keymap.set('n', '<Up>', '<cmd>resize -1<CR>')
-vim.keymap.set('n', '<Down>', '<cmd>resize +1<CR>')
-vim.keymap.set('n', '<Left>', '<cmd>vertical resize +1<CR>')
-vim.keymap.set('n', '<Right>', '<cmd>vertical resize -1<CR>')
-vim.keymap.set('n', '<C-Up>', '<cmd>resize -10<CR>')
-vim.keymap.set('n', '<C-Down>', '<cmd>resize +10<CR>')
-vim.keymap.set('n', '<C-Left>', '<cmd>vertical resize +10<CR>')
-vim.keymap.set('n', '<C-Right>', '<cmd>vertical resize -10<CR>')
+vim.keymap.set('n', '<Up>', function() move_split('up', '1') end)
+vim.keymap.set('n', '<Down>', function() move_split('down', '1') end)
+vim.keymap.set('n', '<Left>', function() move_split('left', '1') end)
+vim.keymap.set('n', '<Right>', function() move_split('right', '1') end)
+vim.keymap.set('n', '<C-Up>', function() move_split('up', '10') end)
+vim.keymap.set('n', '<C-Down>', function() move_split('down', '10') end)
+vim.keymap.set('n', '<C-Left>', function() move_split('left', '10') end)
+vim.keymap.set('n', '<C-Right>', function() move_split('right', '10') end)
 
+vim.keymap.set('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
 vim.keymap.set('n', '<Leader>s', function()
     return ':%s/' .. vim.call('expand', '<cword>') .. '/'
-end, { expr = true })
+end, { expr = true, desc = 'Substitute word under cursor' })
 
 
 -- Commands
@@ -148,7 +150,6 @@ vim.api.nvim_create_user_command('CloseFloatingWindows', function()
         end
     end
 end, { bang = true })
-
 
 -- Autocommands
 
@@ -216,3 +217,36 @@ vim.api.nvim_create_autocmd({ 'BufWritePre', 'FileWritePre' }, {
         end
     end
 })
+
+
+-- Functions
+
+function move_split(direction, amount)
+    local op = '+'
+    local curr_win = vim.fn.winnr()
+    if direction == 'left' or direction == 'right' then
+        local left_win = vim.fn.winnr('h')
+        local right_win = vim.fn.winnr('l')
+        if left_win == right_win then
+            return
+        end
+        if curr_win == right_win then
+            if direction == 'right' then op = '-' end
+        else
+            if direction == 'left' then op = '-' end
+        end
+        vim.cmd('vertical resize ' .. op .. amount)
+    elseif direction == 'up' or direction == 'down' then
+        local up_win = vim.fn.winnr('k')
+        local down_win = vim.fn.winnr('j')
+        if up_win == down_win then
+	    return
+        end
+        if curr_win == up_win then
+            if direction == 'up' then op = '-' end
+        else
+            if direction == 'down' then op = '-' end
+        end
+        vim.cmd('resize ' .. op .. amount)
+    end
+end
