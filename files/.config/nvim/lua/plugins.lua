@@ -12,38 +12,104 @@ return {
           require('leap').add_default_mappings()
       end
     },
+    { 'romainl/vim-cool', event = 'BufReadPost' },
     { 'junegunn/fzf', build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc' },
-    { 'junegunn/fzf.vim',
+    { 'ibhagwan/fzf-lua',
       config = function()
-          vim.keymap.set('n', '<Leader>,', '<cmd>Files<CR>', { silent = true })
-          vim.keymap.set('n', '<Leader>.', '<cmd>Buffers<CR>', { silent = true })
-          vim.keymap.set('n', '<Leader>-', '<cmd>Ripgrep<CR>', { silent = true })
-          vim.keymap.set('n', '<Leader>;', '<cmd>GitFiles<CR>', { silent = true })
-          vim.keymap.set('n', '<Leader>:', '<cmd>BCommits<CR>', { silent = true })
-          vim.keymap.set('n', '<Leader>_', '<cmd>GitRipgrep<CR>', { silent = true })
-          vim.keymap.set('n', '<Leader>\'', '<cmd>History<CR>', { silent = true })
-          vim.keymap.set('n', '<Leader>*', '<cmd>Files ~<CR>', { silent = true })
-          vim.cmd([[ command! -nargs=* Ripgrep
-              \ call fzf#vim#grep(
-              \ 'rg --column --line-number --no-heading --smart-case '
-              \ . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
-              \ . shellescape(<q-args>), 1,
-              \ fzf#vim#with_preview({ 'options': '--delimiter : --nth 4..' }, 'right:50%:hidden', 'ctrl-/'))
-          ]])
-          vim.cmd([[ command! -bang -nargs=* GitRipgrep
-              \ call fzf#vim#grep(
-              \ 'rg --column --line-number --no-heading  --smart-case '
-              \ . '--color=always --colors "path:fg:green" --colors "line:fg:yellow" '
-              \ . shellescape(<q-args>), 1,
-              \ fzf#vim#with_preview(
-              \ { 'options': '--prompt="GitRg> " --delimiter : --nth 4..',
-              \   'dir': system('git -C ' . expand('%:p:h') . ' rev-parse --show-toplevel 2>/dev/null')[:-2]
-              \ }, 'right:50%:hidden', 'ctrl-/'),
-              \ <bang>0)
-          ]])
+          local fzf = require('fzf-lua')
+          local actions = require('fzf-lua.actions')
+          fzf.setup({
+            'default',
+            actions = {
+                files = {
+                    ['default'] = actions.file_edit,
+                    ['alt-q'] = actions.file_sel_to_qf,
+                    ['alt-l'] = actions.file_sel_to_ll,
+                    ['ctrl-s'] = actions.file_split,
+                    ['ctrl-t'] = actions.file_tabedit,
+                    ['ctrl-v'] = actions.file_vsplit,
+                    ['ctrl-o'] = function(selected)
+                        local is_mac = vim.fn.has('mac')
+                        local is_unix = vim.fn.has('unix')
+
+                        if is_mac ~= 1 and is_unix ~= 1 then
+                            vim.notify('file open not supported on this platform', vim.log.levels.ERROR)
+                            return
+                        end
+
+                        for _, item in ipairs(selected) do
+                            local s = string.gsub(item, '\t+', '')
+                            if is_mac == 1 then
+                                vim.fn.jobstart({ 'open', s }, { detach = true })
+                            elseif is_unix == 1 then
+                                vim.fn.jobstart({ 'xdg-open', s }, { detach = true })
+                            end
+                        end
+                    end,
+                },
+                buffers = {
+                    ['default'] = actions.buf_edit,
+                    ['ctrl-s'] = actions.buf_split,
+                    ['ctrl-v'] = actions.buf_vsplit,
+                    ['ctrl-t'] = actions.buf_tabedit,
+                },
+            },
+            keymap = {
+                builtin = {
+                    ['§'] = 'toggle-preview',
+                    ['½'] = 'toggle-help',
+                },
+                fzf = {
+                    ['§'] = 'toggle-preview',
+                    ['ctrl-z'] = 'abort',
+                    ['ctrl-u'] = 'unix-line-discard',
+                    ['ctrl-f'] = 'half-page-down',
+                    ['ctrl-b'] = 'half-page-up',
+                    ['ctrl-a'] = 'beginning-of-line',
+                    ['ctrl-e'] = 'end-of-line',
+                    ['alt-a'] = 'toggle-all',
+                    ['f3'] = 'toggle-preview-wrap',
+                    ['f4'] = 'toggle-preview',
+                },
+            },
+            previewers = {
+                bat = {
+                    args = '--style=numbers,changes,header-filename,rule --color always --line-range=:1000',
+                },
+                builtin = {
+                    extensions = {
+                        ['gif'] = { 'chafa' },
+                        ['png'] = { 'chafa' },
+                        ['jpg'] = { 'chafa' },
+                        ['jpeg'] = { 'chafa' },
+                        ['svg'] = { 'chafa' },
+                    },
+                },
+            },
+            grep = {
+                rg_opts = '--column --line-number --no-heading --smart-case --max-columns=4096 --multiline ' ..
+                '--color=always --colors "path:fg:green" --colors "line:fg:yellow"',
+            },
+          })
+          vim.keymap.set('n', '<Leader>ff', fzf.builtin, { desc = 'Show fzf-lua builtins' })
+          vim.keymap.set('n', '<C-f>', fzf.grep_cWORD, { desc = 'Find text matching word under cursor' })
+          vim.keymap.set('x', '<C-f>', fzf.grep_visual, { desc = 'Find text matching visual selection' })
+          vim.keymap.set('n', '<Leader>,', fzf.files, { desc = 'Find files' })
+          vim.keymap.set('n', '<Leader>.', fzf.buffers, { desc = 'Find open buffers' })
+          vim.keymap.set('n', '<Leader>-', function()
+              fzf.grep_project({ search = '' })
+          end, { desc = 'Find text'  })
+          vim.keymap.set('n', '<Leader>;', fzf.git_files, { desc = 'Find files in git repo' })
+          vim.keymap.set('n', '<Leader>:', fzf.git_bcommits, { desc = 'Find commits affecting current file' })
+          vim.keymap.set('n', '<Leader>_', function()
+              fzf.grep_project({ search = '', cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h') })
+          end, { desc = 'Find text in git repo' })
+          vim.keymap.set('n', '<Leader>\'', fzf.oldfiles, { desc = 'Find recently opened files' })
+          vim.keymap.set('n', '<Leader>*', function()
+              fzf.files({ cwd = vim.fn.expand('$HOME') })
+          end, { desc = 'Find files in ~' })
       end
     },
-    { 'romainl/vim-cool', event = 'BufReadPost' },
 
     -- Manipulation
     { 'tommcdo/vim-lion',
@@ -101,7 +167,7 @@ return {
               vim.keymap.set('n', '<leader><Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
               vim.keymap.set('x', '<leader><Space>', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
               vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-              vim.keymap.set('n', '<leader>f', '<cmd>Format<CR>', opts)
+              vim.keymap.set('n', '<leader>fo', '<cmd>Format<CR>', opts)
               vim.keymap.set('n', '<leader>tt', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
               vim.keymap.set('n', '<leader>tr', '<cmd>TroubleToggle lsp_references<CR>', opts)
           end
@@ -269,7 +335,11 @@ return {
     },
 
     -- Miscellaneous
-    { 'editorconfig/editorconfig-vim' },
+    { 'editorconfig/editorconfig-vim',
+      cond = function()
+          return vim.fn.has('nvim-0.9') == 0
+      end
+    },
     { 'folke/which-key.nvim',
       config = function()
           require('which-key').setup({})
