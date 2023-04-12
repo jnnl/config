@@ -4,8 +4,27 @@
 set -eu
 
 script_name="$(basename $BASH_SOURCE)"
+
+usage() {
+    printf "Usage: $0 <OPTION> ...\n\n"
+    printf "Options:\n"
+    printf "  -i            prompt before executing each step\n"
+    printf "  -o <path>     output base path (default: $HOME)\n"
+    printf "\n"
+    exit 2
+}
+
 is_interactive=0
-[ "$#" -gt 0 ] && [[ "$@" =~ "-i" ]] && is_interactive=1
+outPath="$HOME"
+
+while getopts io: opt; do
+    case "$opt" in
+        h) usage;;
+        i) is_interactive=1;;
+	o) outPath="$OPTARG";;
+        ?) usage;;
+    esac
+done
 
 source utils
 
@@ -80,7 +99,7 @@ install_ubuntu_pkgs() {
 
     (
         set -eu
-        local bindir="$HOME/code/bin"
+        local bindir="$outPath/code/bin"
         mkdir -vp "$bindir"
         cd "$bindir"
         dl - "https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz" | tar -xz
@@ -89,7 +108,7 @@ install_ubuntu_pkgs() {
 
     (
         set -eu
-        local bindir="$HOME/code/bin"
+        local bindir="$outPath/code/bin"
         mkdir -vp "$bindir"
         cd "$bindir"
         dl direnv "https://github.com/direnv/direnv/releases/download/v2.32.2/direnv.linux-amd64"
@@ -115,7 +134,7 @@ install_arch_pkgs() {
 install_vimplug() {
     msg "Installing vim-plug..."
 
-    local plugdir="$HOME/.vim/autoload"
+    local plugdir="$outPath/.vim/autoload"
     local url="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
 
     mkdir -vp "$plugdir"
@@ -155,7 +174,7 @@ install_blocklets() {
 install_fzf() {
     msg "Installing fzf..."
 
-    local fzfdir="$HOME/.fzf"
+    local fzfdir="$outPath/.fzf"
     local tmpdir="$(mktemp -d /tmp/fzf-XXX)"
     local url="https://github.com/junegunn/fzf.git"
 
