@@ -24,7 +24,7 @@ while getopts bhio: opt; do
         b) should_create_backups=1;;
         h) usage;;
         i) is_interactive=1;;
-	o) outPath="$OPTARG";;
+        o) outPath="$(realpath $OPTARG)";;
         ?) usage;;
     esac
 done
@@ -38,7 +38,7 @@ create_dirs() {
     local directory
 
     for directory in $directories; do
-        mkdir -vp "$HOME/$directory"
+        mkdir -vp "$outPath/$directory"
     done
 
     msg_done
@@ -58,7 +58,7 @@ copy_files() {
     fi
 
     for file in $files; do
-        cp $cp_opts "$filedir/$file" "$HOME/$file"
+        cp $cp_opts "$filedir/$file" "$outPath/$file"
     done
 
     msg_done
