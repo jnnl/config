@@ -17,7 +17,7 @@ usage() {
 is_interactive=0
 outPath="$HOME"
 
-while getopts io: opt; do
+while getopts bhio: opt; do
     case "$opt" in
         h) usage;;
         i) is_interactive=1;;

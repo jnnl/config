@@ -19,7 +19,7 @@ should_create_backups=0
 is_interactive=0
 outPath="$HOME"
 
-while getopts io: opt; do
+while getopts bhio: opt; do
     case "$opt" in
         b) should_create_backups=1;;
         h) usage;;
@@ -65,7 +65,8 @@ copy_files() {
 }
 
 main() {
-    msg "Starting $script_name...\n"
+    msg "Starting $script_name..."
+    msg "Output base path: $outPath\n"
 
     exec_step copy_files
 
