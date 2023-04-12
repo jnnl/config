@@ -169,20 +169,23 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'css', 'scss', 'html', 'typescript' },
-    callback = function()
+    pattern = { 'html', 'scss', 'typescript' },
+    callback = function(event)
         local create_cmd = function(name, command)
             vim.api.nvim_create_user_command(name, command, { bang = true })
         end
-        create_cmd('ET', ':e %:p:r.html')
-        create_cmd('EC', ':e %:p:r.ts')
-        create_cmd('ES', ':e %:p:r.scss')
-        create_cmd('ST', ':sp %:p:r.html')
-        create_cmd('SC', ':sp %:p:r.ts')
-        create_cmd('SS', ':sp %:p:r.scss')
-        create_cmd('VT', ':vs %:p:r.html')
-        create_cmd('VC', ':vs %:p:r.ts')
-        create_cmd('VS', ':vs %:p:r.scss')
+        local is_angular = vim.fn.findfile('angular.json', '.;') ~= ''
+        if is_angular then
+            create_cmd('ET', ':e %:p:r.html')
+            create_cmd('EC', ':e %:p:r.ts')
+            create_cmd('ES', ':e %:p:r.scss')
+            create_cmd('ST', ':sp %:p:r.html')
+            create_cmd('SC', ':sp %:p:r.ts')
+            create_cmd('SS', ':sp %:p:r.scss')
+            create_cmd('VT', ':vs %:p:r.html')
+            create_cmd('VC', ':vs %:p:r.ts')
+            create_cmd('VS', ':vs %:p:r.scss')
+        end
     end
 })
 
