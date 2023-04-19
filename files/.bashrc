@@ -95,6 +95,11 @@ elif test -f /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-p
     source "$_"
 fi
 
+# git completion
+if test -f /opt/homebrew/etc/bash_completion.d/git-completion.bash; then
+    source "$_"
+fi
+
 if has __git_ps1; then
     PS1="\u:\W\$(__git_ps1)\$(__nstopjobs) $ "
 else
