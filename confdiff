@@ -1,0 +1,24 @@
+#!/bin/bash
+
+source utils
+
+usage() {
+    printf "Usage: $0 <OPTION> ...\n\n"
+    printf "Options:\n"
+    printf "  -o <path>     output base path (default: $HOME)\n"
+    printf "\n"
+    exit 2
+}
+
+outPath="$HOME"
+
+while getopts ho: opt; do
+    case "$opt" in
+        h) usage;;
+        o) outPath="$(realpath $OPTARG)";;
+        ?) usage;;
+    esac
+done
+shift $((OPTIND-1))
+
+diff -ry --suppress-common-lines -W "$(tput cols)" "$outPath" "$filedir" | grep -ve "^Only in $outPath"
