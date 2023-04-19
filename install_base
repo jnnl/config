@@ -131,27 +131,6 @@ install_arch_pkgs() {
     msg_done
 }
 
-install_vimplug() {
-    msg "Installing vim-plug..."
-
-    local plugdir="$outPath/.vim/autoload"
-    local url="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-
-    mkdir -vp "$plugdir"
-    dl "$plugdir/plug.vim" "$url"
-
-    if has nvim; then
-        nvim +PlugUpdate +qa
-    elif has vim; then
-        vim +PlugUpdate +qa
-    else
-        warn "No vim or neovim found, skipping vim-plug install."
-        return
-    fi
-
-    msg_done
-}
-
 install_blocklets() {
     msg "Installing i3blocks blocklets..."
 
@@ -240,7 +219,6 @@ main() {
     fi
 
     exec_step install_fzf
-    # exec_step install_vimplug
     exec_step install_z
     # exec_step install_langservers
 
