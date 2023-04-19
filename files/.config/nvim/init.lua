@@ -105,8 +105,12 @@ vim.opt.undofile = true
 vim.keymap.set('n', '<BS>', '<C-^>')
 vim.keymap.set('n', '\'', '`')
 vim.keymap.set('n', '_', ',')
-vim.keymap.set('n', 'ö', '<C-o>')
-vim.keymap.set('n', 'ä', '<C-i>')
+vim.keymap.set('n', 'öö', '<C-o>', { desc = 'Go to previous jump list position' })
+vim.keymap.set('n', 'ää', '<C-i>', { desc = 'Go to next jump list position' })
+vim.keymap.set('n', 'öj', '<C-o>', { desc = 'Go to previous jump list position' })
+vim.keymap.set('n', 'äj', '<C-i>', { desc = 'Go to next jump list position' })
+vim.keymap.set('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
+vim.keymap.set('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 
 vim.keymap.set('n', 'j', function() return vim.v.count == 0 and 'gj' or 'j' end, { expr = true })
 vim.keymap.set('n', 'k', function() return vim.v.count == 0 and 'gk' or 'k' end, { expr = true })
@@ -170,7 +174,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'html', 'scss', 'typescript' },
-    callback = function(event)
+    callback = function()
         local create_cmd = function(name, command)
             vim.api.nvim_create_user_command(name, command, { bang = true })
         end

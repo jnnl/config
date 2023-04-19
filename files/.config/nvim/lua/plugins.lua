@@ -38,11 +38,11 @@ return {
                         end
 
                         for _, item in ipairs(selected) do
-                            local s = string.gsub(item, '\t+', '')
+                            local selected_item = string.gsub(item, '\t+', '')
                             if is_mac == 1 then
-                                vim.fn.jobstart({ 'open', s }, { detach = true })
+                                vim.fn.jobstart({ 'open', selected_item }, { detach = true })
                             elseif is_unix == 1 then
-                                vim.fn.jobstart({ 'xdg-open', s }, { detach = true })
+                                vim.fn.jobstart({ 'xdg-open', selected_item }, { detach = true })
                             end
                         end
                     end,
@@ -88,7 +88,7 @@ return {
             },
             grep = {
                 rg_opts = '--column --line-number --no-heading --smart-case --max-columns=4096 --multiline ' ..
-                '--color=always --colors "path:fg:green" --colors "line:fg:yellow"',
+                          '--color=always --colors "path:fg:green" --colors "line:fg:yellow"',
             },
           })
           vim.keymap.set('n', '<Leader>ff', fzf.builtin, { desc = 'Show fzf-lua builtins' })
@@ -197,6 +197,7 @@ return {
               'cssls',
               'gopls',
               'html',
+              'lua_ls',
               'pyright',
               'rust_analyzer',
               'tsserver'
@@ -207,16 +208,12 @@ return {
                   require('typescript').setup({
                       server = {
                           capabilities = capabilities,
-                          on_attach = function(client, bufnr)
-                              local_on_attach(client, bufnr)
-                          end
                       }
                   })
               elseif server == 'angularls' then
                   local lsPath = vim.fn.expand('$HOME/.local/lib/node_modules')
                   local cmd = { 'ngserver', '--stdio', '--tsProbeLocations', lsPath, '--ngProbeLocations', lsPath }
                   lsp.angularls.setup({
-                      on_attach = on_attach,
                       capabilities = capabilities,
                       cmd = cmd,
                       filetypes = { 'html' },
@@ -224,10 +221,28 @@ return {
                           new_config.cmd = cmd
                       end,
                   })
+              elseif server == 'lua_ls' then
+                  lsp.lua_ls.setup({
+                      settings = {
+                          Lua = {
+                              runtime = {
+                                  version = 'LuaJIT',
+                              },
+                              diagnostics = {
+                                  globals = {'vim'},
+                              },
+                              workspace = {
+                                  library = vim.api.nvim_get_runtime_file('', true),
+                              },
+                              telemetry = {
+                                  enable = false,
+                              },
+                          },
+                      },
+                  })
               else
                   lsp[server].setup({
                       capabilities = capabilities,
-                      on_attach = local_on_attach,
                   })
               end
           end
@@ -373,8 +388,8 @@ return {
     { 'nvim-lua/plenary.nvim' },
     { 'romainl/vim-qf',
       config = function()
-        vim.keymap.set('n', 'Ö', '<Plug>(qf_qf_previous)')
-        vim.keymap.set('n', 'Ä', '<Plug>(qf_qf_next)')
+        vim.keymap.set('n', 'öq', '<Plug>(qf_qf_previous)')
+        vim.keymap.set('n', 'äq', '<Plug>(qf_qf_next)')
       end
     },
     { 'tpope/vim-repeat' },
