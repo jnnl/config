@@ -146,33 +146,49 @@ return {
           'folke/trouble.nvim'
       },
       config = function()
-          local cmp_nvim_lsp = require('cmp_nvim_lsp')
           local lsp = require('lspconfig')
 
-          local local_on_attach = function(_, bufnr)
-              vim.diagnostic.config({ virtual_text = false })
-              vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-              vim.cmd('command! Format execute "lua vim.lsp.buf.format({ async = true })"')
+          vim.api.nvim_create_autocmd('LspAttach', {
+              group = vim.api.nvim_create_augroup('LspConfig', {}),
+              callback = function(ev)
+                vim.diagnostic.config({ virtual_text = false })
+                vim.cmd('command! Format execute "lua vim.lsp.buf.format({ async = true })"')
+                vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-              local opts = { noremap = true, silent = true, buffer = bufnr }
+                local opts = { noremap = true, silent = true, buffer = ev.buf }
 
-              vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-              vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-              vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-              vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-              vim.keymap.set('n', 'gö', '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.WARN}})<CR>', opts)
-              vim.keymap.set('n', 'gä', '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.WARN}})<CR>', opts)
-              vim.keymap.set('n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-              vim.keymap.set('n', '<C-Space>', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-              vim.keymap.set('n', '<leader><Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-              vim.keymap.set('x', '<leader><Space>', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
-              vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-              vim.keymap.set('n', '<leader>fo', '<cmd>Format<CR>', opts)
-              vim.keymap.set('n', '<leader>tt', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
-              vim.keymap.set('n', '<leader>tr', '<cmd>TroubleToggle lsp_references<CR>', opts)
-          end
+                vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+                vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+                vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+                vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+                vim.keymap.set('n', 'ög',
+                    '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
+                    vim.tbl_extend('force', opts, { desc = 'Go to previous WARN+ diagnostic' })
+                )
+                vim.keymap.set('n', 'äg',
+                    '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
+                    vim.tbl_extend('force', opts, { desc = 'Go to next WARN+ diagnostic' })
+                )
+                vim.keymap.set('n', 'öG',
+                    '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.HINT}})<CR>',
+                    vim.tbl_extend('force', opts, { desc = 'Go to next HINT+ diagnostic' })
+                )
+                vim.keymap.set('n', 'äG',
+                    '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.HINT}})<CR>',
+                    vim.tbl_extend('force', opts, { desc = 'Go to next HINT+ diagnostic' })
+                )
+                vim.keymap.set('n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+                vim.keymap.set('n', '<C-Space>', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+                vim.keymap.set('n', '<leader><Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+                vim.keymap.set('x', '<leader><Space>', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
+                vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+                vim.keymap.set('n', '<leader>fo', '<cmd>Format<CR>', opts)
+                vim.keymap.set('n', '<leader>tt', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
+                vim.keymap.set('n', '<leader>tr', '<cmd>TroubleToggle lsp_references<CR>', opts)
+            end,
+          })
 
-          local capabilities = cmp_nvim_lsp.default_capabilities()
+          local capabilities = require('cmp_nvim_lsp').default_capabilities()
           capabilities.textDocument.completion.completionItem.snippetSupport = true
 
           local servers = {
