@@ -7,7 +7,6 @@ return {
       end
     },
     { 'ggandor/leap.nvim',
-      event = 'BufReadPost',
       config = function()
           require('leap').add_default_mappings()
       end
@@ -87,22 +86,24 @@ return {
                 },
             },
             grep = {
-                rg_opts = '--column --line-number --no-heading --smart-case --max-columns=4096 --multiline ' ..
+                rg_opts = '--column --line-number --no-heading --hidden --smart-case --max-columns=4096 ' ..
                           '--color=always --colors "path:fg:green" --colors "line:fg:yellow"',
+                rg_glob = true,
             },
           })
           vim.keymap.set('n', '<Leader>ff', fzf.builtin, { desc = 'Show fzf-lua builtins' })
+          vim.keymap.set('n', '<Leader>fr', fzf.resume, { desc = 'Resume most recent fzf-lua search' })
           vim.keymap.set('n', '<C-f>', fzf.grep_cWORD, { desc = 'Find text matching word under cursor' })
           vim.keymap.set('x', '<C-f>', fzf.grep_visual, { desc = 'Find text matching visual selection' })
           vim.keymap.set('n', '<Leader>,', fzf.files, { desc = 'Find files' })
           vim.keymap.set('n', '<Leader>.', fzf.buffers, { desc = 'Find open buffers' })
           vim.keymap.set('n', '<Leader>-', function()
-              fzf.grep_project({ search = '' })
-          end, { desc = 'Find text'  })
+              fzf.grep_project({ fzf_opts = { ['--nth'] = '2..', ['--delimiter'] = ':' } })
+          end, { desc = 'Find text' })
           vim.keymap.set('n', '<Leader>;', fzf.git_files, { desc = 'Find files in git repo' })
           vim.keymap.set('n', '<Leader>:', fzf.git_bcommits, { desc = 'Find commits affecting current file' })
           vim.keymap.set('n', '<Leader>_', function()
-              fzf.grep_project({ search = '', cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h') })
+              fzf.grep_project({ cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h') })
           end, { desc = 'Find text in git repo' })
           vim.keymap.set('n', '<Leader>\'', fzf.oldfiles, { desc = 'Find recently opened files' })
           vim.keymap.set('n', '<Leader>*', function()
