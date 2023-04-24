@@ -145,7 +145,7 @@ vim.api.nvim_create_user_command('NonAscii', '/[^\\x00-\\x7F]', { bang = true })
 vim.api.nvim_create_user_command('Unansify', ':%s/\\%x1b\\[[0-9;]*[a-zA-Z]//ge', { bang = true })
 vim.api.nvim_create_user_command('Rstrip', function()
     vim.cmd(':%s/\\s\\+$//e')
-    vim.cmd(':%s/\r//g')
+    vim.cmd(':%s/\r//ge')
 end, { bang = true })
 vim.api.nvim_create_user_command('CloseFloatingWindows', function()
     for _, win in ipairs(vim.api.nvim_list_wins()) do
