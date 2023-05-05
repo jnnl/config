@@ -8,33 +8,37 @@ vim.g.maplocalleader = ','
 
 -- Plugins
 
-local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
+local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazy_path) then
     vim.notify('lazy.nvim not found, installing...', vim.log.levels.INFO)
-    vim.fn.system({ 'git', 'clone', 'https://github.com/folke/lazy.nvim.git', '--branch=stable', lazypath })
+    vim.fn.system({ 'git', 'clone', 'https://github.com/folke/lazy.nvim.git', '--branch=stable', lazy_path })
 end
-vim.opt.rtp:prepend(lazypath)
+vim.opt.rtp:prepend(lazy_path)
 
-require('lazy').setup('plugins', {
-    defaults = {
-        lazy = false,
-    },
-    lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
-    performance = {
-        rtp = {
-            disabled_plugins = {
-                "gzip",
-                "matchit",
-                "matchparen",
-                "netrwPlugin",
-                "rplugin",
-                "tohtml",
-                "tutor",
+local lazy_ok, lazy = pcall(require, 'lazy')
+if lazy_ok then
+    lazy.setup('plugins', {
+        defaults = {
+            lazy = false,
+        },
+        lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
+        performance = {
+            rtp = {
+                disabled_plugins = {
+                    "gzip",
+                    "matchit",
+                    "matchparen",
+                    "netrwPlugin",
+                    "rplugin",
+                    "tohtml",
+                    "tutor",
+                },
             },
         },
-    },
-})
-
+    })
+else
+    vim.notify('failed to load lazy.nvim, plugins are disabled...', vim.log.levels.WARN)
+end
 
 
 -- General
@@ -87,8 +91,8 @@ if vim.fn.has('termguicolors') == 1 then
     vim.opt.termguicolors = true
 end
 
-local ok, _ = pcall(vim.cmd.colorscheme, 'tonight')
-if not ok then
+local colorscheme_ok, _ = pcall(vim.cmd.colorscheme, 'tonight')
+if not colorscheme_ok then
     vim.notify('failed to load default colorscheme, using fallback...')
     vim.cmd.colorscheme('desert')
 end
