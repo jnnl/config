@@ -21,7 +21,7 @@ return {
             'default',
             actions = {
                 files = {
-                    ['default'] = actions.file_edit,
+                    ['default'] = actions.file_edit_or_qf,
                     ['alt-q'] = actions.file_sel_to_qf,
                     ['alt-l'] = actions.file_sel_to_ll,
                     ['ctrl-s'] = actions.file_split,
@@ -109,6 +109,16 @@ return {
           vim.keymap.set('n', '<Leader>*', function()
               fzf.files({ cwd = vim.fn.expand('$HOME') })
           end, { desc = 'Find files in ~' })
+          vim.keymap.set('n', '<Leader>fgc', function()
+              fzf.fzf_exec('git dmc', {
+                  prompt = 'GitConflicts> ',
+                  cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h'),
+                  preview = "git dt",
+                  actions = {
+                      ["default"] = actions.file_edit_or_qf,
+                  },
+              })
+          end, { desc = 'Find git merge conflicts' })
       end
     },
 
