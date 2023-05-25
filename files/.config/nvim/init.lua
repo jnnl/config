@@ -52,6 +52,7 @@ vim.opt.mouse = ''
 vim.opt.shortmess:append('c')
 vim.opt.showcmd = true
 vim.opt.timeoutlen = 500
+vim.opt.fillchars:append('eob: ')
 
 
 -- Statusline
