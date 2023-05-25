@@ -1,9 +1,0 @@
-#!/bin/bash
-
-set -eu
-source utils
-
-"$scriptdir/install_base" "$*"
-"$scriptdir/install_config" "$*"
-
-printf "<<< all done!\n"

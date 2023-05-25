@@ -26,7 +26,7 @@ while getopts bhio: opt; do
     esac
 done
 
-source utils
+source utils.sh
 
 configure_mac() {
     msg "Configuring macOS defaults..."

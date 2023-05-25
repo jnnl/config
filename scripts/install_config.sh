@@ -29,12 +29,12 @@ while getopts bhio: opt; do
     esac
 done
 
-source utils
+source utils.sh
 
 create_dirs() {
     msg "Creating directories..."
 
-    local directories="$(find $scriptdir/files -mindepth 1 -type d | sed 's|^'$scriptdir/files'/||')"
+    local directories="$(find $filedir -mindepth 1 -type d | sed 's|^'$filedir'/||')"
     local directory
 
     for directory in $directories; do
@@ -50,7 +50,7 @@ copy_files() {
 
     msg "Copying files..."
 
-    local files="$(find $scriptdir/files -type f | sed 's|^'$scriptdir/files'/||')"
+    local files="$(find $filedir -type f | sed 's|^'$filedir'/||')"
     local file
     local cp_opts="-v"
     if test "$should_create_backups" = "1"; then

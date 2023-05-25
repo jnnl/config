@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source utils
+source utils.sh
 
 usage() {
     printf "Usage: $0 <OPTION> ...\n\n"
