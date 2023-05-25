@@ -1,6 +1,8 @@
 #!/bin/bash
 
-source utils.sh
+set -eu
+
+source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
 
 usage() {
     printf "Usage: $0 <OPTION> ...\n\n"

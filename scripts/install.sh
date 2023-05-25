@@ -1,7 +1,8 @@
 #!/bin/bash
 
 set -eu
-source utils
+
+source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
 
 "$scriptdir/install_base.sh" "$*"
 "$scriptdir/install_config.sh" "$*"

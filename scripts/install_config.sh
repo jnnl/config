@@ -29,7 +29,7 @@ while getopts bhio: opt; do
     esac
 done
 
-source utils.sh
+source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
 
 create_dirs() {
     msg "Creating directories..."
