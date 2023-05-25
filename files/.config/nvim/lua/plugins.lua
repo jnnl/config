@@ -113,7 +113,7 @@ return {
               fzf.fzf_exec('git dmc', {
                   prompt = 'GitConflicts> ',
                   cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h'),
-                  preview = "git dt",
+                  preview = "awk '/<<<<<<</, />>>>>>>/ { print NR\"\\t\"$0 }' {1}",
                   actions = {
                       ["default"] = actions.file_edit_or_qf,
                   },
