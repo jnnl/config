@@ -130,8 +130,8 @@ return {
       end
     },
     { 'tpope/vim-abolish' },
-    { 'tpope/vim-commentary', event = 'BufReadPre' },
-    { 'tpope/vim-surround', event = 'BufReadPre' },
+    { 'tpope/vim-commentary', event = { 'BufNewFile', 'BufReadPre' } },
+    { 'tpope/vim-surround', event = { 'BufNewFile', 'BufReadPre' } },
 
     -- Colorschemes
     { 'jnnl/vim-tonight' },
@@ -152,7 +152,7 @@ return {
 
     -- LSP
     { 'neovim/nvim-lspconfig',
-      event = 'BufReadPre',
+      event = { 'BufNewFile', 'BufReadPre' },
       dependencies = {
           'folke/trouble.nvim'
       },
