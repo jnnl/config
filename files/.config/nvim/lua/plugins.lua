@@ -39,8 +39,10 @@ return {
                         for _, item in ipairs(selected) do
                             local selected_item = string.gsub(item, '\t+', '')
                             if is_mac == 1 then
+                                vim.notify('opening file ' .. selected_item)
                                 vim.fn.jobstart({ 'open', selected_item }, { detach = true })
                             elseif is_unix == 1 then
+                                vim.notify('opening file ' .. selected_item)
                                 vim.fn.jobstart({ 'xdg-open', selected_item }, { detach = true })
                             end
                         end
@@ -95,10 +97,12 @@ return {
           vim.keymap.set('n', '<Leader>fr', fzf.resume, { desc = 'Resume most recent fzf-lua search' })
           vim.keymap.set('n', '<C-f>', fzf.grep_cWORD, { desc = 'Find text matching word under cursor' })
           vim.keymap.set('x', '<C-f>', fzf.grep_visual, { desc = 'Find text matching visual selection' })
-          vim.keymap.set('n', '<Leader>,', fzf.files, { desc = 'Find files' })
+          vim.keymap.set('n', '<Leader>,', function()
+              fzf.files({ fzf_opts = { ['--scheme'] = 'path' } })
+          end, { desc = 'Find files' })
           vim.keymap.set('n', '<Leader>.', fzf.buffers, { desc = 'Find open buffers' })
           vim.keymap.set('n', '<Leader>-', function()
-              fzf.grep_project({ fzf_opts = { ['--nth'] = '2..', ['--delimiter'] = ':' } })
+              fzf.grep_project({ fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' } })
           end, { desc = 'Find text' })
           vim.keymap.set('n', '<Leader>;', fzf.git_files, { desc = 'Find files in git repo' })
           vim.keymap.set('n', '<Leader>:', fzf.git_bcommits, { desc = 'Find commits affecting current file' })
