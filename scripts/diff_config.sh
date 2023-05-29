@@ -23,4 +23,4 @@ while getopts ho: opt; do
 done
 shift $((OPTIND-1))
 
-diff -r --suppress-common-lines --color=always -W "$(tput cols)" "$outPath" "$filedir" | grep -ve "^Only in $outPath"
+diff -r --suppress-common-lines --color=always -W "$(tput cols)" "$outPath" "$(realpath $filedir)" | grep -ve "^Only in $outPath"
