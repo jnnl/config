@@ -53,7 +53,7 @@ vim.opt.shortmess:append('c')
 vim.opt.showcmd = true
 vim.opt.timeoutlen = 500
 vim.opt.fillchars:append('eob: ')
-vim.opt.shada:prepend('r/tmp/,rfugitive:,rterm:,rzipfile:')
+vim.opt.shada:prepend('r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:')
 
 
 -- Statusline
