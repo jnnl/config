@@ -8,19 +8,19 @@ script_name="$(basename $BASH_SOURCE)"
 usage() {
     printf "Usage: $0 <OPTION> ...\n\n"
     printf "Options:\n"
-    printf "  -i            prompt before executing each step\n"
+    printf "  -f            execute each step without prompting for confirmation\n"
     printf "  -o <path>     output base path (default: $HOME)\n"
     printf "\n"
     exit 2
 }
 
-is_interactive=0
+is_interactive=1
 outPath="$HOME"
 
-while getopts bhio: opt; do
+while getopts bfho: opt; do
     case "$opt" in
         h) usage;;
-        i) is_interactive=1;;
+        f) is_interactive=0;;
         o) outPath="$(realpath $OPTARG)";;
         ?) usage;;
     esac

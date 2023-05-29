@@ -9,21 +9,21 @@ usage() {
     printf "Usage: $0 <OPTION> ...\n\n"
     printf "Options:\n"
     printf "  -b            make a backup of each existing config file\n"
-    printf "  -i            prompt before executing each step\n"
+    printf "  -f            execute each step without prompting for confirmation\n"
     printf "  -o <path>     output base path (default: $HOME)\n"
     printf "\n"
     exit 2
 }
 
 should_create_backups=0
-is_interactive=0
+is_interactive=1
 outPath="$HOME"
 
-while getopts bhio: opt; do
+while getopts bfho: opt; do
     case "$opt" in
         b) should_create_backups=1;;
+        f) is_interactive=0;;
         h) usage;;
-        i) is_interactive=1;;
         o) outPath="$(realpath $OPTARG)";;
         ?) usage;;
     esac
@@ -52,13 +52,13 @@ copy_files() {
 
     local files="$(find $filedir -type f | sed 's|^'$filedir'/||')"
     local file
-    local cp_opts="-v"
-    if test "$should_create_backups" = "1"; then
-        cp_opts="$cp_opts -b"
-    fi
 
     for file in $files; do
-        cp $cp_opts "$filedir/$file" "$outPath/$file"
+        if test "$should_create_backups" = "1"; then
+            cp -bv "$filedir/$file" "$outPath/$file"
+        else
+            cp -v "$filedir/$file" "$outPath/$file"
+        fi
     done
 
     msg_done
