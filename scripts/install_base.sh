@@ -19,8 +19,8 @@ outPath="$HOME"
 
 while getopts bfho: opt; do
     case "$opt" in
-        h) usage;;
         f) is_interactive=0;;
+        h) usage;;
         o) outPath="$(realpath $OPTARG)";;
         ?) usage;;
     esac

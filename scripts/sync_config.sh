@@ -7,7 +7,7 @@ source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
 usage() {
     printf "Usage: $0 <OPTION> ...\n\n"
     printf "Options:\n"
-    printf "  -f            execute each step without prompting for confirmation\n"
+    printf "  -f            sync all changed files without prompting for confirmation\n"
     printf "  -i <path>     input base path (default: $HOME)\n"
     printf "\n"
     exit 2
@@ -18,8 +18,8 @@ inPath="$HOME"
 
 while getopts fhi: opt; do
     case "$opt" in
-        h) usage;;
         f) is_interactive=0;;
+        h) usage;;
         i) inPath="$(realpath $OPTARG)";;
         ?) usage;;
     esac
@@ -39,8 +39,8 @@ while read line <&3; do
     fi
 
     if test "$is_interactive" = "1"; then
-        cp -i "$source_file" "$destination_file"
+        cp -iv "$source_file" "$destination_file"
     else
-        cp "$source_file" "$destination_file"
+        cp -v "$source_file" "$destination_file"
     fi
 done 3<<< $(diff -qr "$inPath" "$filedir" | awk '!/^Only in/ { print $2, $4 }')
