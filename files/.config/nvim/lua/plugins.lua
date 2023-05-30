@@ -16,17 +16,12 @@ return {
     { 'ibhagwan/fzf-lua',
       config = function()
           local fzf = require('fzf-lua')
+          local defaults = require('fzf-lua.defaults').defaults
           local actions = require('fzf-lua.actions')
           fzf.setup({
             'default',
             actions = {
-                files = {
-                    ['default'] = actions.file_edit_or_qf,
-                    ['alt-q'] = actions.file_sel_to_qf,
-                    ['alt-l'] = actions.file_sel_to_ll,
-                    ['ctrl-s'] = actions.file_split,
-                    ['ctrl-t'] = actions.file_tabedit,
-                    ['ctrl-v'] = actions.file_vsplit,
+                files = vim.tbl_deep_extend('force', defaults.actions.files, {
                     ['ctrl-o'] = function(selected)
                         local is_mac = vim.fn.has('mac')
                         local is_unix = vim.fn.has('unix')
@@ -47,32 +42,25 @@ return {
                             end
                         end
                     end,
-                },
-                buffers = {
-                    ['default'] = actions.buf_edit,
-                    ['ctrl-s'] = actions.buf_split,
-                    ['ctrl-v'] = actions.buf_vsplit,
-                    ['ctrl-t'] = actions.buf_tabedit,
-                },
+                    ['ctrl-p'] = function(selected)
+                        vim.cmd('vsplit')
+                        local win = vim.api.nvim_get_current_win()
+                        local buf = vim.api.nvim_create_buf(true, true)
+                        vim.api.nvim_buf_set_lines(buf, 0, 0, false, selected)
+                        vim.api.nvim_win_set_buf(win, buf)
+                        vim.cmd('$delete')
+                    end,
+                }),
             },
-            keymap = {
+            keymap = vim.tbl_deep_extend('force', defaults.keymap, {
                 builtin = {
                     ['§'] = 'toggle-preview',
                     ['½'] = 'toggle-help',
                 },
                 fzf = {
                     ['§'] = 'toggle-preview',
-                    ['ctrl-z'] = 'abort',
-                    ['ctrl-u'] = 'unix-line-discard',
-                    ['ctrl-f'] = 'half-page-down',
-                    ['ctrl-b'] = 'half-page-up',
-                    ['ctrl-a'] = 'beginning-of-line',
-                    ['ctrl-e'] = 'end-of-line',
-                    ['alt-a'] = 'toggle-all',
-                    ['f3'] = 'toggle-preview-wrap',
-                    ['f4'] = 'toggle-preview',
                 },
-            },
+            }),
             previewers = {
                 bat = {
                     args = '--style=numbers,changes,header-filename,rule --color always --line-range=:1000',
