@@ -1,4 +1,5 @@
 #!/bin/bash
+# install packages, setup os config and install config files
 
 set -eu
 

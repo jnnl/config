@@ -1,4 +1,5 @@
 #!/bin/bash
+# diff local and repo configs
 
 set -eu
 

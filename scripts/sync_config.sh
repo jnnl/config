@@ -1,4 +1,5 @@
 #!/bin/bash
+# copy changed local config files to repo
 
 set -eu
 
