@@ -55,7 +55,11 @@ copy_files() {
 
     for file in $files; do
         if test "$should_create_backups" = "1"; then
-            cp -bv "$filedir/$file" "$outPath/$file"
+            if is_mac; then
+                rsync -ab "$filedir/$file" "$outPath/$file" && printf "$filedir/$file -> $outPath/$file\n"
+            else
+                cp -bv "$filedir/$file" "$outPath/$file"
+            fi
         else
             cp -v "$filedir/$file" "$outPath/$file"
         fi
@@ -67,6 +71,10 @@ copy_files() {
 main() {
     msg "Starting $script_name..."
     msg "Output base path: $outPath\n"
+
+    if test "$should_create_backups" != "1"; then
+        msg "NOTE: backup not enabled, existing config files will be overwritten\n"
+    fi
 
     exec_step copy_files
 
