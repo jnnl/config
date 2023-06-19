@@ -82,7 +82,6 @@ return {
             },
           })
           vim.keymap.set('n', '<Leader>ff', fzf.builtin, { desc = 'Show fzf-lua builtins' })
-          vim.keymap.set('n', '<Leader>fr', fzf.resume, { desc = 'Resume most recent fzf-lua search' })
           vim.keymap.set('n', '<C-f>', fzf.grep_cWORD, { desc = 'Find text matching word under cursor' })
           vim.keymap.set('x', '<C-f>', fzf.grep_visual, { desc = 'Find text matching visual selection' })
           vim.keymap.set('n', '<Leader>,', function()
@@ -92,12 +91,12 @@ return {
           vim.keymap.set('n', '<Leader>-', function()
               fzf.grep_project({ fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' } })
           end, { desc = 'Find text' })
-          vim.keymap.set('n', '<Leader>;', fzf.git_files, { desc = 'Find files in git repo' })
+          vim.keymap.set('n', '<Leader>;', fzf.oldfiles, { desc = 'Find recently opened files' })
           vim.keymap.set('n', '<Leader>:', fzf.git_bcommits, { desc = 'Find commits affecting current file' })
           vim.keymap.set('n', '<Leader>_', function()
               fzf.grep_project({ cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h') })
           end, { desc = 'Find text in git repo' })
-          vim.keymap.set('n', '<Leader>\'', fzf.oldfiles, { desc = 'Find recently opened files' })
+          vim.keymap.set('n', '<Leader>\'', fzf.resume, { desc = 'Resume most recent fzf-lua search' })
           vim.keymap.set('n', '<Leader>*', function()
               fzf.files({ cwd = vim.fn.expand('$HOME') })
           end, { desc = 'Find files in ~' })
@@ -160,10 +159,11 @@ return {
 
                 local opts = { noremap = true, silent = true, buffer = ev.buf }
 
-                vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
                 vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-                vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-                vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+                vim.keymap.set('n', 'gD', '<cmd>FzfLua lsp_definitions<CR>', opts)
+                vim.keymap.set('n', 'gi', '<cmd>FzfLua lsp_implementations<CR>', opts)
+                vim.keymap.set('n', 'gr', '<cmd>FzfLua lsp_references<CR>', opts)
+                vim.keymap.set('n', 'gt', '<cmd>FzfLua lsp_typedefs<CR>', opts)
                 vim.keymap.set('n', 'ög',
                     '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
                     vim.tbl_extend('force', opts, { desc = 'Go to previous WARN+ diagnostic' })
@@ -185,7 +185,7 @@ return {
                 vim.keymap.set('n', '<leader><Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
                 vim.keymap.set('x', '<leader><Space>', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
                 vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-                vim.keymap.set('n', '<leader>fo', '<cmd>Format<CR>', opts)
+                vim.keymap.set('n', '<leader>xf', '<cmd>Format<CR>', opts)
                 vim.keymap.set('n', '<leader>tt', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
                 vim.keymap.set('n', '<leader>tr', '<cmd>TroubleToggle lsp_references<CR>', opts)
             end,
@@ -219,7 +219,7 @@ return {
                   lsp.angularls.setup({
                       capabilities = capabilities,
                       cmd = cmd,
-                      filetypes = { 'html' },
+                      filetypes = { 'ts', 'html' },
                       on_new_config = function(new_config, new_root_dir)
                           new_config.cmd = cmd
                       end,

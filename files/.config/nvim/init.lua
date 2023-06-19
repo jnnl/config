@@ -115,6 +115,8 @@ vim.keymap.set('n', 'öö', '<C-o>', { desc = 'Go to previous jump list position
 vim.keymap.set('n', 'ää', '<C-i>', { desc = 'Go to next jump list position' })
 vim.keymap.set('n', 'öj', '<C-o>', { desc = 'Go to previous jump list position' })
 vim.keymap.set('n', 'äj', '<C-i>', { desc = 'Go to next jump list position' })
+vim.keymap.set('n', '<S-Tab>', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
+vim.keymap.set('n', '<Tab>', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 vim.keymap.set('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
 vim.keymap.set('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 
