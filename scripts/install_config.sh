@@ -107,6 +107,10 @@ main() {
         msg "NOTE: backup not enabled, existing config files will be overwritten\n"
     fi
 
+    if test "$should_use_file_pattern" = "1" -a "$is_interactive" = "1"; then
+        msg "NOTE: install file pattern specified, you will be prompted before copying each matching file\n"
+    fi
+
     exec_step copy_files
 
     printf "\n<<< Completed $script_name.\n\n"
