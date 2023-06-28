@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # diff local and repo configs
+
+trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
@@ -24,4 +26,4 @@ while getopts ho: opt; do
 done
 shift $((OPTIND-1))
 
-diff -r --suppress-common-lines --color=always -W "$(tput cols)" "$outPath" "$(realpath $filedir)" | grep -ve "^Only in $outPath"
+diff -r --suppress-common-lines --color=always -W "$(tput cols)" "$outPath" "$(realpath $filedir)" | grep -ve "^Only in $outPath" || true

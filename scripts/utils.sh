@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # utility functions
+
+trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
@@ -42,6 +44,10 @@ is_distro() {
     grep -qsx "ID=\"*$1\"*" /etc/os-release
 }
 
+is_arch() {
+    test "$(uname -m)" = "$1"
+}
+
 dl() {
     if has curl; then
         curl -#fLo $*
@@ -64,4 +70,3 @@ exec_step() {
         $*
     fi
 }
-

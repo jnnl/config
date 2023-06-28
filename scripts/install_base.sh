@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install packages and setup os config
+
+trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
@@ -16,6 +18,7 @@ usage() {
 
 is_interactive=1
 outPath="$HOME"
+localBinPath="$outPath/code/bin"
 
 while getopts bfho: opt; do
     case "$opt" in
@@ -27,6 +30,14 @@ while getopts bfho: opt; do
 done
 
 source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
+
+configure_env() {
+    msg "Configuring common environment..."
+
+    mkdir -vp "$localBinPath"
+
+    msg_done
+}
 
 configure_mac() {
     msg "Configuring macOS defaults..."
@@ -80,7 +91,7 @@ install_homebrew() {
     fi
 
     msg "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     msg_done
 }
@@ -99,19 +110,17 @@ install_ubuntu_pkgs() {
 
     (
         set -eu
-        local bindir="$outPath/code/bin"
-        mkdir -vp "$bindir"
-        cd "$bindir"
+        mkdir -vp "$localBinPath"
+        cd "$localBinPath"
         dl - "https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz" | tar -xz
-        ln -vsnf "$bindir/nvim-linux64/bin/nvim" "$bindir/nvim"
+        ln -vsnf "$localBinPath/nvim-linux64/bin/nvim" "$localBinPath/nvim"
     )
 
     (
         set -eu
-        local bindir="$outPath/code/bin"
-        mkdir -vp "$bindir"
-        cd "$bindir"
-        dl direnv "https://github.com/direnv/direnv/releases/download/v2.32.2/direnv.linux-amd64"
+        mkdir -vp "$localBinPath"
+        cd "$localBinPath"
+        dl direnv "https://github.com/direnv/direnv/releases/latest/download/direnv.linux-$(uname -m)"
         chmod ug+x direnv
     )
 
@@ -192,6 +201,14 @@ install_z() {
 install_langservers() {
     msg "Installing language servers..."
 
+    if is_mac; then
+        brew install lua-language-server
+    fi
+
+    if has go; then
+        GOBIN="$localBinPath" go install golang.org/x/tools/gopls@latest
+    fi
+
     local npm_servers="bash-language-server pyright typescript typescript-language-server vscode-langservers-extracted"
     if has npm; then
         npm i -g "$npm_servers"
@@ -204,6 +221,8 @@ install_langservers() {
 
 main() {
     msg "Starting $script_name...\n"
+
+    exec_step configure_env
 
     if is_mac; then
         exec_step configure_mac
@@ -218,7 +237,7 @@ main() {
         fi
     fi
 
-    exec_step install_fzf
+    # exec_step install_fzf
     exec_step install_z
     # exec_step install_langservers
 

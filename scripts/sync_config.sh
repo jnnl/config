@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # copy changed local config files to repo
+
+trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
@@ -27,8 +29,7 @@ while getopts fhi: opt; do
 done
 shift $((OPTIND-1))
 
-while read line <&3; do
-    line_files=($line)
+while read -a line_files <&3; do
     if test ${#line_files[@]} -ne 2; then 
         continue
     fi
@@ -40,8 +41,8 @@ while read line <&3; do
     fi
 
     if test "$is_interactive" = "1"; then
-        cp -iv "$source_file" "$destination_file"
+        cp -iv "$source_file" "$destination_file" || true
     else
         cp -v "$source_file" "$destination_file"
     fi
-done 3<<< $(diff -qr "$inPath" "$filedir" | awk '!/^Only in/ { print $2, $4 }')
+done 3<<< "$(diff -qr "$inPath" "$filedir" | awk '!/^Only in/ { print $2, $4 }')"
