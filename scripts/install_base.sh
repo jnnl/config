@@ -17,14 +17,14 @@ usage() {
 }
 
 is_interactive=1
-outPath="$HOME"
-localBinPath="$outPath/code/bin"
+out_path="$HOME"
+local_bin_path="$out_path/code/bin"
 
 while getopts bfho: opt; do
     case "$opt" in
         f) is_interactive=0;;
         h) usage;;
-        o) outPath="$(realpath $OPTARG)";;
+        o) out_path="$(realpath $OPTARG)";;
         ?) usage;;
     esac
 done
@@ -34,7 +34,7 @@ source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
 configure_env() {
     msg "Configuring common environment..."
 
-    mkdir -vp "$localBinPath"
+    mkdir -vp "$local_bin_path"
 
     msg_done
 }
@@ -110,16 +110,16 @@ install_ubuntu_pkgs() {
 
     (
         set -eu
-        mkdir -vp "$localBinPath"
-        cd "$localBinPath"
+        mkdir -vp "$local_bin_path"
+        cd "$local_bin_path"
         dl - "https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz" | tar -xz
-        ln -vsnf "$localBinPath/nvim-linux64/bin/nvim" "$localBinPath/nvim"
+        ln -vsnf "$local_bin_path/nvim-linux64/bin/nvim" "$local_bin_path/nvim"
     )
 
     (
         set -eu
-        mkdir -vp "$localBinPath"
-        cd "$localBinPath"
+        mkdir -vp "$local_bin_path"
+        cd "$local_bin_path"
         dl direnv "https://github.com/direnv/direnv/releases/latest/download/direnv.linux-$(uname -m)"
         chmod ug+x direnv
     )
@@ -143,14 +143,14 @@ install_arch_pkgs() {
 install_blocklets() {
     msg "Installing i3blocks blocklets..."
 
-    local blockletdir="$configdir/i3blocks/blocklets"
-    local tmpdir="$(mktemp -d /tmp/i3blocks-blocklets-XXX)"
+    local blocklet_dir="$config_dir/i3blocks/blocklets"
+    local tmp_dir="$(mktemp -d /tmp/i3blocks-blocklets-XXX)"
     local url="https://github.com/vivien/i3blocks-contrib"
 
     if has git; then
-        git clone --depth 1 "$url" "$tmpdir"
-        rm -rf "$blockletdir"
-        mv "$tmpdir" "$blockletdir"
+        git clone --depth 1 "$url" "$tmp_dir"
+        rm -rf "$blocklet_dir"
+        mv "$tmp_dir" "$blocklet_dir"
     else
         warn "Git not found, skipping blocklets install."
         return
@@ -162,17 +162,17 @@ install_blocklets() {
 install_fzf() {
     msg "Installing fzf..."
 
-    local fzfdir="$outPath/.fzf"
-    local tmpdir="$(mktemp -d /tmp/fzf-XXX)"
+    local fzf_dir="$out_path/.fzf"
+    local tmp_dir="$(mktemp -d /tmp/fzf-XXX)"
     local url="https://github.com/junegunn/fzf.git"
 
     if has git; then
-        git clone --depth 1 "$url" "$tmpdir"
-        rm -rf "$fzfdir"
-        mv "$tmpdir" "$fzfdir"
+        git clone --depth 1 "$url" "$tmp_dir"
+        rm -rf "$fzf_dir"
+        mv "$tmp_dir" "$fzf_dir"
 
-        chmod ug+x "$fzfdir/install"
-        "$fzfdir/install" --key-bindings \
+        chmod ug+x "$fzf_dir/install"
+        "$fzf_dir/install" --key-bindings \
                           --completion \
                           --no-zsh \
                           --no-fish \
@@ -189,11 +189,11 @@ install_fzf() {
 install_z() {
     msg "Installing z..."
 
-    local zdir="$configdir/z"
+    local z_dir="$config_dir/z"
     local url="https://raw.githubusercontent.com/rupa/z/master/z.sh"
 
-    mkdir -vp "$zdir"
-    dl "$zdir/z.sh" "$url"
+    mkdir -vp "$z_dir"
+    dl "$z_dir/z.sh" "$url"
 
     msg_done
 }
@@ -206,7 +206,7 @@ install_langservers() {
     fi
 
     if has go; then
-        GOBIN="$localBinPath" go install golang.org/x/tools/gopls@latest
+        GOBIN="$local_bin_path" go install golang.org/x/tools/gopls@latest
     fi
 
     local npm_servers="bash-language-server pyright typescript typescript-language-server vscode-langservers-extracted"

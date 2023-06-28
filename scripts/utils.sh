@@ -7,9 +7,9 @@ set -eu
 
 test -n "$BASH" || { printf "This script requires bash to run."; exit 1; }
 
-readonly scriptdir="$(realpath $(dirname ${BASH_SOURCE[0]}))"
-readonly filedir="$scriptdir/../files"
-readonly configdir="${XDG_CONFIG_HOME:-$HOME/.config}"
+readonly script_dir="$(realpath $(dirname ${BASH_SOURCE[0]}))"
+readonly file_dir="$script_dir/../files"
+readonly config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 err() {
     printf "!!! ERROR: $*\n" >&2
@@ -55,6 +55,19 @@ dl() {
         wget --show-progress -qO $*
     else
         err "no curl or wget found"
+    fi
+}
+
+prompt_confirm() {
+    if test "$is_interactive" = "1"; then
+        read -p "> $*? [Y/n/q] " choice
+        case "$choice" in
+            y|Y|"") return 0;;
+            q) return 2;;
+            n|N|*) return 1;;
+        esac
+    else
+        return 0;
     fi
 }
 

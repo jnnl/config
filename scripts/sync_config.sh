@@ -17,13 +17,13 @@ usage() {
 }
 
 is_interactive=1
-inPath="$HOME"
+in_path="$HOME"
 
 while getopts fhi: opt; do
     case "$opt" in
         f) is_interactive=0;;
         h) usage;;
-        i) inPath="$(realpath $OPTARG)";;
+        i) in_path="$(realpath $OPTARG)";;
         ?) usage;;
     esac
 done
@@ -45,4 +45,4 @@ while read -a line_files <&3; do
     else
         cp -v "$source_file" "$destination_file"
     fi
-done 3<<< "$(diff -qr "$inPath" "$filedir" | awk '!/^Only in/ { print $2, $4 }')"
+done 3<<< "$(diff -qr "$in_path" "$file_dir" | awk '!/^Only in/ { print $2, $4 }')"

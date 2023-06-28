@@ -15,15 +15,15 @@ usage() {
     exit 2
 }
 
-outPath="$HOME"
+out_path="$HOME"
 
 while getopts ho: opt; do
     case "$opt" in
         h) usage;;
-        o) outPath="$(realpath $OPTARG)";;
+        o) out_path="$(realpath $OPTARG)";;
         ?) usage;;
     esac
 done
 shift $((OPTIND-1))
 
-diff -r --suppress-common-lines --color=always -W "$(tput cols)" "$outPath" "$(realpath $filedir)" | grep -ve "^Only in $outPath" || true
+diff -r --suppress-common-lines --color=always -W "$(tput cols)" "$out_path" "$(realpath $file_dir)" | grep -ve "^Only in $out_path" || true
