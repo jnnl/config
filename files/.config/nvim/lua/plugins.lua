@@ -93,9 +93,7 @@ return {
           end, { desc = 'Find text' })
           vim.keymap.set('n', '<Leader>;', fzf.oldfiles, { desc = 'Find recently opened files' })
           vim.keymap.set('n', '<Leader>:', fzf.git_bcommits, { desc = 'Find commits affecting current file' })
-          vim.keymap.set('n', '<Leader>_', function()
-              fzf.grep_project({ cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h') })
-          end, { desc = 'Find text in git repo' })
+          vim.keymap.set('n', '<Leader>_', fzf.blines, { desc = 'Find text in current file' })
           vim.keymap.set('n', '<Leader>\'', fzf.resume, { desc = 'Resume most recent fzf-lua search' })
           vim.keymap.set('n', '<Leader>*', function()
               fzf.files({ cwd = vim.fn.expand('$HOME') })
@@ -351,7 +349,7 @@ return {
                   { name = 'nvim_lua' },
                   { name = 'vsnip' },
                   { name = 'path' },
-              }
+              },
           })
 
       end
