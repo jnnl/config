@@ -156,27 +156,35 @@ return {
                 vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
                 local opts = { noremap = true, silent = true, buffer = ev.buf }
+                local extend_opts = function(extends)
+                    return vim.tbl_extend('force', opts, extends)
+                end
 
-                vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-                vim.keymap.set('n', 'gD', '<cmd>FzfLua lsp_definitions<CR>', opts)
-                vim.keymap.set('n', 'gi', '<cmd>FzfLua lsp_implementations<CR>', opts)
-                vim.keymap.set('n', 'gr', '<cmd>FzfLua lsp_references<CR>', opts)
-                vim.keymap.set('n', 'gt', '<cmd>FzfLua lsp_typedefs<CR>', opts)
+                vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>',
+                    extend_opts({ desc = 'Go to definition' }))
+                vim.keymap.set('n', 'gD', '<cmd>FzfLua lsp_definitions<CR>',
+                    extend_opts({ desc = 'Find definition(s)' }))
+                vim.keymap.set('n', 'gi', '<cmd>FzfLua lsp_implementations<CR>',
+                    extend_opts({ desc = 'Find implementation(s)' }))
+                vim.keymap.set('n', 'gr', '<cmd>FzfLua lsp_references<CR>',
+                    extend_opts({ desc = 'Find reference(s)' }))
+                vim.keymap.set('n', 'gt', '<cmd>FzfLua lsp_typedefs<CR>',
+                    extend_opts({ desc = 'Find type definitions(s)' }))
                 vim.keymap.set('n', 'ög',
                     '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
-                    vim.tbl_extend('force', opts, { desc = 'Go to previous WARN+ diagnostic' })
+                    extend_opts({ desc = 'Go to previous WARN+ diagnostic' })
                 )
                 vim.keymap.set('n', 'äg',
                     '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
-                    vim.tbl_extend('force', opts, { desc = 'Go to next WARN+ diagnostic' })
+                    extend_opts({ desc = 'Go to next WARN+ diagnostic' })
                 )
                 vim.keymap.set('n', 'öG',
                     '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.HINT}})<CR>',
-                    vim.tbl_extend('force', opts, { desc = 'Go to next HINT+ diagnostic' })
+                    extend_opts({ desc = 'Go to next HINT+ diagnostic' })
                 )
                 vim.keymap.set('n', 'äG',
                     '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.HINT}})<CR>',
-                    vim.tbl_extend('force', opts, { desc = 'Go to next HINT+ diagnostic' })
+                    extend_opts({ desc = 'Go to next HINT+ diagnostic' })
                 )
                 vim.keymap.set('n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
                 vim.keymap.set('n', '<C-Space>', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
@@ -218,7 +226,7 @@ return {
                       capabilities = capabilities,
                       cmd = cmd,
                       filetypes = { 'ts', 'html' },
-                      on_new_config = function(new_config, new_root_dir)
+                      on_new_config = function(new_config, _)
                           new_config.cmd = cmd
                       end,
                   })
