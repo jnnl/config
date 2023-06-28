@@ -144,7 +144,11 @@ elif test -f /etc/bash_completion; then
 fi
 
 # fzf
-test -f ~/.fzf.bash && source "$_"
+if test -f ~/.config/fzf/fzf.bash; then
+    source "$_"
+elif test -f ~/.fzf.bash; then
+    source "$_"
+fi
 if has fzf; then
     export FZF_DEFAULT_OPTS="--reverse --border"
     if has fd; then
