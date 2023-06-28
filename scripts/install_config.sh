@@ -11,6 +11,7 @@ usage() {
     printf "Usage: $0 <OPTION> ...\n\n"
     printf "Options:\n"
     printf "  -b            make a backup of each existing config file\n"
+    printf "  -e <pattern>  specify installable files by ERE regex pattern\n"
     printf "  -f            execute each step without prompting for confirmation\n"
     printf "  -o <path>     output base path (default: $HOME)\n"
     printf "\n"
@@ -18,15 +19,18 @@ usage() {
 }
 
 should_create_backups=0
+should_use_file_pattern=0
+file_pattern=""
 is_interactive=1
-outPath="$HOME"
+out_path="$HOME"
 
-while getopts bfho: opt; do
+while getopts be:fho: opt; do
     case "$opt" in
         b) should_create_backups=1;;
+        e) should_use_file_pattern=1; file_pattern="$OPTARG";;
         f) is_interactive=0;;
         h) usage;;
-        o) outPath="$(realpath $OPTARG)";;
+        o) out_path="$(realpath $OPTARG)";;
         ?) usage;;
     esac
 done
@@ -36,11 +40,19 @@ source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
 create_dirs() {
     msg "Creating directories..."
 
-    local directories="$(find $filedir -mindepth 1 -type d | sed 's|^'$filedir'/||')"
+    local directories="$(find $file_dir -mindepth 1 -type d | sed 's|^'$file_dir'/||')"
     local directory
 
+    if test "$should_use_file_pattern" = "1"; then
+        directories="$(echo $directories | tr ' ' '\n' | grep -E $file_pattern || true)"
+    fi
+
+    if test -z "$directories"; then
+        return
+    fi
+
     for directory in $directories; do
-        mkdir -vp "$outPath/$directory"
+        mkdir -vp "$out_path/$directory"
     done
 
     msg_done
@@ -52,18 +64,35 @@ copy_files() {
 
     msg "Copying files..."
 
-    local files="$(find $filedir -type f | sed 's|^'$filedir'/||')"
-    local file
+    local files="$(find $file_dir -type f | sed 's|^'$file_dir'/||')"
+    local file source_file destination_file
+
+    if test "$should_use_file_pattern" = "1"; then
+        files="$(echo $files | tr ' ' '\n' | grep -E $file_pattern || true)"
+    fi
 
     for file in $files; do
+        source_file="$(realpath $file_dir/$file)"
+        destination_file="$(realpath $out_path/$file)"
+        if test "$should_use_file_pattern" = "1"; then
+            {
+                prompt_confirm "copy $source_file to $destination_file"
+                local prompt_confirm_code="$?"
+                if test "$prompt_confirm_code" = "1"; then
+                    continue;
+                elif test "$prompt_confirm_code" = "2"; then
+                    break;
+                fi
+            } || true
+        fi
         if test "$should_create_backups" = "1"; then
             if is_mac; then
-                rsync -ab "$filedir/$file" "$outPath/$file" && printf "$filedir/$file -> $outPath/$file\n"
+                rsync -ab "$source_file" "$destination_file" && printf "$source_file -> $destination_file\n"
             else
-                cp -bv "$filedir/$file" "$outPath/$file"
+                cp -bv "$source_file" "$destination_file"
             fi
         else
-            cp -v "$filedir/$file" "$outPath/$file"
+            cp -v "$source_file" "$destination_file"
         fi
     done
 
@@ -72,7 +101,7 @@ copy_files() {
 
 main() {
     msg "Starting $script_name..."
-    msg "Output base path: $outPath\n"
+    msg "Output base path: $out_path\n"
 
     if test "$should_create_backups" != "1"; then
         msg "NOTE: backup not enabled, existing config files will be overwritten\n"
