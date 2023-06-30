@@ -43,7 +43,7 @@
     dts = "!git diff | delta --side-by-side"
     dmc = diff --name-only --diff-filter=U
     l = log --oneline --decorate --graph
-    lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(blue)%an%Creset' --abbrev-commit
+    lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cd) %C(blue)%an%Creset' --abbrev-commit --date=default
     nuke = "!git stash && git stash drop; git clean -fdx"
     pp = "!git pull && git push"
     rb = rebase
