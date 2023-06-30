@@ -156,9 +156,7 @@ return {
                 vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
                 local opts = { noremap = true, silent = true, buffer = ev.buf }
-                local extend_opts = function(extends)
-                    return vim.tbl_extend('force', opts, extends)
-                end
+                local extend_opts = function(extends) return vim.tbl_extend('force', opts, extends) end
 
                 vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>',
                     extend_opts({ desc = 'Go to definition' }))
@@ -200,60 +198,41 @@ return {
           local capabilities = require('cmp_nvim_lsp').default_capabilities()
           capabilities.textDocument.completion.completionItem.snippetSupport = true
 
+          local server_opts = { capabilities = capabilities }
+          local extend_server_opts = function(extends) return vim.tbl_extend('force', server_opts, extends) end
+
+          local local_npm_ls_path = vim.fn.expand('$HOME/.local/lib/node_modules')
+          local angularls_cmd = { 'ngserver', '--stdio', '--tsProbeLocations', local_npm_ls_path, '--ngProbeLocations', local_npm_ls_path }
+
           local servers = {
-              'angularls',
-              'bashls',
-              'cssls',
-              'gopls',
-              'html',
-              'lua_ls',
-              'pyright',
-              'rust_analyzer',
-              'tsserver'
+              { name = 'angularls', opts = extend_server_opts({
+                  cmd = angularls_cmd,
+                  filetypes = { 'ts', 'html' },
+                  on_new_config = function(new_config, _)
+                      new_config.cmd = angularls_cmd
+                  end,
+              }) },
+              { name = 'bashls', opts = server_opts },
+              { name = 'cssls', opts = server_opts },
+              { name = 'gopls', opts = server_opts },
+              { name = 'html', opts = server_opts },
+              { name = 'lua_ls', opts = extend_server_opts({
+                  settings = {
+                      Lua = {
+                          runtime = { version = 'LuaJIT', },
+                          diagnostics = { globals = { 'vim' }, },
+                          workspace = { library = vim.api.nvim_get_runtime_file('', true), },
+                          telemetry = { enable = false, },
+                      },
+                  },
+              }) },
+              { name = 'pyright', opts = server_opts },
+              { name = 'rust_analyzer', opts = server_opts },
+              { name = 'tsserver', opts = extend_server_opts({ server = { capabilities = capabilities } }) },
           }
 
           for _, server in ipairs(servers) do
-              if server == 'tsserver' then
-                  require('typescript').setup({
-                      server = {
-                          capabilities = capabilities,
-                      }
-                  })
-              elseif server == 'angularls' then
-                  local lsPath = vim.fn.expand('$HOME/.local/lib/node_modules')
-                  local cmd = { 'ngserver', '--stdio', '--tsProbeLocations', lsPath, '--ngProbeLocations', lsPath }
-                  lsp.angularls.setup({
-                      capabilities = capabilities,
-                      cmd = cmd,
-                      filetypes = { 'ts', 'html' },
-                      on_new_config = function(new_config, _)
-                          new_config.cmd = cmd
-                      end,
-                  })
-              elseif server == 'lua_ls' then
-                  lsp.lua_ls.setup({
-                      settings = {
-                          Lua = {
-                              runtime = {
-                                  version = 'LuaJIT',
-                              },
-                              diagnostics = {
-                                  globals = {'vim'},
-                              },
-                              workspace = {
-                                  library = vim.api.nvim_get_runtime_file('', true),
-                              },
-                              telemetry = {
-                                  enable = false,
-                              },
-                          },
-                      },
-                  })
-              else
-                  lsp[server].setup({
-                      capabilities = capabilities,
-                  })
-              end
+              lsp[server.name].setup(server.opts or {})
           end
 
       end
