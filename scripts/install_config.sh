@@ -37,31 +37,8 @@ done
 
 source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
 
-create_dirs() {
-    msg "Creating directories..."
-
-    local directories="$(find $file_dir -mindepth 1 -type d | sed 's|^'$file_dir'/||')"
-    local directory
-
-    if test "$should_use_file_pattern" = "1"; then
-        directories="$(echo $directories | tr ' ' '\n' | grep -E $file_pattern || true)"
-    fi
-
-    if test -z "$directories"; then
-        return
-    fi
-
-    for directory in $directories; do
-        mkdir -vp "$out_path/$directory"
-    done
-
-    msg_done
-
-}
 
 copy_files() {
-    create_dirs
-
     msg "Copying files..."
 
     local files="$(find $file_dir -type f | sed 's|^'$file_dir'/||')"
@@ -73,7 +50,8 @@ copy_files() {
 
     for file in $files; do
         source_file="$(realpath $file_dir/$file)"
-        destination_file="$(realpath $out_path/$file)"
+        destination_file="$(realpath -m $out_path/$file)"
+
         if test "$should_use_file_pattern" = "1"; then
             {
                 prompt_confirm "copy $source_file to $destination_file"
@@ -85,6 +63,10 @@ copy_files() {
                 fi
             } || true
         fi
+
+        destination_file_dir="$(dirname $destination_file)"
+        [ -d "$destination_file_dir" ] || mkdir -vp "$destination_file_dir"
+
         if test "$should_create_backups" = "1"; then
             if is_mac; then
                 rsync -ab "$source_file" "$destination_file" && printf "$source_file -> $destination_file\n"
