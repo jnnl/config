@@ -11,6 +11,7 @@ usage() {
     printf "Usage: $0 <OPTION> ...\n\n"
     printf "Options:\n"
     printf "  -f            execute each step without prompting for confirmation\n"
+    printf "  -h            display this help text and exit\n"
     printf "  -o <path>     output base path (default: $HOME)\n"
     printf "\n"
     exit 2

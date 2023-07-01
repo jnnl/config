@@ -11,6 +11,7 @@ usage() {
     printf "Usage: $0 <OPTION> ...\n\n"
     printf "Options:\n"
     printf "  -f            sync all changed files without prompting for confirmation\n"
+    printf "  -h            display this help text and exit\n"
     printf "  -i <path>     input base path (default: $HOME)\n"
     printf "\n"
     exit 2

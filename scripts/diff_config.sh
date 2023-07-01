@@ -10,6 +10,7 @@ source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
 usage() {
     printf "Usage: $0 <OPTION> ...\n\n"
     printf "Options:\n"
+    printf "  -h            display this help text and exit\n"
     printf "  -o <path>     output base path (default: $HOME)\n"
     printf "\n"
     exit 2

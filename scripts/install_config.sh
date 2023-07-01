@@ -13,6 +13,7 @@ usage() {
     printf "  -b            make a backup of each existing config file\n"
     printf "  -e <pattern>  specify installable files by ERE regex pattern\n"
     printf "  -f            execute each step without prompting for confirmation\n"
+    printf "  -h            display this help text and exit\n"
     printf "  -o <path>     output base path (default: $HOME)\n"
     printf "\n"
     exit 2
