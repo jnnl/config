@@ -33,7 +33,7 @@ cdgr() {
 
 # browse man pages by name and description
 mana() {
-    man -k . | fzf | awk '{print $1}' | xargs -r man
+    man -k . | fzf | awk '{ print $1 }' | xargs -r man
 }
 
 # browse git commits
@@ -52,9 +52,9 @@ FZF-EOF"
 fkill() {
     local pid
     if [ "$UID" != "0" ]; then
-        pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
+        pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{ print $2 }')
     else
-        pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+        pid=$(ps -ef | sed 1d | fzf -m | awk '{ print $2 }')
     fi
 
     [ -n "$pid" ] && echo $pid | xargs kill -${1:-9}
@@ -107,6 +107,7 @@ else
 fi
 
 # aliases
+alias g="git"
 alias l="ls -lhF"
 alias ll="ls -lhAF"
 alias lx="ls -lhAFX"
