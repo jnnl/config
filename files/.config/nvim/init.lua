@@ -44,7 +44,6 @@ end
 -- General
 
 vim.opt.backspace = 'indent,eol,start'
-vim.opt.clipboard = 'unnamed'
 vim.opt.hidden = true
 vim.opt.joinspaces = false
 vim.opt.modeline = false
