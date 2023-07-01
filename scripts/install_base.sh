@@ -209,7 +209,7 @@ install_langservers() {
         GOBIN="$local_bin_path" go install golang.org/x/tools/gopls@latest
     fi
 
-    local npm_servers="bash-language-server pyright typescript typescript-language-server vscode-langservers-extracted"
+    local npm_servers="bash-language-server emmet-ls pyright typescript typescript-language-server vscode-langservers-extracted"
     if has npm; then
         npm i -g "$npm_servers"
     else
