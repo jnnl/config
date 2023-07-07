@@ -81,6 +81,7 @@ return {
             },
           })
           vim.keymap.set('n', '<Leader>ff', fzf.builtin, { desc = 'Show fzf-lua builtins' })
+          vim.keymap.set('n', '<Leader>fr', fzf.registers, { desc = 'Find registers' })
           vim.keymap.set('n', '<C-f>', fzf.grep_cWORD, { desc = 'Find text matching word under cursor' })
           vim.keymap.set('x', '<C-f>', fzf.grep_visual, { desc = 'Find text matching visual selection' })
           vim.keymap.set('n', '<Leader>,', function()
@@ -142,7 +143,9 @@ return {
     { 'neovim/nvim-lspconfig',
       event = { 'BufNewFile', 'BufReadPre' },
       dependencies = {
-          'folke/trouble.nvim'
+          'folke/trouble.nvim',
+          'ray-x/lsp_signature.nvim',
+          'stevearc/aerial.nvim',
       },
       config = function()
           local lsp = require('lspconfig')
@@ -191,6 +194,15 @@ return {
                 vim.keymap.set('n', '<leader>xf', '<cmd>Format<CR>', opts)
                 vim.keymap.set('n', '<leader>tt', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
                 vim.keymap.set('n', '<leader>tr', '<cmd>TroubleToggle lsp_references<CR>', opts)
+                vim.keymap.set('n', '<leader>at', '<cmd>AerialToggle<CR>', opts)
+                vim.keymap.set('n', 'öa',
+                    '<cmd>AerialPrev<CR>',
+                    extend_opts({ desc = 'Go to previous Aerial symbol' })
+                )
+                vim.keymap.set('n', 'äa',
+                    '<cmd>AerialNext<CR>',
+                    extend_opts({ desc = 'Go to next symbol' })
+                )
             end,
           })
 
@@ -342,6 +354,7 @@ return {
       end
     },
     { 'ray-x/lsp_signature.nvim',
+      lazy = true,
       config = function()
           require('lsp_signature').setup({
               bind = true,
@@ -383,4 +396,8 @@ return {
     { 'tpope/vim-repeat' },
     { 'tpope/vim-fugitive' },
     { 'whiteinge/diffconflicts' },
+    { 'stevearc/aerial.nvim',
+      lazy = true,
+      opts = {},
+    },
 }
