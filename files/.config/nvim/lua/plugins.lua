@@ -11,7 +11,6 @@ return {
           require('leap').add_default_mappings()
       end
     },
-    { 'romainl/vim-cool', event = 'BufReadPost' },
     { 'junegunn/fzf', build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc' },
     { 'ibhagwan/fzf-lua',
       config = function()

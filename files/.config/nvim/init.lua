@@ -232,6 +232,16 @@ vim.api.nvim_create_autocmd({ 'BufWritePre', 'FileWritePre' }, {
     end
 })
 
+-- vim-cool replacement
+vim.on_key(function(key)
+    if vim.fn.mode() == 'n' then
+        local hls_keys = { '<CR>', '*', '#', '/', '?', 'n', 'N', }
+        local is_hls_key = vim.tbl_contains(hls_keys, vim.fn.keytrans(key))
+        if is_hls_key ~= vim.opt.hlsearch then
+            vim.opt.hlsearch = is_hls_key
+        end
+    end
+end, vim.api.nvim_create_namespace "hlsearch_autoclear")
 
 -- Functions
 
