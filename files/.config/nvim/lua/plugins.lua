@@ -81,6 +81,9 @@ return {
             },
           })
           vim.keymap.set('n', '<Leader>ff', fzf.builtin, { desc = 'Show fzf-lua builtins' })
+          vim.keymap.set('n', '<Leader>fc', fzf.commands, { desc = 'Find commands' })
+          vim.keymap.set('n', '<Leader>fh', fzf.help_tags, { desc = 'Find help tags' })
+          vim.keymap.set('n', '<Leader>fl', fzf.lines, { desc = 'Find open buffers\' lines' })
           vim.keymap.set('n', '<Leader>fr', fzf.registers, { desc = 'Find registers' })
           vim.keymap.set('n', '<C-f>', fzf.grep_cWORD, { desc = 'Find text matching word under cursor' })
           vim.keymap.set('x', '<C-f>', fzf.grep_visual, { desc = 'Find text matching visual selection' })
