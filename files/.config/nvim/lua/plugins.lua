@@ -24,6 +24,11 @@ return {
                 'default',
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
+                        ['ctrl-g'] = function(selected)
+                            local dir = vim.fs.dirname(selected[1])
+                            vim.cmd('cd' .. dir)
+                            vim.defer_fn(function() vim.cmd('verbose pwd') end, 0)
+                        end,
                         ['ctrl-o'] = function(selected)
                             local is_mac = vim.fn.has('mac')
                             local is_unix = vim.fn.has('unix')
@@ -230,7 +235,7 @@ return {
                 '--ngProbeLocations', local_npm_ls_path
             }
 
-            local servers = {
+            local lspconfig_servers = {
                 {
                     name = 'angularls',
                     opts = extend_server_opts({
@@ -264,7 +269,7 @@ return {
                 -- { name = 'tsserver', opts = extend_server_opts({ server = { capabilities = capabilities } }) },
             }
 
-            for _, server in ipairs(servers) do
+            for _, server in ipairs(lspconfig_servers) do
                 lsp[server.name].setup(server.opts or {})
             end
         end
