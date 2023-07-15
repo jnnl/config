@@ -164,7 +164,7 @@ end, { bang = true })
 vim.api.nvim_create_user_command('DiffChanges', ':w !git diff --no-index % -', { bang = true })
 vim.api.nvim_create_user_command('Redir', function(ctx)
   local lines = vim.split(vim.api.nvim_exec(ctx.args, true), '\n', { plain = true })
-  vim.cmd('new')
+  vim.cmd('vnew')
   vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
   vim.opt_local.modified = false
 end, { nargs = '+', complete = 'command' })
@@ -194,15 +194,15 @@ vim.api.nvim_create_autocmd('FileType', {
         end
         local is_angular = vim.fn.findfile('angular.json', '.;') ~= ''
         if is_angular then
-            create_cmd('ET', ':e %:p:r.html')
-            create_cmd('EC', ':e %:p:r.ts')
-            create_cmd('ES', ':e %:p:r.scss')
-            create_cmd('ST', ':sp %:p:r.html')
-            create_cmd('SC', ':sp %:p:r.ts')
-            create_cmd('SS', ':sp %:p:r.scss')
-            create_cmd('VT', ':vs %:p:r.html')
-            create_cmd('VC', ':vs %:p:r.ts')
-            create_cmd('VS', ':vs %:p:r.scss')
+            create_cmd('ETemplate', ':e %:p:r.html')
+            create_cmd('EComponent', ':e %:p:r.ts')
+            create_cmd('EStyle', ':e %:p:r.scss')
+            create_cmd('STemplate', ':sp %:p:r.html')
+            create_cmd('SComponent', ':sp %:p:r.ts')
+            create_cmd('SStyle', ':sp %:p:r.scss')
+            create_cmd('VTemplate', ':vs %:p:r.html')
+            create_cmd('VComponent', ':vs %:p:r.ts')
+            create_cmd('VStyle', ':vs %:p:r.scss')
         end
     end
 })
@@ -215,12 +215,12 @@ vim.api.nvim_create_autocmd('FileType', {
         local create_cmd = function(name, command)
             vim.api.nvim_create_user_command(name, command, { bang = true })
         end
-        create_cmd('EC', ':e %:p:s?_test.go?.go?')
-        create_cmd('SC', ':vs %:p:s?_test.go?.go?')
-        create_cmd('VC', ':sp %:p:s?_test.go?.go?')
-        create_cmd('ET', ':e %:p:r_test.go')
-        create_cmd('ST', ':sp %:p:r_test.go')
-        create_cmd('VT', ':vs %:p:r_test.go')
+        create_cmd('ECode', ':e %:p:s?_test.go?.go?')
+        create_cmd('SCode', ':vs %:p:s?_test.go?.go?')
+        create_cmd('VCode', ':sp %:p:s?_test.go?.go?')
+        create_cmd('ETest', ':e %:p:r_test.go')
+        create_cmd('STest', ':sp %:p:r_test.go')
+        create_cmd('VTest', ':vs %:p:r_test.go')
     end
 })
 
