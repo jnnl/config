@@ -25,6 +25,6 @@ while getopts ho: opt; do
         ?) usage;;
     esac
 done
-shift $((OPTIND-1))
+shift "$((OPTIND - 1))"
 
-diff -r --suppress-common-lines --color=always -W "$(tput cols)" "$out_path" "$(realpath $file_dir)" | grep -ve "^Only in $out_path" || true
+diff -r --suppress-common-lines --color=always -W "$(tput cols)" "$out_path" "$(realpath $file_dir)" $* | grep -ve "^Only in $out_path" || true

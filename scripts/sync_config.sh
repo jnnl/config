@@ -28,7 +28,7 @@ while getopts fhi: opt; do
         ?) usage;;
     esac
 done
-shift $((OPTIND-1))
+shift "$((OPTIND - 1))"
 
 while read -a line_files <&3; do
     if test ${#line_files[@]} -ne 2; then 

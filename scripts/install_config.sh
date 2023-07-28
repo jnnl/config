@@ -35,6 +35,7 @@ while getopts be:fho: opt; do
         ?) usage;;
     esac
 done
+shift "$((OPTIND - 1))"
 
 source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
 
@@ -51,7 +52,11 @@ copy_files() {
 
     for file in $files; do
         source_file="$(realpath $file_dir/$file)"
-        destination_file="$(realpath -m $out_path/$file)"
+        if is_mac; then
+            destination_file="$(grealpath -m $out_path/$file)"
+        else
+            destination_file="$(realpath -m $out_path/$file)"
+        fi
 
         if test "$should_use_file_pattern" = "1"; then
             {

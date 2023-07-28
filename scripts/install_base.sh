@@ -29,6 +29,7 @@ while getopts bfho: opt; do
         ?) usage;;
     esac
 done
+shift "$((OPTIND - 1))"
 
 source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
 
