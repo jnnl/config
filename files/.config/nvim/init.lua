@@ -9,7 +9,7 @@ vim.g.maplocalleader = ','
 -- Plugins
 
 local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazy_path) then
+if not vim.uv.fs_stat(lazy_path) then
     vim.notify('lazy.nvim not found, installing...', vim.log.levels.INFO)
     vim.fn.system({ 'git', 'clone', 'https://github.com/folke/lazy.nvim.git', '--branch=stable', lazy_path })
 end
@@ -142,7 +142,7 @@ vim.keymap.set('n', '<C-Right>', function() move_split('right', '10') end)
 
 vim.keymap.set('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
 vim.keymap.set('n', '<Leader>s', function()
-    return ':%s/' .. vim.call('expand', '<cword>') .. '/'
+    return ':%s/' .. vim.fn.expand('<cword>') .. '/'
 end, { expr = true, desc = 'Substitute word under cursor' })
 
 
@@ -150,6 +150,7 @@ end, { expr = true, desc = 'Substitute word under cursor' })
 
 vim.api.nvim_create_user_command('NonAscii', '/[^\\x00-\\x7F]', { bang = true })
 vim.api.nvim_create_user_command('Unansify', ':%s/\\%x1b\\[[0-9;]*[a-zA-Z]//ge', { bang = true })
+vim.api.nvim_create_user_command('Unblankify', ':g/^\\s*$/d', { bang = true })
 vim.api.nvim_create_user_command('Rstrip', function()
     vim.cmd(':%s/\\s\\+$//e')
     vim.cmd(':%s/\r//ge')
@@ -161,13 +162,21 @@ vim.api.nvim_create_user_command('CloseFloatingWindows', function()
         end
     end
 end, { bang = true })
-vim.api.nvim_create_user_command('DiffChanges', ':w !git diff --no-index % -', { bang = true })
-vim.api.nvim_create_user_command('Redir', function(ctx)
-  local lines = vim.split(vim.api.nvim_exec(ctx.args, true), '\n', { plain = true })
+vim.api.nvim_create_user_command('Redir', function(context)
+  local lines = vim.split(vim.api.nvim_exec2(context.args, { output = true }).output, '\n', { plain = true })
   vim.cmd('vnew')
   vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
   vim.opt_local.modified = false
 end, { nargs = '+', complete = 'command' })
+vim.api.nvim_create_user_command('DiffChanges', function(context)
+    local cmd = ':w !git diff --no-index % -'
+    if context.bang then
+        vim.cmd(':Redir ' .. cmd)
+        vim.bo.filetype = 'diff'
+    else
+        vim.cmd(cmd)
+    end
+end, { bang = true })
 
 -- Autocommands
 

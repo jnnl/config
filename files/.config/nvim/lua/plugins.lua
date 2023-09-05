@@ -5,13 +5,14 @@ return {
         event = 'BufReadPost',
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
-        end
+        end,
     },
     {
         'ggandor/leap.nvim',
+        commit = '5efe985cf68fac3b6a6dfe7a75fbfaca8db2af9c',
         config = function()
             require('leap').add_default_mappings()
-        end
+        end,
     },
     { 'junegunn/fzf', build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc' },
     {
@@ -25,31 +26,21 @@ return {
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
                         ['ctrl-g'] = function(selected)
+                            -- Changes current directory to first selected file's parent dir
                             local dir = vim.fs.dirname(selected[1])
-                            vim.cmd('cd' .. dir)
+                            vim.cmd('cd!' .. dir)
                             vim.defer_fn(function() vim.cmd('verbose pwd') end, 0)
                         end,
                         ['ctrl-o'] = function(selected)
-                            local is_mac = vim.fn.has('mac')
-                            local is_unix = vim.fn.has('unix')
-
-                            if is_mac ~= 1 and is_unix ~= 1 then
-                                vim.notify('file open not supported on this platform', vim.log.levels.ERROR)
-                                return
-                            end
-
+                            -- Opens selected file(s) with system default handler
                             for _, item in ipairs(selected) do
                                 local selected_item = string.gsub(item, '\t+', '')
-                                if is_mac == 1 then
-                                    vim.notify('opening file ' .. selected_item)
-                                    vim.fn.jobstart({ 'open', selected_item }, { detach = true })
-                                elseif is_unix == 1 then
-                                    vim.notify('opening file ' .. selected_item)
-                                    vim.fn.jobstart({ 'xdg-open', selected_item }, { detach = true })
-                                end
+                                vim.notify('opening file ' .. selected_item)
+                                vim.ui.open(selected_item)
                             end
                         end,
                         ['ctrl-p'] = function(selected)
+                            -- Opens a new vertical split and populates it with selected search results
                             vim.cmd('vsplit')
                             local win = vim.api.nvim_get_current_win()
                             local buf = vim.api.nvim_create_buf(true, true)
@@ -72,6 +63,7 @@ return {
                         args = '--style=numbers,changes,header-filename,rule --color always --line-range=:1000',
                     },
                     builtin = {
+                        treesitter = { enable = false },
                         extensions = {
                             ['gif'] = { 'chafa' },
                             ['png'] = { 'chafa' },
@@ -83,11 +75,12 @@ return {
                 },
                 grep = {
                     rg_opts = '--column --line-number --no-heading --hidden --smart-case --max-columns=4096 ' ..
+                    '--glob="!.git/" ' ..
                     '--color=always --colors "path:fg:green" --colors "line:fg:yellow"',
                     rg_glob = true,
                 },
             })
-            vim.keymap.set('n', '<Leader>ff', fzf.builtin, { desc = 'Show fzf-lua builtins' })
+            vim.keymap.set('n', '<Leader>ff', fzf.builtin, { desc = 'Find fzf-lua builtins' })
             vim.keymap.set('n', '<Leader>fc', fzf.commands, { desc = 'Find commands' })
             vim.keymap.set('n', '<Leader>fh', fzf.help_tags, { desc = 'Find help tags' })
             vim.keymap.set('n', '<Leader>fl', fzf.lines, { desc = 'Find open buffers\' lines' })
@@ -102,15 +95,17 @@ return {
                 fzf.grep_project({ fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' } })
             end, { desc = 'Find text' })
             vim.keymap.set('n', '<Leader>;', fzf.oldfiles, { desc = 'Find recently opened files' })
-            vim.keymap.set('n', '<Leader>:', fzf.git_bcommits, { desc = 'Find commits affecting current file' })
+            vim.keymap.set('n', '<Leader>:', fzf.git_bcommits, { desc = 'Find git commits affecting current file' })
             vim.keymap.set('n', '<Leader>_', fzf.blines, { desc = 'Find text in current file' })
             vim.keymap.set('n', '<Leader>\'', fzf.resume, { desc = 'Resume most recent fzf-lua search' })
             vim.keymap.set('n', '<Leader>*', function()
                 fzf.files({ cwd = vim.fn.expand('$HOME') })
             end, { desc = 'Find files in ~' })
-            vim.keymap.set('n', '<Leader>fgc', function()
+            vim.keymap.set('n', '<Leader>fgb', fzf.git_branches, { desc = 'Find git branches' })
+            vim.keymap.set('n', '<Leader>fgc', fzf.git_commits, { desc = 'Find git commits' })
+            vim.keymap.set('n', '<Leader>fgx', function()
                 fzf.fzf_exec('git dmc', {
-                    prompt = 'GitConflicts> ',
+                    prompt = 'Conflicts> ',
                     cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h'),
                     preview = "awk '/<<<<<<</, />>>>>>>/ { print NR\"\\t\"$0 }' {1}",
                     actions = {
@@ -118,30 +113,53 @@ return {
                     },
                 })
             end, { desc = 'Find git merge conflicts' })
-        end
+        end,
     },
 
     -- Manipulation
     {
         'tommcdo/vim-lion',
+        commit = 'ce46593ecd60e6051fb6e4d3986d2fc9f5a618b1',
         event = 'BufReadPost',
         config = function()
             vim.g.lion_squeeze_spaces = 1
-        end
+        end,
     },
-    { 'tpope/vim-abolish' },
-    { 'tpope/vim-commentary', event = { 'BufNewFile', 'BufReadPre' } },
-    { 'tpope/vim-surround', event = { 'BufNewFile', 'BufReadPre' } },
+    {
+        'tpope/vim-abolish',
+        commit = 'cb3dcb220262777082f63972298d57ef9e9455ec',
+    },
+    {
+        'tpope/vim-commentary',
+        commit = 'e87cd90dc09c2a203e13af9704bd0ef79303d755',
+        event = { 'BufNewFile', 'BufReadPre' },
+    },
+    {
+        'tpope/vim-surround',
+        commit = '3d188ed2113431cf8dac77be61b842acb64433d9',
+        event = { 'BufNewFile', 'BufReadPre' },
+    },
 
     -- Colorschemes
     { 'jnnl/vim-tonight' },
 
     -- Language
-    { 'ap/vim-css-color', ft = { 'css', 'scss' } },
-    { 'hashivim/vim-terraform' },
-    { 'leafgarland/typescript-vim' },
+    {
+        'ap/vim-css-color',
+        commit = '2840cd5252db9decc4422844945b3460868ee691',
+        ft = { 'css', 'scss' },
+    },
+    {
+        'hashivim/vim-terraform',
+        commit = '2bbc5f65a80c79a5110494a2ba1b869075fcf7a0',
+    },
+    {
+        'leafgarland/typescript-vim',
+        commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa',
+    },
     {
         'prettier/vim-prettier',
+        commit = '5e6cca21e12587c02e32a06bf423519eb1e9f1b2',
         ft = {
             'javascript', 'javascriptreact',
             'typescript', 'typescriptreact',
@@ -151,9 +169,68 @@ return {
             vim.keymap.set('n', '<Leader>p', '<cmd>Prettier<CR>', { silent = true })
             vim.g['prettier#autoformat_config_present'] = 1
             vim.g['prettier#autoformat_require_pragma'] = 0
-        end
+        end,
     },
-    { 'ziglang/zig.vim', ft = { 'zig' } },
+    {
+        'nvim-treesitter/nvim-treesitter',
+        dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+        build = ':TSUpdate',
+        config = function()
+            require('nvim-treesitter.configs').setup({
+                ensure_installed = { 'bash', 'c', 'go', 'html', 'lua', 'markdown', 'python', 'rust', 'tsx', 'typescript', },
+                auto_install = false,
+                highlight = {
+                    enable = true,
+                    disable = function(lang, buf)
+                        return (lang ~= 'markdown' and lang ~= 'typescriptreact') or vim.api.nvim_buf_line_count(buf) > 5000
+                    end
+                },
+                matchup = {
+                    enable = true,
+                    disable = function(lang, _)
+                        return lang == 'typescript'
+                    end
+                },
+                textobjects = {
+                    select = {
+                        enable = true,
+                        lookahead = true,
+                        keymaps = {
+                            ['aa'] = '@parameter.outer',
+                            ['ia'] = '@parameter.inner',
+                            ['af'] = '@function.outer',
+                            ['if'] = '@function.inner',
+                            ['ac'] = '@class.outer',
+                            ['ic'] = '@class.inner',
+                        },
+                    },
+                    move = {
+                        enable = true,
+                        set_jumps = true,
+                        goto_next_start = {
+                            ['äf'] = '@function.outer',
+                            ['äc'] = '@class.outer',
+                        },
+                        goto_previous_start = {
+                            ['öf'] = '@function.outer',
+                            ['öc'] = '@class.outer',
+                        },
+                    },
+                    lsp_interop = {
+                        enable = true,
+                        peek_definition_code = {
+                            ['<leader>df'] = '@function.outer',
+                            ['<leader>dc'] = '@class.outer',
+                        }
+                    },
+                },
+            })
+        end,
+    },
+    {
+        'nvim-treesitter/nvim-treesitter-textobjects',
+        lazy = true,
+    },
 
     -- LSP
     {
@@ -250,7 +327,6 @@ return {
                 { name = 'cssls', opts = server_opts },
                 { name = 'emmet_ls', opts = extend_server_opts({ filetypes = { 'html', 'css', 'scss' } }) },
                 { name = 'gopls', opts = server_opts },
-                -- { name = 'html', opts = server_opts },
                 {
                     name = 'lua_ls',
                     opts = extend_server_opts({
@@ -265,14 +341,24 @@ return {
                     })
                 },
                 { name = 'pyright', opts = server_opts },
-                { name = 'rust_analyzer', opts = server_opts },
-                -- { name = 'tsserver', opts = extend_server_opts({ server = { capabilities = capabilities } }) },
+                {
+                    name = 'rust_analyzer',
+                    opts = extend_server_opts({
+                        settings = {
+                            ['rust-analyzer'] = {
+                                check = {
+                                    command = 'clippy',
+                                },
+                            }
+                        }
+                    })
+                },
             }
 
             for _, server in ipairs(lspconfig_servers) do
                 lsp[server.name].setup(server.opts or {})
             end
-        end
+        end,
     },
     {
         'folke/trouble.nvim',
@@ -292,23 +378,12 @@ return {
                 },
                 use_diagnostic_signs = false
             })
-        end
+        end,
     },
     {
         'pmizio/typescript-tools.nvim',
         dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-        opts = {
-            settings = {
-                tsserver_file_preferences = {
-                    includeInlayParameterNameHints = 'all',
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                    includeInlayFunctionParameterTypeHints = true,
-                    includeInlayVariableTypeHints = true,
-                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                },
-            },
-        },
+        opts = {},
     },
 
     -- Completion
@@ -322,7 +397,7 @@ return {
         config = function()
             -- vim.g.vsnip_filetypes = { 'html' }
             vim.g.vsnip_snippet_dir = vim.fn.stdpath('config') .. '/snippets'
-        end
+        end,
     },
     {
         'hrsh7th/vim-vsnip-integ',
@@ -354,8 +429,8 @@ return {
                     ['<Down>'] = cmp.mapping.select_next_item(),
                     ['<C-k>'] = cmp.mapping.select_prev_item(),
                     ['<C-j>'] = cmp.mapping.select_next_item(),
-                    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-                    ['<C-u>'] = cmp.mapping.scroll_docs(4),
+                    ['<C-d>'] = cmp.mapping.scroll_docs(4),
+                    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
                     ['<C-Space>'] = cmp.mapping.complete(),
                     ['<C-e>'] = cmp.mapping.close(),
                     ['<CR>'] = cmp.mapping.confirm {
@@ -394,7 +469,7 @@ return {
                     { name = 'path' },
                 },
             })
-        end
+        end,
     },
     {
         'ray-x/lsp_signature.nvim',
@@ -407,43 +482,48 @@ return {
                     border = 'single',
                 },
             })
-        end
+        end,
     },
 
     -- Miscellaneous
     {
-        'editorconfig/editorconfig-vim',
-        cond = function()
-            return vim.fn.has('nvim-0.9') == 0
-        end
-    },
-    {
         'folke/which-key.nvim',
         config = function()
             require('which-key').setup({})
-        end
+        end,
     },
     {
         'mbbill/undotree',
+        commit = '0e11ba7325efbbb3f3bebe06213afa3e7ec75131',
         config = function()
             vim.keymap.set('n', '<Leader>u', '<cmd>UndotreeToggle<CR>', { silent = true })
             vim.g.undotree_SetFocusWhenToggle = 1
             vim.g.undotree_ShortIndicators = 1
             vim.g.undotree_HelpLine = 0
-        end
+        end,
     },
-    { 'michaeljsmith/vim-indent-object' },
+    {
+        'michaeljsmith/vim-indent-object',
+        commit = '5c5b24c959478929b54a9e831a8e2e651a465965',
+    },
     { 'nvim-lua/plenary.nvim' },
     {
         'romainl/vim-qf',
+        commit = '7e65325651ff5a0b06af8df3980d2ee54cf10e14',
         config = function()
             vim.keymap.set('n', 'öq', '<Plug>(qf_qf_previous)')
             vim.keymap.set('n', 'äq', '<Plug>(qf_qf_next)')
-        end
+        end,
     },
-    { 'tpope/vim-repeat' },
+    {
+        'tpope/vim-repeat',
+        commit = '24afe922e6a05891756ecf331f39a1f6743d3d5a',
+    },
     { 'tpope/vim-fugitive' },
-    { 'whiteinge/diffconflicts' },
+    {
+        'whiteinge/diffconflicts',
+        commit = '05e8d2e935a235b8f8e6d308a46a5f028ea5bf97',
+    },
     {
         'stevearc/aerial.nvim',
         lazy = true,
