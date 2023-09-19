@@ -11,7 +11,9 @@ return {
         'ggandor/leap.nvim',
         commit = '5efe985cf68fac3b6a6dfe7a75fbfaca8db2af9c',
         config = function()
-            require('leap').add_default_mappings()
+            local leap = require('leap')
+            leap.add_default_mappings()
+            leap.opts.safe_labels = {}
         end,
     },
     { 'junegunn/fzf', build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc' },
@@ -198,29 +200,43 @@ return {
                         keymaps = {
                             ['aa'] = '@parameter.outer',
                             ['ia'] = '@parameter.inner',
-                            ['af'] = '@function.outer',
-                            ['if'] = '@function.inner',
+                            ['ab'] = '@block.outer',
+                            ['ib'] = '@block.inner',
                             ['ac'] = '@class.outer',
                             ['ic'] = '@class.inner',
+                            ['af'] = '@function.outer',
+                            ['if'] = '@function.inner',
                         },
                     },
                     move = {
                         enable = true,
                         set_jumps = true,
                         goto_next_start = {
+                            ['äa'] = '@parameter.outer',
+                            ['äb'] = '@block.outer',
                             ['äf'] = '@function.outer',
                             ['äc'] = '@class.outer',
                         },
                         goto_previous_start = {
+                            ['öa'] = '@parameter.outer',
+                            ['öb'] = '@block.outer',
                             ['öf'] = '@function.outer',
                             ['öc'] = '@class.outer',
                         },
                     },
-                    lsp_interop = {
+                    swap = {
                         enable = true,
-                        peek_definition_code = {
-                            ['<leader>df'] = '@function.outer',
-                            ['<leader>dc'] = '@class.outer',
+                        swap_next = {
+                            ['<leader>cal'] = '@parameter.inner',
+                            ['<leader>cbl'] = '@block.outer',
+                            ['<leader>cfl'] = '@function.outer',
+                            ['<leader>ccl'] = '@class.outer',
+                        },
+                        swap_previous = {
+                            ['<leader>cah'] = '@parameter.inner',
+                            ['<leader>cbh'] = '@block.outer',
+                            ['<leader>cfh'] = '@function.outer',
+                            ['<leader>cch'] = '@class.outer',
                         }
                     },
                 },
@@ -239,7 +255,6 @@ return {
         dependencies = {
             'folke/trouble.nvim',
             'ray-x/lsp_signature.nvim',
-            'stevearc/aerial.nvim',
         },
         config = function()
             local lsp = require('lspconfig')
@@ -288,13 +303,6 @@ return {
                     vim.keymap.set('n', '<leader>xf', '<cmd>Format<CR>', opts)
                     vim.keymap.set('n', '<leader>tt', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
                     vim.keymap.set('n', '<leader>tr', '<cmd>TroubleToggle lsp_references<CR>', opts)
-                    vim.keymap.set('n', '<leader>at', '<cmd>AerialToggle<CR>', opts)
-                    vim.keymap.set('n', 'öa', '<cmd>AerialPrev<CR>',
-                    extend_opts({ desc = 'Go to previous Aerial symbol' })
-                    )
-                    vim.keymap.set('n', 'äa', '<cmd>AerialNext<CR>',
-                    extend_opts({ desc = 'Go to next symbol' })
-                    )
                 end,
             })
 
@@ -400,11 +408,6 @@ return {
         end,
     },
     {
-        'hrsh7th/vim-vsnip-integ',
-        lazy = true,
-        dependencies = { 'hrsh7th/vim-vsnip' },
-    },
-    {
         'hrsh7th/nvim-cmp',
         event = 'BufReadPost',
         dependencies = {
@@ -413,7 +416,6 @@ return {
             'hrsh7th/cmp-nvim-lua',
             'hrsh7th/cmp-vsnip',
             'hrsh7th/vim-vsnip',
-            'hrsh7th/vim-vsnip-integ',
         },
         config = function()
             vim.opt.completeopt = 'menu,menuone,noselect'
@@ -523,10 +525,5 @@ return {
     {
         'whiteinge/diffconflicts',
         commit = '05e8d2e935a235b8f8e6d308a46a5f028ea5bf97',
-    },
-    {
-        'stevearc/aerial.nvim',
-        lazy = true,
-        opts = {},
     },
 }
