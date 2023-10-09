@@ -27,16 +27,11 @@ return {
                 'default',
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
-                        ['ctrl-g'] = function(selected)
-                            -- Changes current directory to first selected file's parent dir
-                            local dir = vim.fs.dirname(selected[1])
-                            vim.cmd('cd!' .. dir)
-                            vim.defer_fn(function() vim.cmd('verbose pwd') end, 0)
-                        end,
                         ['ctrl-o'] = function(selected)
                             -- Opens selected file(s) with system default handler
                             for _, item in ipairs(selected) do
                                 local selected_item = string.gsub(item, '\t+', '')
+
                                 vim.notify('opening file ' .. selected_item)
                                 vim.ui.open(selected_item)
                             end
@@ -51,15 +46,6 @@ return {
                         end,
                     }),
                 },
-                keymap = vim.tbl_deep_extend('force', defaults.keymap, {
-                    builtin = {
-                        ['§'] = 'toggle-preview',
-                        ['½'] = 'toggle-help',
-                    },
-                    fzf = {
-                        ['§'] = 'toggle-preview',
-                    },
-                }),
                 previewers = {
                     bat = {
                         args = '--style=numbers,changes,header-filename,rule --color always --line-range=:1000',
@@ -77,18 +63,19 @@ return {
                 },
                 grep = {
                     rg_opts = '--column --line-number --no-heading --hidden --smart-case --max-columns=4096 ' ..
-                    '--glob="!.git/" ' ..
-                    '--color=always --colors "path:fg:green" --colors "line:fg:yellow"',
+                        '--glob="!.git/" ' ..
+                        '--color=always --colors "path:fg:green" --colors "line:fg:yellow"',
                     rg_glob = true,
                 },
             })
             vim.keymap.set('n', '<Leader>ff', fzf.builtin, { desc = 'Find fzf-lua builtins' })
             vim.keymap.set('n', '<Leader>fc', fzf.commands, { desc = 'Find commands' })
             vim.keymap.set('n', '<Leader>fh', fzf.help_tags, { desc = 'Find help tags' })
+            vim.keymap.set('n', '<Leader>fk', fzf.keymaps, { desc = 'Find keymaps' })
             vim.keymap.set('n', '<Leader>fl', fzf.lines, { desc = 'Find open buffers\' lines' })
             vim.keymap.set('n', '<Leader>fr', fzf.registers, { desc = 'Find registers' })
-            vim.keymap.set('n', '<C-f>', fzf.grep_cWORD, { desc = 'Find text matching word under cursor' })
-            vim.keymap.set('x', '<C-f>', fzf.grep_visual, { desc = 'Find text matching visual selection' })
+            vim.keymap.set('n', '<Leader>fw', fzf.grep_cWORD, { desc = 'Find text matching word under cursor' })
+            vim.keymap.set('x', '<Leader>fw', fzf.grep_visual, { desc = 'Find text matching visual selection' })
             vim.keymap.set('n', '<Leader>,', function()
                 fzf.files({ fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find files' })
@@ -160,18 +147,37 @@ return {
         commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa',
     },
     {
-        'prettier/vim-prettier',
-        commit = '5e6cca21e12587c02e32a06bf423519eb1e9f1b2',
-        ft = {
-            'javascript', 'javascriptreact',
-            'typescript', 'typescriptreact',
-            'vue', 'svelte', 'css', 'scss', 'html'
-        },
+        'stevearc/conform.nvim',
+        opts = {},
         config = function()
-            vim.keymap.set('n', '<Leader>p', '<cmd>Prettier<CR>', { silent = true })
-            vim.g['prettier#autoformat_config_present'] = 1
-            vim.g['prettier#autoformat_require_pragma'] = 0
-        end,
+            require('conform').setup({
+                formatters_by_ft = {
+                    -- json = { 'jq' },
+                    go = { 'gofmt' },
+                    rust = { 'rustfmt' },
+                    html = { 'prettier' },
+                    scss = { 'prettier' },
+                    javascript = { 'prettier' },
+                    javascriptreact = { 'prettier' },
+                    typescript = { 'prettier' },
+                    typescriptreact = { 'prettier' },
+                },
+                format_on_save = function(bufnr)
+                    if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
+                    return {
+                        timeout_ms = 500,
+                        lsp_fallback = false,
+                    }
+                end
+            })
+            vim.api.nvim_create_user_command('FormatDisable', function(args)
+                if args.bang then vim.b.disable_autoformat = true else vim.g.disable_autoformat = true end
+            end, { bang = true })
+            vim.api.nvim_create_user_command('FormatEnable', function()
+                vim.b.disable_autoformat = false
+                vim.g.disable_autoformat = false
+            end, { bang = true })
+        end
     },
     {
         'nvim-treesitter/nvim-treesitter',
@@ -184,7 +190,8 @@ return {
                 highlight = {
                     enable = true,
                     disable = function(lang, buf)
-                        return (lang ~= 'markdown' and lang ~= 'typescriptreact') or vim.api.nvim_buf_line_count(buf) > 5000
+                        return (lang ~= 'markdown' and lang ~= 'typescriptreact') or
+                            vim.api.nvim_buf_line_count(buf) > 5000
                     end
                 },
                 matchup = {
@@ -200,8 +207,6 @@ return {
                         keymaps = {
                             ['aa'] = '@parameter.outer',
                             ['ia'] = '@parameter.inner',
-                            ['ab'] = '@block.outer',
-                            ['ib'] = '@block.inner',
                             ['ac'] = '@class.outer',
                             ['ic'] = '@class.inner',
                             ['af'] = '@function.outer',
@@ -213,13 +218,11 @@ return {
                         set_jumps = true,
                         goto_next_start = {
                             ['äa'] = '@parameter.outer',
-                            ['äb'] = '@block.outer',
                             ['äf'] = '@function.outer',
                             ['äc'] = '@class.outer',
                         },
                         goto_previous_start = {
                             ['öa'] = '@parameter.outer',
-                            ['öb'] = '@block.outer',
                             ['öf'] = '@function.outer',
                             ['öc'] = '@class.outer',
                         },
@@ -253,7 +256,6 @@ return {
         'neovim/nvim-lspconfig',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
-            'folke/trouble.nvim',
             'ray-x/lsp_signature.nvim',
         },
         config = function()
@@ -263,37 +265,37 @@ return {
                 group = vim.api.nvim_create_augroup('LspConfig', {}),
                 callback = function(ev)
                     vim.diagnostic.config({ virtual_text = false })
-                    vim.cmd('command! Format execute "lua vim.lsp.buf.format({ async = true })"')
+                    vim.cmd('command! Format execute "lua require(\'conform\').format()"')
                     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
                     local opts = { noremap = true, silent = true, buffer = ev.buf }
                     local extend_opts = function(extends) return vim.tbl_extend('force', opts, extends) end
 
                     vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>',
-                    extend_opts({ desc = 'Go to definition' }))
+                        extend_opts({ desc = 'Go to definition' }))
                     vim.keymap.set('n', 'gD', '<cmd>FzfLua lsp_definitions<CR>',
-                    extend_opts({ desc = 'Find definition(s)' }))
+                        extend_opts({ desc = 'Find definition(s)' }))
                     vim.keymap.set('n', 'gi', '<cmd>FzfLua lsp_implementations<CR>',
-                    extend_opts({ desc = 'Find implementation(s)' }))
+                        extend_opts({ desc = 'Find implementation(s)' }))
                     vim.keymap.set('n', 'gr', '<cmd>FzfLua lsp_references<CR>',
-                    extend_opts({ desc = 'Find reference(s)' }))
+                        extend_opts({ desc = 'Find reference(s)' }))
                     vim.keymap.set('n', 'gt', '<cmd>FzfLua lsp_typedefs<CR>',
-                    extend_opts({ desc = 'Find type definitions(s)' }))
+                        extend_opts({ desc = 'Find type definitions(s)' }))
                     vim.keymap.set('n', 'ög',
-                    '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
-                    extend_opts({ desc = 'Go to previous WARN+ diagnostic' })
+                        '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
+                        extend_opts({ desc = 'Go to previous WARN+ diagnostic' })
                     )
                     vim.keymap.set('n', 'äg',
-                    '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
-                    extend_opts({ desc = 'Go to next WARN+ diagnostic' })
+                        '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
+                        extend_opts({ desc = 'Go to next WARN+ diagnostic' })
                     )
                     vim.keymap.set('n', 'öG',
-                    '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.HINT}})<CR>',
-                    extend_opts({ desc = 'Go to next HINT+ diagnostic' })
+                        '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.HINT}})<CR>',
+                        extend_opts({ desc = 'Go to next HINT+ diagnostic' })
                     )
                     vim.keymap.set('n', 'äG',
-                    '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.HINT}})<CR>',
-                    extend_opts({ desc = 'Go to next HINT+ diagnostic' })
+                        '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.HINT}})<CR>',
+                        extend_opts({ desc = 'Go to next HINT+ diagnostic' })
                     )
                     vim.keymap.set('n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
                     vim.keymap.set('n', '<C-Space>', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
@@ -301,8 +303,6 @@ return {
                     vim.keymap.set('x', '<leader><Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
                     vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
                     vim.keymap.set('n', '<leader>xf', '<cmd>Format<CR>', opts)
-                    vim.keymap.set('n', '<leader>tt', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
-                    vim.keymap.set('n', '<leader>tr', '<cmd>TroubleToggle lsp_references<CR>', opts)
                 end,
             })
 
@@ -349,43 +349,12 @@ return {
                     })
                 },
                 { name = 'pyright', opts = server_opts },
-                {
-                    name = 'rust_analyzer',
-                    opts = extend_server_opts({
-                        settings = {
-                            ['rust-analyzer'] = {
-                                check = {
-                                    command = 'clippy',
-                                },
-                            }
-                        }
-                    })
-                },
+                { name = 'rust_analyzer', opts = server_opts },
             }
 
             for _, server in ipairs(lspconfig_servers) do
                 lsp[server.name].setup(server.opts or {})
             end
-        end,
-    },
-    {
-        'folke/trouble.nvim',
-        lazy = true,
-        config = function()
-            require('trouble').setup({
-                icons = false,
-                fold_open = 'v',
-                fold_closed = '>',
-                indent_lines = false,
-                signs = {
-                    error = '[error]',
-                    warn = '[warn]',
-                    hint = '[hint]',
-                    information = '[info]',
-                    other = '[other]',
-                },
-                use_diagnostic_signs = false
-            })
         end,
     },
     {
@@ -403,7 +372,7 @@ return {
         'hrsh7th/vim-vsnip',
         lazy = true,
         config = function()
-            -- vim.g.vsnip_filetypes = { 'html' }
+            vim.g.vsnip_filetypes = {}
             vim.g.vsnip_snippet_dir = vim.fn.stdpath('config') .. '/snippets'
         end,
     },
@@ -444,8 +413,8 @@ return {
                             cmp.select_next_item()
                         elseif vim.fn['vsnip#available'](1) == 1 then
                             vim.api.nvim_feedkeys(
-                            vim.api.nvim_replace_termcodes('<Plug>(vsnip-expand-or-jump)', true, true, true),
-                            '', true
+                                vim.api.nvim_replace_termcodes('<Plug>(vsnip-expand-or-jump)', true, true, true),
+                                '', true
                             )
                         else
                             fallback()
@@ -456,8 +425,8 @@ return {
                             cmp.select_prev_item()
                         elseif vim.fn['vsnip#jumpable'](-1) == 1 then
                             vim.api.nvim_feedkeys(
-                            vim.api.nvim_replace_termcodes('<Plug>(vsnip-jump-prev)', true, true, true),
-                            '', true
+                                vim.api.nvim_replace_termcodes('<Plug>(vsnip-jump-prev)', true, true, true),
+                                '', true
                             )
                         else
                             fallback()

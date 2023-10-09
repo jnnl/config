@@ -21,18 +21,13 @@ if lazy_ok then
         defaults = {
             lazy = false,
         },
+        change_detection = {
+            enabled = false,
+        },
         lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
         performance = {
             rtp = {
-                disabled_plugins = {
-                    "gzip",
-                    "matchit",
-                    "matchparen",
-                    "netrwPlugin",
-                    "rplugin",
-                    "tohtml",
-                    "tutor",
-                },
+                disabled_plugins = { "gzip", "matchit", "matchparen", "netrwPlugin", "rplugin", "tohtml", "tutor", },
             },
         },
     })
@@ -58,7 +53,7 @@ vim.opt.shada:prepend('r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:')
 -- Statusline
 
 vim.opt.laststatus = 2
-vim.opt.statusline = [[%f %y%m%=%l/%L]]
+vim.opt.statusline = [[%f %y%m %l/%L]]
 
 
 -- Indentation
@@ -114,8 +109,6 @@ vim.keymap.set('n', 'öö', '<C-o>', { desc = 'Go to previous jump list position
 vim.keymap.set('n', 'ää', '<C-i>', { desc = 'Go to next jump list position' })
 vim.keymap.set('n', 'öj', '<C-o>', { desc = 'Go to previous jump list position' })
 vim.keymap.set('n', 'äj', '<C-i>', { desc = 'Go to next jump list position' })
-vim.keymap.set('n', '<S-Tab>', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
-vim.keymap.set('n', '<Tab>', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 vim.keymap.set('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
 vim.keymap.set('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 
@@ -125,20 +118,13 @@ vim.keymap.set({ 'n', 'x' }, '<C-j>', '}')
 vim.keymap.set({ 'n', 'x' }, '<C-k>', '{')
 vim.keymap.set('c', '<C-j>', '<Down>')
 vim.keymap.set('c', '<C-k>', '<Up>')
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
 
 vim.keymap.set('n', 'Q', '@q')
 vim.keymap.set('x', 'Q', '<cmd>normal @q<CR>')
 vim.keymap.set('x', '@', '<cmd>normal @')
 vim.keymap.set('x', '.', '<cmd>normal .<CR>')
-
-vim.keymap.set('n', '<Up>', function() move_split('up', '1') end)
-vim.keymap.set('n', '<Down>', function() move_split('down', '1') end)
-vim.keymap.set('n', '<Left>', function() move_split('left', '1') end)
-vim.keymap.set('n', '<Right>', function() move_split('right', '1') end)
-vim.keymap.set('n', '<C-Up>', function() move_split('up', '10') end)
-vim.keymap.set('n', '<C-Down>', function() move_split('down', '10') end)
-vim.keymap.set('n', '<C-Left>', function() move_split('left', '10') end)
-vim.keymap.set('n', '<C-Right>', function() move_split('right', '10') end)
 
 vim.keymap.set('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
 vim.keymap.set('n', '<Leader>s', function()
@@ -248,7 +234,6 @@ vim.api.nvim_create_autocmd({ 'BufWritePre', 'FileWritePre' }, {
     end
 })
 
--- vim-cool replacement
 vim.on_key(function(key)
     if vim.fn.mode() == 'n' then
         local hls_keys = { '<CR>', '*', '#', '/', '?', 'n', 'N', }
@@ -258,35 +243,3 @@ vim.on_key(function(key)
         end
     end
 end, vim.api.nvim_create_namespace "hlsearch_autoclear")
-
--- Functions
-
-function move_split(direction, amount)
-    local op = '+'
-    local curr_win = vim.fn.winnr()
-    if direction == 'left' or direction == 'right' then
-        local left_win = vim.fn.winnr('h')
-        local right_win = vim.fn.winnr('l')
-        if left_win == right_win then
-            return
-        end
-        if curr_win == right_win then
-            if direction == 'right' then op = '-' end
-        else
-            if direction == 'left' then op = '-' end
-        end
-        vim.cmd('vertical resize ' .. op .. amount)
-    elseif direction == 'up' or direction == 'down' then
-        local up_win = vim.fn.winnr('k')
-        local down_win = vim.fn.winnr('j')
-        if up_win == down_win then
-	    return
-        end
-        if curr_win == up_win then
-            if direction == 'up' then op = '-' end
-        else
-            if direction == 'down' then op = '-' end
-        end
-        vim.cmd('resize ' .. op .. amount)
-    end
-end
