@@ -122,9 +122,9 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 
 vim.keymap.set('n', 'Q', '@q')
-vim.keymap.set('x', 'Q', '<cmd>normal @q<CR>')
-vim.keymap.set('x', '@', '<cmd>normal @')
-vim.keymap.set('x', '.', '<cmd>normal .<CR>')
+vim.keymap.set('x', 'Q', ':normal @q<CR>')
+vim.keymap.set('x', '@', ':normal @')
+vim.keymap.set('x', '.', ':normal .<CR>')
 
 vim.keymap.set('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
 vim.keymap.set('n', '<Leader>s', function()

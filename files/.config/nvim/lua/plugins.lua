@@ -227,21 +227,6 @@ return {
                             ['öc'] = '@class.outer',
                         },
                     },
-                    swap = {
-                        enable = true,
-                        swap_next = {
-                            ['<leader>cal'] = '@parameter.inner',
-                            ['<leader>cbl'] = '@block.outer',
-                            ['<leader>cfl'] = '@function.outer',
-                            ['<leader>ccl'] = '@class.outer',
-                        },
-                        swap_previous = {
-                            ['<leader>cah'] = '@parameter.inner',
-                            ['<leader>cbh'] = '@block.outer',
-                            ['<leader>cfh'] = '@function.outer',
-                            ['<leader>cch'] = '@class.outer',
-                        }
-                    },
                 },
             })
         end,
