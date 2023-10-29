@@ -27,7 +27,7 @@ if lazy_ok then
         lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
         performance = {
             rtp = {
-                disabled_plugins = { "gzip", "matchit", "matchparen", "netrwPlugin", "rplugin", "tohtml", "tutor", },
+                disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor', },
             },
         },
     })
@@ -120,6 +120,11 @@ vim.keymap.set('c', '<C-j>', '<Down>')
 vim.keymap.set('c', '<C-k>', '<Up>')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
+vim.keymap.set('n', '<C-w>.', function()
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    local longest_line_length = math.max(unpack(vim.tbl_map(function(line) return #line end, lines))) + 5
+    vim.cmd('vertical resize ' .. longest_line_length)
+end, { desc = 'Resize window width to fit content' })
 
 vim.keymap.set('n', 'Q', '@q')
 vim.keymap.set('x', 'Q', ':normal @q<CR>')
@@ -143,7 +148,7 @@ vim.api.nvim_create_user_command('Rstrip', function()
 end, { bang = true })
 vim.api.nvim_create_user_command('CloseFloatingWindows', function()
     for _, win in ipairs(vim.api.nvim_list_wins()) do
-        if vim.api.nvim_win_get_config(win).relative ~= "" then
+        if vim.api.nvim_win_get_config(win).relative ~= '' then
             vim.api.nvim_win_close(win, false)
         end
     end
@@ -242,4 +247,4 @@ vim.on_key(function(key)
             vim.opt.hlsearch = is_hls_key
         end
     end
-end, vim.api.nvim_create_namespace "hlsearch_autoclear")
+end, vim.api.nvim_create_namespace 'hlsearch_autoclear')

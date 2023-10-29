@@ -16,7 +16,11 @@ return {
             leap.opts.safe_labels = {}
         end,
     },
-    { 'junegunn/fzf', build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc' },
+    { 'justinmk/vim-dirvish' },
+    {
+        'junegunn/fzf',
+        build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc'
+    },
     {
         'ibhagwan/fzf-lua',
         config = function()
@@ -31,7 +35,6 @@ return {
                             -- Opens selected file(s) with system default handler
                             for _, item in ipairs(selected) do
                                 local selected_item = string.gsub(item, '\t+', '')
-
                                 vim.notify('opening file ' .. selected_item)
                                 vim.ui.open(selected_item)
                             end
@@ -59,6 +62,7 @@ return {
                             ['jpeg'] = { 'chafa' },
                             ['svg'] = { 'chafa' },
                         },
+                        title_fnamemodify = function(s) return vim.fn.fnamemodify(s, ':p:.') end,
                     },
                 },
                 grep = {
@@ -96,9 +100,9 @@ return {
                 fzf.fzf_exec('git dmc', {
                     prompt = 'Conflicts> ',
                     cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h'),
-                    preview = "awk '/<<<<<<</, />>>>>>>/ { print NR\"\\t\"$0 }' {1}",
+                    preview = 'awk "/<<<<<<</, />>>>>>>/ { print NR\"\\t\"$0 }" {1}',
                     actions = {
-                        ["default"] = actions.file_edit_or_qf,
+                        ['default'] = actions.file_edit_or_qf,
                     },
                 })
             end, { desc = 'Find git merge conflicts' })
@@ -179,62 +183,6 @@ return {
             end, { bang = true })
         end
     },
-    {
-        'nvim-treesitter/nvim-treesitter',
-        dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
-        build = ':TSUpdate',
-        config = function()
-            require('nvim-treesitter.configs').setup({
-                ensure_installed = { 'bash', 'c', 'go', 'html', 'lua', 'markdown', 'python', 'rust', 'tsx', 'typescript', },
-                auto_install = false,
-                highlight = {
-                    enable = true,
-                    disable = function(lang, buf)
-                        return (lang ~= 'markdown' and lang ~= 'typescriptreact') or
-                            vim.api.nvim_buf_line_count(buf) > 5000
-                    end
-                },
-                matchup = {
-                    enable = true,
-                    disable = function(lang, _)
-                        return lang == 'typescript'
-                    end
-                },
-                textobjects = {
-                    select = {
-                        enable = true,
-                        lookahead = true,
-                        keymaps = {
-                            ['aa'] = '@parameter.outer',
-                            ['ia'] = '@parameter.inner',
-                            ['ac'] = '@class.outer',
-                            ['ic'] = '@class.inner',
-                            ['af'] = '@function.outer',
-                            ['if'] = '@function.inner',
-                        },
-                    },
-                    move = {
-                        enable = true,
-                        set_jumps = true,
-                        goto_next_start = {
-                            ['äa'] = '@parameter.outer',
-                            ['äf'] = '@function.outer',
-                            ['äc'] = '@class.outer',
-                        },
-                        goto_previous_start = {
-                            ['öa'] = '@parameter.outer',
-                            ['öf'] = '@function.outer',
-                            ['öc'] = '@class.outer',
-                        },
-                    },
-                },
-            })
-        end,
-    },
-    {
-        'nvim-treesitter/nvim-treesitter-textobjects',
-        lazy = true,
-    },
 
     -- LSP
     {
@@ -264,7 +212,7 @@ return {
                         extend_opts({ desc = 'Find implementation(s)' }))
                     vim.keymap.set('n', 'gr', '<cmd>FzfLua lsp_references<CR>',
                         extend_opts({ desc = 'Find reference(s)' }))
-                    vim.keymap.set('n', 'gt', '<cmd>FzfLua lsp_typedefs<CR>',
+                    vim.keymap.set('n', 'gy', '<cmd>FzfLua lsp_typedefs<CR>',
                         extend_opts({ desc = 'Find type definitions(s)' }))
                     vim.keymap.set('n', 'ög',
                         '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
@@ -333,7 +281,21 @@ return {
                         },
                     })
                 },
-                { name = 'pyright', opts = server_opts },
+                {
+                    name = 'pyright',
+                    opts = extend_server_opts({
+                        settings = {
+                            python = {
+                                analysis = {
+                                    autoSearchPaths = false,
+                                    diagnosticMode = 'openFilesOnly',
+                                    useLibraryCodeForTypes = false,
+                                    typeCheckingMode = 'basic',
+                                }
+                            }
+                        }
+                    })
+                },
                 { name = 'rust_analyzer', opts = server_opts },
             }
 
