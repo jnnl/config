@@ -2,6 +2,7 @@ return {
     -- Navigation
     {
         'andymass/vim-matchup',
+        commit = 'd30b72d20f01478a8486f15a57c89fe3177373db',
         event = 'BufReadPost',
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
@@ -17,17 +18,14 @@ return {
         end,
     },
     { 'justinmk/vim-dirvish' },
-    {
-        'junegunn/fzf',
-        build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc'
-    },
+    { 'junegunn/fzf', build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc' },
     {
         'ibhagwan/fzf-lua',
         config = function()
-            local fzf = require('fzf-lua')
+            local fzf_lua = require('fzf-lua')
             local defaults = require('fzf-lua.defaults').defaults
             local actions = require('fzf-lua.actions')
-            fzf.setup({
+            fzf_lua.setup({
                 'default',
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
@@ -72,32 +70,32 @@ return {
                     rg_glob = true,
                 },
             })
-            vim.keymap.set('n', '<Leader>ff', fzf.builtin, { desc = 'Find fzf-lua builtins' })
-            vim.keymap.set('n', '<Leader>fc', fzf.commands, { desc = 'Find commands' })
-            vim.keymap.set('n', '<Leader>fh', fzf.help_tags, { desc = 'Find help tags' })
-            vim.keymap.set('n', '<Leader>fk', fzf.keymaps, { desc = 'Find keymaps' })
-            vim.keymap.set('n', '<Leader>fl', fzf.lines, { desc = 'Find open buffers\' lines' })
-            vim.keymap.set('n', '<Leader>fr', fzf.registers, { desc = 'Find registers' })
-            vim.keymap.set('n', '<Leader>fw', fzf.grep_cWORD, { desc = 'Find text matching word under cursor' })
-            vim.keymap.set('x', '<Leader>fw', fzf.grep_visual, { desc = 'Find text matching visual selection' })
+            vim.keymap.set('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
+            vim.keymap.set('n', '<Leader>fc', fzf_lua.commands, { desc = 'Find commands' })
+            vim.keymap.set('n', '<Leader>fh', fzf_lua.help_tags, { desc = 'Find help tags' })
+            vim.keymap.set('n', '<Leader>fk', fzf_lua.keymaps, { desc = 'Find keymaps' })
+            vim.keymap.set('n', '<Leader>fl', fzf_lua.lines, { desc = 'Find open buffers\' lines' })
+            vim.keymap.set('n', '<Leader>fr', fzf_lua.registers, { desc = 'Find registers' })
+            vim.keymap.set('n', '<Leader>fw', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
+            vim.keymap.set('x', '<Leader>fw', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
             vim.keymap.set('n', '<Leader>,', function()
-                fzf.files({ fzf_opts = { ['--scheme'] = 'path' } })
+                fzf_lua.files({ fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find files' })
-            vim.keymap.set('n', '<Leader>.', fzf.buffers, { desc = 'Find open buffers' })
+            vim.keymap.set('n', '<Leader>.', fzf_lua.buffers, { desc = 'Find open buffers' })
             vim.keymap.set('n', '<Leader>-', function()
-                fzf.grep_project({ fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' } })
+                fzf_lua.grep_project({ fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' } })
             end, { desc = 'Find text' })
-            vim.keymap.set('n', '<Leader>;', fzf.oldfiles, { desc = 'Find recently opened files' })
-            vim.keymap.set('n', '<Leader>:', fzf.git_bcommits, { desc = 'Find git commits affecting current file' })
-            vim.keymap.set('n', '<Leader>_', fzf.blines, { desc = 'Find text in current file' })
-            vim.keymap.set('n', '<Leader>\'', fzf.resume, { desc = 'Resume most recent fzf-lua search' })
+            vim.keymap.set('n', '<Leader>;', fzf_lua.oldfiles, { desc = 'Find recently opened files' })
+            vim.keymap.set('n', '<Leader>:', fzf_lua.git_bcommits, { desc = 'Find git commits affecting current file' })
+            vim.keymap.set('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
+            vim.keymap.set('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
             vim.keymap.set('n', '<Leader>*', function()
-                fzf.files({ cwd = vim.fn.expand('$HOME') })
+                fzf_lua.files({ cwd = vim.fn.expand('$HOME') })
             end, { desc = 'Find files in ~' })
-            vim.keymap.set('n', '<Leader>fgb', fzf.git_branches, { desc = 'Find git branches' })
-            vim.keymap.set('n', '<Leader>fgc', fzf.git_commits, { desc = 'Find git commits' })
+            vim.keymap.set('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
+            vim.keymap.set('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
             vim.keymap.set('n', '<Leader>fgx', function()
-                fzf.fzf_exec('git dmc', {
+                fzf_lua.fzf_exec('git dmc', {
                     prompt = 'Conflicts> ',
                     cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h'),
                     preview = 'awk "/<<<<<<</, />>>>>>>/ { print NR\"\\t\"$0 }" {1}',
@@ -118,20 +116,9 @@ return {
             vim.g.lion_squeeze_spaces = 1
         end,
     },
-    {
-        'tpope/vim-abolish',
-        commit = 'cb3dcb220262777082f63972298d57ef9e9455ec',
-    },
-    {
-        'tpope/vim-commentary',
-        commit = 'e87cd90dc09c2a203e13af9704bd0ef79303d755',
-        event = { 'BufNewFile', 'BufReadPre' },
-    },
-    {
-        'tpope/vim-surround',
-        commit = '3d188ed2113431cf8dac77be61b842acb64433d9',
-        event = { 'BufNewFile', 'BufReadPre' },
-    },
+    { 'tpope/vim-abolish', commit = 'cb3dcb220262777082f63972298d57ef9e9455ec' },
+    { 'tpope/vim-commentary', commit = 'e87cd90dc09c2a203e13af9704bd0ef79303d755' },
+    { 'tpope/vim-surround', commit = '3d188ed2113431cf8dac77be61b842acb64433d9' },
 
     -- Colorschemes
     { 'jnnl/vim-tonight' },
@@ -142,19 +129,19 @@ return {
         commit = '2840cd5252db9decc4422844945b3460868ee691',
         ft = { 'css', 'scss' },
     },
+    { 'hashivim/vim-terraform', commit = '2bbc5f65a80c79a5110494a2ba1b869075fcf7a0' },
+    { 'leafgarland/typescript-vim', commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa' },
     {
-        'hashivim/vim-terraform',
-        commit = '2bbc5f65a80c79a5110494a2ba1b869075fcf7a0',
-    },
-    {
-        'leafgarland/typescript-vim',
-        commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa',
+        'pmizio/typescript-tools.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+        opts = {},
     },
     {
         'stevearc/conform.nvim',
         opts = {},
         config = function()
-            require('conform').setup({
+            local conform = require('conform')
+            conform.setup({
                 formatters_by_ft = {
                     -- json = { 'jq' },
                     go = { 'gofmt' },
@@ -174,6 +161,9 @@ return {
                     }
                 end
             })
+            vim.api.nvim_create_user_command('Format', function()
+                conform.format()
+            end, { bang = true })
             vim.api.nvim_create_user_command('FormatDisable', function(args)
                 if args.bang then vim.b.disable_autoformat = true else vim.g.disable_autoformat = true end
             end, { bang = true })
@@ -183,8 +173,17 @@ return {
             end, { bang = true })
         end
     },
-
-    -- LSP
+    {
+        'ray-x/lsp_signature.nvim',
+        lazy = true,
+        opts = {
+            bind = true,
+            hint_enable = false,
+            handler_opts = {
+                border = 'single',
+            },
+        },
+    },
     {
         'neovim/nvim-lspconfig',
         event = { 'BufNewFile', 'BufReadPre' },
@@ -198,44 +197,41 @@ return {
                 group = vim.api.nvim_create_augroup('LspConfig', {}),
                 callback = function(ev)
                     vim.diagnostic.config({ virtual_text = false })
-                    vim.cmd('command! Format execute "lua require(\'conform\').format()"')
                     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
                     local opts = { noremap = true, silent = true, buffer = ev.buf }
                     local extend_opts = function(extends) return vim.tbl_extend('force', opts, extends) end
+                    local fzf_lua = require('fzf-lua')
 
-                    vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>',
-                        extend_opts({ desc = 'Go to definition' }))
-                    vim.keymap.set('n', 'gD', '<cmd>FzfLua lsp_definitions<CR>',
-                        extend_opts({ desc = 'Find definition(s)' }))
-                    vim.keymap.set('n', 'gi', '<cmd>FzfLua lsp_implementations<CR>',
-                        extend_opts({ desc = 'Find implementation(s)' }))
-                    vim.keymap.set('n', 'gr', '<cmd>FzfLua lsp_references<CR>',
-                        extend_opts({ desc = 'Find reference(s)' }))
-                    vim.keymap.set('n', 'gy', '<cmd>FzfLua lsp_typedefs<CR>',
-                        extend_opts({ desc = 'Find type definitions(s)' }))
-                    vim.keymap.set('n', 'ög',
-                        '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
+                    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, extend_opts({ desc = 'Go to definition' }))
+                    vim.keymap.set('n', 'gD', fzf_lua.lsp_definitions, extend_opts({ desc = 'Find definition(s)' }))
+                    vim.keymap.set('n', 'gi', fzf_lua.lsp_implementations, extend_opts({ desc = 'Find implementation(s)' }))
+                    vim.keymap.set('n', 'gr', fzf_lua.lsp_references, extend_opts({ desc = 'Find reference(s)' }))
+                    vim.keymap.set('n', 'gy', fzf_lua.lsp_typedefs, extend_opts({ desc = 'Find type definitions(s)' }))
+                    vim.keymap.set('n', 'ög', function()
+                            vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN } })
+                        end,
                         extend_opts({ desc = 'Go to previous WARN+ diagnostic' })
                     )
-                    vim.keymap.set('n', 'äg',
-                        '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.WARN}})<CR>',
+                    vim.keymap.set('n', 'äg', function()
+                            vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.WARN } })
+                        end,
                         extend_opts({ desc = 'Go to next WARN+ diagnostic' })
                     )
-                    vim.keymap.set('n', 'öG',
-                        '<cmd>lua vim.diagnostic.goto_prev({severity = {min = vim.diagnostic.severity.HINT}})<CR>',
+                    vim.keymap.set('n', 'öG', function()
+                            vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.HINT } })
+                        end,
                         extend_opts({ desc = 'Go to next HINT+ diagnostic' })
                     )
-                    vim.keymap.set('n', 'äG',
-                        '<cmd>lua vim.diagnostic.goto_next({severity = {min = vim.diagnostic.severity.HINT}})<CR>',
-                        extend_opts({ desc = 'Go to next HINT+ diagnostic' })
+                    vim.keymap.set('n', 'äG', function()
+                            vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.HINT } })
+                        end, extend_opts({ desc = 'Go to next HINT+ diagnostic' })
                     )
-                    vim.keymap.set('n', '<Space>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-                    vim.keymap.set('n', '<C-Space>', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-                    vim.keymap.set('n', '<leader><Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-                    vim.keymap.set('x', '<leader><Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-                    vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-                    vim.keymap.set('n', '<leader>xf', '<cmd>Format<CR>', opts)
+                    vim.keymap.set('n', '<Space>', vim.lsp.buf.hover, opts)
+                    vim.keymap.set('n', '<C-Space>', vim.diagnostic.open_float, opts)
+                    vim.keymap.set({ 'n', 'x' }, '<leader><Space>', vim.lsp.buf.code_action, opts)
+                    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, opts)
+                    vim.keymap.set('n', '<leader>xf', function() vim.cmd('Format') end, opts)
                 end,
             })
 
@@ -304,44 +300,23 @@ return {
             end
         end,
     },
-    {
-        'pmizio/typescript-tools.nvim',
-        dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-        opts = {},
-    },
 
     -- Completion
     { 'hrsh7th/cmp-nvim-lsp', lazy = true },
     { 'hrsh7th/cmp-nvim-lua', lazy = true },
     { 'hrsh7th/cmp-path', lazy = true },
-    { 'hrsh7th/cmp-vsnip', lazy = true },
-    {
-        'hrsh7th/vim-vsnip',
-        lazy = true,
-        config = function()
-            vim.g.vsnip_filetypes = {}
-            vim.g.vsnip_snippet_dir = vim.fn.stdpath('config') .. '/snippets'
-        end,
-    },
     {
         'hrsh7th/nvim-cmp',
         event = 'BufReadPost',
         dependencies = {
             'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-path',
             'hrsh7th/cmp-nvim-lua',
-            'hrsh7th/cmp-vsnip',
-            'hrsh7th/vim-vsnip',
+            'hrsh7th/cmp-path',
         },
         config = function()
             vim.opt.completeopt = 'menu,menuone,noselect'
             local cmp = require('cmp')
             cmp.setup({
-                snippet = {
-                    expand = function(args)
-                        vim.fn['vsnip#anonymous'](args.body)
-                    end
-                },
                 mapping = {
                     ['<Up>'] = cmp.mapping.select_prev_item(),
                     ['<Down>'] = cmp.mapping.select_next_item(),
@@ -358,11 +333,8 @@ return {
                     ['<Tab>'] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_next_item()
-                        elseif vim.fn['vsnip#available'](1) == 1 then
-                            vim.api.nvim_feedkeys(
-                                vim.api.nvim_replace_termcodes('<Plug>(vsnip-expand-or-jump)', true, true, true),
-                                '', true
-                            )
+                        elseif vim.snippet.jumpable(1) then
+                            vim.snippet.jump(1)
                         else
                             fallback()
                         end
@@ -370,15 +342,17 @@ return {
                     ['<S-Tab>'] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_prev_item()
-                        elseif vim.fn['vsnip#jumpable'](-1) == 1 then
-                            vim.api.nvim_feedkeys(
-                                vim.api.nvim_replace_termcodes('<Plug>(vsnip-jump-prev)', true, true, true),
-                                '', true
-                            )
+                        elseif vim.snippet.jumpable(-1) then
+                            vim.snippet.jump(-1)
                         else
                             fallback()
                         end
                     end, { 'i', 's' }),
+                },
+                snippet = {
+                    expand = function(args)
+                        vim.snippet.expand(args.body)
+                    end
                 },
                 sources = {
                     { name = 'nvim_lsp' },
@@ -389,27 +363,9 @@ return {
             })
         end,
     },
-    {
-        'ray-x/lsp_signature.nvim',
-        lazy = true,
-        config = function()
-            require('lsp_signature').setup({
-                bind = true,
-                hint_enable = false,
-                handler_opts = {
-                    border = 'single',
-                },
-            })
-        end,
-    },
 
     -- Miscellaneous
-    {
-        'folke/which-key.nvim',
-        config = function()
-            require('which-key').setup({})
-        end,
-    },
+    { 'folke/which-key.nvim', opts = {} },
     {
         'mbbill/undotree',
         commit = '0e11ba7325efbbb3f3bebe06213afa3e7ec75131',
@@ -420,11 +376,7 @@ return {
             vim.g.undotree_HelpLine = 0
         end,
     },
-    {
-        'michaeljsmith/vim-indent-object',
-        commit = '5c5b24c959478929b54a9e831a8e2e651a465965',
-    },
-    { 'nvim-lua/plenary.nvim' },
+    { 'michaeljsmith/vim-indent-object', commit = '5c5b24c959478929b54a9e831a8e2e651a465965' },
     {
         'romainl/vim-qf',
         commit = '7e65325651ff5a0b06af8df3980d2ee54cf10e14',
@@ -433,13 +385,7 @@ return {
             vim.keymap.set('n', 'äq', '<Plug>(qf_qf_next)')
         end,
     },
-    {
-        'tpope/vim-repeat',
-        commit = '24afe922e6a05891756ecf331f39a1f6743d3d5a',
-    },
     { 'tpope/vim-fugitive' },
-    {
-        'whiteinge/diffconflicts',
-        commit = '05e8d2e935a235b8f8e6d308a46a5f028ea5bf97',
-    },
+    { 'tpope/vim-repeat', commit = '24afe922e6a05891756ecf331f39a1f6743d3d5a' },
+    { 'whiteinge/diffconflicts', commit = '05e8d2e935a235b8f8e6d308a46a5f028ea5bf97' },
 }
