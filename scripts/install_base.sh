@@ -101,7 +101,7 @@ install_homebrew() {
 install_mac_pkgs() {
     msg "Installing packages for macOS..."
 
-    local pkgs="chafa coreutils fd neovim node python3 renameutils ripgrep"
+    local pkgs="chafa coreutils fd neovim node python3 ranger renameutils ripgrep"
     brew install $pkgs
 
     msg_done
@@ -126,7 +126,7 @@ install_ubuntu_pkgs() {
         chmod ug+x direnv
     )
 
-    local apt_pkgs="chafa fd-find nodejs python3-pip renameutils ripgrep"
+    local apt_pkgs="chafa fd-find nodejs python3-pip ranger renameutils ripgrep"
     sudo apt update
     sudo apt install $apt_pkgs
 
@@ -136,7 +136,7 @@ install_ubuntu_pkgs() {
 install_arch_pkgs() {
     msg "Installing packages for Arch Linux..."
 
-    local pkgs="chafa fd git htop jq neovim nodejs openssh python renameutils ripgrep"
+    local pkgs="chafa fd git htop jq neovim nodejs openssh python ranger renameutils ripgrep"
     sudo pacman -Syyu --needed $pkgs
 
     msg_done
