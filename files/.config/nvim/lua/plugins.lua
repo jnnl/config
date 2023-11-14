@@ -27,6 +27,10 @@ return {
             local actions = require('fzf-lua.actions')
             fzf_lua.setup({
                 'default',
+                winopts = {
+                    height = 0.9,
+                    width = 0.9,
+                },
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
                         ['ctrl-o'] = function(selected)
@@ -86,7 +90,9 @@ return {
                 fzf_lua.grep_project({ fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' } })
             end, { desc = 'Find text' })
             vim.keymap.set('n', '<Leader>;', fzf_lua.oldfiles, { desc = 'Find recently opened files' })
-            vim.keymap.set('n', '<Leader>:', fzf_lua.git_bcommits, { desc = 'Find git commits affecting current file' })
+            vim.keymap.set('n', '<Leader>:', function()
+                fzf_lua.oldfiles({ prompt = 'CwdHistory> ', cwd_only = true })
+            end, { desc = 'Find recently opened files under current dir' })
             vim.keymap.set('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
             vim.keymap.set('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
             vim.keymap.set('n', '<Leader>*', function()
@@ -125,9 +131,15 @@ return {
 
     -- Language
     {
-        'ap/vim-css-color',
-        commit = '2840cd5252db9decc4422844945b3460868ee691',
+        'nvchad/nvim-colorizer.lua',
+        commit = 'dde3084106a70b9a79d48f426f6d6fec6fd203f7',
         ft = { 'css', 'scss' },
+        opts = {
+            user_default_options = {
+                mode = 'virtualtext',
+                css = true,
+            },
+        },
     },
     { 'hashivim/vim-terraform', commit = '2bbc5f65a80c79a5110494a2ba1b869075fcf7a0' },
     { 'leafgarland/typescript-vim', commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa' },
@@ -184,11 +196,15 @@ return {
             },
         },
     },
+    { 'williamboman/mason.nvim', lazy = true, opts = {} },
+    { 'williamboman/mason-lspconfig.nvim', lazy = true, opts = {} },
     {
         'neovim/nvim-lspconfig',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
             'ray-x/lsp_signature.nvim',
+            'williamboman/mason.nvim',
+            'williamboman/mason-lspconfig.nvim',
         },
         config = function()
             local lsp = require('lspconfig')
@@ -207,7 +223,8 @@ return {
                     vim.keymap.set('n', 'gD', fzf_lua.lsp_definitions, extend_opts({ desc = 'Find definition(s)' }))
                     vim.keymap.set('n', 'gi', fzf_lua.lsp_implementations, extend_opts({ desc = 'Find implementation(s)' }))
                     vim.keymap.set('n', 'gr', fzf_lua.lsp_references, extend_opts({ desc = 'Find reference(s)' }))
-                    vim.keymap.set('n', 'gy', fzf_lua.lsp_typedefs, extend_opts({ desc = 'Find type definitions(s)' }))
+                    vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, extend_opts({ desc = 'Go to type definition' }))
+                    vim.keymap.set('n', 'gT', fzf_lua.lsp_typedefs, extend_opts({ desc = 'Find type definitions(s)' }))
                     vim.keymap.set('n', 'ög', function()
                             vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN } })
                         end,
@@ -262,7 +279,12 @@ return {
                 },
                 { name = 'bashls', opts = server_opts },
                 { name = 'cssls', opts = server_opts },
-                { name = 'emmet_ls', opts = extend_server_opts({ filetypes = { 'html', 'css', 'scss' } }) },
+                {
+                    name = 'emmet_ls',
+                    opts = extend_server_opts({
+                        filetypes = { 'html', 'css', 'scss', 'typescriptreact' }
+                    })
+                },
                 { name = 'gopls', opts = server_opts },
                 {
                     name = 'lua_ls',

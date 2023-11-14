@@ -5,7 +5,6 @@
 vim.g.mapleader = ','
 vim.g.maplocalleader = ','
 
-
 -- Plugins
 
 local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
@@ -35,7 +34,6 @@ else
     vim.notify('failed to load lazy.nvim, plugins are disabled...', vim.log.levels.WARN)
 end
 
-
 -- General
 
 vim.opt.backspace = 'indent,eol,start'
@@ -49,12 +47,10 @@ vim.opt.timeoutlen = 500
 vim.opt.fillchars:append('eob: ')
 vim.opt.shada:prepend('r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:')
 
-
 -- Statusline
 
 vim.opt.laststatus = 2
 vim.opt.statusline = [[%f %y%m %l/%L]]
-
 
 -- Indentation
 
@@ -65,7 +61,6 @@ vim.opt.shiftround = true
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = -1
 
-
 -- Search
 
 vim.opt.incsearch = true
@@ -73,12 +68,10 @@ vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
-
 -- Splits
 
 vim.opt.splitright = true
 vim.opt.splitbelow = true
-
 
 -- Styles
 
@@ -93,12 +86,10 @@ if not colorscheme_ok then
     vim.cmd.colorscheme('desert')
 end
 
-
 -- Undo
 
 vim.opt.undodir = vim.fn.stdpath('state') .. '/undo'
 vim.opt.undofile = true
-
 
 -- Keymaps
 
@@ -111,6 +102,8 @@ vim.keymap.set('n', 'öj', '<C-o>', { desc = 'Go to previous jump list position'
 vim.keymap.set('n', 'äj', '<C-i>', { desc = 'Go to next jump list position' })
 vim.keymap.set('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
 vim.keymap.set('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
+vim.keymap.set('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
+vim.keymap.set('n', 'ät', '<cmd>tabnext<CR>', { desc = 'Go to next tab' })
 
 vim.keymap.set('n', 'j', function() return vim.v.count == 0 and 'gj' or 'j' end, { expr = true })
 vim.keymap.set('n', 'k', function() return vim.v.count == 0 and 'gk' or 'k' end, { expr = true })
@@ -135,7 +128,6 @@ vim.keymap.set('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Clos
 vim.keymap.set('n', '<Leader>s', function()
     return ':%s/' .. vim.fn.expand('<cword>') .. '/'
 end, { expr = true, desc = 'Substitute word under cursor' })
-
 
 -- Commands
 
