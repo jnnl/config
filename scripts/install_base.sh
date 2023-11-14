@@ -101,7 +101,7 @@ install_homebrew() {
 install_mac_pkgs() {
     msg "Installing packages for macOS..."
 
-    local pkgs="chafa coreutils fd neovim node python3 ranger renameutils ripgrep"
+    local pkgs="chafa coreutils fd neovim node python3 ranger renameutils ripgrep shellcheck"
     brew install $pkgs
 
     msg_done
@@ -126,7 +126,7 @@ install_ubuntu_pkgs() {
         chmod ug+x direnv
     )
 
-    local apt_pkgs="chafa fd-find nodejs python3-pip ranger renameutils ripgrep"
+    local apt_pkgs="chafa fd-find nodejs python3-pip ranger renameutils ripgrep shellcheck"
     sudo apt update
     sudo apt install $apt_pkgs
 
@@ -136,7 +136,7 @@ install_ubuntu_pkgs() {
 install_arch_pkgs() {
     msg "Installing packages for Arch Linux..."
 
-    local pkgs="chafa fd git htop jq neovim nodejs openssh python ranger renameutils ripgrep"
+    local pkgs="chafa fd git htop jq neovim nodejs openssh python ranger renameutils ripgrep shellcheck"
     sudo pacman -Syyu --needed $pkgs
 
     msg_done
@@ -200,27 +200,6 @@ install_z() {
     msg_done
 }
 
-install_langservers() {
-    msg "Installing language servers..."
-
-    if is_mac; then
-        brew install lua-language-server
-    fi
-
-    if has go; then
-        GOBIN="$local_bin_path" go install golang.org/x/tools/gopls@latest
-    fi
-
-    local npm_servers="bash-language-server emmet-ls pyright typescript typescript-language-server vscode-langservers-extracted"
-    if has npm; then
-        npm i -g "$npm_servers"
-    else
-        warn "Npm not found, skipping language server install."
-    fi
-
-    msg_done
-}
-
 main() {
     msg "Starting $script_name...\n"
 
@@ -241,7 +220,6 @@ main() {
 
     exec_step install_fzf
     exec_step install_z
-    exec_step install_langservers
 
     printf "\n<<< Completed $script_name.\n\n"
 }
