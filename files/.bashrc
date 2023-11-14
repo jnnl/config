@@ -5,29 +5,31 @@
 
 # check if command exists
 has() {
-    type -p $* &>/dev/null
+    type -p "$1" &>/dev/null
 }
 
 # cd to dirname
 cdd() {
-    cd "$(dirname ${1:-$PWD})"
+    cd "$(dirname "${1:-$PWD}")" || exit
 }
 
 # cd to selected shell wd
 cdsh() {
-    local dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
+    local dir
+    dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
         sort -u | grep -Fvx "$PWD" | \
-        fzf +s --reverse)" && cd "$dir"
+        fzf +s --reverse)" && cd "$dir" || exit
 }
 
 # cd to git root
 cdgr() {
+    local gitdir dir
     if [ $# -gt 0 ]; then
-        local gitdir="$(realpath $1)"
-        [ -d "$gitdir" ] || gitdir="$(dirname $gitdir)"
-        local dir="$(git -C $gitdir rev-parse --show-toplevel)" && cd "$dir"
+        gitdir="$(realpath "$1")"
+        [ -d "$gitdir" ] || gitdir="$(dirname "$gitdir")"
+        dir="$(git -C "$gitdir" rev-parse --show-toplevel)" && cd "$dir" || exit
     else
-        local dir="$(git rev-parse --show-toplevel)" && cd "$dir"
+        dir="$(git rev-parse --show-toplevel)" && cd "$dir" || exit
     fi
 }
 
@@ -58,27 +60,28 @@ fkill() {
         pid=$(ps -ef | sed 1d | fzf -m | awk '{ print $2 }')
     fi
 
-    [ -n "$pid" ] && echo $pid | xargs kill -${1:-9}
+    [ -n "$pid" ] && echo "$pid" | xargs kill -"${1:-9}"
 }
 
 # print compacted wd path
 compact_pwd() {
+    local path=""
     local pathsep="/"
     local trunclen="1"
     local triglen="20"
 
     if test "${#PWD}" -lt "$triglen"; then
-        printf "$PWD"
+        printf "%s" "$PWD"
         return
     fi
 
-    local path=""
     mapfile -td "$pathsep" wd_parts < <(printf "%s\0" "$PWD")
     for part in "${wd_parts[@]:1:${#wd_parts[@]}-2}"; do
         path="$path$pathsep${part::trunclen}"
     done
+
     path="$path$pathsep${wd_parts[-1]}"
-    printf "$path"
+    printf "%s" "$path"
 }
 
 # print number of stopped jobs
@@ -162,14 +165,14 @@ fi
 
 # z
 if test -f ~/.config/z/z.sh; then
-    _Z_DATA="$HOME/.config/z/z"
+    export _Z_DATA="$HOME/.config/z/z"
     source ~/.config/z/z.sh
     f() {
         test $# -gt 0 && _z "$*" && return
         cd "$(_z -l 2>&1 | \
             fzf --height 40% --nth 2.. --reverse --inline-info \
             +s --tac --query "${*##-* }" | \
-            sed 's/^[0-9,.]* *//')"
+            sed 's/^[0-9,.]* *//')" || exit
     }
 fi
 
