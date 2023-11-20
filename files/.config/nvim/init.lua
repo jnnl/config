@@ -165,6 +165,7 @@ end, { bang = true })
 
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'make',
+    group = vim.api.nvim_create_augroup('make_ft_options', { clear = true }),
     callback = function()
         vim.opt_local.expandtab = false
         vim.opt_local.shiftwidth = 8
@@ -172,7 +173,15 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('treesitter', { clear = true }),
+    callback = function()
+        pcall(vim.treesitter.start)
+    end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'vim', 'help' },
+    group = vim.api.nvim_create_augroup('help_keywordprg', { clear = true }),
     callback = function()
         vim.opt_local.keywordprg = ':help'
     end
@@ -180,6 +189,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'html', 'scss', 'typescript' },
+    group = vim.api.nvim_create_augroup('angular_commands', { clear = true }),
     callback = function()
         local create_cmd = function(name, command)
             vim.api.nvim_create_user_command(name, command, { bang = true })
@@ -200,6 +210,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('go_commands', { clear = true }),
     pattern = 'go',
     callback = function()
         vim.opt_local.expandtab = false
@@ -217,12 +228,14 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 vim.api.nvim_create_autocmd('TextYankPost', {
+    group = vim.api.nvim_create_augroup('yank_highlight', { clear = true }),
     callback = function()
         require('vim.highlight').on_yank({ higroup = 'IncSearch', timeout = 500, on_visual = false })
     end
 })
 
 vim.api.nvim_create_autocmd({ 'BufWritePre', 'FileWritePre' }, {
+    group = vim.api.nvim_create_augroup('auto_mkdir', { clear = true }),
     callback = function()
         local dir = vim.fn.expand('<afile>:p:h')
         if vim.fn.isdirectory(dir) == 0 then

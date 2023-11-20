@@ -69,8 +69,8 @@ return {
                 },
                 grep = {
                     rg_opts = '--column --line-number --no-heading --hidden --smart-case --max-columns=4096 ' ..
-                        '--glob="!.git/" ' ..
-                        '--color=always --colors "path:fg:green" --colors "line:fg:yellow"',
+                    '--glob="!.git/" ' ..
+                    '--color=always --colors "path:fg:green" --colors "line:fg:yellow"',
                     rg_glob = true,
                 },
             })
@@ -128,6 +128,7 @@ return {
 
     -- Colorschemes
     { 'jnnl/vim-tonight' },
+    { 'ellisonleao/gruvbox.nvim', config = true, commit = '517b012757fbe7a4d6e507baf5cc75837e62734f' },
 
     -- Language
     {
@@ -173,6 +174,7 @@ return {
                     }
                 end
             })
+            vim.o.formatexpr = 'v:lua.require("conform").formatexpr()'
             vim.api.nvim_create_user_command('Format', function()
                 conform.format()
             end, { bang = true })
@@ -226,24 +228,17 @@ return {
                     vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, extend_opts({ desc = 'Go to type definition' }))
                     vim.keymap.set('n', 'gT', fzf_lua.lsp_typedefs, extend_opts({ desc = 'Find type definitions(s)' }))
                     vim.keymap.set('n', 'ög', function()
-                            vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN } })
-                        end,
-                        extend_opts({ desc = 'Go to previous WARN+ diagnostic' })
-                    )
+                        vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN } })
+                    end, extend_opts({ desc = 'Go to previous WARN+ diagnostic' }))
                     vim.keymap.set('n', 'äg', function()
-                            vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.WARN } })
-                        end,
-                        extend_opts({ desc = 'Go to next WARN+ diagnostic' })
-                    )
+                        vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.WARN } })
+                    end, extend_opts({ desc = 'Go to next WARN+ diagnostic' }))
                     vim.keymap.set('n', 'öG', function()
-                            vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.HINT } })
-                        end,
-                        extend_opts({ desc = 'Go to next HINT+ diagnostic' })
-                    )
+                        vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.HINT } })
+                    end, extend_opts({ desc = 'Go to next HINT+ diagnostic' }))
                     vim.keymap.set('n', 'äG', function()
-                            vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.HINT } })
-                        end, extend_opts({ desc = 'Go to next HINT+ diagnostic' })
-                    )
+                        vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.HINT } })
+                    end, extend_opts({ desc = 'Go to next HINT+ diagnostic' }))
                     vim.keymap.set('n', '<Space>', vim.lsp.buf.hover, opts)
                     vim.keymap.set('n', '<C-Space>', vim.diagnostic.open_float, opts)
                     vim.keymap.set({ 'n', 'x' }, '<leader><Space>', vim.lsp.buf.code_action, opts)
@@ -339,7 +334,7 @@ return {
             vim.opt.completeopt = 'menu,menuone,noselect'
             local cmp = require('cmp')
             cmp.setup({
-                mapping = {
+                mapping = cmp.mapping.preset.insert({
                     ['<Up>'] = cmp.mapping.select_prev_item(),
                     ['<Down>'] = cmp.mapping.select_next_item(),
                     ['<C-k>'] = cmp.mapping.select_prev_item(),
@@ -349,7 +344,7 @@ return {
                     ['<C-Space>'] = cmp.mapping.complete(),
                     ['<C-e>'] = cmp.mapping.close(),
                     ['<CR>'] = cmp.mapping.confirm {
-                        behavior = cmp.ConfirmBehavior.Replace,
+                        behavior = cmp.ConfirmBehavior.Insert,
                         select = false,
                     },
                     ['<Tab>'] = cmp.mapping(function(fallback)
@@ -370,7 +365,7 @@ return {
                             fallback()
                         end
                     end, { 'i', 's' }),
-                },
+                }),
                 snippet = {
                     expand = function(args)
                         vim.snippet.expand(args.body)
@@ -379,7 +374,6 @@ return {
                 sources = {
                     { name = 'nvim_lsp' },
                     { name = 'nvim_lua' },
-                    { name = 'vsnip' },
                     { name = 'path' },
                 },
             })
