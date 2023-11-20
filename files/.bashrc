@@ -23,6 +23,7 @@ cdsh() {
 
 # cd to git root
 cdgr() {
+    git rev-parse || return
     local gitdir dir
     if [ $# -gt 0 ]; then
         gitdir="$(realpath "$1")"
@@ -34,20 +35,21 @@ cdgr() {
 }
 
 # browse man pages by name and description
-mana() {
+manf() {
     man -k . | fzf | awk '{ print $1 }' | xargs -r man
 }
 
 # browse git commits
 gcb() {
-  git log --graph --color=always --date=short \
-      --format="%C(yellow)%h %Cgreen%ad %Cblue%aN%Cred%d %Creset%s" "$@" |
-  fzf --ansi --no-sort --reverse --tiebreak=index \
-      --preview 'git show --color=always {+2}' \
-      --bind "ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-                {}
+    git rev-parse || return
+    git log --graph --color=always --date=short \
+        --format="%C(yellow)%h %Cgreen%ad %Cblue%aN%Cred%d %Creset%s" "$@" | \
+        fzf --ansi --no-sort --reverse --tiebreak=index \
+        --preview 'git show --color=always {+2}' \
+        --bind "ctrl-m:execute:
+            (grep -o '[a-f0-9]\{7\}' | head -1 |
+            xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+            {}
 FZF-EOF"
 }
 
