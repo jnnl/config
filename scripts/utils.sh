@@ -7,7 +7,7 @@ set -eu
 
 test -n "$BASH" || { printf "This script requires bash to run."; exit 1; }
 
-readonly script_dir="$(realpath $(dirname ${BASH_SOURCE[0]}))"
+readonly script_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 readonly file_dir="$script_dir/../files"
 readonly config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
 

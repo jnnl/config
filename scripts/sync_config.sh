@@ -5,14 +5,14 @@ trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
-source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
+source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 usage() {
-    printf "Usage: $0 <OPTION> ...\n\n"
+    printf "Usage: %s <OPTION> ...\n\n" "$0"
     printf "Options:\n"
     printf "  -f            sync all changed files without prompting for confirmation\n"
     printf "  -h            display this help text and exit\n"
-    printf "  -i <path>     input base path (default: $HOME)\n"
+    printf "  -i <path>     input base path (default: %s)\n" "$HOME"
     printf "\n"
     exit 2
 }
@@ -24,7 +24,7 @@ while getopts fhi: opt; do
     case "$opt" in
         f) is_interactive=0;;
         h) usage;;
-        i) in_path="$(realpath $OPTARG)";;
+        i) in_path="$(realpath "$OPTARG")";;
         ?) usage;;
     esac
 done
@@ -35,8 +35,8 @@ while read -a line_files <&3; do
         continue
     fi
 
-    source_file="$(realpath ${line_files[0]})"
-    destination_file="$(realpath ${line_files[1]})"
+    source_file="$(realpath "${line_files[0]}")"
+    destination_file="$(realpath "${line_files[1]}")"
     if cmp --silent "$source_file" "$destination_file"; then
         continue
     fi

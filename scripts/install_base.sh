@@ -5,14 +5,14 @@ trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
-script_name="$(basename $BASH_SOURCE)"
+script_name="$(basename "$BASH_SOURCE")"
 
 usage() {
-    printf "Usage: $0 <OPTION> ...\n\n"
+    printf "Usage: %s <OPTION> ...\n\n" "$0"
     printf "Options:\n"
     printf "  -f            execute each step without prompting for confirmation\n"
     printf "  -h            display this help text and exit\n"
-    printf "  -o <path>     output base path (default: $HOME)\n"
+    printf "  -o <path>     output base path (default: %s)\n" "$HOME"
     printf "\n"
     exit 2
 }
@@ -25,13 +25,13 @@ while getopts bfho: opt; do
     case "$opt" in
         f) is_interactive=0;;
         h) usage;;
-        o) out_path="$(realpath $OPTARG)";;
+        o) out_path="$(realpath "$OPTARG")";;
         ?) usage;;
     esac
 done
 shift "$((OPTIND - 1))"
 
-source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
+source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 configure_env() {
     msg "Configuring common environment..."
@@ -88,7 +88,7 @@ configure_mac() {
 
 install_homebrew() {
     if has brew; then
-        warn "Homebrew already installed, skipping..."
+        msg "Homebrew already installed, skipping..."
         return
     fi
 
@@ -221,7 +221,7 @@ main() {
     exec_step install_fzf
     exec_step install_z
 
-    printf "\n<<< Completed $script_name.\n\n"
+    printf "\n<<< Completed %s.\n\n" "$script_name"
 }
 
 main

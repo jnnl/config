@@ -5,16 +5,16 @@ trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
-script_name="$(basename $BASH_SOURCE)"
+script_name="$(basename "$BASH_SOURCE")"
 
 usage() {
-    printf "Usage: $0 <OPTION> ...\n\n"
+    printf "Usage: %s <OPTION> ...\n\n" "$0"
     printf "Options:\n"
     printf "  -b            make a backup of each existing config file\n"
     printf "  -e <pattern>  specify installable files by ERE regex pattern\n"
     printf "  -f            execute each step without prompting for confirmation\n"
     printf "  -h            display this help text and exit\n"
-    printf "  -o <path>     output base path (default: $HOME)\n"
+    printf "  -o <path>     output base path (default: %s)\n" "$HOME"
     printf "\n"
     exit 2
 }
@@ -31,31 +31,31 @@ while getopts be:fho: opt; do
         e) should_use_file_pattern=1; file_pattern="$OPTARG";;
         f) is_interactive=0;;
         h) usage;;
-        o) out_path="$(realpath $OPTARG)";;
+        o) out_path="$(realpath "$OPTARG")";;
         ?) usage;;
     esac
 done
 shift "$((OPTIND - 1))"
 
-source "$(realpath $(dirname ${BASH_SOURCE[0]}))/utils.sh"
+source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 
 copy_files() {
     msg "Copying files..."
 
-    local files="$(find $file_dir -type f | sed 's|^'$file_dir'/||')"
-    local file source_file destination_file
+    local file files source_file destination_file
+    files="$(find "$file_dir" -type f | sed 's|^'"$file_dir"'/||')"
 
     if test "$should_use_file_pattern" = "1"; then
-        files="$(echo $files | tr ' ' '\n' | grep -E $file_pattern || true)"
+        files="$(echo "$files" | tr ' ' '\n' | grep -E "$file_pattern" || true)"
     fi
 
     for file in $files; do
-        source_file="$(realpath $file_dir/$file)"
+        source_file="$(realpath "$file_dir"/"$file")"
         if is_mac; then
-            destination_file="$(grealpath -m $out_path/$file)"
+            destination_file="$(grealpath -m "$out_path"/"$file")"
         else
-            destination_file="$(realpath -m $out_path/$file)"
+            destination_file="$(realpath -m "$out_path"/"$file")"
         fi
 
         if test "$should_use_file_pattern" = "1"; then
@@ -70,12 +70,12 @@ copy_files() {
             } || true
         fi
 
-        destination_file_dir="$(dirname $destination_file)"
+        destination_file_dir="$(dirname "$destination_file")"
         [ -d "$destination_file_dir" ] || mkdir -vp "$destination_file_dir"
 
         if test "$should_create_backups" = "1"; then
             if is_mac; then
-                rsync -ab "$source_file" "$destination_file" && printf "$source_file -> $destination_file\n"
+                rsync -ab "$source_file" "$destination_file" && printf "%s -> %s\n" "$source_file" "$destination_file"
             else
                 cp -bv "$source_file" "$destination_file"
             fi
@@ -101,7 +101,7 @@ main() {
 
     exec_step copy_files
 
-    printf "\n<<< Completed $script_name.\n\n"
+    printf "\n<<< Completed %s.\n\n" "$script_name"
 }
 
 main
