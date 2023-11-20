@@ -53,6 +53,13 @@ gcb() {
 FZF-EOF"
 }
 
+gco() {
+    git rev-parse || return
+    git branch --format='%(refname:short)' | \
+        fzf --preview='git log -10 --color=always {..}' | \
+        xargs -r git checkout
+}
+
 # kill selected process
 fkill() {
     local pid
