@@ -31,6 +31,9 @@ return {
                     height = 0.9,
                     width = 0.9,
                 },
+                fzf_opts = {
+                    ['--cycle'] = ''
+                },
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
                         ['ctrl-o'] = function(selected)
@@ -75,13 +78,8 @@ return {
                 },
             })
             vim.keymap.set('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
-            vim.keymap.set('n', '<Leader>fc', fzf_lua.commands, { desc = 'Find commands' })
-            vim.keymap.set('n', '<Leader>fh', fzf_lua.help_tags, { desc = 'Find help tags' })
-            vim.keymap.set('n', '<Leader>fk', fzf_lua.keymaps, { desc = 'Find keymaps' })
-            vim.keymap.set('n', '<Leader>fl', fzf_lua.lines, { desc = 'Find open buffers\' lines' })
-            vim.keymap.set('n', '<Leader>fr', fzf_lua.registers, { desc = 'Find registers' })
-            vim.keymap.set('n', '<Leader>fw', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
-            vim.keymap.set('x', '<Leader>fw', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
+            vim.keymap.set('n', '<Leader>f*', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
+            vim.keymap.set('x', '<Leader>f*', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
             vim.keymap.set('n', '<Leader>,', function()
                 fzf_lua.files({ fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find files' })
@@ -89,14 +87,16 @@ return {
             vim.keymap.set('n', '<Leader>-', function()
                 fzf_lua.grep_project({ fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' } })
             end, { desc = 'Find text' })
-            vim.keymap.set('n', '<Leader>;', fzf_lua.oldfiles, { desc = 'Find recently opened files' })
+            vim.keymap.set('n', '<Leader>;', function()
+                fzf_lua.oldfiles({ fzf_opts = { ['--scheme'] = 'path' } })
+            end, { desc = 'Find recently opened files' })
             vim.keymap.set('n', '<Leader>:', function()
-                fzf_lua.oldfiles({ prompt = 'CwdHistory> ', cwd_only = true })
+                fzf_lua.oldfiles({ prompt = 'CwdHistory> ', cwd_only = true, fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find recently opened files under current dir' })
             vim.keymap.set('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
             vim.keymap.set('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
             vim.keymap.set('n', '<Leader>*', function()
-                fzf_lua.files({ cwd = vim.fn.expand('$HOME') })
+                fzf_lua.files({ cwd = vim.fn.expand('$HOME'), fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find files in ~' })
             vim.keymap.set('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
             vim.keymap.set('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
@@ -185,6 +185,7 @@ return {
                 vim.b.disable_autoformat = false
                 vim.g.disable_autoformat = false
             end, { bang = true })
+            vim.keymap.set('n', '<leader>xf', function() vim.cmd('Format') end, { desc = 'Format' })
         end
     },
     {
@@ -212,7 +213,7 @@ return {
             local lsp = require('lspconfig')
 
             vim.api.nvim_create_autocmd('LspAttach', {
-                group = vim.api.nvim_create_augroup('LspConfig', {}),
+                group = vim.api.nvim_create_augroup('lsp_attach_config', { clear = true }),
                 callback = function(ev)
                     vim.diagnostic.config({ virtual_text = false })
                     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
@@ -241,9 +242,8 @@ return {
                     end, extend_opts({ desc = 'Go to next HINT+ diagnostic' }))
                     vim.keymap.set('n', '<Space>', vim.lsp.buf.hover, opts)
                     vim.keymap.set('n', '<C-Space>', vim.diagnostic.open_float, opts)
-                    vim.keymap.set({ 'n', 'x' }, '<leader><Space>', vim.lsp.buf.code_action, opts)
+                    vim.keymap.set({ 'n', 'x' }, '<leader><Space>', fzf_lua.lsp_code_actions, opts)
                     vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, opts)
-                    vim.keymap.set('n', '<leader>xf', function() vim.cmd('Format') end, opts)
                 end,
             })
 

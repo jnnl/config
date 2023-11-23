@@ -164,8 +164,8 @@ end, { bang = true })
 -- Autocommands
 
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = 'make',
     group = vim.api.nvim_create_augroup('make_ft_options', { clear = true }),
+    pattern = 'make',
     callback = function()
         vim.opt_local.expandtab = false
         vim.opt_local.shiftwidth = 8
@@ -180,16 +180,16 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'vim', 'help' },
     group = vim.api.nvim_create_augroup('help_keywordprg', { clear = true }),
+    pattern = { 'vim', 'help' },
     callback = function()
         vim.opt_local.keywordprg = ':help'
     end
 })
 
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'html', 'scss', 'typescript' },
     group = vim.api.nvim_create_augroup('angular_commands', { clear = true }),
+    pattern = { 'html', 'scss', 'typescript' },
     callback = function()
         local create_cmd = function(name, command)
             vim.api.nvim_create_user_command(name, command, { bang = true })
