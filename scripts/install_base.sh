@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install packages and setup os config
+# install packages and configure environment
 
 trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
@@ -8,7 +8,9 @@ set -eu
 script_name="$(basename "$BASH_SOURCE")"
 
 usage() {
-    printf "Usage: %s <OPTION> ...\n\n" "$0"
+    printf "Usage: %s [OPTION] ...\n\n" "$0"
+    printf "Install packages and configure environment.\n"
+    printf "\n"
     printf "Options:\n"
     printf "  -f            execute each step without prompting for confirmation\n"
     printf "  -h            display this help text and exit\n"
@@ -192,10 +194,16 @@ install_z() {
     msg "Installing z..."
 
     local z_dir="$config_dir/z"
-    local url="https://raw.githubusercontent.com/rupa/z/master/z.sh"
-
     mkdir -vp "$z_dir"
-    dl "$z_dir/z.sh" "$url"
+    cp -v "$script_dir/tools/z.sh" "$z_dir"
+
+    msg_done
+}
+
+install_tool_scripts() {
+    msg "Installing tool scripts..."
+
+    exec_step install_z
 
     msg_done
 }
@@ -208,7 +216,7 @@ main() {
     if is_mac; then
         exec_step configure_mac
         exec_step install_homebrew
-        exec_step instalL_mac_pkgs
+        exec_step install_mac_pkgs
     elif is_linux; then
         if is_distro arch; then
             exec_step install_arch_pkgs
@@ -219,7 +227,7 @@ main() {
     fi
 
     exec_step install_fzf
-    exec_step install_z
+    exec_step install_tool_scripts
 
     printf "\n<<< Completed %s.\n\n" "$script_name"
 }

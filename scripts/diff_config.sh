@@ -8,10 +8,16 @@ set -eu
 source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 usage() {
-    printf "Usage: %s <OPTION> ...\n\n" "$0"
+    printf "Usage: %s [OPTION] ...\n\n" "$0"
+    printf "Compare local and repo configs.\n"
+    printf "\n"
     printf "Options:\n"
     printf "  -h            display this help text and exit\n"
     printf "  -o <path>     output base path (default: %s)\n" "$HOME"
+    printf "\n"
+    printf "Tips:\n"
+    printf "%s Pass extra arguments to diff like this: %s -- -u\n" "-" "$0"
+    printf "%s Read default output as: how will applying repo configs change local configs?" "-"
     printf "\n"
     exit 2
 }

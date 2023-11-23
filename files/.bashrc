@@ -174,14 +174,17 @@ fi
 
 # z
 if test -f ~/.config/z/z.sh; then
-    export _Z_DATA="$HOME/.config/z/z"
+    export _Z_DATA="$HOME/.config/z/z_data"
     source ~/.config/z/z.sh
+
     f() {
         test $# -gt 0 && _z "$*" && return
-        cd "$(_z -l 2>&1 | \
-            fzf --height 40% --nth 2.. --reverse --inline-info \
-            +s --tac --query "${*##-* }" | \
-            sed 's/^[0-9,.]* *//')" || exit
+        cd "$(_z -l 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || exit
+    }
+
+    ff() {
+        test $# -gt 0 && _z -t "$*" && return
+        cd "$(_z -lt 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || exit
     }
 fi
 

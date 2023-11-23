@@ -8,7 +8,9 @@ set -eu
 script_name="$(basename "$BASH_SOURCE")"
 
 usage() {
-    printf "Usage: %s <OPTION> ...\n\n" "$0"
+    printf "Usage: %s [OPTION] ...\n\n" "$0"
+    printf "Install config files.\n"
+    printf "\n"
     printf "Options:\n"
     printf "  -b            make a backup of each existing config file\n"
     printf "  -e <pattern>  specify installable files by ERE regex pattern\n"
@@ -60,7 +62,7 @@ copy_files() {
 
         if test "$should_use_file_pattern" = "1"; then
             {
-                prompt_confirm "copy $source_file to $destination_file"
+                prompt_confirm "copy ${source_file} to ${destination_file}?"
                 local prompt_confirm_code="$?"
                 if test "$prompt_confirm_code" = "1"; then
                     continue;

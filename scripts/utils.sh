@@ -7,9 +7,9 @@ set -eu
 
 test -n "$BASH" || { printf "This script requires bash to run."; exit 1; }
 
-readonly script_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
-readonly file_dir="$script_dir/../files"
-readonly config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
+export readonly script_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+export readonly file_dir="$script_dir/../files"
+export readonly config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 err() {
     printf "!!! ERROR: $*\n" >&2
@@ -60,7 +60,7 @@ dl() {
 
 prompt_confirm() {
     if test "$is_interactive" = "1"; then
-        read -p "> $*? [Y/n/q] " choice
+        read -p "> $* [Y/n/q] " choice
         case "$choice" in
             y|Y|"") return 0;;
             q) return 2;;

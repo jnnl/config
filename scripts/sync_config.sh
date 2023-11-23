@@ -8,7 +8,9 @@ set -eu
 source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 usage() {
-    printf "Usage: %s <OPTION> ...\n\n" "$0"
+    printf "Usage: %s [OPTION] ...\n\n" "$0"
+    printf "Copy changed local config files to repo.\n"
+    printf "\n"
     printf "Options:\n"
     printf "  -f            sync all changed files without prompting for confirmation\n"
     printf "  -h            display this help text and exit\n"
