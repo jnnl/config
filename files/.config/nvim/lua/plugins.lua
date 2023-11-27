@@ -146,12 +146,12 @@ return {
     { 'leafgarland/typescript-vim', commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa' },
     {
         'pmizio/typescript-tools.nvim',
+        ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
         dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
         opts = {},
     },
     {
         'stevearc/conform.nvim',
-        opts = {},
         config = function()
             local conform = require('conform')
             conform.setup({
