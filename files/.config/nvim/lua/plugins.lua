@@ -274,12 +274,6 @@ return {
                 },
                 { name = 'bashls', opts = server_opts },
                 { name = 'cssls', opts = server_opts },
-                {
-                    name = 'emmet_ls',
-                    opts = extend_server_opts({
-                        filetypes = { 'html', 'css', 'scss', 'typescriptreact' }
-                    })
-                },
                 { name = 'gopls', opts = server_opts },
                 {
                     name = 'lua_ls',
