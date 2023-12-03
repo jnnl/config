@@ -10,7 +10,7 @@ has() {
 
 # cd to dirname
 cdd() {
-    cd "$(dirname "${1:-$PWD}")" || exit
+    cd "$(dirname "${1:-$PWD}")" || return
 }
 
 # cd to selected shell wd
@@ -18,19 +18,18 @@ cdsh() {
     local dir
     dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
         sort -u | grep -Fvx "$PWD" | \
-        fzf +s --reverse)" && cd "$dir" || exit
+        fzf +s --reverse)" && cd "$dir" || return
 }
 
 # cd to git root
 cdgr() {
-    git rev-parse || return
     local gitdir dir
     if [ $# -gt 0 ]; then
         gitdir="$(realpath "$1")"
         [ -d "$gitdir" ] || gitdir="$(dirname "$gitdir")"
-        dir="$(git -C "$gitdir" rev-parse --show-toplevel)" && cd "$dir" || exit
+        dir="$(git -C "$gitdir" rev-parse --show-toplevel)" && cd "$dir" || return
     else
-        dir="$(git rev-parse --show-toplevel)" && cd "$dir" || exit
+        dir="$(git rev-parse --show-toplevel)" && cd "$dir" || return
     fi
 }
 
@@ -64,12 +63,12 @@ gco() {
 fkill() {
     local pid
     if [ "$UID" != "0" ]; then
-        pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{ print $2 }')
+        pid=$(ps -f -u "$UID" | sed 1d | fzf -m | awk '{ print $2 }')
     else
         pid=$(ps -ef | sed 1d | fzf -m | awk '{ print $2 }')
     fi
 
-    [ -n "$pid" ] && echo "$pid" | xargs kill -"${1:-9}"
+    [ "$pid" != "" ] && printf "%s\n" "$pid" | xargs kill -"${1:-9}"
 }
 
 # print compacted wd path
@@ -179,12 +178,12 @@ if test -f ~/.config/z/z.sh; then
 
     f() {
         test $# -gt 0 && _z "$*" && return
-        cd "$(_z -l 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || exit
+        cd "$(_z -l 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || return
     }
 
     ff() {
         test $# -gt 0 && _z -t "$*" && return
-        cd "$(_z -lt 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || exit
+        cd "$(_z -lt 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || return
     }
 fi
 
