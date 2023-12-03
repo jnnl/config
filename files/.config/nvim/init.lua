@@ -98,8 +98,6 @@ vim.keymap.set('n', '\'', '`')
 vim.keymap.set('n', '_', ',')
 vim.keymap.set('n', 'öö', '<C-o>', { desc = 'Go to previous jump list position' })
 vim.keymap.set('n', 'ää', '<C-i>', { desc = 'Go to next jump list position' })
-vim.keymap.set('n', 'öj', '<C-o>', { desc = 'Go to previous jump list position' })
-vim.keymap.set('n', 'äj', '<C-i>', { desc = 'Go to next jump list position' })
 vim.keymap.set('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
 vim.keymap.set('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 vim.keymap.set('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
@@ -117,7 +115,7 @@ vim.keymap.set('n', '<C-w>.', function()
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     local longest_line_length = math.max(unpack(vim.tbl_map(function(line) return #line end, lines))) + 5
     vim.cmd('vertical resize ' .. longest_line_length)
-end, { desc = 'Resize window width to fit content' })
+end, { desc = 'Fit window width to content' })
 
 vim.keymap.set('n', 'Q', '@q')
 vim.keymap.set('x', 'Q', ':normal @q<CR>')
@@ -237,8 +235,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd({ 'BufWritePre', 'FileWritePre' }, {
     group = vim.api.nvim_create_augroup('auto_mkdir', { clear = true }),
     callback = function()
-        local dir = vim.fn.expand('<afile>:p:h')
-        if vim.fn.isdirectory(dir) == 0 then
+        local filename = vim.api.nvim_buf_get_name(0)
+        local dir = vim.fn.fnamemodify(filename, ':p:h')
+        if vim.fn.isdirectory(dir) == 0 and not string.find(dir, '^oil:/') then
             vim.fn.system({ 'mkdir', '-vp', dir })
         end
     end

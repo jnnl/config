@@ -6,6 +6,8 @@ return {
         event = 'BufReadPost',
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
+            vim.keymap.set({ 'n', 'x' }, 'ö%', '<Plug>(matchup-[%)')
+            vim.keymap.set({ 'n', 'x' }, 'ä%', '<Plug>(matchup-]%)')
         end,
     },
     {
@@ -17,7 +19,7 @@ return {
             leap.opts.safe_labels = {}
         end,
     },
-    { 'justinmk/vim-dirvish' },
+    { 'stevearc/oil.nvim', opts = {} },
     { 'junegunn/fzf', build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc' },
     {
         'ibhagwan/fzf-lua',
@@ -135,9 +137,11 @@ return {
         'nvchad/nvim-colorizer.lua',
         commit = 'dde3084106a70b9a79d48f426f6d6fec6fd203f7',
         ft = { 'css', 'scss' },
+        cmd = { 'ColorizerToggle' },
         opts = {
             user_default_options = {
                 mode = 'virtualtext',
+                virtualtext = '⬛',
                 css = true,
             },
         },
@@ -159,6 +163,7 @@ return {
                     -- json = { 'jq' },
                     go = { 'gofmt' },
                     rust = { 'rustfmt' },
+                    sh = { 'shellharden' },
                     html = { 'prettier' },
                     scss = { 'prettier' },
                     javascript = { 'prettier' },
@@ -192,11 +197,7 @@ return {
         'ray-x/lsp_signature.nvim',
         lazy = true,
         opts = {
-            bind = true,
             hint_enable = false,
-            handler_opts = {
-                border = 'single',
-            },
         },
     },
     { 'williamboman/mason.nvim', lazy = true, opts = {} },
