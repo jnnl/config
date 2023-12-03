@@ -5,11 +5,12 @@ trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
-test -n "$BASH" || { printf "This script requires bash to run."; exit 1; }
+test "$BASH" != "" || { printf "This script requires bash to run."; exit 1; }
 
-export readonly script_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
-export readonly file_dir="$script_dir/../files"
-export readonly config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
+readonly script_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+readonly file_dir="$script_dir/../files"
+readonly config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
+export script_dir file_dir config_dir
 
 err() {
     printf "!!! ERROR: $*\n" >&2
@@ -50,9 +51,9 @@ is_arch() {
 
 dl() {
     if has curl; then
-        curl -#fLo $*
+        curl -#fLo "$@"
     elif has wget; then
-        wget --show-progress -qO $*
+        wget --show-progress -qO "$@"
     else
         err "no curl or wget found"
     fi
@@ -60,7 +61,7 @@ dl() {
 
 prompt_confirm() {
     if test "$is_interactive" = "1"; then
-        read -p "> $* [Y/n/q] " choice
+        read -rp "> $* [Y/n/q] " choice
         case "$choice" in
             y|Y|"") return 0;;
             q) return 2;;
@@ -73,13 +74,13 @@ prompt_confirm() {
 
 exec_step() {
     if test "$is_interactive" = "1"; then
-        read -p "> $*? [Y/n/q] " choice
+        read -rp "> $*? [Y/n/q] " choice
         case "$choice" in
-            y|Y|"") $*;;
-            q) printf "\n<<< Skipping rest of $script_name...\n\n"; exit 0;;
+            y|Y|"") "$@";;
+            q) printf "\n<<< Skipping rest of %s...\n\n" "$script_name"; exit 0;;
             n|N|*) ;;
         esac
     else
-        $*
+        "$@"
     fi
 }

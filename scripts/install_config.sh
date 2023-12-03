@@ -5,7 +5,7 @@ trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
-script_name="$(basename "$BASH_SOURCE")"
+script_name="$(basename "${BASH_SOURCE[0]}")"
 
 usage() {
     printf "Usage: %s [OPTION] ...\n\n" "$0"
@@ -39,6 +39,7 @@ while getopts be:fho: opt; do
 done
 shift "$((OPTIND - 1))"
 
+# shellcheck source=utils.sh
 source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 
@@ -46,13 +47,13 @@ copy_files() {
     msg "Copying files..."
 
     local file files source_file destination_file
-    files="$(find "$file_dir" -type f | sed 's|^'"$file_dir"'/||')"
+    mapfile -t files < <(find "$file_dir" -type f | sed 's|^'"$file_dir"'/||')
 
     if test "$should_use_file_pattern" = "1"; then
-        files="$(echo "$files" | tr ' ' '\n' | grep -E "$file_pattern" || true)"
+        mapfile -t files < <(printf "%s\n" "${files[@]}" | grep -E "$file_pattern")
     fi
 
-    for file in $files; do
+    for file in "${files[@]}"; do
         source_file="$(realpath "$file_dir"/"$file")"
         if is_mac; then
             destination_file="$(grealpath -m "$out_path"/"$file")"

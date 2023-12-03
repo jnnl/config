@@ -5,7 +5,7 @@ trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
-script_name="$(basename "$BASH_SOURCE")"
+script_name="$(basename "${BASH_SOURCE[0]}")"
 
 usage() {
     printf "Usage: %s [OPTION] ...\n\n" "$0"
@@ -33,7 +33,8 @@ while getopts bfho: opt; do
 done
 shift "$((OPTIND - 1))"
 
-source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
+# shellcheck source=utils.sh
+source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"/utils.sh
 
 configure_env() {
     msg "Configuring common environment..."
@@ -103,8 +104,8 @@ install_homebrew() {
 install_mac_pkgs() {
     msg "Installing packages for macOS..."
 
-    local pkgs="chafa coreutils fd neovim node python3 ranger renameutils ripgrep shellcheck"
-    brew install $pkgs
+    local pkgs=("chafa" "coreutils" "fd" "neovim" "node" "python3" "ranger" "renameutils" "ripgrep" "shellcheck")
+    brew install "${pkgs[@]}"
 
     msg_done
 }
@@ -128,9 +129,9 @@ install_ubuntu_pkgs() {
         chmod ug+x direnv
     )
 
-    local apt_pkgs="chafa fd-find nodejs python3-pip ranger renameutils ripgrep shellcheck"
+    local apt_pkgs=("chafa" "fd-find" "nodejs" "python3-pip" "ranger" "renameutils" "ripgrep" "shellcheck")
     sudo apt update
-    sudo apt install $apt_pkgs
+    sudo apt install "${apt_pkgs[@]}"
 
     msg_done
 }
@@ -138,27 +139,8 @@ install_ubuntu_pkgs() {
 install_arch_pkgs() {
     msg "Installing packages for Arch Linux..."
 
-    local pkgs="chafa fd git htop jq neovim nodejs openssh python ranger renameutils ripgrep shellcheck"
-    sudo pacman -Syyu --needed $pkgs
-
-    msg_done
-}
-
-install_blocklets() {
-    msg "Installing i3blocks blocklets..."
-
-    local blocklet_dir="$config_dir/i3blocks/blocklets"
-    local tmp_dir="$(mktemp -d /tmp/i3blocks-blocklets-XXX)"
-    local url="https://github.com/vivien/i3blocks-contrib"
-
-    if has git; then
-        git clone --depth 1 "$url" "$tmp_dir"
-        rm -rf "$blocklet_dir"
-        mv "$tmp_dir" "$blocklet_dir"
-    else
-        warn "Git not found, skipping blocklets install."
-        return
-    fi
+    local pkgs=("chafa" "fd" "git" "htop" "jq" "neovim" "nodejs" "openssh" "python" "ranger" "renameutils" "ripgrep" "shellcheck")
+    sudo pacman -Syyu --needed "${pkgs[@]}"
 
     msg_done
 }
@@ -167,7 +149,8 @@ install_fzf() {
     msg "Installing fzf..."
 
     local fzf_dir="$out_path/.fzf"
-    local tmp_dir="$(mktemp -d /tmp/fzf-XXX)"
+    local tmp_dir
+    tmp_dir="$(mktemp -d /tmp/fzf-XXX)"
     local url="https://github.com/junegunn/fzf.git"
 
     if has git; then
@@ -220,7 +203,6 @@ main() {
     elif is_linux; then
         if is_distro arch; then
             exec_step install_arch_pkgs
-            exec_step install_blocklets
         elif is_distro ubuntu; then
             exec_step install_ubuntu_pkgs
         fi
