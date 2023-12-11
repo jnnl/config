@@ -30,12 +30,25 @@ return {
             fzf_lua.setup({
                 'default',
                 winopts = {
-                    height = 0.9,
-                    width = 0.9,
+                    height = 0.75,
+                    width = 0.6,
+                    preview = {
+                        layout = 'vertical',
+                        vertical = 'down:50%',
+                    },
                 },
                 fzf_opts = {
                     ['--cycle'] = ''
                 },
+                keymap = vim.tbl_deep_extend('force', defaults.keymap.builtin, {
+                    builtin = {
+                        ['<C-h>'] = 'toggle-help',
+                        ['<C-i>'] = 'toggle-preview',
+                        ['<C-f>'] = 'toggle-fullscreen',
+                        ['<C-u>'] = 'preview-page-up',
+                        ['<C-d>'] = 'preview-page-down',
+                    },
+                }),
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
                         ['ctrl-o'] = function(selected)
@@ -72,11 +85,20 @@ return {
                         title_fnamemodify = function(s) return vim.fn.fnamemodify(s, ':p:.') end,
                     },
                 },
+                oldfiles = {
+                    include_current_session = true,
+                },
                 grep = {
                     rg_opts = '--column --line-number --no-heading --hidden --smart-case --max-columns=4096 ' ..
-                    '--glob="!.git/" ' ..
-                    '--color=always --colors "path:fg:green" --colors "line:fg:yellow"',
+                    '--glob="!.git/" --color=always --colors "path:fg:green" --colors "line:fg:yellow"',
                     rg_glob = true,
+                },
+                lsp = {
+                    code_actions = {
+                        previewer = 'codeaction_native',
+                        preview_pager = 'delta -s -w=$FZF_PREVIEW_COLUMNS ' ..
+                        '--syntax-theme ansi --file-style=omit --hunk-header-style=omit',
+                    },
                 },
             })
             vim.keymap.set('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
@@ -243,8 +265,21 @@ return {
                     end, extend_opts({ desc = 'Go to next HINT+ diagnostic' }))
                     vim.keymap.set('n', '<Space>', vim.lsp.buf.hover, opts)
                     vim.keymap.set('n', '<C-Space>', vim.diagnostic.open_float, opts)
-                    vim.keymap.set({ 'n', 'x' }, '<leader><Space>', fzf_lua.lsp_code_actions, opts)
-                    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, opts)
+                    vim.keymap.set({ 'n', 'x' }, '<leader><Space>', function()
+                        fzf_lua.lsp_code_actions({
+                            winopts = {
+                                relative = 'cursor',
+                                row = 1,
+                                width = 0.5,
+                                height = 0.5,
+                                preview = {
+                                    layout = 'vertical',
+                                    vertical = 'down:75%'
+                                },
+                            }
+                        })
+                    end, extend_opts({ desc = 'Find code actions' }))
+                    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, extend_opts({ desc = 'Rename symbol under cursor' }))
                 end,
             })
 
