@@ -26,10 +26,6 @@
 [alias]
     ac = "!git add -A && git commit"
     ap = add --patch
-    ad = "!bash -c 'git add -A $(git diff --name-only --diff-filter=D)'"
-    an = "!bash -c 'git add -A $(git diff --name-only --diff-filter=A)'"
-    ar = "!bash -c 'git add -A $(git diff --name-only --diff-filter=R)'"
-    au = "!bash -c 'git add -A $(git diff --name-only --diff-filter=M)'"
     br = branch
     c = commit
     ca = commit --amend
@@ -37,22 +33,13 @@
     d = diff
     dc = diff --cached
     dh = diff HEAD^ HEAD
-    dw = diff --word-diff
-    dr = "!git fetch && git diff FETCH_HEAD"
-    dt = "!git diff | delta"
-    dts = "!git diff | delta --side-by-side"
     dmc = diff --name-only --diff-filter=U
+    dr = "!git fetch && git diff FETCH_HEAD"
     l = log --oneline --decorate --graph
     lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cd) %C(blue)%an%Creset' --abbrev-commit --date=default
-    nuke = "!git stash && git stash drop; git clean -fdx"
     pp = "!git pull && git push"
-    rb = rebase
-    rp = reset --patch
     rh = reset --hard
-    rs = reset --soft
     rso = remote show origin
     s = status -bsu
-    sp = stash pop
-    spm = stash push -m
-    sps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git stash pop; else git pull; fi'"
     spps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git push && git stash pop; else git pull && git push; fi'"
+    sps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git stash pop; else git pull; fi'"
