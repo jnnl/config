@@ -5,7 +5,7 @@ trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
-test "$BASH" != "" || { printf "This script requires bash to run."; exit 1; }
+test "$BASH_VERSION" != "" || { printf "This script requires bash to run.\n"; exit 1; }
 
 readonly script_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 readonly file_dir="$script_dir/../files"

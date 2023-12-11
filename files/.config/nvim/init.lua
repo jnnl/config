@@ -83,7 +83,7 @@ end
 local colorscheme_ok, _ = pcall(vim.cmd.colorscheme, 'tonight')
 if not colorscheme_ok then
     vim.notify('failed to load default colorscheme, using fallback...')
-    vim.cmd.colorscheme('desert')
+    vim.cmd.colorscheme('default')
 end
 
 -- Undo
@@ -134,26 +134,26 @@ end, { expr = true, desc = 'Substitute word under cursor' })
 
 -- Commands
 
-vim.api.nvim_create_user_command('NonAscii', '/[^\\x00-\\x7F]', { bang = true })
-vim.api.nvim_create_user_command('Unansify', ':%s/\\%x1b\\[[0-9;]*[a-zA-Z]//ge', { bang = true })
-vim.api.nvim_create_user_command('Unblankify', ':g/^\\s*$/d', { bang = true })
+vim.api.nvim_create_user_command('NonAscii', '/[^\\x00-\\x7F]', { bang = true, desc = 'Search for non-ASCII characters' })
+vim.api.nvim_create_user_command('Unansify', ':%s/\\%x1b\\[[0-9;]*[a-zA-Z]//ge', { bang = true, desc = 'Remove ANSI escape codes' })
+vim.api.nvim_create_user_command('Unblankify', ':g/^\\s*$/d', { bang = true, desc = 'Remove blank lines' })
 vim.api.nvim_create_user_command('Rstrip', function()
     vim.cmd(':%s/\\s\\+$//e')
     vim.cmd(':%s/\r//ge')
-end, { bang = true })
+end, { bang = true, desc = 'Strip trailing whitespace' })
 vim.api.nvim_create_user_command('CloseFloatingWindows', function()
     for _, win in ipairs(vim.api.nvim_list_wins()) do
         if vim.api.nvim_win_get_config(win).relative ~= '' then
             vim.api.nvim_win_close(win, false)
         end
     end
-end, { bang = true })
+end, { bang = true, desc = 'Close floating windows' })
 vim.api.nvim_create_user_command('Redir', function(context)
   local lines = vim.split(vim.api.nvim_exec2(context.args, { output = true }).output, '\n', { plain = true })
   vim.cmd('vnew')
   vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
   vim.opt_local.modified = false
-end, { nargs = '+', complete = 'command' })
+end, { nargs = '+', complete = 'command', desc = 'Redirect command output to a new vertical split' })
 vim.api.nvim_create_user_command('DiffChanges', function(context)
     local cmd = ':w !git diff --no-index % -'
     if context.bang then
@@ -162,7 +162,7 @@ vim.api.nvim_create_user_command('DiffChanges', function(context)
     else
         vim.cmd(cmd)
     end
-end, { bang = true })
+end, { bang = true, desc = 'Show unsaved changes diff. Opens diff in a vertical split when invoked with a bang.' })
 
 -- Autocommands
 

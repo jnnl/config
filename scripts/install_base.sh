@@ -36,7 +36,7 @@ shift "$((OPTIND - 1))"
 # shellcheck source=utils.sh
 source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"/utils.sh
 
-configure_env() {
+configure_common_env() {
     msg "Configuring common environment..."
 
     mkdir -vp "$local_bin_path"
@@ -44,8 +44,8 @@ configure_env() {
     msg_done
 }
 
-configure_mac() {
-    msg "Configuring macOS defaults..."
+configure_mac_env() {
+    msg "Configuring macOS environment..."
 
     # Expand save panels
     defaults write -g NSNavPanelExpandedStateForSaveMode -bool true
@@ -194,10 +194,10 @@ install_tool_scripts() {
 main() {
     msg "Starting $script_name...\n"
 
-    exec_step configure_env
+    exec_step configure_common_env
 
     if is_mac; then
-        exec_step configure_mac
+        exec_step configure_mac_env
         exec_step install_homebrew
         exec_step install_mac_pkgs
     elif is_linux; then

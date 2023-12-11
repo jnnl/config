@@ -43,8 +43,8 @@ shift "$((OPTIND - 1))"
 source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 
-copy_files() {
-    msg "Copying files..."
+copy_config_files() {
+    msg "Copying config files..."
 
     local file files source_file destination_file
     mapfile -t files < <(find "$file_dir" -type f | sed 's|^'"$file_dir"'/||')
@@ -102,7 +102,7 @@ main() {
         msg "NOTE: install file pattern specified, you will be prompted before copying each matching file\n"
     fi
 
-    exec_step copy_files
+    exec_step copy_config_files
 
     printf "\n<<< Completed %s.\n\n" "$script_name"
 }
