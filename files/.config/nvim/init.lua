@@ -122,6 +122,11 @@ vim.keymap.set('x', 'Q', ':normal @q<CR>')
 vim.keymap.set('x', '@', ':normal @')
 vim.keymap.set('x', '.', ':normal .<CR>')
 
+vim.keymap.set({'n', 'x'}, '<Leader>y', '"+y', { desc = 'Copy text to system clipboard' })
+vim.keymap.set({'n', 'x'}, '<Leader>Y', '"+Y', { desc = 'Copy text from cursor to end of line to system clipboard' })
+vim.keymap.set({'n', 'x'}, '<Leader>p', '"+p', { desc = 'Paste text from system clipboard after the cursor' })
+vim.keymap.set({'n', 'x'}, '<Leader>P', '"+P', { desc = 'Paste text from system clipboard before the cursor' })
+
 vim.keymap.set('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
 vim.keymap.set('n', '<Leader>s', function()
     return ':%s/' .. vim.fn.expand('<cword>') .. '/'
