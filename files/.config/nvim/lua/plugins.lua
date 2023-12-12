@@ -40,15 +40,6 @@ return {
                 fzf_opts = {
                     ['--cycle'] = ''
                 },
-                keymap = vim.tbl_deep_extend('force', defaults.keymap.builtin, {
-                    builtin = {
-                        ['<C-h>'] = 'toggle-help',
-                        ['<C-i>'] = 'toggle-preview',
-                        ['<C-f>'] = 'toggle-fullscreen',
-                        ['<C-u>'] = 'preview-page-up',
-                        ['<C-d>'] = 'preview-page-down',
-                    },
-                }),
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
                         ['ctrl-o'] = function(selected)
