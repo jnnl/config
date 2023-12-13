@@ -126,11 +126,11 @@ vim.keymap.set({'n', 'x'}, '<Leader>y', '"+y', { desc = 'Copy text to system cli
 vim.keymap.set({'n', 'x'}, '<Leader>Y', '"+Y', { desc = 'Copy text from cursor to end of line to system clipboard' })
 vim.keymap.set({'n', 'x'}, '<Leader>p', function()
     vim.cmd('normal "+p')
-    vim.cmd([['[,']s/\r//]])
+    vim.cmd([['[,']s/\r//e]])
 end, { desc = 'Paste text from system clipboard after the cursor' })
 vim.keymap.set({'n', 'x'}, '<Leader>P', function()
     vim.cmd('normal "+P')
-    vim.cmd([['[,']s/\r//]])
+    vim.cmd([['[,']s/\r//e]])
 end, { desc = 'Paste text from system clipboard before the cursor' })
 
 vim.keymap.set('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
