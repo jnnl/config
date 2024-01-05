@@ -77,7 +77,11 @@ return {
                     },
                 },
                 oldfiles = {
+                    winopts = { preview = { hidden = 'hidden' } },
                     include_current_session = true,
+                },
+                commands = {
+                    winopts = { preview = { hidden = 'hidden' } },
                 },
                 grep = {
                     rg_opts = '--column --line-number --no-heading --hidden --smart-case --max-columns=4096 ' ..
@@ -115,6 +119,7 @@ return {
             end, { desc = 'Find files in ~' })
             vim.keymap.set('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
             vim.keymap.set('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
+            vim.keymap.set('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
             vim.keymap.set('n', '<Leader>fgx', function()
                 fzf_lua.fzf_exec('git dmc', {
                     prompt = 'Conflicts> ',
