@@ -29,6 +29,7 @@
     br = branch
     c = commit
     ca = commit --amend
+    cb = "!bash -ic gcb"
     co = checkout
     d = diff
     dc = diff --cached
