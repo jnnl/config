@@ -182,8 +182,8 @@ if test -f ~/.config/z/z.sh; then
     }
 
     ff() {
-        test $# -gt 0 && _z -t "$*" && return
-        cd "$(_z -lt 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || return
+        test $# -gt 0 && _z -c "$*" && return
+        cd "$(_z -lc 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || return
     }
 fi
 
