@@ -148,6 +148,12 @@ vim.api.nvim_create_user_command('Unblankify', function(opts)
     vim.cmd(range .. 'g/^\\s*$/d')
 end, { bang = true, range = true, desc = 'Remove blank lines' })
 
+vim.api.nvim_create_user_command('Lstrip', function(opts)
+    local range = '%'
+    if opts.range ~= 0 then range = opts.line1 .. ',' .. opts.line2 end
+    vim.cmd('keeppatterns ' .. range .. 's/^\\s\\+//e')
+end, { bang = true, range = true, desc = 'Strip leading whitespace' })
+
 vim.api.nvim_create_user_command('Rstrip', function(opts)
     local range = '%'
     if opts.range ~= 0 then range = opts.line1 .. ',' .. opts.line2 end
@@ -164,10 +170,10 @@ vim.api.nvim_create_user_command('CloseFloatingWindows', function()
 end, { bang = true, desc = 'Close floating windows' })
 
 vim.api.nvim_create_user_command('Redir', function(context)
-  local lines = vim.split(vim.api.nvim_exec2(context.args, { output = true }).output, '\n', { plain = true })
-  vim.cmd('vnew')
-  vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
-  vim.opt_local.modified = false
+    local lines = vim.split(vim.api.nvim_exec2(context.args, { output = true }).output, '\n', { plain = true })
+    vim.cmd('vnew')
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+    vim.opt_local.modified = false
 end, { nargs = '+', complete = 'command', desc = 'Redirect command output to a new vertical split' })
 
 vim.api.nvim_create_user_command('DiffChanges', function(context)
