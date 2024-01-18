@@ -80,12 +80,6 @@ if vim.fn.has('termguicolors') == 1 then
     vim.opt.termguicolors = true
 end
 
-local colorscheme_ok, _ = pcall(vim.cmd.colorscheme, 'tonight')
-if not colorscheme_ok then
-    vim.notify('failed to load default colorscheme, using fallback...')
-    vim.cmd.colorscheme('default')
-end
-
 -- Undo
 
 vim.opt.undodir = vim.fn.stdpath('state') .. '/undo'

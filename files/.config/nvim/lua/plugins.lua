@@ -147,7 +147,13 @@ return {
     { 'tpope/vim-surround', commit = '3d188ed2113431cf8dac77be61b842acb64433d9' },
 
     -- Colorschemes
-    { 'jnnl/tonight.nvim' },
+    {
+        'jnnl/tonight.nvim',
+        priority = 1000,
+        config = function()
+            vim.cmd.colorscheme('tonight')
+        end
+    },
     { 'ellisonleao/gruvbox.nvim', config = true, commit = '517b012757fbe7a4d6e507baf5cc75837e62734f' },
 
     -- Language
