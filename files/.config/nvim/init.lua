@@ -10,19 +10,19 @@ vim.g.maplocalleader = ','
 local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.uv.fs_stat(lazy_path) then
     vim.notify('lazy.nvim not found, installing...', vim.log.levels.INFO)
-    vim.fn.system({ 'git', 'clone', 'https://github.com/folke/lazy.nvim.git', '--branch=stable', lazy_path })
+    vim.fn.system({
+        'git', 'clone', 'https://github.com/folke/lazy.nvim.git',
+        '--filter=blob:none', '--branch=stable',
+        lazy_path
+    })
 end
 vim.opt.rtp:prepend(lazy_path)
 
 local lazy_ok, lazy = pcall(require, 'lazy')
 if lazy_ok then
     lazy.setup('plugins', {
-        defaults = {
-            lazy = false,
-        },
-        change_detection = {
-            enabled = false,
-        },
+        defaults = { lazy = false },
+        change_detection = { enabled = false },
         lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
         performance = {
             rtp = {
@@ -36,26 +36,19 @@ end
 
 -- General
 
-vim.opt.backspace = 'indent,eol,start'
-vim.opt.hidden = true
-vim.opt.joinspaces = false
+vim.opt.fillchars:append('eob: ')
 vim.opt.modeline = false
 vim.opt.mouse = ''
-vim.opt.shortmess:append('c')
-vim.opt.showcmd = true
-vim.opt.timeoutlen = 500
-vim.opt.fillchars:append('eob: ')
 vim.opt.shada:prepend('r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:')
+vim.opt.shortmess:append('c')
+vim.opt.timeoutlen = 500
 
 -- Statusline
 
-vim.opt.laststatus = 2
 vim.opt.statusline = [[%f %y%m %l/%L]]
 
 -- Indentation
 
-vim.opt.autoindent = true
-vim.opt.breakindent = true
 vim.opt.expandtab = true
 vim.opt.shiftround = true
 vim.opt.shiftwidth = 4
@@ -63,15 +56,13 @@ vim.opt.softtabstop = -1
 
 -- Search
 
-vim.opt.incsearch = true
-vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Splits
 
-vim.opt.splitright = true
 vim.opt.splitbelow = true
+vim.opt.splitright = true
 
 -- Styles
 
@@ -238,8 +229,6 @@ vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('go_commands', { clear = true }),
     pattern = 'go',
     callback = function()
-        vim.opt_local.expandtab = false
-        vim.opt_local.shiftwidth = 8
         local create_cmd = function(name, command)
             vim.api.nvim_create_user_command(name, command, { bang = true })
         end

@@ -15,11 +15,12 @@ return {
         commit = '5efe985cf68fac3b6a6dfe7a75fbfaca8db2af9c',
         config = function()
             local leap = require('leap')
-            leap.add_default_mappings()
             leap.opts.safe_labels = {}
+            vim.keymap.set('n', 's', '<Plug>(leap-forward-to)')
+            vim.keymap.set('n', 'S', '<Plug>(leap-backward-to)')
         end,
     },
-    { 'stevearc/oil.nvim', opts = {} },
+    { 'justinmk/vim-dirvish' },
     { 'junegunn/fzf', build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc' },
     {
         'ibhagwan/fzf-lua',
@@ -154,7 +155,6 @@ return {
             vim.cmd.colorscheme('tonight')
         end
     },
-    { 'ellisonleao/gruvbox.nvim', config = true, commit = '517b012757fbe7a4d6e507baf5cc75837e62734f' },
 
     -- Language
     {
@@ -184,7 +184,6 @@ return {
             local conform = require('conform')
             conform.setup({
                 formatters_by_ft = {
-                    -- json = { 'jq' },
                     go = { 'gofmt' },
                     rust = { 'rustfmt' },
                     sh = { 'shellharden' },
