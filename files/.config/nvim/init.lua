@@ -1,5 +1,3 @@
--- init.lua
-
 -- Globals
 
 vim.g.mapleader = ','

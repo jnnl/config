@@ -13,6 +13,7 @@ return {
     {
         'ggandor/leap.nvim',
         commit = '5efe985cf68fac3b6a6dfe7a75fbfaca8db2af9c',
+        keys = { 's', 'S' },
         config = function()
             local leap = require('leap')
             leap.opts.safe_labels = {}
@@ -24,6 +25,7 @@ return {
     { 'junegunn/fzf', build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc' },
     {
         'ibhagwan/fzf-lua',
+        event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
             local defaults = require('fzf-lua.defaults').defaults
@@ -143,9 +145,8 @@ return {
             vim.g.lion_squeeze_spaces = 1
         end,
     },
-    { 'tpope/vim-abolish', commit = 'cb3dcb220262777082f63972298d57ef9e9455ec' },
-    { 'tpope/vim-commentary', commit = 'e87cd90dc09c2a203e13af9704bd0ef79303d755' },
-    { 'tpope/vim-surround', commit = '3d188ed2113431cf8dac77be61b842acb64433d9' },
+    { 'tpope/vim-commentary', commit = 'e87cd90dc09c2a203e13af9704bd0ef79303d755', event = 'VeryLazy', },
+    { 'tpope/vim-surround', commit = '3d188ed2113431cf8dac77be61b842acb64433d9', event = 'VeryLazy', },
 
     -- Colorschemes
     {
@@ -180,6 +181,7 @@ return {
     },
     {
         'stevearc/conform.nvim',
+        event = 'VeryLazy',
         config = function()
             local conform = require('conform')
             conform.setup({
@@ -218,10 +220,9 @@ return {
     },
     {
         'ray-x/lsp_signature.nvim',
+        commit = 'fed2c8389c148ff1dfdcdca63c2b48d08a50dea0',
         lazy = true,
-        opts = {
-            hint_enable = false,
-        },
+        opts = { hint_enable = false },
     },
     { 'williamboman/mason.nvim', lazy = true, opts = {} },
     { 'williamboman/mason-lspconfig.nvim', lazy = true, opts = {} },
@@ -229,6 +230,7 @@ return {
         'neovim/nvim-lspconfig',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
+            'hrsh7th/cmp-nvim-lsp',
             'ray-x/lsp_signature.nvim',
             'williamboman/mason.nvim',
             'williamboman/mason-lspconfig.nvim',
@@ -243,7 +245,7 @@ return {
                     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
                     local opts = { noremap = true, silent = true, buffer = ev.buf }
-                    local extend_opts = function(extends) return vim.tbl_extend('force', opts, extends) end
+                    local extend_opts = function(extends) return vim.tbl_deep_extend('force', opts, extends) end
                     local fzf_lua = require('fzf-lua')
 
                     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, extend_opts({ desc = 'Go to definition' }))
@@ -288,7 +290,7 @@ return {
             capabilities.textDocument.completion.completionItem.snippetSupport = true
 
             local server_opts = { capabilities = capabilities }
-            local extend_server_opts = function(extends) return vim.tbl_extend('force', server_opts, extends) end
+            local extend_server_opts = function(extends) return vim.tbl_deep_extend('force', server_opts, extends) end
 
             local local_npm_ls_path = vim.fn.expand('$HOME/.local/lib/node_modules')
             local angularls_cmd = {
@@ -355,7 +357,7 @@ return {
     { 'hrsh7th/cmp-path', lazy = true },
     {
         'hrsh7th/nvim-cmp',
-        event = 'BufReadPost',
+        event = 'InsertEnter',
         dependencies = {
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-nvim-lua',
