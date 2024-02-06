@@ -46,11 +46,17 @@ source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 copy_config_files() {
     msg "Copying config files..."
 
-    local file files source_file destination_file
-    mapfile -t files < <(find "$file_dir" -type f | sed 's|^'"$file_dir"'/||')
+    local file files matching_files source_file destination_file
+
+    while IFS= read -r line; do
+        files+=("$line")
+    done < <(find "$file_dir" -type f | sed 's|^'"$file_dir"'/||')
 
     if test "$should_use_file_pattern" = "1"; then
-        mapfile -t files < <(printf "%s\n" "${files[@]}" | grep -E "$file_pattern")
+        while IFS= read -r line; do
+            matching_files+=("$line")
+        done < <(printf "%s\n" "${files[@]}" | grep -E "$file_pattern")
+        files=("${matching_files[@]}")
     fi
 
     for file in "${files[@]}"; do

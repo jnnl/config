@@ -83,7 +83,10 @@ compact_pwd() {
         return
     fi
 
-    mapfile -td "$pathsep" wd_parts < <(printf "%s\0" "$PWD")
+    while IFS="$pathsep" read -r part; do
+        wd_parts+=("$part")
+    done < <(printf "%s\0" "$PWD")
+
     for part in "${wd_parts[@]:1:${#wd_parts[@]}-2}"; do
         path="$path$pathsep${part::trunclen}"
     done
