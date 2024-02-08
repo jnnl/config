@@ -75,6 +75,7 @@ fkill() {
 compact_pwd() {
     local path=""
     local pathsep="/"
+    local path_parts=()
     local trunclen="1"
     local triglen="20"
 
@@ -83,15 +84,13 @@ compact_pwd() {
         return
     fi
 
-    while IFS="$pathsep" read -r part; do
-        wd_parts+=("$part")
-    done < <(printf "%s\0" "$PWD")
+    IFS="$pathsep" read -ra path_parts < <(printf "%s\0" "$PWD")
 
-    for part in "${wd_parts[@]:1:${#wd_parts[@]}-2}"; do
+    for part in "${path_parts[@]:1:${#path_parts[@]}-2}"; do
         path="$path$pathsep${part::trunclen}"
     done
 
-    path="$path$pathsep${wd_parts[-1]}"
+    path="$path$pathsep${path_parts[-1]}"
     printf "%s" "$path"
 }
 
