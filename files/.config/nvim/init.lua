@@ -37,7 +37,7 @@ end
 vim.opt.fillchars:append('eob: ')
 vim.opt.modeline = false
 vim.opt.mouse = ''
-vim.opt.shada:prepend('r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:')
+vim.opt.shada = [[r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:,!,'200,<50,s10,h]]
 vim.opt.shortmess:append('c')
 vim.opt.timeoutlen = 500
 
