@@ -5,6 +5,7 @@ trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
+# shellcheck source=utils.sh
 source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 usage() {
@@ -32,7 +33,7 @@ while getopts fhi: opt; do
 done
 shift "$((OPTIND - 1))"
 
-while read -a line_files <&3; do
+while read -ra line_files <&3; do
     if test ${#line_files[@]} -ne 2; then 
         continue
     fi

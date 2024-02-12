@@ -5,6 +5,7 @@ trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
+# shellcheck source=utils.sh
 source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 usage() {
@@ -27,10 +28,10 @@ out_path="$HOME"
 while getopts ho: opt; do
     case "$opt" in
         h) usage;;
-        o) out_path="$(realpath $OPTARG)";;
+        o) out_path="$(realpath "$OPTARG")";;
         ?) usage;;
     esac
 done
 shift "$((OPTIND - 1))"
 
-diff -r --suppress-common-lines --color=always -W "$(tput cols)" "$out_path" "$(realpath "$file_dir")" $* | grep -ve "^Only in $out_path" || true
+diff -r --suppress-common-lines --color=always -W "$(tput cols)" "$out_path" "$(realpath "$file_dir")" "$@" | grep -ve "^Only in $out_path" || true
