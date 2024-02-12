@@ -119,15 +119,15 @@ return {
             vim.keymap.set('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
             vim.keymap.set('n', '<Leader>*', function()
                 fzf_lua.files({ cwd = vim.fn.expand('$HOME'), fzf_opts = { ['--scheme'] = 'path' } })
-            end, { desc = 'Find files in ~' })
+            end, { desc = 'Find files in $HOME' })
             vim.keymap.set('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
             vim.keymap.set('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
             vim.keymap.set('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
             vim.keymap.set('n', '<Leader>fgx', function()
-                fzf_lua.fzf_exec('git dmc', {
+                fzf_lua.fzf_exec('git diff --name-only --diff-filter=U', {
                     prompt = 'Conflicts> ',
                     cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h'),
-                    preview = 'awk "/<<<<<<</, />>>>>>>/ { print NR\"\\t\"$0 }" {1}',
+                    preview = [[awk '/^<<<<<<</,/^>>>>>>>/ { printf("%4d %s\n", NR, $0) }' {1}]],
                     actions = {
                         ['default'] = actions.file_edit_or_qf,
                     },
@@ -224,7 +224,7 @@ return {
         lazy = true,
         opts = { hint_enable = false },
     },
-    { 'williamboman/mason.nvim', lazy = true, opts = {} },
+    { 'williamboman/mason.nvim', lazy = true, opts = {}, cmd = 'Mason' },
     { 'williamboman/mason-lspconfig.nvim', lazy = true, opts = {} },
     {
         'neovim/nvim-lspconfig',
