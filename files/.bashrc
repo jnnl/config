@@ -94,6 +94,14 @@ compact_pwd() {
     printf "%s" "$path"
 }
 
+t() {
+    if test $# -gt 0; then
+        tmux "$@"
+    else
+        tmux at || tmux
+    fi
+}
+
 # print number of stopped jobs
 __nstopjobs() {
     n_stopped="$(jobs -ps 2>/dev/null | wc -l)"
