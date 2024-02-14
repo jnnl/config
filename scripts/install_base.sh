@@ -34,7 +34,7 @@ done
 shift "$((OPTIND - 1))"
 
 # shellcheck source=utils.sh
-source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")"/utils.sh
+source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 configure_common_env() {
     msg "Configuring common environment..."
@@ -110,8 +110,8 @@ install_mac_pkgs() {
     msg_done
 }
 
-install_ubuntu_pkgs() {
-    msg "Installing packages for Ubuntu..."
+install_deb_pkgs() {
+    msg "Installing packages for Debian/Ubuntu..."
 
     (
         set -eu
@@ -203,8 +203,10 @@ main() {
     elif is_linux; then
         if is_distro arch; then
             exec_step install_arch_pkgs
+        elif is_distro debian; then
+            exec_step install_deb_pkgs
         elif is_distro ubuntu; then
-            exec_step install_ubuntu_pkgs
+            exec_step install_deb_pkgs
         fi
     fi
 
