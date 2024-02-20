@@ -38,7 +38,7 @@ vim.opt.fillchars:append('eob: ')
 vim.opt.modeline = false
 vim.opt.mouse = ''
 vim.opt.shada = [[r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:,!,'200,<50,s10,h]]
-vim.opt.shortmess:append('c')
+vim.opt.shortmess:append('cI')
 vim.opt.timeoutlen = 500
 
 -- Statusline
