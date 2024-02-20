@@ -9,6 +9,7 @@
 [core]
     editor = nvim
 [diff]
+    algorithm = histogram
     colorMoved = default
 [push]
     default = current
@@ -21,12 +22,10 @@
 [mergetool "diffconflicts"]
     cmd = nvim -c DiffConflicts \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
     trustExitCode = true
-[pull]
-    rebase = true
 [alias]
     ac = "!git add -A && git commit"
     ap = add --patch
-    br = branch
+    b = branch
     c = commit
     ca = commit --amend
     cb = "!bash -ic gcb"
@@ -34,7 +33,7 @@
     d = diff
     dc = diff --cached
     dh = diff HEAD^ HEAD
-    dmc = diff --name-only --diff-filter=U
+    du = diff --name-only --diff-filter=U
     dr = "!git fetch && git diff FETCH_HEAD"
     l = log --oneline --decorate --graph
     lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cd) %C(blue)%an%Creset' --abbrev-commit --date=default
