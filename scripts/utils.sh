@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # utility functions
 
-trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
+trap 'echo "fatal error >>> utils.sh (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 

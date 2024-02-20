@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # install packages and configure environment
 
-trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
+trap 'echo "fatal error >>> install_base.sh (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 

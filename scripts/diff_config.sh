@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # diff local and repo configs
 
-trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
+trap 'echo "fatal error >>> diff_config.sh (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 

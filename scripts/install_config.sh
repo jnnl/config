@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # install config files
 
-trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
+trap 'echo "fatal error >>> install_config.sh (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 

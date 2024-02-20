@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # copy changed local config files to repo
 
-trap 'echo "ERR trap (line: $LINENO, exit code: $?)"' ERR
+trap 'echo "fatal error >>> sync_config.sh (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
