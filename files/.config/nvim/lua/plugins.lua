@@ -3,7 +3,7 @@ return {
     {
         'andymass/vim-matchup',
         commit = 'd30b72d20f01478a8486f15a57c89fe3177373db',
-        event = 'BufReadPost',
+        event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
             vim.keymap.set({ 'n', 'x' }, 'ö%', '<Plug>(matchup-[%)')
@@ -13,16 +13,21 @@ return {
     {
         'ggandor/leap.nvim',
         commit = '5efe985cf68fac3b6a6dfe7a75fbfaca8db2af9c',
-        keys = { 's', 'S' },
+        event = 'VeryLazy',
         config = function()
             local leap = require('leap')
             leap.opts.safe_labels = {}
-            vim.keymap.set('n', 's', '<Plug>(leap-forward-to)')
-            vim.keymap.set('n', 'S', '<Plug>(leap-backward-to)')
+            vim.keymap.set({ 'n', 'x' }, 's', '<Plug>(leap-forward-to)')
+            vim.keymap.set({ 'n', 'x' }, 'S', '<Plug>(leap-backward-to)')
         end,
     },
-    { 'justinmk/vim-dirvish' },
-    { 'junegunn/fzf', build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc' },
+    {
+        'justinmk/vim-dirvish'
+    },
+    {
+        'junegunn/fzf',
+        build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc'
+    },
     {
         'ibhagwan/fzf-lua',
         event = 'VeryLazy',
@@ -140,13 +145,21 @@ return {
     {
         'tommcdo/vim-lion',
         commit = 'ce46593ecd60e6051fb6e4d3986d2fc9f5a618b1',
-        event = 'BufReadPost',
+        event = 'VeryLazy',
         config = function()
             vim.g.lion_squeeze_spaces = 1
         end,
     },
-    { 'tpope/vim-commentary', commit = 'e87cd90dc09c2a203e13af9704bd0ef79303d755', event = 'VeryLazy', },
-    { 'tpope/vim-surround', commit = '3d188ed2113431cf8dac77be61b842acb64433d9', event = 'VeryLazy', },
+    {
+        'tpope/vim-commentary',
+        commit = 'e87cd90dc09c2a203e13af9704bd0ef79303d755',
+        event = 'VeryLazy',
+    },
+    {
+        'tpope/vim-surround',
+        commit = '3d188ed2113431cf8dac77be61b842acb64433d9',
+        event = 'VeryLazy',
+    },
 
     -- Colorschemes
     {
@@ -171,8 +184,14 @@ return {
             },
         },
     },
-    { 'hashivim/vim-terraform', commit = '2bbc5f65a80c79a5110494a2ba1b869075fcf7a0' },
-    { 'leafgarland/typescript-vim', commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa' },
+    {
+        'hashivim/vim-terraform',
+        commit = '2bbc5f65a80c79a5110494a2ba1b869075fcf7a0'
+    },
+    {
+        'leafgarland/typescript-vim',
+        commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa'
+    },
     {
         'pmizio/typescript-tools.nvim',
         ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
@@ -224,8 +243,17 @@ return {
         lazy = true,
         opts = { hint_enable = false },
     },
-    { 'williamboman/mason.nvim', lazy = true, opts = {}, cmd = 'Mason' },
-    { 'williamboman/mason-lspconfig.nvim', lazy = true, opts = {} },
+    {
+        'williamboman/mason.nvim',
+        lazy = true,
+        opts = {},
+        cmd = { 'Mason', 'MasonInstall', 'MasonUpdate', 'MasonUninstall' }
+    },
+    {
+        'williamboman/mason-lspconfig.nvim',
+        lazy = true,
+        opts = {}
+    },
     {
         'neovim/nvim-lspconfig',
         event = { 'BufNewFile', 'BufReadPre' },
@@ -352,9 +380,18 @@ return {
     },
 
     -- Completion
-    { 'hrsh7th/cmp-nvim-lsp', lazy = true },
-    { 'hrsh7th/cmp-nvim-lua', lazy = true },
-    { 'hrsh7th/cmp-path', lazy = true },
+    {
+        'hrsh7th/cmp-nvim-lsp',
+        lazy = true
+    },
+    {
+        'hrsh7th/cmp-nvim-lua',
+        lazy = true
+    },
+    {
+        'hrsh7th/cmp-path',
+        lazy = true
+    },
     {
         'hrsh7th/nvim-cmp',
         event = 'InsertEnter',
@@ -414,10 +451,15 @@ return {
     },
 
     -- Miscellaneous
-    { 'folke/which-key.nvim', opts = {} },
+    {
+        'folke/which-key.nvim',
+        event = 'VeryLazy',
+        opts = {},
+    },
     {
         'mbbill/undotree',
         commit = '0e11ba7325efbbb3f3bebe06213afa3e7ec75131',
+        event = 'VeryLazy',
         config = function()
             vim.keymap.set('n', '<Leader>u', '<cmd>UndotreeToggle<CR>', { silent = true })
             vim.g.undotree_SetFocusWhenToggle = 1
@@ -425,16 +467,32 @@ return {
             vim.g.undotree_HelpLine = 0
         end,
     },
-    { 'michaeljsmith/vim-indent-object', commit = '5c5b24c959478929b54a9e831a8e2e651a465965' },
+    {
+        'michaeljsmith/vim-indent-object',
+        commit = '5c5b24c959478929b54a9e831a8e2e651a465965',
+        event = 'VeryLazy',
+    },
     {
         'romainl/vim-qf',
         commit = '7e65325651ff5a0b06af8df3980d2ee54cf10e14',
+        event = 'VeryLazy',
         config = function()
             vim.keymap.set('n', 'öq', '<Plug>(qf_qf_previous)')
             vim.keymap.set('n', 'äq', '<Plug>(qf_qf_next)')
         end,
     },
-    { 'tpope/vim-fugitive' },
-    { 'tpope/vim-repeat', commit = '24afe922e6a05891756ecf331f39a1f6743d3d5a' },
-    { 'whiteinge/diffconflicts', commit = '05e8d2e935a235b8f8e6d308a46a5f028ea5bf97' },
+    {
+        'tpope/vim-fugitive',
+        event = 'VeryLazy'
+    },
+    {
+        'tpope/vim-repeat',
+        commit = '24afe922e6a05891756ecf331f39a1f6743d3d5a',
+        event = 'VeryLazy',
+    },
+    {
+        'whiteinge/diffconflicts',
+        commit = '05e8d2e935a235b8f8e6d308a46a5f028ea5bf97',
+        event = 'VeryLazy',
+    },
 }
