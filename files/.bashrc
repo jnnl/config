@@ -40,7 +40,6 @@ manf() {
 
 # browse git commits
 gcb() {
-    git rev-parse || return
     git log --graph --color=always --date=short \
         --format="%C(yellow)%h %Cgreen%ad %Cblue%aN%Cred%d %Creset%s" "$@" | \
         fzf --ansi --no-sort --reverse --tiebreak=index \
@@ -52,15 +51,15 @@ gcb() {
 FZF-EOF"
 }
 
+# browse and checkout git branches
 gco() {
-    git rev-parse || return
     git branch --format='%(refname:short)' | \
         fzf --preview='git log -10 --color=always {..}' | \
         xargs -r git checkout
 }
 
 # kill selected process
-fkill() {
+killf() {
     local pid
     if [ "$UID" != "0" ]; then
         pid=$(ps -f -u "$UID" | sed 1d | fzf -m | awk '{ print $2 }')
@@ -94,6 +93,7 @@ compact_pwd() {
     printf "%s" "$path"
 }
 
+# tmux convenience wrapper
 t() {
     if test $# -gt 0; then
         tmux "$@"
@@ -108,7 +108,7 @@ __nstopjobs() {
     test "$n_stopped" -gt 0 && printf " [%s]" "${n_stopped#${n_stopped%%[![:space:]]*}}"
 }
 
-# prompt
+# git prompt
 if test -f /usr/share/git/completion/git-prompt.sh; then
     source "$_"
 elif test -f /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh; then
@@ -122,6 +122,7 @@ if test -f /opt/homebrew/etc/bash_completion.d/git-completion.bash; then
     source "$_"
 fi
 
+# prompt
 if has __git_ps1; then
     PS1="\u:\W\$(__git_ps1)\$(__nstopjobs) $ "
 else
