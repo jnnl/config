@@ -37,7 +37,9 @@
     dr = "!git fetch && git diff FETCH_HEAD"
     l = log --oneline --decorate --graph
     lg = log --graph --pretty=format:'%C(auto)%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cd) %C(blue)%an%Creset' --abbrev-commit --date=default
+    mff = merge --ff-only
     pp = "!git pull && git push"
+    pr = pull --rebase
     rh = reset --hard
     rso = remote show origin
     s = status -bsu
