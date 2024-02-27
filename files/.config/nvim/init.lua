@@ -32,7 +32,7 @@ else
     vim.notify('failed to load lazy.nvim, plugins are disabled...', vim.log.levels.WARN)
 end
 
--- General
+-- Miscellaneous
 
 vim.opt.fillchars:append('eob: ')
 vim.opt.modeline = false
@@ -43,7 +43,35 @@ vim.opt.timeoutlen = 500
 
 -- Statusline
 
-vim.opt.statusline = [[%f %y%m %l/%L]]
+function _G.statusline()
+    local separator = '%#StatuslineNC# > %*'
+    local buf_attrs = (function()
+        local attrs = {}
+        local buf_name = vim.api.nvim_buf_get_name(0)
+        if buf_name ~= '' then
+            table.insert(attrs, '%y%r%m')
+        end
+        if vim.g.loaded_fugitive ~= nil and string.len(vim.fn.FugitiveHead()) > 0 then
+            if #attrs > 0 then
+                table.insert(attrs, ' ')
+            end
+            table.insert(attrs, string.format('(%s)', vim.fn.FugitiveHead()))
+        end
+        if #attrs > 0 then
+            table.insert(attrs, 1, separator)
+        end
+        return table.concat(attrs)
+    end)()
+
+    return table.concat({
+        '%3l/%L',
+        separator,
+        '%f',
+        buf_attrs,
+    })
+end
+
+vim.opt.statusline = '%{%v:lua.statusline()%}'
 
 -- Indentation
 
