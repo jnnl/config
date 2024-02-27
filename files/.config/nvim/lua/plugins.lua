@@ -22,7 +22,7 @@ return {
         end,
     },
     {
-        'justinmk/vim-dirvish'
+        'justinmk/vim-dirvish',
     },
     {
         'junegunn/fzf',
@@ -403,7 +403,7 @@ return {
         config = function()
             vim.opt.completeopt = 'menu,menuone,noselect'
             local cmp = require('cmp')
-            cmp.setup({
+            local cmp_config = {
                 mapping = cmp.mapping.preset.insert({
                     ['<Up>'] = cmp.mapping.select_prev_item(),
                     ['<Down>'] = cmp.mapping.select_next_item(),
@@ -446,7 +446,10 @@ return {
                     { name = 'nvim_lua' },
                     { name = 'path' },
                 },
-            })
+            }
+            cmp.setup(cmp_config)
+            vim.api.nvim_create_user_command('CmpEnable', function() cmp.setup.buffer(cmp_config) end, {})
+            vim.api.nvim_create_user_command('CmpDisable', function() cmp.setup.buffer({ enabled = false }) end, {})
         end,
     },
 
