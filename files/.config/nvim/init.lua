@@ -44,18 +44,30 @@ vim.opt.timeoutlen = 500
 -- Statusline
 
 function _G.statusline()
-    local separator = '%#StatuslineNC# > %*'
+    local separator = '%#StatuslineNC# | %*'
+    local line_count = '%3l/%L'
+    local file_path = separator .. '%f'
     local buf_attrs = (function()
         local attrs = {}
-        local buf_name = vim.api.nvim_buf_get_name(0)
-        if buf_name ~= '' then
-            table.insert(attrs, '%y%r%m')
+        if #vim.api.nvim_buf_get_name(0) > 0 then
+            table.insert(attrs, '%y%r%m ')
         end
-        if vim.g.loaded_fugitive ~= nil and string.len(vim.fn.FugitiveHead()) > 0 then
-            if #attrs > 0 then
-                table.insert(attrs, ' ')
+        if vim.g.loaded_fugitive ~= nil and #vim.fn.FugitiveHead() > 0 then
+            table.insert(attrs, string.format('(%s) ', vim.fn.FugitiveHead()))
+        end
+        if #vim.diagnostic.get(0) > 0 then
+            local diagnostics = {
+                { name = 'H', severity = vim.diagnostic.severity.HINT },
+                { name = 'I', severity = vim.diagnostic.severity.INFO },
+                { name = 'W', severity = vim.diagnostic.severity.WARN },
+                { name = 'E', severity = vim.diagnostic.severity.ERROR },
+            }
+            for _, diagnostic in ipairs(diagnostics) do
+                local diagnostic_count = #vim.diagnostic.get(0, { severity = diagnostic.severity })
+                if diagnostic_count > 0 then
+                    table.insert(attrs, string.format('%s:%s ', diagnostic.name, diagnostic_count))
+                end
             end
-            table.insert(attrs, string.format('(%s)', vim.fn.FugitiveHead()))
         end
         if #attrs > 0 then
             table.insert(attrs, 1, separator)
@@ -64,9 +76,8 @@ function _G.statusline()
     end)()
 
     return table.concat({
-        '%3l/%L',
-        separator,
-        '%f',
+        line_count,
+        file_path,
         buf_attrs,
     })
 end
@@ -293,4 +304,4 @@ vim.on_key(function(key)
             vim.opt.hlsearch = is_hls_key
         end
     end
-end, vim.api.nvim_create_namespace 'hlsearch_autoclear')
+end, vim.api.nvim_create_namespace('hlsearch_autoclear'))
