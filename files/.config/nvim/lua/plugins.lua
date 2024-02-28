@@ -105,6 +105,7 @@ return {
                 },
             })
             vim.keymap.set('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
+            vim.keymap.set('n', '<Leader>fc', fzf_lua.commands, { desc = 'Find commands' })
             vim.keymap.set('n', '<Leader>f*', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
             vim.keymap.set('x', '<Leader>f*', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
             vim.keymap.set('n', '<Leader>,', function()
@@ -194,6 +195,7 @@ return {
     },
     {
         'pmizio/typescript-tools.nvim',
+        commit = 'c43d9580c3ff5999a1eabca849f807ab33787ea7',
         ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
         dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
         opts = {},
@@ -202,6 +204,7 @@ return {
         'stevearc/conform.nvim',
         event = 'VeryLazy',
         config = function()
+            vim.g.disable_autoformat = true
             local conform = require('conform')
             conform.setup({
                 formatters_by_ft = {
@@ -234,7 +237,7 @@ return {
                 vim.b.disable_autoformat = false
                 vim.g.disable_autoformat = false
             end, { bang = true })
-            vim.keymap.set('n', '<leader>xf', function() vim.cmd('Format') end, { desc = 'Format' })
+            vim.keymap.set('n', '<leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
         end
     },
     {
@@ -349,7 +352,10 @@ return {
                             Lua = {
                                 runtime = { version = 'LuaJIT', },
                                 diagnostics = { globals = { 'vim' }, },
-                                workspace = { library = vim.api.nvim_get_runtime_file('', true), },
+                                workspace = {
+                                    library = vim.api.nvim_get_runtime_file('', true),
+                                    checkThirdParty = false
+                                },
                                 telemetry = { enable = false, },
                             },
                         },
