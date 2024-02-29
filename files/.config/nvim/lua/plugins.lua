@@ -23,10 +23,11 @@ return {
     },
     {
         'justinmk/vim-dirvish',
+        commit = 'b660af1fa07fe1d44d4eb3ea5242334f6c2766ca',
     },
     {
         'junegunn/fzf',
-        build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc'
+        build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc',
     },
     {
         'ibhagwan/fzf-lua',
@@ -202,6 +203,7 @@ return {
     },
     {
         'stevearc/conform.nvim',
+        commit = '192a6d2ddace343f1840a8f72efe2315bd392243',
         event = 'VeryLazy',
         config = function()
             vim.g.disable_autoformat = true
@@ -462,6 +464,7 @@ return {
     -- Miscellaneous
     {
         'folke/which-key.nvim',
+        commit = '4433e5ec9a507e5097571ed55c02ea9658fb268a',
         event = 'VeryLazy',
         opts = {},
     },
