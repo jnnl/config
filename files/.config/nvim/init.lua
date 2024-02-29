@@ -37,8 +37,10 @@ end
 vim.opt.fillchars:append('eob: ')
 vim.opt.modeline = false
 vim.opt.mouse = ''
+vim.opt.number = true
 vim.opt.shada = [[r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:,!,'200,<50,s10,h]]
 vim.opt.shortmess:append('cI')
+vim.opt.termguicolors = true
 vim.opt.timeoutlen = 500
 
 -- Statusline
@@ -56,16 +58,16 @@ function _G.statusline()
             table.insert(attrs, string.format('(%s) ', vim.fn.FugitiveHead()))
         end
         if #vim.diagnostic.get(0) > 0 then
-            local diagnostics = {
-                { name = 'H', severity = vim.diagnostic.severity.HINT },
-                { name = 'I', severity = vim.diagnostic.severity.INFO },
-                { name = 'W', severity = vim.diagnostic.severity.WARN },
-                { name = 'E', severity = vim.diagnostic.severity.ERROR },
+            local diagnostic_levels = {
+                { symbol = 'H', value = vim.diagnostic.severity.HINT },
+                { symbol = 'I', value = vim.diagnostic.severity.INFO },
+                { symbol = 'W', value = vim.diagnostic.severity.WARN },
+                { symbol = 'E', value = vim.diagnostic.severity.ERROR },
             }
-            for _, diagnostic in ipairs(diagnostics) do
-                local diagnostic_count = #vim.diagnostic.get(0, { severity = diagnostic.severity })
+            for _, level in ipairs(diagnostic_levels) do
+                local diagnostic_count = #vim.diagnostic.get(0, { severity = level.value })
                 if diagnostic_count > 0 then
-                    table.insert(attrs, string.format('%s:%s ', diagnostic.name, diagnostic_count))
+                    table.insert(attrs, string.format('%s:%s ', level.symbol, diagnostic_count))
                 end
             end
         end
@@ -101,13 +103,6 @@ vim.opt.smartcase = true
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 
--- Styles
-
-vim.opt.number = true
-if vim.fn.has('termguicolors') == 1 then
-    vim.opt.termguicolors = true
-end
-
 -- Undo
 
 vim.opt.undodir = vim.fn.stdpath('state') .. '/undo'
@@ -131,8 +126,8 @@ vim.keymap.set({ 'n', 'x' }, '<C-j>', '}')
 vim.keymap.set({ 'n', 'x' }, '<C-k>', '{')
 vim.keymap.set('c', '<C-j>', '<Down>')
 vim.keymap.set('c', '<C-k>', '<Up>')
-vim.keymap.set('n', '<C-d>', '<C-d>zz')
-vim.keymap.set('n', '<C-u>', '<C-u>zz')
+-- vim.keymap.set('n', '<C-d>', '<C-d>zz')
+-- vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', '<C-w>.', function()
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     local longest_line_length = math.max(unpack(vim.tbl_map(function(line) return #line end, lines))) + 5
@@ -162,32 +157,32 @@ end, { expr = true, desc = 'Substitute word under cursor' })
 
 -- Commands
 
-vim.api.nvim_create_user_command('NonAscii', '/[^\\x00-\\x7F]', { bang = true, desc = 'Search for non-ASCII characters' })
+vim.api.nvim_create_user_command('NonAscii', '/[^\\x00-\\x7F]', { desc = 'Search for non-ASCII characters' })
 
 vim.api.nvim_create_user_command('Unansify', function(opts)
     local range = '%'
     if opts.range ~= 0 then range = opts.line1 .. ',' .. opts.line2 end
     vim.cmd('keeppatterns ' .. range .. 's/\\%x1b\\[[0-9;]*[a-zA-Z]//ge')
-end, { bang = true, range = true, desc = 'Remove ANSI escape codes' })
+end, { range = true, desc = 'Remove ANSI escape codes' })
 
 vim.api.nvim_create_user_command('Unblankify', function(opts)
     local range = '%'
     if opts.range ~= 0 then range = opts.line1 .. ',' .. opts.line2 end
     vim.cmd(range .. 'g/^\\s*$/d')
-end, { bang = true, range = true, desc = 'Remove blank lines' })
+end, { range = true, desc = 'Remove blank lines' })
 
 vim.api.nvim_create_user_command('Lstrip', function(opts)
     local range = '%'
     if opts.range ~= 0 then range = opts.line1 .. ',' .. opts.line2 end
     vim.cmd('keeppatterns ' .. range .. 's/^\\s\\+//e')
-end, { bang = true, range = true, desc = 'Strip leading whitespace' })
+end, { range = true, desc = 'Strip leading whitespace' })
 
 vim.api.nvim_create_user_command('Rstrip', function(opts)
     local range = '%'
     if opts.range ~= 0 then range = opts.line1 .. ',' .. opts.line2 end
     vim.cmd('keeppatterns ' .. range .. 's/\\s\\+$//e')
     vim.cmd('keeppatterns ' .. range .. 's/\r//ge')
-end, { bang = true, range = true, desc = 'Strip trailing whitespace' })
+end, { range = true, desc = 'Strip trailing whitespace' })
 
 vim.api.nvim_create_user_command('CloseFloatingWindows', function()
     for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -195,7 +190,7 @@ vim.api.nvim_create_user_command('CloseFloatingWindows', function()
             vim.api.nvim_win_close(win, false)
         end
     end
-end, { bang = true, desc = 'Close floating windows' })
+end, { desc = 'Close floating windows' })
 
 vim.api.nvim_create_user_command('Redir', function(context)
     local lines = vim.split(vim.api.nvim_exec2(context.args, { output = true }).output, '\n', { plain = true })
@@ -245,7 +240,7 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'html', 'scss', 'typescript' },
     callback = function()
         local create_cmd = function(name, command)
-            vim.api.nvim_create_user_command(name, command, { bang = true })
+            vim.api.nvim_create_user_command(name, command, {})
         end
         local is_angular = vim.fn.findfile('angular.json', '.;') ~= ''
         if is_angular then
@@ -267,7 +262,7 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = 'go',
     callback = function()
         local create_cmd = function(name, command)
-            vim.api.nvim_create_user_command(name, command, { bang = true })
+            vim.api.nvim_create_user_command(name, command, {})
         end
         create_cmd('ECode', ':e %:p:s?_test.go?.go?')
         create_cmd('SCode', ':vs %:p:s?_test.go?.go?')
@@ -290,10 +285,17 @@ vim.api.nvim_create_autocmd({ 'BufWritePre', 'FileWritePre' }, {
     callback = function()
         local filename = vim.api.nvim_buf_get_name(0)
         local dir = vim.fn.fnamemodify(filename, ':p:h')
-        if vim.fn.isdirectory(dir) == 0 and not string.find(dir, '^oil:/') then
+        if vim.fn.isdirectory(dir) == 0 then
             vim.fn.system({ 'mkdir', '-vp', dir })
         end
     end
+})
+
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+    group = vim.api.nvim_create_augroup('statusline_refresh', { clear = true }),
+    callback = function()
+        vim.o.stl = vim.o.stl
+    end,
 })
 
 vim.on_key(function(key)
