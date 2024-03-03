@@ -376,14 +376,17 @@ return {
     -- Completion
     {
         'hrsh7th/cmp-nvim-lsp',
+        commit = '5af77f54de1b16c34b23cba810150689a3a90312',
         lazy = true
     },
     {
         'hrsh7th/cmp-nvim-lua',
+        commit = 'f12408bdb54c39c23e67cab726264c10db33ada8',
         lazy = true
     },
     {
         'hrsh7th/cmp-path',
+        commit = '91ff86cd9c29299a64f968ebb45846c485725f23',
         lazy = true
     },
     {
