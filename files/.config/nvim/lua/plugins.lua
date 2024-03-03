@@ -274,7 +274,6 @@ return {
             autocmd('LspAttach', {
                 group = augroup('lsp_attach_config', { clear = true }),
                 callback = function(ev)
-                    vim.diagnostic.config({ virtual_text = false })
                     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
                     local opts = { noremap = true, silent = true, buffer = ev.buf }

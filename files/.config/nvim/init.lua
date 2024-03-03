@@ -43,6 +43,8 @@ vim.opt.shortmess:append('cI')
 vim.opt.termguicolors = true
 vim.opt.timeoutlen = 500
 
+vim.diagnostic.config({ virtual_text = false })
+
 -- Statusline
 
 function _G.statusline()
