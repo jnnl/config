@@ -6,8 +6,8 @@ return {
         event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
-            vim.keymap.set({ 'n', 'x' }, 'ö%', '<Plug>(matchup-[%)')
-            vim.keymap.set({ 'n', 'x' }, 'ä%', '<Plug>(matchup-]%)')
+            keymap({ 'n', 'x' }, 'ö%', '<Plug>(matchup-[%)')
+            keymap({ 'n', 'x' }, 'ä%', '<Plug>(matchup-]%)')
         end,
     },
     {
@@ -17,8 +17,8 @@ return {
         config = function()
             local leap = require('leap')
             leap.opts.safe_labels = {}
-            vim.keymap.set({ 'n', 'x' }, 's', '<Plug>(leap-forward-to)')
-            vim.keymap.set({ 'n', 'x' }, 'S', '<Plug>(leap-backward-to)')
+            keymap({ 'n', 'x' }, 's', '<Plug>(leap-forward-to)')
+            keymap({ 'n', 'x' }, 'S', '<Plug>(leap-backward-to)')
         end,
     },
     {
@@ -105,32 +105,32 @@ return {
                     },
                 },
             })
-            vim.keymap.set('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
-            vim.keymap.set('n', '<Leader>fc', fzf_lua.commands, { desc = 'Find commands' })
-            vim.keymap.set('n', '<Leader>f*', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
-            vim.keymap.set('x', '<Leader>f*', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
-            vim.keymap.set('n', '<Leader>,', function()
+            keymap('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
+            keymap('n', '<Leader>fc', fzf_lua.commands, { desc = 'Find commands' })
+            keymap('n', '<Leader>f*', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
+            keymap('x', '<Leader>f*', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
+            keymap('n', '<Leader>,', function()
                 fzf_lua.files({ fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find files' })
-            vim.keymap.set('n', '<Leader>.', fzf_lua.buffers, { desc = 'Find open buffers' })
-            vim.keymap.set('n', '<Leader>-', function()
+            keymap('n', '<Leader>.', fzf_lua.buffers, { desc = 'Find open buffers' })
+            keymap('n', '<Leader>-', function()
                 fzf_lua.grep_project({ fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' } })
             end, { desc = 'Find text' })
-            vim.keymap.set('n', '<Leader>;', function()
+            keymap('n', '<Leader>;', function()
                 fzf_lua.oldfiles({ fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find recently opened files' })
-            vim.keymap.set('n', '<Leader>:', function()
+            keymap('n', '<Leader>:', function()
                 fzf_lua.oldfiles({ prompt = 'CwdHistory> ', cwd_only = true, fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find recently opened files under current dir' })
-            vim.keymap.set('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
-            vim.keymap.set('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
-            vim.keymap.set('n', '<Leader>*', function()
+            keymap('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
+            keymap('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
+            keymap('n', '<Leader>*', function()
                 fzf_lua.files({ cwd = vim.fn.expand('$HOME'), fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find files in $HOME' })
-            vim.keymap.set('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
-            vim.keymap.set('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
-            vim.keymap.set('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
-            vim.keymap.set('n', '<Leader>fgx', function()
+            keymap('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
+            keymap('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
+            keymap('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
+            keymap('n', '<Leader>fgx', function()
                 fzf_lua.fzf_exec('git diff --name-only --diff-filter=U', {
                     prompt = 'Conflicts> ',
                     cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h'),
@@ -229,17 +229,17 @@ return {
                 end
             })
             vim.o.formatexpr = 'v:lua.require("conform").formatexpr()'
-            vim.api.nvim_create_user_command('Format', function()
+            command('Format', function()
                 conform.format()
             end, { bang = true })
-            vim.api.nvim_create_user_command('FormatDisable', function(args)
+            command('FormatDisable', function(args)
                 if args.bang then vim.b.disable_autoformat = true else vim.g.disable_autoformat = true end
             end, { bang = true })
-            vim.api.nvim_create_user_command('FormatEnable', function()
+            command('FormatEnable', function()
                 vim.b.disable_autoformat = false
                 vim.g.disable_autoformat = false
             end, { bang = true })
-            vim.keymap.set('n', '<leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
+            keymap('n', '<leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
         end
     },
     {
@@ -271,8 +271,8 @@ return {
         config = function()
             local lsp = require('lspconfig')
 
-            vim.api.nvim_create_autocmd('LspAttach', {
-                group = vim.api.nvim_create_augroup('lsp_attach_config', { clear = true }),
+            autocmd('LspAttach', {
+                group = augroup('lsp_attach_config', { clear = true }),
                 callback = function(ev)
                     vim.diagnostic.config({ virtual_text = false })
                     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
@@ -281,27 +281,14 @@ return {
                     local extend_opts = function(extends) return vim.tbl_deep_extend('force', opts, extends) end
                     local fzf_lua = require('fzf-lua')
 
-                    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, extend_opts({ desc = 'Go to definition' }))
-                    vim.keymap.set('n', 'gD', fzf_lua.lsp_definitions, extend_opts({ desc = 'Find definition(s)' }))
-                    vim.keymap.set('n', 'gi', fzf_lua.lsp_implementations, extend_opts({ desc = 'Find implementation(s)' }))
-                    vim.keymap.set('n', 'gr', fzf_lua.lsp_references, extend_opts({ desc = 'Find reference(s)' }))
-                    vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, extend_opts({ desc = 'Go to type definition' }))
-                    vim.keymap.set('n', 'gT', fzf_lua.lsp_typedefs, extend_opts({ desc = 'Find type definitions(s)' }))
-                    vim.keymap.set('n', 'ög', function()
-                        vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN } })
-                    end, extend_opts({ desc = 'Go to previous WARN+ diagnostic' }))
-                    vim.keymap.set('n', 'äg', function()
-                        vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.WARN } })
-                    end, extend_opts({ desc = 'Go to next WARN+ diagnostic' }))
-                    vim.keymap.set('n', 'öG', function()
-                        vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.HINT } })
-                    end, extend_opts({ desc = 'Go to next HINT+ diagnostic' }))
-                    vim.keymap.set('n', 'äG', function()
-                        vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.HINT } })
-                    end, extend_opts({ desc = 'Go to next HINT+ diagnostic' }))
-                    vim.keymap.set('n', '<Space>', vim.lsp.buf.hover, opts)
-                    vim.keymap.set('n', '<C-Space>', vim.diagnostic.open_float, opts)
-                    vim.keymap.set({ 'n', 'x' }, '<leader><Space>', function()
+                    keymap('n', 'gd', vim.lsp.buf.definition, extend_opts({ desc = 'Go to definition' }))
+                    keymap('n', 'gD', fzf_lua.lsp_definitions, extend_opts({ desc = 'Find definition(s)' }))
+                    keymap('n', 'gi', fzf_lua.lsp_implementations, extend_opts({ desc = 'Find implementation(s)' }))
+                    keymap('n', 'gr', fzf_lua.lsp_references, extend_opts({ desc = 'Find reference(s)' }))
+                    keymap('n', 'gt', vim.lsp.buf.type_definition, extend_opts({ desc = 'Go to type definition' }))
+                    keymap('n', 'gT', fzf_lua.lsp_typedefs, extend_opts({ desc = 'Find type definitions(s)' }))
+                    keymap('n', '<Space>', vim.lsp.buf.hover, opts)
+                    keymap({ 'n', 'x' }, '<leader><Space>', function()
                         fzf_lua.lsp_code_actions({
                             winopts = {
                                 relative = 'cursor',
@@ -315,7 +302,7 @@ return {
                             }
                         })
                     end, extend_opts({ desc = 'Find code actions' }))
-                    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, extend_opts({ desc = 'Rename symbol under cursor' }))
+                    keymap('n', '<leader>r', vim.lsp.buf.rename, extend_opts({ desc = 'Rename symbol under cursor' }))
                 end,
             })
 
@@ -456,8 +443,8 @@ return {
                 },
             }
             cmp.setup(cmp_config)
-            vim.api.nvim_create_user_command('CmpEnable', function() cmp.setup.buffer(cmp_config) end, {})
-            vim.api.nvim_create_user_command('CmpDisable', function() cmp.setup.buffer({ enabled = false }) end, {})
+            command('CmpEnable', function() cmp.setup.buffer(cmp_config) end, {})
+            command('CmpDisable', function() cmp.setup.buffer({ enabled = false }) end, {})
         end,
     },
 
@@ -473,7 +460,7 @@ return {
         commit = '0e11ba7325efbbb3f3bebe06213afa3e7ec75131',
         event = 'VeryLazy',
         config = function()
-            vim.keymap.set('n', '<Leader>u', '<cmd>UndotreeToggle<CR>', { silent = true })
+            keymap('n', '<Leader>u', '<cmd>UndotreeToggle<CR>', { silent = true })
             vim.g.undotree_SetFocusWhenToggle = 1
             vim.g.undotree_ShortIndicators = 1
             vim.g.undotree_HelpLine = 0
@@ -489,8 +476,8 @@ return {
         commit = '7e65325651ff5a0b06af8df3980d2ee54cf10e14',
         event = 'VeryLazy',
         config = function()
-            vim.keymap.set('n', 'öq', '<Plug>(qf_qf_previous)')
-            vim.keymap.set('n', 'äq', '<Plug>(qf_qf_next)')
+            keymap('n', 'öq', '<Plug>(qf_qf_previous)')
+            keymap('n', 'äq', '<Plug>(qf_qf_next)')
         end,
     },
     {
