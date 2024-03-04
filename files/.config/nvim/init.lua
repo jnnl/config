@@ -47,7 +47,7 @@ vim.diagnostic.config({ virtual_text = false })
 
 -- Statusline
 
-function _G.statusline()
+_G.statusline = function()
     local separator = '%#StatuslineNC# | %*'
     local line_count = '%3l/%L'
     local file_path = separator .. '%f'
@@ -173,31 +173,28 @@ end, { expr = true, desc = 'Substitute word under cursor' })
 -- Commands
 
 _G.command = vim.api.nvim_create_user_command
+_G.get_command_range = function(opts) return opts.range == 0 and '%' or opts.line1 .. ',' .. opts.line2 end
 
 command('NonAscii', '/[^\\x00-\\x7F]', { desc = 'Search for non-ASCII characters' })
 command('Unansify', function(opts)
-    local range = '%'
-    if opts.range ~= 0 then range = opts.line1 .. ',' .. opts.line2 end
-    vim.cmd('keeppatterns ' .. range .. 's/\\%x1b\\[[0-9;]*[a-zA-Z]//ge')
+    local range = get_command_range(opts)
+    vim.cmd('keeppatterns ' .. range .. [[s/\%x1b\[[0-9;]*[a-zA-Z]//ge]])
 end, { range = true, desc = 'Remove ANSI escape codes' })
 
 command('Unblankify', function(opts)
-    local range = '%'
-    if opts.range ~= 0 then range = opts.line1 .. ',' .. opts.line2 end
-    vim.cmd(range .. 'g/^\\s*$/d')
+    local range = get_command_range(opts)
+    vim.cmd(range .. [[g/^\s*$/d]])
 end, { range = true, desc = 'Remove blank lines' })
 
 command('Lstrip', function(opts)
-    local range = '%'
-    if opts.range ~= 0 then range = opts.line1 .. ',' .. opts.line2 end
-    vim.cmd('keeppatterns ' .. range .. 's/^\\s\\+//e')
+    local range = get_command_range(opts)
+    vim.cmd('keeppatterns ' .. range .. [[s/^\s\+//e]])
 end, { range = true, desc = 'Strip leading whitespace' })
 
 command('Rstrip', function(opts)
-    local range = '%'
-    if opts.range ~= 0 then range = opts.line1 .. ',' .. opts.line2 end
-    vim.cmd('keeppatterns ' .. range .. 's/\\s\\+$//e')
-    vim.cmd('keeppatterns ' .. range .. 's/\r//ge')
+    local range = get_command_range(opts)
+    vim.cmd('keeppatterns ' .. range .. [[s/\s\+$//e]])
+    vim.cmd('keeppatterns ' .. range .. [[s/\r//ge]])
 end, { range = true, desc = 'Strip trailing whitespace' })
 
 command('CloseFloatingWindows', function()
@@ -223,7 +220,7 @@ command('DiffChanges', function(context)
     else
         vim.cmd(cmd)
     end
-end, { bang = true, desc = 'Show unsaved changes diff. Opens diff in a vertical split when invoked with a bang.' })
+end, { bang = true, desc = 'Show unsaved changes diff; open in a vertical split when invoked with a bang' })
 
 -- Autocommands
 

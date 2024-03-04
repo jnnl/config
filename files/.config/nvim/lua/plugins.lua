@@ -89,9 +89,6 @@ return {
                     winopts = { preview = { hidden = 'hidden' } },
                     include_current_session = true,
                 },
-                commands = {
-                    winopts = { preview = { hidden = 'hidden' } },
-                },
                 grep = {
                     rg_opts = '--column --line-number --no-heading --hidden --smart-case --max-columns=4096 ' ..
                     '--glob="!.git/" --color=always --colors "path:fg:green" --colors "line:fg:yellow"',
