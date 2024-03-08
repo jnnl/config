@@ -27,6 +27,7 @@ return {
     },
     {
         'junegunn/fzf',
+        lazy = true,
         build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc',
     },
     {
@@ -104,6 +105,7 @@ return {
             })
             keymap('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
             keymap('n', '<Leader>fc', fzf_lua.commands, { desc = 'Find commands' })
+            keymap('n', '<Leader>fr', fzf_lua.registers, { desc = 'Find registers' })
             keymap('n', '<Leader>f*', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
             keymap('x', '<Leader>f*', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
             keymap('n', '<Leader>,', function()
@@ -247,12 +249,14 @@ return {
     },
     {
         'williamboman/mason.nvim',
+        commit = '3b5068f0fc565f337d67a2d315d935f574848ee7',
         lazy = true,
         opts = {},
         cmd = { 'Mason', 'MasonInstall', 'MasonUpdate', 'MasonUninstall' }
     },
     {
         'williamboman/mason-lspconfig.nvim',
+        commit = '21d33d69a81f6351e5a5f49078b2e4f0075c8e73',
         lazy = true,
         opts = {}
     },
@@ -293,7 +297,7 @@ return {
                                 height = 0.5,
                                 preview = {
                                     layout = 'vertical',
-                                    vertical = 'down:75%'
+                                    vertical = 'down:75%',
                                 },
                             }
                         })
@@ -313,7 +317,7 @@ return {
                 'ngserver',
                 '--stdio',
                 '--tsProbeLocations', local_npm_ls_path,
-                '--ngProbeLocations', local_npm_ls_path
+                '--ngProbeLocations', local_npm_ls_path,
             }
 
             local lspconfig_servers = {
@@ -339,9 +343,9 @@ return {
                                 diagnostics = { globals = { 'vim' }, },
                                 workspace = {
                                     library = vim.api.nvim_get_runtime_file('', true),
-                                    checkThirdParty = false
+                                    checkThirdParty = false,
                                 },
-                                telemetry = { enable = false, },
+                                telemetry = { enable = false },
                             },
                         },
                     })
@@ -382,17 +386,12 @@ return {
         lazy = true
     },
     {
-        'hrsh7th/cmp-path',
-        commit = '91ff86cd9c29299a64f968ebb45846c485725f23',
-        lazy = true
-    },
-    {
         'hrsh7th/nvim-cmp',
+        commit = '04e0ca376d6abdbfc8b52180f8ea236cbfddf782',
         event = 'InsertEnter',
         dependencies = {
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-nvim-lua',
-            'hrsh7th/cmp-path',
         },
         config = function()
             vim.opt.completeopt = 'menu,menuone,noselect'
@@ -449,10 +448,39 @@ return {
 
     -- Miscellaneous
     {
-        'folke/which-key.nvim',
-        commit = '4433e5ec9a507e5097571ed55c02ea9658fb268a',
+        'echasnovski/mini.clue',
+        commit = '4937bbfb4d461dd9408e004e929716f1fc0296c8',
         event = 'VeryLazy',
-        opts = {},
+        config = function()
+            local miniclue = require('mini.clue')
+            miniclue.setup({
+                triggers = {
+                    { mode = 'n', keys = '<Leader>' },
+                    { mode = 'x', keys = '<Leader>' },
+                    { mode = 'n', keys = 'g' },
+                    { mode = 'x', keys = 'g' },
+                    { mode = 'n', keys = "'" },
+                    { mode = 'x', keys = "'" },
+                    { mode = 'n', keys = '"' },
+                    { mode = 'x', keys = '"' },
+                    { mode = 'i', keys = '<C-x>' },
+                    { mode = 'i', keys = '<C-r>' },
+                    { mode = 'c', keys = '<C-r>' },
+                    { mode = 'n', keys = '<C-w>' },
+                },
+                clues = {
+                    miniclue.gen_clues.builtin_completion(),
+                    miniclue.gen_clues.g(),
+                    miniclue.gen_clues.marks(),
+                    miniclue.gen_clues.registers({ show_contents = true }),
+                    miniclue.gen_clues.windows(),
+                },
+                window = {
+                    delay = 500,
+                    config = { width = 'auto', border = 'rounded' },
+                }
+            })
+        end
     },
     {
         'mbbill/undotree',
@@ -491,6 +519,6 @@ return {
     {
         'whiteinge/diffconflicts',
         commit = '05e8d2e935a235b8f8e6d308a46a5f028ea5bf97',
-        event = 'VeryLazy',
+        cmd = { 'DiffConflicts', 'DiffConflictsShowHistory', 'DiffConflictsWithHistory' },
     },
 }
