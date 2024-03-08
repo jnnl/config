@@ -56,8 +56,11 @@ _G.statusline = function()
         if #vim.api.nvim_buf_get_name(0) > 0 then
             table.insert(attrs, '%y%r%m ')
         end
-        if vim.g['loaded_fugitive'] == 1 and #vim.fn.FugitiveHead() > 0 then
-            table.insert(attrs, string.format('(%s) ', vim.fn.FugitiveHead()))
+        if vim.g['loaded_fugitive'] == 1 then
+            local branch_name = vim.fn.FugitiveHead(7)
+            if #branch_name > 0 then
+                table.insert(attrs, string.format('(%s) ', branch_name))
+            end
         end
         local diagnostic_start_pos = #attrs + 1
         local diagnostic_counts = vim.diagnostic.count(0)
