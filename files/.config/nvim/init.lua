@@ -56,22 +56,14 @@ _G.statusline = function()
         if #vim.api.nvim_buf_get_name(0) > 0 then
             table.insert(attrs, '%y%r%m ')
         end
-        if vim.g['loaded_fugitive'] ~= nil and #vim.fn.FugitiveHead() > 0 then
+        if vim.g['loaded_fugitive'] == 1 and #vim.fn.FugitiveHead() > 0 then
             table.insert(attrs, string.format('(%s) ', vim.fn.FugitiveHead()))
         end
-        if #vim.diagnostic.get(0) > 0 then
-            local diagnostic_levels = {
-                { symbol = 'H', severity = vim.diagnostic.severity.HINT },
-                { symbol = 'I', severity = vim.diagnostic.severity.INFO },
-                { symbol = 'W', severity = vim.diagnostic.severity.WARN },
-                { symbol = 'E', severity = vim.diagnostic.severity.ERROR },
-            }
-            for _, level in ipairs(diagnostic_levels) do
-                local diagnostic_count = #vim.diagnostic.get(0, { severity = level.severity })
-                if diagnostic_count > 0 then
-                    table.insert(attrs, string.format('%s:%s ', level.symbol, diagnostic_count))
-                end
-            end
+        local diagnostic_start_pos = #attrs + 1
+        local diagnostic_counts = vim.diagnostic.count(0)
+        for severity, count in pairs(diagnostic_counts) do
+            local symbol = vim.diagnostic.severity[severity]:sub(1, 1)
+            table.insert(attrs, diagnostic_start_pos, string.format('%s:%s ', symbol, count))
         end
         if #attrs > 0 then
             table.insert(attrs, 1, separator)
