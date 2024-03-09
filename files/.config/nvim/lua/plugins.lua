@@ -2,7 +2,7 @@ return {
     -- Navigation
     {
         'andymass/vim-matchup',
-        commit = 'd30b72d20f01478a8486f15a57c89fe3177373db',
+        commit = '2d660e4aa7c566014c667af2cda0458043527902',
         event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
@@ -12,7 +12,7 @@ return {
     },
     {
         'ggandor/leap.nvim',
-        commit = '5efe985cf68fac3b6a6dfe7a75fbfaca8db2af9c',
+        commit = '89d878f8399d00fb348ad65b6077b996808234d8',
         event = 'VeryLazy',
         config = function()
             local leap = require('leap')
@@ -32,6 +32,7 @@ return {
     },
     {
         'ibhagwan/fzf-lua',
+        commit = '14228229b8138e4a306bd0f633e3e55a77a58d6e',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -168,7 +169,7 @@ return {
         priority = 1000,
         config = function()
             vim.cmd.colorscheme('tonight')
-        end
+        end,
     },
 
     -- Language
@@ -187,11 +188,11 @@ return {
     },
     {
         'hashivim/vim-terraform',
-        commit = '2bbc5f65a80c79a5110494a2ba1b869075fcf7a0'
+        commit = '2bbc5f65a80c79a5110494a2ba1b869075fcf7a0',
     },
     {
         'leafgarland/typescript-vim',
-        commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa'
+        commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa',
     },
     {
         'pmizio/typescript-tools.nvim',
@@ -202,7 +203,7 @@ return {
     },
     {
         'stevearc/conform.nvim',
-        commit = '192a6d2ddace343f1840a8f72efe2315bd392243',
+        commit = '5a15cc46e75cad804fd51ec5af9227aeb1d1bdaa',
         event = 'VeryLazy',
         config = function()
             vim.g.disable_autoformat = true
@@ -243,7 +244,7 @@ return {
     },
     {
         'ray-x/lsp_signature.nvim',
-        commit = 'fed2c8389c148ff1dfdcdca63c2b48d08a50dea0',
+        commit = 'e92b4e7073345b2a30a56b20db3d541a9aa2771e',
         lazy = true,
         opts = { hint_enable = false },
     },
@@ -251,14 +252,14 @@ return {
         'williamboman/mason.nvim',
         commit = '3b5068f0fc565f337d67a2d315d935f574848ee7',
         lazy = true,
+        cmd = { 'Mason', 'MasonInstall', 'MasonUpdate', 'MasonUninstall' },
         opts = {},
-        cmd = { 'Mason', 'MasonInstall', 'MasonUpdate', 'MasonUninstall' }
     },
     {
         'williamboman/mason-lspconfig.nvim',
         commit = '21d33d69a81f6351e5a5f49078b2e4f0075c8e73',
         lazy = true,
-        opts = {}
+        opts = {},
     },
     {
         'neovim/nvim-lspconfig',
@@ -378,12 +379,12 @@ return {
     {
         'hrsh7th/cmp-nvim-lsp',
         commit = '5af77f54de1b16c34b23cba810150689a3a90312',
-        lazy = true
+        lazy = true,
     },
     {
         'hrsh7th/cmp-nvim-lua',
         commit = 'f12408bdb54c39c23e67cab726264c10db33ada8',
-        lazy = true
+        lazy = true,
     },
     {
         'hrsh7th/nvim-cmp',
@@ -480,7 +481,7 @@ return {
                     config = { width = 'auto', border = 'rounded' },
                 }
             })
-        end
+        end,
     },
     {
         'mbbill/undotree',
@@ -509,7 +510,7 @@ return {
     },
     {
         'tpope/vim-fugitive',
-        event = 'VeryLazy'
+        event = 'VeryLazy',
     },
     {
         'tpope/vim-repeat',
