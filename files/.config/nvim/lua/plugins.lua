@@ -6,8 +6,8 @@ return {
         event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
-            keymap({ 'n', 'x' }, 'ö%', '<Plug>(matchup-[%)')
-            keymap({ 'n', 'x' }, 'ä%', '<Plug>(matchup-]%)')
+            keymap({ 'n', 'x' }, 'ö%', '<Plug>(matchup-[%)', { desc = 'Go to previous outer open word' })
+            keymap({ 'n', 'x' }, 'ä%', '<Plug>(matchup-]%)', { desc = 'Go to next outer close word' })
         end,
     },
     {
@@ -265,10 +265,10 @@ return {
         'neovim/nvim-lspconfig',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
-            'hrsh7th/cmp-nvim-lsp',
-            'ray-x/lsp_signature.nvim',
             'williamboman/mason.nvim',
             'williamboman/mason-lspconfig.nvim',
+            'hrsh7th/cmp-nvim-lsp',
+            'ray-x/lsp_signature.nvim',
         },
         config = function()
             local lsp = require('lspconfig')
@@ -276,102 +276,59 @@ return {
             autocmd('LspAttach', {
                 group = augroup('lsp_attach_config', { clear = true }),
                 callback = function(ev)
+                    local fzf_lua = require('fzf-lua')
                     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-                    local opts = { noremap = true, silent = true, buffer = ev.buf }
-                    local extend_opts = function(extends) return vim.tbl_deep_extend('force', opts, extends) end
-                    local fzf_lua = require('fzf-lua')
-
-                    keymap('n', 'gd', vim.lsp.buf.definition, extend_opts({ desc = 'Go to definition' }))
-                    keymap('n', 'gD', fzf_lua.lsp_definitions, extend_opts({ desc = 'Find definition(s)' }))
-                    keymap('n', 'gi', fzf_lua.lsp_implementations, extend_opts({ desc = 'Find implementation(s)' }))
-                    keymap('n', 'gr', fzf_lua.lsp_references, extend_opts({ desc = 'Find reference(s)' }))
-                    keymap('n', 'gt', vim.lsp.buf.type_definition, extend_opts({ desc = 'Go to type definition' }))
-                    keymap('n', 'gT', fzf_lua.lsp_typedefs, extend_opts({ desc = 'Find type definitions(s)' }))
-                    keymap('n', '<Space>', vim.lsp.buf.hover, opts)
-                    keymap({ 'n', 'x' }, '<leader><Space>', function()
-                        fzf_lua.lsp_code_actions({
-                            winopts = {
-                                relative = 'cursor',
-                                row = 1,
-                                width = 0.5,
-                                height = 0.5,
-                                preview = {
-                                    layout = 'vertical',
-                                    vertical = 'down:75%',
-                                },
-                            }
-                        })
-                    end, extend_opts({ desc = 'Find code actions' }))
-                    keymap('n', '<leader>r', vim.lsp.buf.rename, extend_opts({ desc = 'Rename symbol under cursor' }))
+                    keymap('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Go to definition' })
+                    keymap('n', 'gD', fzf_lua.lsp_definitions, { buffer = ev.buf, desc = 'Find definitions' })
+                    keymap('n', 'gi', fzf_lua.lsp_implementations, { desc = 'Find implementations' })
+                    keymap('n', 'gr', fzf_lua.lsp_references, { buffer = ev.buf, desc = 'Find references' })
+                    keymap('n', 'gt', vim.lsp.buf.type_definition, { buffer = ev.buf, desc = 'Go to type definition' })
+                    keymap('n', 'gT', fzf_lua.lsp_typedefs, { buffer = ev.buf, desc = 'Find type definitions' })
+                    keymap('n', '<Space>', vim.lsp.buf.hover, { buffer = ev.buf })
+                    keymap({ 'n', 'x' }, '<leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
+                    keymap('n', '<leader>r', vim.lsp.buf.rename, { buffer = ev.buf, desc = 'Rename symbol under cursor' })
                 end,
             })
 
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-            local server_opts = { capabilities = capabilities }
-            local extend_server_opts = function(extends) return vim.tbl_deep_extend('force', server_opts, extends) end
-
-            local local_npm_ls_path = vim.fn.expand('$HOME/.local/lib/node_modules')
-            local angularls_cmd = {
-                'ngserver',
-                '--stdio',
-                '--tsProbeLocations', local_npm_ls_path,
-                '--ngProbeLocations', local_npm_ls_path,
-            }
-
-            local lspconfig_servers = {
-                {
-                    name = 'angularls',
-                    opts = extend_server_opts({
-                        cmd = angularls_cmd,
-                        filetypes = { 'ts', 'html' },
-                        on_new_config = function(new_config, _)
-                            new_config.cmd = angularls_cmd
-                        end,
-                    })
-                },
-                { name = 'bashls', opts = server_opts },
-                { name = 'cssls', opts = server_opts },
-                { name = 'gopls', opts = server_opts },
-                {
-                    name = 'lua_ls',
-                    opts = extend_server_opts({
-                        settings = {
-                            Lua = {
-                                runtime = { version = 'LuaJIT', },
-                                diagnostics = { globals = { 'vim' }, },
-                                workspace = {
-                                    library = vim.api.nvim_get_runtime_file('', true),
-                                    checkThirdParty = false,
-                                },
-                                telemetry = { enable = false },
+            local server_configs = {
+                lua_ls = {
+                    settings = {
+                        Lua = {
+                            runtime = { version = 'LuaJIT', },
+                            diagnostics = { globals = { 'vim' }, },
+                            workspace = {
+                                library = vim.api.nvim_get_runtime_file('', true),
+                                checkThirdParty = false,
                             },
+                            telemetry = { enable = false },
                         },
-                    })
+                    },
                 },
-                {
-                    name = 'pyright',
-                    opts = extend_server_opts({
-                        settings = {
-                            python = {
-                                analysis = {
-                                    autoSearchPaths = false,
-                                    diagnosticMode = 'openFilesOnly',
-                                    useLibraryCodeForTypes = false,
-                                    typeCheckingMode = 'basic',
-                                }
+                pyright = {
+                    settings = {
+                        python = {
+                            analysis = {
+                                autoSearchPaths = false,
+                                diagnosticMode = 'openFilesOnly',
+                                useLibraryCodeForTypes = false,
+                                typeCheckingMode = 'basic',
                             }
                         }
-                    })
+                    }
                 },
-                { name = 'rust_analyzer', opts = server_opts },
             }
 
-            for _, server in ipairs(lspconfig_servers) do
-                lsp[server.name].setup(server.opts or {})
-            end
+            require('mason-lspconfig').setup_handlers({
+                function(server_name)
+                    local config = server_configs[server_name] or {}
+                    config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
+                    lsp[server_name].setup(config)
+                end
+            })
         end,
     },
 
@@ -382,17 +339,11 @@ return {
         lazy = true,
     },
     {
-        'hrsh7th/cmp-nvim-lua',
-        commit = 'f12408bdb54c39c23e67cab726264c10db33ada8',
-        lazy = true,
-    },
-    {
         'hrsh7th/nvim-cmp',
         commit = '04e0ca376d6abdbfc8b52180f8ea236cbfddf782',
         event = 'InsertEnter',
         dependencies = {
             'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-nvim-lua',
         },
         config = function()
             vim.opt.completeopt = 'menu,menuone,noselect'
@@ -435,11 +386,9 @@ return {
                         vim.snippet.expand(args.body)
                     end
                 },
-                sources = {
+                sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
-                    { name = 'nvim_lua' },
-                    { name = 'path' },
-                },
+                }),
             }
             cmp.setup(cmp_config)
             command('CmpEnable', function() cmp.setup.buffer(cmp_config) end, {})
@@ -478,6 +427,8 @@ return {
                 triggers = {
                     { mode = 'n', keys = '<Leader>' },
                     { mode = 'x', keys = '<Leader>' },
+                    { mode = 'n', keys = 'ö' },
+                    { mode = 'n', keys = 'ä' },
                     { mode = 'n', keys = 'g' },
                     { mode = 'x', keys = 'g' },
                     { mode = 'n', keys = "'" },
@@ -524,8 +475,8 @@ return {
         commit = '7e65325651ff5a0b06af8df3980d2ee54cf10e14',
         event = 'VeryLazy',
         config = function()
-            keymap('n', 'öq', '<Plug>(qf_qf_previous)')
-            keymap('n', 'äq', '<Plug>(qf_qf_next)')
+            keymap('n', 'öq', '<Plug>(qf_qf_previous)', { desc = 'Go to previous quickfix item' })
+            keymap('n', 'äq', '<Plug>(qf_qf_next)', { desc = 'Go to next quickfix item' })
         end,
     },
     {
