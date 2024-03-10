@@ -447,6 +447,26 @@ return {
         end,
     },
 
+    -- Git
+    {
+        'lewis6991/gitsigns.nvim',
+        commit = '2c2463dbd82eddd7dbab881c3a62cfbfbe3c67ae',
+        opts = {
+            signs = {
+                add = { text = '+' },
+                change = { text = '~' },
+                delete = { text = '-' },
+                topdelete = { text = '‾' },
+                changedelete = { text = '~' },
+            },
+        },
+    },
+    {
+        'tpope/vim-fugitive',
+        commit = '41beedabc7e948c787ea5696e04c3544c3674e23',
+        event = 'VeryLazy',
+    },
+
     -- Miscellaneous
     {
         'echasnovski/mini.clue',
@@ -507,10 +527,6 @@ return {
             keymap('n', 'öq', '<Plug>(qf_qf_previous)')
             keymap('n', 'äq', '<Plug>(qf_qf_next)')
         end,
-    },
-    {
-        'tpope/vim-fugitive',
-        event = 'VeryLazy',
     },
     {
         'tpope/vim-repeat',
