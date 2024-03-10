@@ -288,6 +288,10 @@ return {
                     keymap('n', '<Space>', vim.lsp.buf.hover, { buffer = ev.buf })
                     keymap({ 'n', 'x' }, '<leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
                     keymap('n', '<leader>r', vim.lsp.buf.rename, { buffer = ev.buf, desc = 'Rename symbol under cursor' })
+                    keymap('n', '<leader>fld', fzf_lua.lsp_document_diagnostics, { buffer = ev.buf, desc = 'Find document diagnostics' })
+                    keymap('n', '<leader>flD', fzf_lua.lsp_workspace_diagnostics, { buffer = ev.buf, desc = 'Find workspace diagnostics' })
+                    keymap('n', '<leader>fls', fzf_lua.lsp_document_symbols, { buffer = ev.buf, desc = 'Find document symbols' })
+                    keymap('n', '<leader>flS', fzf_lua.lsp_workspace_symbols, { buffer = ev.buf, desc = 'Find workspace symbols' })
                 end,
             })
 
