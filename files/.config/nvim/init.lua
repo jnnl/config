@@ -3,6 +3,13 @@
 vim.g.mapleader = ','
 vim.g.maplocalleader = ','
 
+_G.keymap = vim.keymap.set
+_G.command = vim.api.nvim_create_user_command
+_G.get_command_range = function(opts) return opts.range == 0 and '%' or opts.line1 .. ',' .. opts.line2 end
+_G.autocmd = vim.api.nvim_create_autocmd
+_G.augroup = vim.api.nvim_create_augroup
+_G.dx = vim.diagnostic
+
 -- Plugins
 
 local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
@@ -42,8 +49,9 @@ vim.opt.shada = [[r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:,!,'200,<50,s10,h
 vim.opt.shortmess:append('cI')
 vim.opt.termguicolors = true
 vim.opt.timeoutlen = 500
+vim.opt.inccommand = 'split'
 
-vim.diagnostic.config({ virtual_text = false })
+dx.config({ virtual_text = false })
 
 -- Statusline
 
@@ -63,9 +71,9 @@ _G.statusline = function()
             end
         end
         local diagnostic_start_pos = #attrs + 1
-        local diagnostic_counts = vim.diagnostic.count(0)
+        local diagnostic_counts = dx.count(0)
         for severity, count in pairs(diagnostic_counts) do
-            local symbol = vim.diagnostic.severity[severity]:sub(1, 1)
+            local symbol = dx.severity[severity]:sub(1, 1)
             table.insert(attrs, diagnostic_start_pos, string.format('%s:%s ', symbol, count))
         end
         if #attrs > 0 then
@@ -107,11 +115,10 @@ vim.opt.undofile = true
 
 -- Keymaps
 
-_G.keymap = vim.keymap.set
-
 keymap('n', '<BS>', '<C-^>')
 keymap('n', '\'', '`')
 keymap('n', '_', ',')
+keymap('n', '<Esc>', '<cmd>nohlsearch<CR>')
 keymap('n', 'öö', '<C-o>', { desc = 'Go to previous jump list position' })
 keymap('n', 'ää', '<C-i>', { desc = 'Go to next jump list position' })
 keymap('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
@@ -119,18 +126,18 @@ keymap('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 keymap('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
 keymap('n', 'ät', '<cmd>tabnext<CR>', { desc = 'Go to next tab' })
 keymap('n', 'ög', function()
-    vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN } })
+    dx.goto_prev({ severity = { min = dx.severity.WARN } })
 end, { desc = 'Go to previous WARN+ diagnostic' })
 keymap('n', 'äg', function()
-    vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.WARN } })
+    dx.goto_next({ severity = { min = dx.severity.WARN } })
 end, { desc = 'Go to next WARN+ diagnostic' })
 keymap('n', 'öG', function()
-    vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.HINT } })
-end, { desc = 'Go to next HINT+ diagnostic' })
+    dx.goto_prev({ severity = { min = dx.severity.HINT } })
+end, { desc = 'Go to previous HINT+ diagnostic' })
 keymap('n', 'äG', function()
-    vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.HINT } })
+    dx.goto_next({ severity = { min = dx.severity.HINT } })
 end, { desc = 'Go to next HINT+ diagnostic' })
-keymap('n', '<C-Space>', vim.diagnostic.open_float)
+keymap('n', '<C-Space>', dx.open_float)
 
 keymap('n', 'j', function() return vim.v.count == 0 and 'gj' or 'j' end, { expr = true })
 keymap('n', 'k', function() return vim.v.count == 0 and 'gk' or 'k' end, { expr = true })
@@ -140,7 +147,7 @@ keymap('c', '<C-j>', '<Down>')
 keymap('c', '<C-k>', '<Up>')
 keymap('n', '<C-w>.', function()
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-    local longest_line_length = math.max(unpack(vim.tbl_map(function(line) return #line end, lines))) + 5
+    local longest_line_length = math.max(unpack(vim.tbl_map(function(line) return #line end, lines))) + 8
     vim.cmd('vertical resize ' .. longest_line_length)
 end, { desc = 'Fit window width to content' })
 
@@ -166,9 +173,6 @@ keymap('n', '<Leader>s', function()
 end, { expr = true, desc = 'Substitute word under cursor' })
 
 -- Commands
-
-_G.command = vim.api.nvim_create_user_command
-_G.get_command_range = function(opts) return opts.range == 0 and '%' or opts.line1 .. ',' .. opts.line2 end
 
 command('NonAscii', '/[^\\x00-\\x7F]', { desc = 'Search for non-ASCII characters' })
 command('Unansify', function(opts)
@@ -218,9 +222,6 @@ command('DiffChanges', function(context)
 end, { bang = true, desc = 'Show unsaved changes diff; open in a vertical split when invoked with a bang' })
 
 -- Autocommands
-
-_G.autocmd = vim.api.nvim_create_autocmd
-_G.augroup = vim.api.nvim_create_augroup
 
 autocmd('FileType', {
     group = augroup('make_ft_options', { clear = true }),
@@ -281,7 +282,7 @@ autocmd('FileType', {
 autocmd('TextYankPost', {
     group = augroup('yank_highlight', { clear = true }),
     callback = function()
-        require('vim.highlight').on_yank({ higroup = 'IncSearch', timeout = 500, on_visual = false })
+        vim.highlight.on_yank({ higroup = 'IncSearch', timeout = 500, on_visual = false })
     end
 })
 
@@ -302,13 +303,3 @@ autocmd('DiagnosticChanged', {
         vim.o.statusline = vim.o.statusline
     end,
 })
-
-vim.on_key(function(key)
-    if vim.fn.mode() == 'n' then
-        local hls_keys = { '<CR>', '*', '#', '/', '?', 'n', 'N', }
-        local is_hls_key = vim.tbl_contains(hls_keys, vim.fn.keytrans(key))
-        if is_hls_key ~= vim.opt.hlsearch then
-            vim.opt.hlsearch = is_hls_key
-        end
-    end
-end, vim.api.nvim_create_namespace('hlsearch_autoclear'))
