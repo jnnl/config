@@ -81,6 +81,7 @@ copy_config_files() {
 
         destination_file_dir="$(dirname "$destination_file")"
         [ -d "$destination_file_dir" ] || mkdir -vp "$destination_file_dir"
+        [ -d "$destination_file" ] && continue
 
         if test "$should_create_backups" = "1"; then
             if is_mac; then
