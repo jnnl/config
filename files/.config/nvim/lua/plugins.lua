@@ -167,7 +167,7 @@ return {
     {
         'jnnl/tonight.nvim',
         priority = 1000,
-        config = function()
+        init = function()
             vim.cmd.colorscheme('tonight')
         end,
     },
@@ -243,32 +243,13 @@ return {
         end
     },
     {
-        'ray-x/lsp_signature.nvim',
-        commit = 'e92b4e7073345b2a30a56b20db3d541a9aa2771e',
-        lazy = true,
-        opts = { hint_enable = false },
-    },
-    {
-        'williamboman/mason.nvim',
-        commit = '3b5068f0fc565f337d67a2d315d935f574848ee7',
-        lazy = true,
-        cmd = { 'Mason', 'MasonInstall', 'MasonUpdate', 'MasonUninstall' },
-        opts = {},
-    },
-    {
-        'williamboman/mason-lspconfig.nvim',
-        commit = '21d33d69a81f6351e5a5f49078b2e4f0075c8e73',
-        lazy = true,
-        opts = {},
-    },
-    {
         'neovim/nvim-lspconfig',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
-            'williamboman/mason.nvim',
-            'williamboman/mason-lspconfig.nvim',
+            { 'williamboman/mason.nvim', commit = '3b5068f0fc565f337d67a2d315d935f574848ee7' },
+            { 'williamboman/mason-lspconfig.nvim', commit = '21d33d69a81f6351e5a5f49078b2e4f0075c8e73' },
+            { 'ray-x/lsp_signature.nvim', commit = 'e92b4e7073345b2a30a56b20db3d541a9aa2771e', opts = { hint_enable = false } },
             'hrsh7th/cmp-nvim-lsp',
-            'ray-x/lsp_signature.nvim',
         },
         config = function()
             local lsp = require('lspconfig')
@@ -298,7 +279,10 @@ return {
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-            local server_configs = {
+            local servers = {
+                bashls = {},
+                cssls = {},
+                gopls = {},
                 lua_ls = {
                     settings = {
                         Lua = {
@@ -324,14 +308,19 @@ return {
                         }
                     }
                 },
+                terraformls = {},
             }
 
-            require('mason-lspconfig').setup_handlers({
-                function(server_name)
-                    local config = server_configs[server_name] or {}
-                    config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
-                    lsp[server_name].setup(config)
-                end
+            require('mason').setup()
+            require('mason-lspconfig').setup({
+                -- ensure_installed = vim.tbl_keys(servers or {}),
+                handlers = {
+                    function(server_name)
+                        local config = servers[server_name] or {}
+                        config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
+                        lsp[server_name].setup(config)
+                    end
+                }
             })
         end,
     },
@@ -466,7 +455,7 @@ return {
             keymap('n', '<Leader>u', '<cmd>UndotreeToggle<CR>', { silent = true })
             vim.g.undotree_SetFocusWhenToggle = 1
             vim.g.undotree_ShortIndicators = 1
-            vim.g.undotree_HelpLine = 0
+            vim.g.undotree_WindowLayout = 2
         end,
     },
     {
