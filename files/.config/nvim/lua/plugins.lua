@@ -253,13 +253,11 @@ return {
         },
         config = function()
             local lsp = require('lspconfig')
-
             autocmd('LspAttach', {
                 group = augroup('lsp_attach_config', { clear = true }),
                 callback = function(ev)
                     local fzf_lua = require('fzf-lua')
                     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-
                     keymap('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Go to definition' })
                     keymap('n', 'gD', fzf_lua.lsp_definitions, { buffer = ev.buf, desc = 'Find definitions' })
                     keymap('n', 'gi', fzf_lua.lsp_implementations, { desc = 'Find implementations' })
@@ -275,10 +273,8 @@ return {
                     keymap('n', '<leader>flS', fzf_lua.lsp_workspace_symbols, { buffer = ev.buf, desc = 'Find workspace symbols' })
                 end,
             })
-
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             capabilities.textDocument.completion.completionItem.snippetSupport = true
-
             local servers = {
                 bashls = {},
                 cssls = {},
@@ -310,7 +306,6 @@ return {
                 },
                 terraformls = {},
             }
-
             require('mason').setup()
             require('mason-lspconfig').setup({
                 -- ensure_installed = vim.tbl_keys(servers or {}),
@@ -481,5 +476,65 @@ return {
         'whiteinge/diffconflicts',
         commit = '05e8d2e935a235b8f8e6d308a46a5f028ea5bf97',
         cmd = { 'DiffConflicts', 'DiffConflictsShowHistory', 'DiffConflictsWithHistory' },
+    },
+    {
+        'nvim-treesitter/nvim-treesitter',
+        event = 'VeryLazy',
+        branch = 'main',
+        commit = 'e73c775aa9d540f0c33585ed1b5ea572a64bdac1',
+        dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+        config = function()
+            require('nvim-treesitter.configs').setup({
+                highlight = {
+                    enable = true,
+                    disable = function(_, buf)
+                        local max_filesize = 200 * 1024 -- 200 KB
+                        local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
+                        if ok and stats and stats.size > max_filesize then
+                            return true
+                        end
+                    end,
+                },
+                incremental_selection = {
+                    enable = true,
+                    keymaps = {
+                        node_incremental = 'v',
+                        node_decremental = 'V',
+                    },
+                },
+                textobjects = {
+                    select = {
+                        enable = true,
+                        lookahead = true,
+                        keymaps = {
+                            ['aa'] = '@parameter.outer',
+                            ['ia'] = '@parameter.inner',
+                            ['ac'] = '@class.outer',
+                            ['ic'] = '@class.inner',
+                            ['aC'] = '@comment.outer',
+                            ['iC'] = '@comment.inner',
+                            ['af'] = '@function.outer',
+                            ['if'] = '@function.inner',
+                        },
+                    },
+                    move = {
+                        enable = true,
+                        set_jumps = true,
+                        goto_previous_start = {
+                            ['öa'] = '@parameter.inner',
+                            ['öc'] = '@class.outer',
+                            ['öC'] = '@comment.outer',
+                            ['öf'] = '@function.outer',
+                        },
+                        goto_next_start = {
+                            ['äa'] = '@parameter.inner',
+                            ['äc'] = '@class.outer',
+                            ['äC'] = '@comment.outer',
+                            ['äf'] = '@function.outer',
+                        },
+                    },
+                },
+            })
+        end,
     },
 }
