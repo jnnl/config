@@ -153,6 +153,11 @@ return {
         end,
     },
     {
+        'tommcdo/vim-exchange',
+        commit = 'd6c1e9790bcb8df27c483a37167459bbebe0112e',
+        event = 'VeryLazy',
+    },
+    {
         'tpope/vim-commentary',
         commit = 'e87cd90dc09c2a203e13af9704bd0ef79303d755',
         event = 'VeryLazy',
