@@ -145,11 +145,15 @@ keymap({ 'n', 'x' }, '<C-j>', '}')
 keymap({ 'n', 'x' }, '<C-k>', '{')
 keymap('c', '<C-j>', '<Down>')
 keymap('c', '<C-k>', '<Up>')
+
 keymap('n', '<C-w>.', function()
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-    local longest_line_length = math.max(unpack(vim.tbl_map(function(line) return #line end, lines))) + 8
-    vim.cmd('vertical resize ' .. longest_line_length)
+    local longest_line_length = math.max(unpack(vim.tbl_map(function(line) return #line end, lines)))
+    vim.cmd('vertical resize ' .. longest_line_length + 8)
 end, { desc = 'Fit window width to content' })
+keymap('n', '<C-w>:', function()
+    vim.cmd('resize' .. vim.fn.line('$'))
+end, { desc = 'Fit window height to content' })
 
 keymap('n', 'Q', '@q')
 keymap('x', 'Q', ':normal @q<CR>')
@@ -206,10 +210,10 @@ end, { desc = 'Close floating windows' })
 
 command('Redir', function(context)
     local lines = vim.split(vim.api.nvim_exec2(context.args, { output = true }).output, '\n', { plain = true })
-    vim.cmd('vnew')
+    vim.cmd(context.bang and 'new' or 'vnew')
     vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
     vim.opt_local.modified = false
-end, { nargs = '+', complete = 'command', desc = 'Redirect command output to a new vertical split' })
+end, { bang = true, nargs = '+', complete = 'command', desc = 'Redirect command output to a vertical split (!: horizontal split)' })
 
 command('DiffChanges', function(context)
     local cmd = 'w !git diff --no-index % -'
@@ -219,7 +223,7 @@ command('DiffChanges', function(context)
     else
         vim.cmd(cmd)
     end
-end, { bang = true, desc = 'Show unsaved changes diff; open in a vertical split when invoked with a bang' })
+end, { bang = true, desc = 'Show unsaved changes diff (!: vertical split)' })
 
 -- Autocommands
 
