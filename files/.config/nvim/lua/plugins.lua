@@ -281,6 +281,13 @@ return {
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             capabilities.textDocument.completion.completionItem.snippetSupport = true
             local servers = {
+                ansiblels = {
+                    settings = {
+                        ansible = {
+                            validation = { lint = { enabled = false } },
+                        },
+                    },
+                },
                 bashls = {},
                 cssls = {},
                 gopls = {},
@@ -297,18 +304,7 @@ return {
                         },
                     },
                 },
-                pyright = {
-                    settings = {
-                        python = {
-                            analysis = {
-                                autoSearchPaths = false,
-                                diagnosticMode = 'openFilesOnly',
-                                useLibraryCodeForTypes = false,
-                                typeCheckingMode = 'basic',
-                            }
-                        }
-                    }
-                },
+                pylsp = {},
                 terraformls = {},
             }
             require('mason').setup()
