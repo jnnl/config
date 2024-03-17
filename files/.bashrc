@@ -41,7 +41,7 @@ manf() {
 # browse git commits
 gcb() {
     git log --graph --color=always --date=short \
-        --format="%C(yellow)%h %Cgreen%ad %Cblue%aN%Cred%d %Creset%s" "$@" | \
+        --format="%C(yellow)%h %Cgreen%ad %Cblue%aN %Creset%s%Cred%d" "$@" | \
         fzf --ansi --no-sort --reverse --tiebreak=index \
         --preview 'git show --color=always {+2}' \
         --bind "ctrl-m:execute:
