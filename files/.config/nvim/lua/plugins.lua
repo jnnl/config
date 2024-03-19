@@ -56,8 +56,8 @@ return {
                         ['ctrl-o'] = function(selected)
                             -- Opens selected file(s) with system default handler
                             for _, item in ipairs(selected) do
-                                local selected_item = string.gsub(item, '\t+', '')
-                                vim.notify('opening file ' .. selected_item)
+                                local selected_item = item:match('^%s*(.-)%s*$')
+                                vim.notify('fzf-lua: opening file ' .. selected_item)
                                 vim.ui.open(selected_item)
                             end
                         end,
@@ -282,11 +282,7 @@ return {
             capabilities.textDocument.completion.completionItem.snippetSupport = true
             local servers = {
                 ansiblels = {
-                    settings = {
-                        ansible = {
-                            validation = { lint = { enabled = false } },
-                        },
-                    },
+                    settings = { ansible = { validation = { lint = { enabled = false } } } },
                 },
                 bashls = {},
                 cssls = {},
@@ -314,6 +310,13 @@ return {
                     function(server_name)
                         local config = servers[server_name] or {}
                         config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
+                        config.on_attach = function(client, bufnr)
+                            local filename = vim.api.nvim_buf_get_name(bufnr)
+                            if #filename > 0 and vim.fn.getfsize(filename) > 1024 * 100 then
+                                vim.notify('lsp: file is too large, stopping ' .. client.name .. '...', vim.log.levels.WARN)
+                                vim.lsp.stop_client(client.id)
+                            end
+                        end
                         lsp[server_name].setup(config)
                     end
                 }
@@ -488,13 +491,13 @@ return {
             require('nvim-treesitter.configs').setup({
                 highlight = {
                     enable = true,
-                    disable = function(_, buf)
-                        local max_filesize = 200 * 1024 -- 200 KB
-                        local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
-                        if ok and stats and stats.size > max_filesize then
-                            return true
-                        end
+                    disable = function(_, bufnr)
+                        local filename = vim.api.nvim_buf_get_name(bufnr)
+                        return #filename > 0 and vim.fn.getfsize(filename) > 1024 * 100
                     end,
+                },
+                matchup = {
+                    enable = true,
                 },
                 incremental_selection = {
                     enable = true,
