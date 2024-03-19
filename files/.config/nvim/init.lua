@@ -53,6 +53,12 @@ vim.opt.inccommand = 'split'
 
 dx.config({ virtual_text = false })
 
+vim.filetype.add({
+  pattern = {
+    ['.*/roles/.*/tasks/.*.ya?ml'] = 'yaml.ansible'
+  },
+})
+
 -- Statusline
 
 _G.statusline = function()
