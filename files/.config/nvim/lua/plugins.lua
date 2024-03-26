@@ -54,7 +54,7 @@ return {
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
                         ['ctrl-o'] = function(selected)
-                            -- Opens selected file(s) with system default handler
+                            -- Opens selected file(s) using system default handler
                             for _, item in ipairs(selected) do
                                 local selected_item = item:match('^%s*(.-)%s*$')
                                 vim.notify('fzf-lua: opening file ' .. selected_item)
@@ -258,28 +258,7 @@ return {
         },
         config = function()
             local lsp = require('lspconfig')
-            autocmd('LspAttach', {
-                group = augroup('lsp_attach_config', { clear = true }),
-                callback = function(ev)
-                    local fzf_lua = require('fzf-lua')
-                    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-                    keymap('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Go to definition' })
-                    keymap('n', 'gD', fzf_lua.lsp_definitions, { buffer = ev.buf, desc = 'Find definitions' })
-                    keymap('n', 'gi', fzf_lua.lsp_implementations, { desc = 'Find implementations' })
-                    keymap('n', 'gr', fzf_lua.lsp_references, { buffer = ev.buf, desc = 'Find references' })
-                    keymap('n', 'gt', vim.lsp.buf.type_definition, { buffer = ev.buf, desc = 'Go to type definition' })
-                    keymap('n', 'gT', fzf_lua.lsp_typedefs, { buffer = ev.buf, desc = 'Find type definitions' })
-                    keymap('n', '<Space>', vim.lsp.buf.hover, { buffer = ev.buf })
-                    keymap({ 'n', 'x' }, '<leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
-                    keymap('n', '<leader>r', vim.lsp.buf.rename, { buffer = ev.buf, desc = 'Rename symbol under cursor' })
-                    keymap('n', '<leader>fld', fzf_lua.lsp_document_diagnostics, { buffer = ev.buf, desc = 'Find document diagnostics' })
-                    keymap('n', '<leader>flD', fzf_lua.lsp_workspace_diagnostics, { buffer = ev.buf, desc = 'Find workspace diagnostics' })
-                    keymap('n', '<leader>fls', fzf_lua.lsp_document_symbols, { buffer = ev.buf, desc = 'Find document symbols' })
-                    keymap('n', '<leader>flS', fzf_lua.lsp_workspace_symbols, { buffer = ev.buf, desc = 'Find workspace symbols' })
-                end,
-            })
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
-            capabilities.textDocument.completion.completionItem.snippetSupport = true
             local servers = {
                 ansiblels = {
                     settings = { ansible = { validation = { lint = { enabled = false } } } },
@@ -313,13 +292,33 @@ return {
                         config.on_attach = function(client, bufnr)
                             local filename = vim.api.nvim_buf_get_name(bufnr)
                             if #filename > 0 and vim.fn.getfsize(filename) > 1024 * 100 then
-                                vim.notify('lsp: file is too large, stopping ' .. client.name .. '...', vim.log.levels.WARN)
+                                vim.notify('lsp: file is too large, stopping ' .. client.name, vim.log.levels.WARN)
                                 vim.lsp.stop_client(client.id)
                             end
                         end
                         lsp[server_name].setup(config)
                     end
                 }
+            })
+            autocmd('LspAttach', {
+                group = augroup('lsp_attach_config', { clear = true }),
+                callback = function(ev)
+                    local fzf_lua = require('fzf-lua')
+                    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+                    keymap('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Go to definition' })
+                    keymap('n', 'gD', fzf_lua.lsp_definitions, { buffer = ev.buf, desc = 'Find definitions' })
+                    keymap('n', 'gi', fzf_lua.lsp_implementations, { desc = 'Find implementations' })
+                    keymap('n', 'gr', fzf_lua.lsp_references, { buffer = ev.buf, desc = 'Find references' })
+                    keymap('n', 'gt', vim.lsp.buf.type_definition, { buffer = ev.buf, desc = 'Go to type definition' })
+                    keymap('n', 'gT', fzf_lua.lsp_typedefs, { buffer = ev.buf, desc = 'Find type definitions' })
+                    keymap('n', '<Space>', vim.lsp.buf.hover, { buffer = ev.buf })
+                    keymap({ 'n', 'x' }, '<leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
+                    keymap('n', '<leader>r', vim.lsp.buf.rename, { buffer = ev.buf, desc = 'Rename symbol under cursor' })
+                    keymap('n', '<leader>fld', fzf_lua.lsp_document_diagnostics, { buffer = ev.buf, desc = 'Find document diagnostics' })
+                    keymap('n', '<leader>flD', fzf_lua.lsp_workspace_diagnostics, { buffer = ev.buf, desc = 'Find workspace diagnostics' })
+                    keymap('n', '<leader>fls', fzf_lua.lsp_document_symbols, { buffer = ev.buf, desc = 'Find document symbols' })
+                    keymap('n', '<leader>flS', fzf_lua.lsp_workspace_symbols, { buffer = ev.buf, desc = 'Find workspace symbols' })
+                end,
             })
         end,
     },
@@ -451,7 +450,7 @@ return {
         commit = '0e11ba7325efbbb3f3bebe06213afa3e7ec75131',
         event = 'VeryLazy',
         config = function()
-            keymap('n', '<Leader>u', '<cmd>UndotreeToggle<CR>', { silent = true })
+            keymap('n', '<Leader>u', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
             vim.g.undotree_SetFocusWhenToggle = 1
             vim.g.undotree_ShortIndicators = 1
             vim.g.undotree_WindowLayout = 2

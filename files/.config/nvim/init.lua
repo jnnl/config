@@ -53,12 +53,6 @@ vim.opt.inccommand = 'split'
 
 dx.config({ virtual_text = false })
 
-vim.filetype.add({
-  pattern = {
-    ['.*/roles/.*/tasks/.*.ya?ml'] = 'yaml.ansible'
-  },
-})
-
 -- Statusline
 
 _G.statusline = function()
@@ -76,11 +70,13 @@ _G.statusline = function()
                 table.insert(attrs, string.format('(%s) ', branch_name))
             end
         end
-        local diagnostic_start_pos = #attrs + 1
         local diagnostic_counts = dx.count(0)
-        for severity, count in pairs(diagnostic_counts) do
-            local symbol = dx.severity[severity]:sub(1, 1)
-            table.insert(attrs, diagnostic_start_pos, string.format('%s:%s ', symbol, count))
+        if #diagnostic_counts > 0 then
+            local diagnostic_start_pos = #attrs + 1
+            for severity, count in pairs(diagnostic_counts) do
+                local symbol = dx.severity[severity]:sub(1, 1)
+                table.insert(attrs, diagnostic_start_pos, string.format('%s:%s ', symbol, count))
+            end
         end
         if #attrs > 0 then
             table.insert(attrs, 1, separator)
@@ -312,4 +308,12 @@ autocmd('DiagnosticChanged', {
     callback = function()
         vim.o.statusline = vim.o.statusline
     end,
+})
+
+-- Filetypes
+
+vim.filetype.add({
+  pattern = {
+    ['.*/roles/.*/tasks/.*.ya?ml'] = 'yaml.ansible'
+  },
 })
