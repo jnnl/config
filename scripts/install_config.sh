@@ -67,7 +67,7 @@ copy_config_files() {
             destination_file="$(realpath -m "$out_path"/"$file")"
         fi
 
-        if test "$should_use_file_pattern" = "1"; then
+        if test "$should_use_file_pattern" = "1" && ! test -d "$destination_file"; then
             {
                 prompt_confirm "copy ${source_file} to ${destination_file}?"
                 local prompt_confirm_code="$?"
@@ -80,8 +80,8 @@ copy_config_files() {
         fi
 
         destination_file_dir="$(dirname "$destination_file")"
-        [ -d "$destination_file_dir" ] || mkdir -vp "$destination_file_dir"
-        [ -d "$destination_file" ] && continue
+        test -d "$destination_file_dir" || mkdir -vp "$destination_file_dir"
+        test -d "$destination_file" && continue
 
         if test "$should_create_backups" = "1"; then
             if is_mac; then
