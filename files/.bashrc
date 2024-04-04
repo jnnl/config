@@ -40,10 +40,12 @@ manf() {
 
 # browse git commits
 gcb() {
-    git log --graph --color=always --date=short \
-        --format="%C(yellow)%h %Cgreen%ad %Cblue%aN %Creset%s%Cred%d" "$@" | \
+    git log --color=always \
+        --date=format:'%F %H:%M:%S' \
+        --pretty=format:'%C(auto)%h  %C(green)%ad  %C(blue)%<(15,trunc)%an %C(auto)%s%d' \
+        "$@" | \
         fzf --ansi --no-sort --reverse --tiebreak=index \
-        --preview 'git show --color=always {+2}' \
+        --preview 'git show --color=always {+1}' \
         --bind "ctrl-m:execute:
             (grep -o '[a-f0-9]\{7\}' | head -1 |
             xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
