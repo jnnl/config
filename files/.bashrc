@@ -24,9 +24,9 @@ cdsh() {
 # cd to git root
 cdgr() {
     local gitdir dir
-    if [ $# -gt 0 ]; then
+    if test $# -gt 0; then
         gitdir="$(realpath "$1")"
-        [ -d "$gitdir" ] || gitdir="$(dirname "$gitdir")"
+        test -d "$gitdir" || gitdir="$(dirname "$gitdir")"
         dir="$(git -C "$gitdir" rev-parse --show-toplevel)" && cd "$dir" || return
     else
         dir="$(git rev-parse --show-toplevel)" && cd "$dir" || return
@@ -40,36 +40,34 @@ manf() {
 
 # browse git commits
 gcb() {
-    git log --color=always \
-        --date=format:'%F %H:%M:%S' \
-        --pretty=format:'%C(auto)%h  %C(green)%ad  %C(blue)%<(15,trunc)%an %C(auto)%s%d' \
+    git log --color \
+        --date=format:"%F %H:%M:%S" \
+        --pretty=format:"%C(auto)%h  %C(green)%ad  %C(blue)%<(15,trunc)%an %C(auto)%s%d" \
         "$@" | \
-        fzf --ansi --no-sort --reverse --tiebreak=index \
-        --preview 'git show --color=always {+1}' \
-        --bind "ctrl-m:execute:
-            (grep -o '[a-f0-9]\{7\}' | head -1 |
-            xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-            {}
-FZF-EOF"
+        fzf --ansi --multi --no-sort --reverse \
+        --preview "git show --color {+1}" \
+        --bind "ctrl-m:execute:(grep -o '[0-9a-f]\{7\}' | paste -sd ' ' | xargs git show) << EOF
+            {+}
+EOF"
 }
 
 # browse and checkout git branches
 gco() {
-    git branch --format='%(refname:short)' | \
-        fzf --preview='git log -10 --color=always {..}' | \
+    git branch --format="%(refname:short)" | \
+        fzf --preview="git log -10 --color {..}" | \
         xargs -r git checkout
 }
 
 # kill selected process
 killf() {
     local pid
-    if [ "$UID" != "0" ]; then
+    if test "$UID" != "0"; then
         pid=$(ps -f -u "$UID" | sed 1d | fzf -m | awk '{ print $2 }')
     else
         pid=$(ps -ef | sed 1d | fzf -m | awk '{ print $2 }')
     fi
 
-    [ "$pid" != "" ] && printf "%s\n" "$pid" | xargs kill -"${1:-9}"
+    test "$pid" != "" && printf "%s\n" "$pid" | xargs kill -"${1:-9}"
 }
 
 # print compacted wd path
