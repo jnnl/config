@@ -9,8 +9,8 @@ else
     setxkbmap -option caps:escape
 fi
 
-test -f ~/.Xmodmap && xmodmap ~/.Xmodmap
-test -f ~/.Xresources && xrdb -merge -I~ ~/.Xresources
+[ -f ~/.Xmodmap ] && xmodmap ~/.Xmodmap
+[ -f ~/.Xresources ] && xrdb -merge -I~ ~/.Xresources
 
 xset r rate 250 35
 
