@@ -24,18 +24,13 @@ cdsh() {
 # cd to git root
 cdgr() {
     local gitdir dir
-    if test $# -gt 0; then
+    if [ $# -gt 0 ]; then
         gitdir="$(realpath "$1")"
-        test -d "$gitdir" || gitdir="$(dirname "$gitdir")"
+        [ -d "$gitdir" ] || gitdir="$(dirname "$gitdir")"
         dir="$(git -C "$gitdir" rev-parse --show-toplevel)" && cd "$dir" || return
     else
         dir="$(git rev-parse --show-toplevel)" && cd "$dir" || return
     fi
-}
-
-# browse man pages by name and description
-manf() {
-    man -k . | fzf | awk '{ print $1 }' | xargs -r man
 }
 
 # browse git commits
@@ -58,16 +53,26 @@ gco() {
         xargs -r git checkout
 }
 
-# kill selected process
-killf() {
-    local pid
-    if test "$UID" != "0"; then
-        pid=$(ps -f -u "$UID" | sed 1d | fzf -m | awk '{ print $2 }')
-    else
-        pid=$(ps -ef | sed 1d | fzf -m | awk '{ print $2 }')
-    fi
+# browse man pages by name and description
+fman() {
+    man -k . | fzf | awk '{ print $1 }' | xargs -r man
+}
 
-    test "$pid" != "" && printf "%s\n" "$pid" | xargs kill -"${1:-9}"
+# browse and kill user processes
+fkill() {
+    local pid
+    pid=$(ps -ef | sed 1d | fzf -m | awk '{ print $2 }')
+    [ "$pid" != "" ] && printf "%s\n" "$pid" | xargs kill -"${1:-9}"
+}
+
+# source first found file
+sourcef() {
+    for f in "$@"; do
+        if [ -f "$f" ] || [ -h "$f" ]; then
+            source "$f"
+            return
+        fi
+    done
 }
 
 # print compacted wd path
@@ -78,7 +83,7 @@ compact_pwd() {
     local trunclen="1"
     local triglen="20"
 
-    if test "${#PWD}" -lt "$triglen"; then
+    if [ "${#PWD}" -lt "$triglen" ]; then
         printf "%s" "$PWD"
         return
     fi
@@ -95,7 +100,7 @@ compact_pwd() {
 
 # tmux convenience wrapper
 t() {
-    if test $# -gt 0; then
+    if [ $# -gt 0 ]; then
         tmux "$@"
     else
         tmux at || tmux
@@ -105,22 +110,17 @@ t() {
 # print number of stopped jobs
 __nstopjobs() {
     n_stopped="$(jobs -ps 2>/dev/null | wc -l)"
-    test "$n_stopped" -gt 0 && printf " [%s]" "${n_stopped#${n_stopped%%[![:space:]]*}}"
+    [ "$n_stopped" -gt 0 ] && printf " [%s]" "${n_stopped#${n_stopped%%[![:space:]]*}}"
 }
 
 # git prompt
-if test -f /usr/share/git/completion/git-prompt.sh; then
-    source "$_"
-elif test -f /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh; then
-    source "$_"
-elif test -f /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh; then
-    source "$_"
-fi
+sourcef \
+    /usr/share/git/completion/git-prompt.sh \
+    /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh \
+    /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
 
 # git completion
-if test -f /opt/homebrew/etc/bash_completion.d/git-completion.bash; then
-    source "$_"
-fi
+sourcef /opt/homebrew/etc/bash_completion.d/git-completion.bash
 
 # prompt
 if has __git_ps1; then
@@ -157,22 +157,17 @@ elif has vim; then
 fi
 
 # bash completion
-if test -f /usr/share/bash-completion/bash_completion; then
-    source "$_"
-elif test -f /usr/local/share/bash-completion/bash_completion; then
-    source "$_"
-elif test -f /usr/local/etc/bash_completion; then
-    source "$_"
-elif test -f /etc/bash_completion; then
-    source "$_"
-fi
+sourcef \
+    /usr/share/bash-completion/bash_completion \
+    /usr/local/share/bash-completion/bash_completion \
+    /usr/local/etc/bash_completion \
+    /etc/bash_completion
 
 # fzf
-if test -f ~/.config/fzf/fzf.bash; then
-    source "$_"
-elif test -f ~/.fzf.bash; then
-    source "$_"
-fi
+sourcef \
+    ~/.config/fzf/fzf.bash \
+    ~/.fzf.bash
+
 if has fzf; then
     export FZF_DEFAULT_OPTS="--reverse --border"
     if has fd; then
@@ -183,20 +178,20 @@ if has fzf; then
 fi
 
 # z
-if test -f ~/.config/z/z.sh; then
+if [ -f ~/.config/z/z.sh ]; then
     export _Z_DATA="$HOME/.config/z/z_data"
     source ~/.config/z/z.sh
 
     f() {
-        test $# -gt 0 && _z "$*" && return
+        [ $# -gt 0 ] && _z "$*" && return
         cd "$(_z -l 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || return
     }
 
     ff() {
-        test $# -gt 0 && _z -c "$*" && return
+        [ $# -gt 0 ] && _z -c "$*" && return
         cd "$(_z -lc 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || return
     }
 fi
 
 # source local bashrc
-test -f ~/.bashrc.local && source "$_"
+sourcef ~/.bashrc.local
