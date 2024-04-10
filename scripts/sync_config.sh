@@ -34,7 +34,7 @@ done
 shift "$((OPTIND - 1))"
 
 while read -ra line_files <&3; do
-    if test ${#line_files[@]} -ne 2; then 
+    if [ ${#line_files[@]} -ne 2 ]; then
         continue
     fi
 
@@ -44,7 +44,7 @@ while read -ra line_files <&3; do
         continue
     fi
 
-    if test "$is_interactive" = "1"; then
+    if [ "$is_interactive" = "1" ]; then
         cp -iv "$source_file" "$destination_file" || true
     else
         cp -v "$source_file" "$destination_file"

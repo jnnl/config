@@ -127,7 +127,7 @@ install_deb_pkgs() {
         cd "$local_bin_path"
         local arch
         arch="$(uname -m)"
-        if test "$arch" = "x86_64"; then
+        if [ "$arch" = "x86_64" ]; then
             arch="amd64"
         fi
         dl direnv "https://github.com/direnv/direnv/releases/latest/download/direnv.linux-$arch"

@@ -52,7 +52,7 @@ copy_config_files() {
         files+=("$line")
     done < <(find "$file_dir" -type f | sed 's|^'"$file_dir"'/||')
 
-    if test "$should_use_file_pattern" = "1"; then
+    if [ "$should_use_file_pattern" = "1" ]; then
         while IFS= read -r line; do
             matching_files+=("$line")
         done < <(printf "%s\n" "${files[@]}" | grep -E "$file_pattern")
@@ -67,23 +67,23 @@ copy_config_files() {
             destination_file="$(realpath -m "$out_path"/"$file")"
         fi
 
-        if test "$should_use_file_pattern" = "1" && ! test -d "$destination_file"; then
+        if [ "$should_use_file_pattern" = "1" ] && ! [ -d "$destination_file" ]; then
             {
                 prompt_confirm "copy ${source_file} to ${destination_file}?"
                 local prompt_confirm_code="$?"
-                if test "$prompt_confirm_code" = "1"; then
+                if [ "$prompt_confirm_code" = "1" ]; then
                     continue;
-                elif test "$prompt_confirm_code" = "2"; then
+                elif [ "$prompt_confirm_code" = "2" ]; then
                     break;
                 fi
             } || true
         fi
 
         destination_file_dir="$(dirname "$destination_file")"
-        test -d "$destination_file_dir" || mkdir -vp "$destination_file_dir"
-        test -d "$destination_file" && continue
+        [ -d "$destination_file_dir" ] || mkdir -vp "$destination_file_dir"
+        [ -d "$destination_file" ] && continue
 
-        if test "$should_create_backups" = "1"; then
+        if [ "$should_create_backups" = "1" ]; then
             if is_mac; then
                 rsync -ab "$source_file" "$destination_file" && printf "%s -> %s\n" "$source_file" "$destination_file"
             else
@@ -101,11 +101,11 @@ main() {
     msg "Starting $script_name..."
     msg "Output base path: $out_path\n"
 
-    if test "$should_create_backups" != "1"; then
+    if [ "$should_create_backups" != "1" ]; then
         msg "NOTE: backup not enabled, existing config files will be overwritten\n"
     fi
 
-    if test "$should_use_file_pattern" = "1" -a "$is_interactive" = "1"; then
+    if [ "$should_use_file_pattern" = "1" ] && [ "$is_interactive" = "1" ]; then
         msg "NOTE: install file pattern specified, you will be prompted before copying each matching file\n"
     fi
 

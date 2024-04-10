@@ -5,7 +5,7 @@ trap 'echo "fatal error >>> utils.sh (line: $LINENO, exit code: $?)"' ERR
 
 set -eu
 
-test "$BASH_VERSION" != "" || { printf "This script requires bash to run.\n"; exit 1; }
+[ "$BASH_VERSION" != "" ] || { printf "This script requires bash to run.\n"; exit 1; }
 
 readonly script_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 readonly file_dir="$script_dir/../files"
@@ -34,11 +34,11 @@ has() {
 }
 
 is_mac() {
-    test "$(uname -s)" = Darwin
+    [ "$(uname -s)" = Darwin ]
 }
 
 is_linux() {
-    test "$(uname -s)" = Linux
+    [ "$(uname -s)" = Linux ]
 }
 
 is_distro() {
@@ -46,7 +46,7 @@ is_distro() {
 }
 
 is_arch() {
-    test "$(uname -m)" = "$1"
+    [ "$(uname -m)" = "$1" ]
 }
 
 dl() {
@@ -60,7 +60,7 @@ dl() {
 }
 
 prompt_confirm() {
-    if test "$is_interactive" = "1"; then
+    if [ "$is_interactive" = "1" ]; then
         read -rp "> $* [Y/n/q] " choice
         case "$choice" in
             y|Y|"") return 0;;
@@ -73,7 +73,7 @@ prompt_confirm() {
 }
 
 exec_step() {
-    if test "$is_interactive" = "1"; then
+    if [ "$is_interactive" = "1" ]; then
         read -rp "> $*? [Y/n/q] " choice
         case "$choice" in
             y|Y|"") "$@";;
