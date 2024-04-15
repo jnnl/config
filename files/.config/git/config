@@ -33,14 +33,14 @@
     d = diff
     dc = diff --cached
     dh = diff HEAD^ HEAD
-    du = diff --name-only --diff-filter=U
     dr = "!git fetch && git diff FETCH_HEAD"
+    du = diff --name-only --diff-filter=U
     l = log --oneline --decorate --graph
     lg = log --date=format:'%F %H:%M:%S' --pretty=format:'%C(auto)%h  %C(green)%ad  %C(blue)%<(15,trunc)%an %C(auto)%s%d'
     mff = merge --ff-only
     pp = "!git pull && git push"
-    prp = "!git pull --rebase && git push"
     pr = pull --rebase
+    prp = "!git pull --rebase && git push"
     rh = reset --hard
     rso = remote show origin
     s = status -bsu
