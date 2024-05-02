@@ -36,7 +36,7 @@
     dr = "!git fetch && git diff FETCH_HEAD"
     du = diff --name-only --diff-filter=U
     l = log --oneline --decorate --graph
-    lg = log --date=format:'%F %H:%M:%S' --pretty=format:'%C(auto)%h  %C(green)%ad  %C(blue)%<(15,trunc)%an %C(auto)%s%d'
+    lg = log --date=format:'%a %_d %b %T %Y' --pretty=format:'%C(auto)%h  %C(green)%ad  %C(blue)%<(15,trunc)%an %C(auto)%s%d'
     mff = merge --ff-only
     pp = "!git pull && git push"
     pr = pull --rebase
