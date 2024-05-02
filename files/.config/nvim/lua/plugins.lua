@@ -54,7 +54,7 @@ return {
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
                         ['ctrl-o'] = function(selected)
-                            -- Opens selected file(s) using system default handler
+                            -- Open selected file(s) using system default handler
                             for _, item in ipairs(selected) do
                                 local selected_item = item:match('^%s*(.-)%s*$')
                                 vim.notify('fzf-lua: opening file ' .. selected_item)
@@ -62,12 +62,25 @@ return {
                             end
                         end,
                         ['ctrl-p'] = function(selected)
-                            -- Opens a new vertical split and populates it with selected search results
+                            -- Open a new vertical split and populate it with selected search results
                             vim.cmd('vsplit')
                             local win = vim.api.nvim_get_current_win()
                             local buf = vim.api.nvim_create_buf(true, true)
                             vim.api.nvim_buf_set_lines(buf, 0, -1, false, selected)
                             vim.api.nvim_win_set_buf(win, buf)
+                        end,
+                        ['ctrl-h'] = function()
+                            -- Change search cwd to parent directory
+                            local opts = vim.tbl_deep_extend('force', fzf_lua.config.__resume_data.opts or {}, {
+                                query = fzf_lua.config.__resume_data.last_query,
+                            })
+                            if #(opts.cwd or '') > 1 and vim.endswith(opts.cwd, '/') then
+                                opts.cwd = string.sub(opts.cwd, 1, -2)
+                            end
+                            if opts.cwd ~= '/' then
+                                opts.cwd = vim.fn.fnamemodify(opts.cwd, ':p:h:h')
+                            end
+                            fzf_lua.files(opts)
                         end,
                     }),
                 },
@@ -127,6 +140,9 @@ return {
             keymap('n', '<Leader>*', function()
                 fzf_lua.files({ cwd = vim.fn.expand('$HOME'), fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find files in $HOME' })
+            keymap('n', '<Leader>f,', function()
+                fzf_lua.files({ cwd = vim.fn.expand('%:h'), fzf_opts = { ['--scheme'] = 'path' } })
+            end, { desc = 'Find files in directory of current file' })
             keymap('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
             keymap('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
             keymap('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
