@@ -19,6 +19,8 @@ usage() {
     exit 2
 }
 
+[[ "${1:--X}" =~ ^\-[^-]+ ]] || usage
+
 is_interactive=1
 out_path="$HOME"
 local_bin_path="$out_path/code/bin"

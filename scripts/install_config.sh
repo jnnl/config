@@ -21,6 +21,8 @@ usage() {
     exit 2
 }
 
+[[ "${1:--X}" =~ ^\-[^-]+ ]] || usage
+
 should_create_backups=0
 should_use_file_pattern=0
 file_pattern=""
