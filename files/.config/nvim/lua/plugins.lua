@@ -142,7 +142,10 @@ return {
             end, { desc = 'Find files in $HOME' })
             keymap('n', '<Leader>f,', function()
                 fzf_lua.files({ cwd = vim.fn.expand('%:h'), fzf_opts = { ['--scheme'] = 'path' } })
-            end, { desc = 'Find files in directory of current file' })
+            end, { desc = 'Find files in current file\'s directory' })
+            keymap('n', '<Leader>f;', function()
+                fzf_lua.oldfiles({ cwd = vim.fn.expand('%:h'), fzf_opts = { ['--scheme'] = 'path' } })
+            end, { desc = 'Find recently opened files in current file\'s directory' })
             keymap('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
             keymap('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
             keymap('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
@@ -270,7 +273,9 @@ return {
         config = function()
             local lsp = require('lspconfig')
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
+            capabilities.textDocument.completion.completionItem.snippetSupport = true
             local servers = {
+                angularls = {},
                 ansiblels = {
                     settings = { ansible = { validation = { lint = { enabled = false } } } },
                 },
@@ -323,6 +328,7 @@ return {
                     keymap('n', 'gt', vim.lsp.buf.type_definition, { buffer = ev.buf, desc = 'Go to type definition' })
                     keymap('n', 'gT', fzf_lua.lsp_typedefs, { buffer = ev.buf, desc = 'Find type definitions' })
                     keymap('n', '<Space>', vim.lsp.buf.hover, { buffer = ev.buf })
+                    keymap('n', '<C-Space>', vim.lsp.buf.signature_help, { buffer = ev.buf })
                     keymap({ 'n', 'x' }, '<leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
                     keymap('n', '<leader>r', vim.lsp.buf.rename, { buffer = ev.buf, desc = 'Rename symbol under cursor' })
                     keymap('n', '<leader>fld', fzf_lua.lsp_document_diagnostics, { buffer = ev.buf, desc = 'Find document diagnostics' })
