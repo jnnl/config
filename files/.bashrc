@@ -143,6 +143,7 @@ alias g="git"
 alias l="ls -lhF"
 alias ll="ls -lhAF"
 alias lx="ls -lhAFX"
+alias v="fzf -m --bind 'enter:become(nvim {+})'"
 
 # shell options
 shopt -s histappend
