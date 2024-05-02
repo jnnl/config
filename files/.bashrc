@@ -16,9 +16,18 @@ cdd() {
 # cd to selected shell wd
 cdsh() {
     local dir
-    dir="$(pgrep -x bash | xargs -I_ readlink /proc/_/cwd | \
-        sort -u | grep -Fvx "$PWD" | \
-        fzf +s --reverse)" && cd "$dir" || return
+    if test "$(uname -s)" = Darwin; then
+        dir="$(pgrep -x -- -bash | \
+            xargs -I_ lsof -a -Fn -d cwd -p _ | \
+            awk '/^n/ { print substr($1, 2) }' | \
+            sort -u | grep -Fvx "$PWD" | \
+            fzf +s --reverse)" && cd "$dir" || return
+    else
+        dir="$(pgrep -x bash | \
+            xargs -I_ readlink /proc/_/cwd | \
+            sort -u | grep -Fvx "$PWD" | \
+            fzf +s --reverse)" && cd "$dir" || return
+    fi
 }
 
 # cd to git root
