@@ -12,7 +12,7 @@ return {
     },
     {
         'ggandor/leap.nvim',
-        commit = '89d878f8399d00fb348ad65b6077b996808234d8',
+        commit = '626be4c4ec040aeaf6466c9aae17ee0ab09f1a5b',
         event = 'VeryLazy',
         config = function()
             local leap = require('leap')
@@ -23,7 +23,7 @@ return {
     },
     {
         'justinmk/vim-dirvish',
-        commit = 'b660af1fa07fe1d44d4eb3ea5242334f6c2766ca',
+        commit = '3851bedb7f191b9a4a5531000b6fc0a8795cc9bb',
     },
     {
         'junegunn/fzf',
@@ -32,7 +32,7 @@ return {
     },
     {
         'ibhagwan/fzf-lua',
-        commit = '14228229b8138e4a306bd0f633e3e55a77a58d6e',
+        commit = 'cb208cd24bacac5893249ea3a8624d705d2135f9',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -158,11 +158,6 @@ return {
         event = 'VeryLazy',
     },
     {
-        'tpope/vim-commentary',
-        commit = 'e87cd90dc09c2a203e13af9704bd0ef79303d755',
-        event = 'VeryLazy',
-    },
-    {
         'tpope/vim-surround',
         commit = '3d188ed2113431cf8dac77be61b842acb64433d9',
         event = 'VeryLazy',
@@ -193,11 +188,11 @@ return {
     },
     {
         'hashivim/vim-terraform',
-        commit = '2bbc5f65a80c79a5110494a2ba1b869075fcf7a0',
+        commit = '21f756b933cd11ac5990a6046fdc7c4e2a6c0aee',
     },
     {
         'leafgarland/typescript-vim',
-        commit = '31ede5ad905ce4159a5e285073a391daa3bf83fa',
+        commit = 'e83ccab88c7a045ce795583adb66956afd464a31',
     },
     {
         'pmizio/typescript-tools.nvim',
@@ -208,7 +203,7 @@ return {
     },
     {
         'stevearc/conform.nvim',
-        commit = '5a15cc46e75cad804fd51ec5af9227aeb1d1bdaa',
+        commit = '12b3995537f52ba2810a9857e8ca256881febbda',
         event = 'VeryLazy',
         config = function()
             vim.g.disable_autoformat = true
@@ -331,7 +326,7 @@ return {
     },
     {
         'hrsh7th/nvim-cmp',
-        commit = '04e0ca376d6abdbfc8b52180f8ea236cbfddf782',
+        commit = '8f3c541407e691af6163e2447f3af1bd6e17f9a3',
         event = 'InsertEnter',
         dependencies = {
             'hrsh7th/cmp-nvim-lsp',
@@ -390,7 +385,7 @@ return {
     -- Git
     {
         'lewis6991/gitsigns.nvim',
-        commit = '2c2463dbd82eddd7dbab881c3a62cfbfbe3c67ae',
+        commit = '9cafac31a091267838e1e90fd6e083d37611f516',
         opts = {
             signs = {
                 add = { text = '+' },
@@ -403,14 +398,14 @@ return {
     },
     {
         'tpope/vim-fugitive',
-        commit = '41beedabc7e948c787ea5696e04c3544c3674e23',
+        commit = 'dac8e5c2d85926df92672bf2afb4fc48656d96c7',
         event = 'VeryLazy',
     },
 
     -- Miscellaneous
     {
         'echasnovski/mini.clue',
-        commit = '4937bbfb4d461dd9408e004e929716f1fc0296c8',
+        commit = '76850c33411ab544725d1a66c9ed528eb6202a64',
         event = 'VeryLazy',
         config = function()
             local miniclue = require('mini.clue')
@@ -447,7 +442,7 @@ return {
     },
     {
         'mbbill/undotree',
-        commit = '0e11ba7325efbbb3f3bebe06213afa3e7ec75131',
+        commit = '56c684a805fe948936cda0d1b19505b84ad7e065',
         event = 'VeryLazy',
         config = function()
             keymap('n', '<Leader>u', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
@@ -477,16 +472,26 @@ return {
     },
     {
         'whiteinge/diffconflicts',
-        commit = '05e8d2e935a235b8f8e6d308a46a5f028ea5bf97',
+        commit = '4972d1401e008c5e9afeb703eddd1b2c2a1d1199',
         cmd = { 'DiffConflicts', 'DiffConflictsShowHistory', 'DiffConflictsWithHistory' },
+    },
+    {
+        'andrewferrier/debugprint.nvim',
+        commit = 'c7d04c3bf0a83e37434a4319040c2384a7f97acc',
+        event = 'VeryLazy',
+        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        opts = {},
     },
     {
         'nvim-treesitter/nvim-treesitter',
         event = 'VeryLazy',
-        branch = 'main',
-        commit = 'e73c775aa9d540f0c33585ed1b5ea572a64bdac1',
-        dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+        branch = 'master',
+        commit = '0883ff05655117a3fc79ab295a640c4984cfd415',
+        dependencies = {
+            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '23b820146956b3b681c19e10d3a8bc0cbd9a1d4c'},
+        },
         config = function()
+            ---@diagnostic disable-next-line: missing-fields
             require('nvim-treesitter.configs').setup({
                 highlight = {
                     enable = true,
