@@ -456,7 +456,13 @@ return {
                 },
                 window = {
                     delay = 500,
-                    config = { width = 'auto', border = 'rounded' },
+                    config = {
+                        anchor = 'SW',
+                        row = 'auto',
+                        col = 'auto',
+                        width = 'auto',
+                        border = 'rounded',
+                    },
                 }
             })
         end,
