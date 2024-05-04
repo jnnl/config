@@ -89,7 +89,7 @@ return {
                         args = '--style=numbers,changes,header-filename,rule --color always --line-range=:1000',
                     },
                     builtin = {
-                        treesitter = { enable = false },
+                        treesitter = { enable = true },
                         extensions = {
                             ['gif'] = { 'chafa' },
                             ['png'] = { 'chafa' },
@@ -100,9 +100,13 @@ return {
                         title_fnamemodify = function(s) return vim.fn.fnamemodify(s, ':p:.') end,
                     },
                 },
+                files = {
+                    formatter = 'path.filename_first',
+                },
                 oldfiles = {
-                    winopts = { preview = { hidden = 'hidden' } },
+                    formatter = 'path.filename_first',
                     include_current_session = true,
+                    winopts = { preview = { hidden = 'hidden' } },
                 },
                 grep = {
                     rg_opts = '--column --line-number --no-heading --hidden --smart-case --max-columns=4096 ' ..
@@ -488,6 +492,8 @@ return {
         commit = '7e65325651ff5a0b06af8df3980d2ee54cf10e14',
         event = 'VeryLazy',
         config = function()
+            keymap('n', 'öl', '<Plug>(qf_loc_previous)', { desc = 'Go to previous location list item' })
+            keymap('n', 'äl', '<Plug>(qf_loc_next)', { desc = 'Go to next location list item' })
             keymap('n', 'öq', '<Plug>(qf_qf_previous)', { desc = 'Go to previous quickfix item' })
             keymap('n', 'äq', '<Plug>(qf_qf_next)', { desc = 'Go to next quickfix item' })
         end,
@@ -513,7 +519,8 @@ return {
         'nvim-treesitter/nvim-treesitter',
         event = 'VeryLazy',
         branch = 'master',
-        commit = '0883ff05655117a3fc79ab295a640c4984cfd415',
+        commit = '4e21361e15b1d4147830c5fe571556eb1b14e6f9',
+        build = ':TSUpdate',
         dependencies = {
             { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '23b820146956b3b681c19e10d3a8bc0cbd9a1d4c'},
         },
