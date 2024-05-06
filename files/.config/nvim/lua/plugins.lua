@@ -32,7 +32,7 @@ return {
     },
     {
         'ibhagwan/fzf-lua',
-        commit = 'cb208cd24bacac5893249ea3a8624d705d2135f9',
+        commit = '6865ff44f975c21d84a0206edae82e5cbb0fd80e',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -181,9 +181,10 @@ return {
         event = 'VeryLazy',
     },
     {
-        'tpope/vim-surround',
-        commit = '3d188ed2113431cf8dac77be61b842acb64433d9',
+        'kylechui/nvim-surround',
+        commit = '6d0dc3dbb557bcc6a024969da461df4ba803fc48',
         event = 'VeryLazy',
+        opts = {},
     },
 
     -- Colorschemes
@@ -497,11 +498,6 @@ return {
             keymap('n', 'öq', '<Plug>(qf_qf_previous)', { desc = 'Go to previous quickfix item' })
             keymap('n', 'äq', '<Plug>(qf_qf_next)', { desc = 'Go to next quickfix item' })
         end,
-    },
-    {
-        'tpope/vim-repeat',
-        commit = '24afe922e6a05891756ecf331f39a1f6743d3d5a',
-        event = 'VeryLazy',
     },
     {
         'whiteinge/diffconflicts',
