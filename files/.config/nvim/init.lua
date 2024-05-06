@@ -58,7 +58,7 @@ dx.config({ virtual_text = false })
 _G.statusline = function()
     local separator = '%#StatuslineNC# | %*'
     local line_count = '%3l/%L'
-    local file_path = separator .. '%f'
+    local file_path = separator .. '%<%f'
     local buf_attrs = (function()
         local attrs = {}
         if #vim.api.nvim_buf_get_name(0) > 0 then
