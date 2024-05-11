@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # install config files
 
-trap 'echo "fatal error >>> install_config.sh (line: $LINENO, exit code: $?)"' ERR
-
 set -eu
 
 script_name="$(basename "${BASH_SOURCE[0]}")"
@@ -17,7 +15,6 @@ usage() {
     printf "  -f            execute each step without prompting for confirmation\n"
     printf "  -h            display this help text and exit\n"
     printf "  -o <path>     output base path (default: %s)\n" "$HOME"
-    printf "\n"
     exit 2
 }
 
@@ -46,7 +43,7 @@ source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 
 copy_config_files() {
-    msg "Copying config files..."
+    printf "Copying config files...\n"
 
     local file files matching_files source_file destination_file
 
@@ -96,24 +93,26 @@ copy_config_files() {
         fi
     done
 
-    msg_done
+    msg_done "$FUNCNAME"
 }
 
 main() {
-    msg "Starting $script_name..."
-    msg "Output base path: $out_path\n"
+    printf "Starting %s...\n\n" "$script_name"
+    printf "Output base path: %s\n" "$out_path"
 
     if [ "$should_create_backups" != "1" ]; then
-        msg "NOTE: backup not enabled, existing config files will be overwritten\n"
+        warn "backup not enabled, existing config files will be replaced."
     fi
 
     if [ "$should_use_file_pattern" = "1" ] && [ "$is_interactive" = "1" ]; then
-        msg "NOTE: install file pattern specified, you will be prompted before copying each matching file\n"
+        printf "File pattern '%s' was specified, you will be prompted before copying each matching file.\n" "$file_pattern"
     fi
+
+    printf "\n"
 
     exec_step copy_config_files
 
-    printf "\n<<< Completed %s.\n\n" "$script_name"
+    printf "\nCompleted %s.\n" "$script_name"
 }
 
 main

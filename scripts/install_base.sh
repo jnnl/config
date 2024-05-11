@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # install packages and configure environment
 
-trap 'echo "fatal error >>> install_base.sh (line: $LINENO, exit code: $?)"' ERR
-
 set -eu
 
 script_name="$(basename "${BASH_SOURCE[0]}")"
@@ -15,7 +13,6 @@ usage() {
     printf "  -f            execute each step without prompting for confirmation\n"
     printf "  -h            display this help text and exit\n"
     printf "  -o <path>     output base path (default: %s)\n" "$HOME"
-    printf "\n"
     exit 2
 }
 
@@ -39,15 +36,15 @@ shift "$((OPTIND - 1))"
 source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
 configure_common_env() {
-    msg "Configuring common environment..."
+    printf "Configuring common environment...\n"
 
     mkdir -vp "$local_bin_path"
 
-    msg_done
+    msg_done "$FUNCNAME"
 }
 
 configure_mac_env() {
-    msg "Configuring macOS environment..."
+    printf "Configuring macOS environment...\n"
 
     # Expand save panels
     defaults write -g NSNavPanelExpandedStateForSaveMode -bool true
@@ -88,32 +85,32 @@ configure_mac_env() {
 
     killall Dock Finder
 
-    msg_done
+    msg_done "$FUNCNAME"
 }
 
 install_homebrew() {
     if has brew; then
-        msg "Homebrew already installed, skipping..."
+        printf "Homebrew already installed, skipping...\n"
         return
     fi
 
-    msg "Installing Homebrew..."
+    printf "Installing Homebrew...\n"
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    msg_done
+    msg_done "$FUNCNAME"
 }
 
 install_mac_pkgs() {
-    msg "Installing packages for macOS..."
+    printf "Installing packages for macOS...\n"
 
     local pkgs=("chafa" "coreutils" "fd" "neovim" "node" "python3" "ranger" "renameutils" "ripgrep" "shellcheck")
     brew install "${pkgs[@]}"
 
-    msg_done
+    msg_done "$FUNCNAME"
 }
 
 install_deb_pkgs() {
-    msg "Installing packages for Debian/Ubuntu..."
+    printf "Installing packages for Debian/Ubuntu...\n"
 
     (
         set -eu
@@ -140,66 +137,69 @@ install_deb_pkgs() {
     sudo apt update
     sudo apt install "${apt_pkgs[@]}"
 
-    msg_done
+    msg_done "$FUNCNAME"
 }
 
 install_arch_pkgs() {
-    msg "Installing packages for Arch Linux..."
+    printf "Installing packages for Arch Linux...\n"
 
     local pkgs=("chafa" "fd" "git" "htop" "jq" "neovim" "nodejs" "openssh" "python" "ranger" "renameutils" "ripgrep" "shellcheck")
     sudo pacman -Syyu --needed "${pkgs[@]}"
 
-    msg_done
+    msg_done "$FUNCNAME"
 }
 
 install_fzf() {
-    msg "Installing fzf..."
+    printf "Installing fzf...\n"
 
     local fzf_dir="$out_path/.fzf"
     local tmp_dir
-    tmp_dir="$(mktemp -d /tmp/fzf-XXX)"
+    tmp_dir="$(mktemp -d /tmp/fzf-XXXXX)"
     local url="https://github.com/junegunn/fzf.git"
 
-    if has git; then
-        git clone --depth 1 "$url" "$tmp_dir"
-        rm -rf "$fzf_dir"
-        mv "$tmp_dir" "$fzf_dir"
-
-        chmod ug+x "$fzf_dir/install"
-        "$fzf_dir/install" --key-bindings \
-                          --completion \
-                          --no-zsh \
-                          --no-fish \
-                          --no-update-rc \
-                          1>/dev/null
-    else
-        warn "Git not found, skipping fzf install."
+    if ! has git; then
+        warn "git not found, skipping fzf install."
         return
     fi
 
-    msg_done
+    git clone --depth 1 "$url" "$tmp_dir"
+    rm -rf "$fzf_dir"
+    mv "$tmp_dir" "$fzf_dir"
+
+    chmod ug+x "$fzf_dir/install"
+    "$fzf_dir/install" \
+        --key-bindings \
+        --completion \
+        --no-zsh \
+        --no-fish \
+        --no-update-rc \
+        1>/dev/null
+
+    [ -d "$tmp_dir" ] && rm -rf "$tmp_dir"
+
+    msg_done "$FUNCNAME"
 }
 
 install_z() {
-    msg "Installing z..."
+    printf "Installing z...\n"
 
     local z_dir="$config_dir/z"
     mkdir -vp "$z_dir"
     cp -v "$script_dir/tools/z.sh" "$z_dir"
 
-    msg_done
+    msg_done "$FUNCNAME"
 }
 
 install_tool_scripts() {
-    msg "Installing tool scripts..."
+    printf "Installing tool scripts...\n"
 
     exec_step install_z
 
-    msg_done
+    msg_done "$FUNCNAME"
 }
 
 main() {
-    msg "Starting $script_name...\n"
+    printf "Starting %s...\n\n" "$script_name"
 
     exec_step configure_common_env
 
@@ -220,7 +220,7 @@ main() {
     exec_step install_fzf
     exec_step install_tool_scripts
 
-    printf "\n<<< Completed %s.\n\n" "$script_name"
+    printf "\nCompleted %s.\n" "$script_name"
 }
 
 main

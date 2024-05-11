@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # copy changed local config files to repo
 
-trap 'echo "fatal error >>> sync_config.sh (line: $LINENO, exit code: $?)"' ERR
-
 set -eu
 
 # shellcheck source=utils.sh
@@ -16,7 +14,6 @@ usage() {
     printf "  -f            sync all changed files without prompting for confirmation\n"
     printf "  -h            display this help text and exit\n"
     printf "  -i <path>     input base path (default: %s)\n" "$HOME"
-    printf "\n"
     exit 2
 }
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # utility functions
 
-trap 'echo "fatal error >>> utils.sh (line: $LINENO, exit code: $?)"' ERR
-
 set -eu
 
 [ "$BASH_VERSION" != "" ] || { printf "This script requires bash to run.\n"; exit 1; }
@@ -13,20 +11,26 @@ readonly config_dir="${XDG_CONFIG_HOME:-$HOME/.config}"
 export script_dir file_dir config_dir
 
 err() {
-    printf "!!! ERROR: $*\n" >&2
+    local msg="ERROR: $*"
+    if [ -t 1 ]; then
+        printf "%b%s%b\n" "\033[31m" "$msg" "\033[0m" >&2
+    else
+        printf "%s\n" "$msg" >&2
+    fi
     exit 1
 }
 
 warn() {
-    printf "~~~ $*\n" >&2
-}
-
-msg() {
-    printf ">>> $*\n"
+    local msg="WARNING: $*"
+    if [ -t 1 ]; then
+        printf "%b%s%b\n" "\033[33m" "$msg" "\033[0m" >&2
+    else
+        printf "%s\n" "$msg" >&2
+    fi
 }
 
 msg_done() {
-    printf "<<< done\n\n"
+    printf "Completed %s.\n\n" "$*"
 }
 
 has() {
@@ -77,7 +81,7 @@ exec_step() {
         read -rp "> $*? [Y/n/q] " choice
         case "$choice" in
             y|Y|"") "$@";;
-            q) printf "\n<<< Skipping rest of %s...\n\n" "$script_name"; exit 0;;
+            q) printf "\nSkipping rest of %s...\n" "$script_name"; exit 0;;
             n|N|*) ;;
         esac
     else
