@@ -138,18 +138,30 @@ return {
             end, { desc = 'Find recently opened files' })
             keymap('n', '<Leader>:', function()
                 fzf_lua.oldfiles({ prompt = 'CwdHistory> ', cwd_only = true, fzf_opts = { ['--scheme'] = 'path' } })
-            end, { desc = 'Find recently opened files under current dir' })
+            end, { desc = 'Find recently opened files under cwd' })
             keymap('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
             keymap('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
             keymap('n', '<Leader>*', function()
                 fzf_lua.files({ cwd = vim.fn.expand('$HOME'), fzf_opts = { ['--scheme'] = 'path' } })
             end, { desc = 'Find files in $HOME' })
             keymap('n', '<Leader>f,', function()
-                fzf_lua.files({ cwd = vim.fn.expand('%:h'), fzf_opts = { ['--scheme'] = 'path' } })
-            end, { desc = 'Find files in current file\'s directory' })
+                fzf_lua.files({
+                    cwd = #vim.fn.expand('%:h') > 0 and vim.fn.expand('%:h') or vim.fn.getcwd(0),
+                    fzf_opts = { ['--scheme'] = 'path' }
+                })
+            end, { desc = 'Find files in directory containing current file' })
             keymap('n', '<Leader>f;', function()
-                fzf_lua.oldfiles({ cwd = vim.fn.expand('%:h'), fzf_opts = { ['--scheme'] = 'path' } })
-            end, { desc = 'Find recently opened files in current file\'s directory' })
+                fzf_lua.oldfiles({
+                    cwd = #vim.fn.expand('%:h') > 0 and vim.fn.expand('%:h') or vim.fn.getcwd(0),
+                    fzf_opts = { ['--scheme'] = 'path' }
+                })
+            end, { desc = 'Find recently opened files in directory containing current file' })
+            keymap('n', '<Leader>f-', function()
+                fzf_lua.grep_project({
+                    cwd = #vim.fn.expand('%:h') > 0 and vim.fn.expand('%:h') or vim.fn.getcwd(0),
+                    fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' }
+                })
+            end, { desc = 'Find text in directory containing current file' })
             keymap('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
             keymap('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
             keymap('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
@@ -185,6 +197,11 @@ return {
         commit = '6d0dc3dbb557bcc6a024969da461df4ba803fc48',
         event = 'VeryLazy',
         opts = {},
+    },
+    {
+        'tpope/vim-abolish',
+        commit = 'dcbfe065297d31823561ba787f51056c147aa682',
+        event = 'VeryLazy',
     },
 
     -- Colorschemes
@@ -280,7 +297,9 @@ return {
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             capabilities.textDocument.completion.completionItem.snippetSupport = true
             local servers = {
-                angularls = {},
+                angularls = {
+                    filetypes = { 'html' },
+                },
                 ansiblels = {
                     settings = { ansible = { validation = { lint = { enabled = false } } } },
                 },
@@ -412,6 +431,7 @@ return {
     {
         'lewis6991/gitsigns.nvim',
         commit = '9cafac31a091267838e1e90fd6e083d37611f516',
+        event = 'VeryLazy',
         opts = {
             signs = {
                 add = { text = '+' },
@@ -477,7 +497,7 @@ return {
         commit = '56c684a805fe948936cda0d1b19505b84ad7e065',
         event = 'VeryLazy',
         config = function()
-            keymap('n', '<Leader>u', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
+            keymap('n', '<Leader>ou', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
             vim.g.undotree_SetFocusWhenToggle = 1
             vim.g.undotree_ShortIndicators = 1
             vim.g.undotree_WindowLayout = 2
@@ -510,6 +530,15 @@ return {
         event = 'VeryLazy',
         dependencies = { 'nvim-treesitter/nvim-treesitter' },
         opts = {},
+    },
+    {
+        'magicduck/grug-far.nvim',
+        commit = '58250566b4abb0595d55e2d2bcd8f18dfd17e819',
+        event = 'VeryLazy',
+        config = function()
+            require('grug-far').setup()
+            keymap('n', 'os', ':GrugFar<CR>', { desc = 'Open GrugFar' })
+        end,
     },
     {
         'nvim-treesitter/nvim-treesitter',

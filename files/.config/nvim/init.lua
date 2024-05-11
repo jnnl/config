@@ -5,7 +5,6 @@ vim.g.maplocalleader = ','
 
 _G.keymap = vim.keymap.set
 _G.command = vim.api.nvim_create_user_command
-_G.get_command_range = function(opts) return opts.range == 0 and '%' or opts.line1 .. ',' .. opts.line2 end
 _G.autocmd = vim.api.nvim_create_autocmd
 _G.augroup = vim.api.nvim_create_augroup
 _G.dx = vim.diagnostic
@@ -182,22 +181,22 @@ end, { expr = true, desc = 'Substitute word under cursor' })
 
 command('NonAscii', '/[^\\x00-\\x7F]', { desc = 'Search for non-ASCII characters' })
 command('Unansify', function(opts)
-    local range = get_command_range(opts)
+    local range = string.format('%s,%s', opts.line1, opts.line2)
     vim.cmd('keeppatterns ' .. range .. [[s/\%x1b\[[0-9;]*[a-zA-Z]//ge]])
 end, { range = true, desc = 'Remove ANSI escape codes' })
 
 command('Unblankify', function(opts)
-    local range = get_command_range(opts)
+    local range = string.format('%s,%s', opts.line1, opts.line2)
     vim.cmd(range .. [[g/^\s*$/d]])
 end, { range = true, desc = 'Remove blank lines' })
 
 command('Lstrip', function(opts)
-    local range = get_command_range(opts)
+    local range = string.format('%s,%s', opts.line1, opts.line2)
     vim.cmd('keeppatterns ' .. range .. [[s/^\s\+//e]])
 end, { range = true, desc = 'Strip leading whitespace' })
 
 command('Rstrip', function(opts)
-    local range = get_command_range(opts)
+    local range = string.format('%s,%s', opts.line1, opts.line2)
     vim.cmd('keeppatterns ' .. range .. [[s/\s\+$//e]])
     vim.cmd('keeppatterns ' .. range .. [[s/\r//ge]])
 end, { range = true, desc = 'Strip trailing whitespace' })
