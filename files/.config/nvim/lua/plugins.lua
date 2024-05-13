@@ -10,6 +10,7 @@ return {
             keymap({ 'n', 'x' }, 'ä%', '<Plug>(matchup-]%)', { desc = 'Go to next outer close word' })
         end,
     },
+
     {
         'ggandor/leap.nvim',
         commit = '626be4c4ec040aeaf6466c9aae17ee0ab09f1a5b',
@@ -21,15 +22,18 @@ return {
             keymap({ 'n', 'x' }, 'S', '<Plug>(leap-backward-to)')
         end,
     },
+
     {
         'justinmk/vim-dirvish',
         commit = '3851bedb7f191b9a4a5531000b6fc0a8795cc9bb',
     },
+
     {
         'junegunn/fzf',
         lazy = true,
         build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc',
     },
+
     {
         'ibhagwan/fzf-lua',
         commit = '6865ff44f975c21d84a0206edae82e5cbb0fd80e',
@@ -38,6 +42,7 @@ return {
             local fzf_lua = require('fzf-lua')
             local defaults = require('fzf-lua.defaults').defaults
             local actions = require('fzf-lua.actions')
+
             fzf_lua.setup({
                 'default',
                 winopts = {
@@ -53,34 +58,53 @@ return {
                 },
                 actions = {
                     files = vim.tbl_deep_extend('force', defaults.actions.files, {
-                        ['ctrl-o'] = function(selected)
-                            -- Open selected file(s) using system default handler
-                            for _, item in ipairs(selected) do
-                                local selected_item = item:match('^%s*(.-)%s*$')
-                                vim.notify('fzf-lua: opening file ' .. selected_item)
-                                vim.ui.open(selected_item)
+                        -- Change search cwd to directory containing current file
+                        ['ctrl-x'] = function()
+                            local resume_data = fzf_lua.config.__resume_data
+                            local opts = { query = resume_data.last_query }
+                            local file_dir = vim.fn.expand('%:h')
+                            if #file_dir > 0 then
+                                opts.cwd = file_dir
                             end
+                            fzf_lua[resume_data.opts.__INFO.cmd](opts)
                         end,
-                        ['ctrl-p'] = function(selected)
-                            -- Open a new vertical split and populate it with selected search results
-                            vim.cmd('vsplit')
-                            local win = vim.api.nvim_get_current_win()
-                            local buf = vim.api.nvim_create_buf(true, true)
-                            vim.api.nvim_buf_set_lines(buf, 0, -1, false, selected)
-                            vim.api.nvim_win_set_buf(win, buf)
-                        end,
+                        -- Change search cwd to parent directory
                         ['ctrl-h'] = function()
-                            -- Change search cwd to parent directory
-                            local opts = vim.tbl_deep_extend('force', fzf_lua.config.__resume_data.opts or {}, {
-                                query = fzf_lua.config.__resume_data.last_query,
-                            })
+                            local resume_data = fzf_lua.config.__resume_data
+                            local opts = { query = resume_data.last_query, cwd = resume_data.opts.cwd }
                             if #(opts.cwd or '') > 1 and vim.endswith(opts.cwd, '/') then
                                 opts.cwd = string.sub(opts.cwd, 1, -2)
                             end
                             if opts.cwd ~= '/' then
                                 opts.cwd = vim.fn.fnamemodify(opts.cwd, ':p:h:h')
                             end
-                            fzf_lua.files(opts)
+                            fzf_lua[resume_data.opts.__INFO.cmd](opts)
+                        end,
+                        -- Change search cwd to git root
+                        ['ctrl-r'] = function()
+                            local resume_data = fzf_lua.config.__resume_data
+                            local opts = { query = resume_data.last_query }
+                            local git_root_dir = vim.fs.dirname(vim.fn.finddir('.git', '.;'))
+                            if #git_root_dir > 0 then
+                                opts.cwd = git_root_dir
+                            end
+                            fzf_lua[resume_data.opts.__INFO.cmd](opts)
+                        end,
+                        -- Open selected file(s) using system default handler
+                        ['ctrl-o'] = function(selected)
+                            for _, item in ipairs(selected) do
+                                local selected_item = item:match('^%s*(.-)%s*$')
+                                vim.notify('fzf-lua: opening file ' .. selected_item)
+                                vim.ui.open(selected_item)
+                            end
+                        end,
+                        -- Open a new vertical split and populate it with selected search results
+                        ['ctrl-p'] = function(selected)
+                            vim.cmd('vsplit')
+                            local win = vim.api.nvim_get_current_win()
+                            local buf = vim.api.nvim_create_buf(true, true)
+                            vim.api.nvim_buf_set_lines(buf, 0, -1, false, selected)
+                            vim.api.nvim_win_set_buf(win, buf)
                         end,
                     }),
                 },
@@ -102,13 +126,16 @@ return {
                 },
                 files = {
                     formatter = 'path.filename_first',
+                    fzf_opts = { ['--scheme'] = 'path' },
                 },
                 oldfiles = {
                     formatter = 'path.filename_first',
+                    fzf_opts = { ['--scheme'] = 'path' },
                     include_current_session = true,
                     winopts = { preview = { hidden = 'hidden' } },
                 },
                 grep = {
+                    fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' },
                     rg_opts = '--column --line-number --no-heading --hidden --smart-case --max-columns=4096 ' ..
                     '--glob="!.git/" --color=always --colors "path:fg:green" --colors "line:fg:yellow"',
                     rg_glob = true,
@@ -121,50 +148,35 @@ return {
                     },
                 },
             })
+
             keymap('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
             keymap('n', '<Leader>fc', fzf_lua.commands, { desc = 'Find commands' })
             keymap('n', '<Leader>fr', fzf_lua.registers, { desc = 'Find registers' })
             keymap('n', '<Leader>f*', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
             keymap('x', '<Leader>f*', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
-            keymap('n', '<Leader>,', function()
-                fzf_lua.files({ fzf_opts = { ['--scheme'] = 'path' } })
-            end, { desc = 'Find files' })
+
+            keymap('n', '<Leader>,', fzf_lua.files, { desc = 'Find files' })
             keymap('n', '<Leader>.', fzf_lua.buffers, { desc = 'Find open buffers' })
-            keymap('n', '<Leader>-', function()
-                fzf_lua.grep_project({ fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' } })
-            end, { desc = 'Find text' })
-            keymap('n', '<Leader>;', function()
-                fzf_lua.oldfiles({ fzf_opts = { ['--scheme'] = 'path' } })
-            end, { desc = 'Find recently opened files' })
+            keymap('n', '<Leader>-', fzf_lua.grep_project, { desc = 'Find text' })
+            keymap('n', '<Leader>;', fzf_lua.oldfiles, { desc = 'Find recently opened files' })
             keymap('n', '<Leader>:', function()
-                fzf_lua.oldfiles({ prompt = 'CwdHistory> ', cwd_only = true, fzf_opts = { ['--scheme'] = 'path' } })
+                fzf_lua.oldfiles({ prompt = 'CwdHistory> ', cwd_only = true })
             end, { desc = 'Find recently opened files under cwd' })
             keymap('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
             keymap('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
-            keymap('n', '<Leader>*', function()
-                fzf_lua.files({ cwd = vim.fn.expand('$HOME'), fzf_opts = { ['--scheme'] = 'path' } })
-            end, { desc = 'Find files in $HOME' })
-            keymap('n', '<Leader>f,', function()
-                fzf_lua.files({
-                    cwd = #vim.fn.expand('%:h') > 0 and vim.fn.expand('%:h') or vim.fn.getcwd(0),
-                    fzf_opts = { ['--scheme'] = 'path' }
-                })
-            end, { desc = 'Find files in directory containing current file' })
-            keymap('n', '<Leader>f;', function()
-                fzf_lua.oldfiles({
-                    cwd = #vim.fn.expand('%:h') > 0 and vim.fn.expand('%:h') or vim.fn.getcwd(0),
-                    fzf_opts = { ['--scheme'] = 'path' }
-                })
-            end, { desc = 'Find recently opened files in directory containing current file' })
-            keymap('n', '<Leader>f-', function()
-                fzf_lua.grep_project({
-                    cwd = #vim.fn.expand('%:h') > 0 and vim.fn.expand('%:h') or vim.fn.getcwd(0),
-                    fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' }
-                })
-            end, { desc = 'Find text in directory containing current file' })
+            keymap('n', '<Leader>*', function() fzf_lua.files({ cwd = '~' }) end, { desc = 'Find files in $HOME' })
+
+            keymap('n', '<Leader>fg,', function()
+                fzf_lua.files({ cwd = vim.fs.dirname(vim.fn.finddir('.git', '.;')) })
+            end, { desc = 'Find files under git root' })
+            keymap('n', '<Leader>fg;', function()
+                fzf_lua.files({ cwd = vim.fs.dirname(vim.fn.finddir('.git', '.;')) })
+            end, { desc = 'Find recently opened files under git root' })
+            keymap('n', '<Leader>fg-', function()
+                fzf_lua.grep_project({ cwd = vim.fs.dirname(vim.fn.finddir('.git', '.;')) })
+            end, { desc = 'Find text under git root' })
             keymap('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
             keymap('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
-            keymap('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
             keymap('n', '<Leader>fgx', function()
                 fzf_lua.fzf_exec('git diff --name-only --diff-filter=U', {
                     prompt = 'Conflicts> ',
@@ -187,17 +199,20 @@ return {
             vim.g.lion_squeeze_spaces = 1
         end,
     },
+
     {
         'tommcdo/vim-exchange',
         commit = 'd6c1e9790bcb8df27c483a37167459bbebe0112e',
         event = 'VeryLazy',
     },
+
     {
         'kylechui/nvim-surround',
         commit = '6d0dc3dbb557bcc6a024969da461df4ba803fc48',
         event = 'VeryLazy',
         opts = {},
     },
+
     {
         'tpope/vim-abolish',
         commit = 'dcbfe065297d31823561ba787f51056c147aa682',
@@ -227,14 +242,17 @@ return {
             },
         },
     },
+
     {
         'hashivim/vim-terraform',
         commit = '21f756b933cd11ac5990a6046fdc7c4e2a6c0aee',
     },
+
     {
         'leafgarland/typescript-vim',
         commit = 'e83ccab88c7a045ce795583adb66956afd464a31',
     },
+
     {
         'pmizio/typescript-tools.nvim',
         commit = 'c43d9580c3ff5999a1eabca849f807ab33787ea7',
@@ -242,6 +260,7 @@ return {
         dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
         opts = {},
     },
+
     {
         'stevearc/conform.nvim',
         commit = '12b3995537f52ba2810a9857e8ca256881febbda',
@@ -283,6 +302,7 @@ return {
             keymap('n', '<leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
         end
     },
+
     {
         'neovim/nvim-lspconfig',
         event = { 'BufNewFile', 'BufReadPre' },
@@ -369,6 +389,7 @@ return {
         commit = '5af77f54de1b16c34b23cba810150689a3a90312',
         lazy = true,
     },
+
     {
         'hrsh7th/nvim-cmp',
         commit = '8f3c541407e691af6163e2447f3af1bd6e17f9a3',
@@ -442,6 +463,7 @@ return {
             },
         },
     },
+
     {
         'tpope/vim-fugitive',
         commit = 'dac8e5c2d85926df92672bf2afb4fc48656d96c7',
@@ -492,6 +514,7 @@ return {
             })
         end,
     },
+
     {
         'mbbill/undotree',
         commit = '56c684a805fe948936cda0d1b19505b84ad7e065',
@@ -503,11 +526,13 @@ return {
             vim.g.undotree_WindowLayout = 2
         end,
     },
+
     {
         'michaeljsmith/vim-indent-object',
         commit = '5c5b24c959478929b54a9e831a8e2e651a465965',
         event = 'VeryLazy',
     },
+
     {
         'romainl/vim-qf',
         commit = '7e65325651ff5a0b06af8df3980d2ee54cf10e14',
@@ -519,11 +544,13 @@ return {
             keymap('n', 'äq', '<Plug>(qf_qf_next)', { desc = 'Go to next quickfix item' })
         end,
     },
+
     {
         'whiteinge/diffconflicts',
         commit = '4972d1401e008c5e9afeb703eddd1b2c2a1d1199',
         cmd = { 'DiffConflicts', 'DiffConflictsShowHistory', 'DiffConflictsWithHistory' },
     },
+
     {
         'andrewferrier/debugprint.nvim',
         commit = 'c7d04c3bf0a83e37434a4319040c2384a7f97acc',
@@ -531,15 +558,17 @@ return {
         dependencies = { 'nvim-treesitter/nvim-treesitter' },
         opts = {},
     },
+
     {
         'magicduck/grug-far.nvim',
         commit = '58250566b4abb0595d55e2d2bcd8f18dfd17e819',
         event = 'VeryLazy',
         config = function()
             require('grug-far').setup()
-            keymap('n', 'os', ':GrugFar<CR>', { desc = 'Open GrugFar' })
+            keymap('n', '<Leader>os', ':GrugFar<CR>', { desc = 'Open GrugFar' })
         end,
     },
+
     {
         'nvim-treesitter/nvim-treesitter',
         event = 'VeryLazy',
