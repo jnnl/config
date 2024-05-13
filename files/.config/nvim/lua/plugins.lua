@@ -166,17 +166,9 @@ return {
             keymap('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
             keymap('n', '<Leader>*', function() fzf_lua.files({ cwd = '~' }) end, { desc = 'Find files in $HOME' })
 
-            keymap('n', '<Leader>fg,', function()
-                fzf_lua.files({ cwd = vim.fs.dirname(vim.fn.finddir('.git', '.;')) })
-            end, { desc = 'Find files under git root' })
-            keymap('n', '<Leader>fg;', function()
-                fzf_lua.files({ cwd = vim.fs.dirname(vim.fn.finddir('.git', '.;')) })
-            end, { desc = 'Find recently opened files under git root' })
-            keymap('n', '<Leader>fg-', function()
-                fzf_lua.grep_project({ cwd = vim.fs.dirname(vim.fn.finddir('.git', '.;')) })
-            end, { desc = 'Find text under git root' })
             keymap('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
             keymap('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
+            keymap('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
             keymap('n', '<Leader>fgx', function()
                 fzf_lua.fzf_exec('git diff --name-only --diff-filter=U', {
                     prompt = 'Conflicts> ',
@@ -561,7 +553,7 @@ return {
 
     {
         'magicduck/grug-far.nvim',
-        commit = '58250566b4abb0595d55e2d2bcd8f18dfd17e819',
+        commit = '92e26d4485a80a8da478563ab3293cc56dce1cd8',
         event = 'VeryLazy',
         config = function()
             require('grug-far').setup()
