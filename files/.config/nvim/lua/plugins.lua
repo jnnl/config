@@ -13,7 +13,7 @@ return {
 
     {
         'ggandor/leap.nvim',
-        commit = '626be4c4ec040aeaf6466c9aae17ee0ab09f1a5b',
+        commit = 'be68eec21e37415d15cffaabc959b8d3f9466665',
         event = 'VeryLazy',
         config = function()
             local leap = require('leap')
@@ -36,7 +36,7 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        commit = '6865ff44f975c21d84a0206edae82e5cbb0fd80e',
+        commit = 'b64d2802d1349ae9c3d54062492856c2e071326a',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -222,41 +222,22 @@ return {
 
     -- Language
     {
-        'nvchad/nvim-colorizer.lua',
-        commit = 'dde3084106a70b9a79d48f426f6d6fec6fd203f7',
-        ft = { 'css', 'scss' },
-        cmd = { 'ColorizerToggle' },
-        opts = {
-            user_default_options = {
-                mode = 'virtualtext',
-                virtualtext = '█',
-                css = true,
-            },
-        },
-    },
-
-    {
-        'hashivim/vim-terraform',
-        commit = '21f756b933cd11ac5990a6046fdc7c4e2a6c0aee',
-    },
-
-    {
-        'leafgarland/typescript-vim',
-        commit = 'e83ccab88c7a045ce795583adb66956afd464a31',
-    },
-
-    {
         'pmizio/typescript-tools.nvim',
         commit = 'c43d9580c3ff5999a1eabca849f807ab33787ea7',
         ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
-        dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+        dependencies = {
+            { 'nvim-lua/plenary.nvim' },
+            { 'neovim/nvim-lspconfig' }
+        },
         opts = {},
     },
 
     {
         'stevearc/conform.nvim',
-        commit = '12b3995537f52ba2810a9857e8ca256881febbda',
-        event = 'VeryLazy',
+        commit = '59d0dd233a2cafacfa1235ab22054c4d80a72319',
+        event = 'BufWritePre',
+        cmd = { 'Format', 'FormatDisable', 'FormatEnable' },
+        keys = { { '<Leader>xf', desc = 'Format buffer' } },
         config = function()
             vim.g.disable_autoformat = true
             local conform = require('conform')
@@ -291,18 +272,23 @@ return {
                 vim.b.disable_autoformat = false
                 vim.g.disable_autoformat = false
             end, { bang = true })
-            keymap('n', '<leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
+            keymap('n', '<Leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
         end
+    },
+
+    {
+        'ray-x/lsp_signature.nvim',
+        commit = 'aed5d1162b0f07bb3af34bedcc5f70a2b6466ed8',
+        lazy = true,
     },
 
     {
         'neovim/nvim-lspconfig',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
-            { 'williamboman/mason.nvim', commit = '3b5068f0fc565f337d67a2d315d935f574848ee7' },
-            { 'williamboman/mason-lspconfig.nvim', commit = '21d33d69a81f6351e5a5f49078b2e4f0075c8e73' },
-            { 'ray-x/lsp_signature.nvim', commit = 'e92b4e7073345b2a30a56b20db3d541a9aa2771e', opts = { hint_enable = false } },
-            'hrsh7th/cmp-nvim-lsp',
+            { 'williamboman/mason.nvim', commit = '1b3d60405d1d720b2c4927f19672e9479703b00f' },
+            { 'williamboman/mason-lspconfig.nvim', commit = '9ae570e206360e47d30b4c35a4550c165f4ea7b7' },
+            { 'hrsh7th/cmp-nvim-lsp' },
         },
         config = function()
             local lsp = require('lspconfig')
@@ -364,12 +350,13 @@ return {
                     keymap('n', 'gt', vim.lsp.buf.type_definition, { buffer = ev.buf, desc = 'Go to type definition' })
                     keymap('n', 'gT', fzf_lua.lsp_typedefs, { buffer = ev.buf, desc = 'Find type definitions' })
                     keymap('n', '<Space>', vim.lsp.buf.hover, { buffer = ev.buf })
-                    keymap({ 'n', 'x' }, '<leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
-                    keymap('n', '<leader>r', vim.lsp.buf.rename, { buffer = ev.buf, desc = 'Rename symbol under cursor' })
-                    keymap('n', '<leader>fld', fzf_lua.lsp_document_diagnostics, { buffer = ev.buf, desc = 'Find document diagnostics' })
-                    keymap('n', '<leader>flD', fzf_lua.lsp_workspace_diagnostics, { buffer = ev.buf, desc = 'Find workspace diagnostics' })
-                    keymap('n', '<leader>fls', fzf_lua.lsp_document_symbols, { buffer = ev.buf, desc = 'Find document symbols' })
-                    keymap('n', '<leader>flS', fzf_lua.lsp_workspace_symbols, { buffer = ev.buf, desc = 'Find workspace symbols' })
+                    keymap({ 'n', 'x' }, '<Leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
+                    keymap('n', '<Leader>r', vim.lsp.buf.rename, { buffer = ev.buf, desc = 'Rename symbol under cursor' })
+                    keymap('n', '<Leader>fld', fzf_lua.lsp_document_diagnostics, { buffer = ev.buf, desc = 'Find document diagnostics' })
+                    keymap('n', '<Leader>flD', fzf_lua.lsp_workspace_diagnostics, { buffer = ev.buf, desc = 'Find workspace diagnostics' })
+                    keymap('n', '<Leader>fls', fzf_lua.lsp_document_symbols, { buffer = ev.buf, desc = 'Find document symbols' })
+                    keymap('n', '<Leader>flS', fzf_lua.lsp_workspace_symbols, { buffer = ev.buf, desc = 'Find workspace symbols' })
+                    require('lsp_signature').on_attach({ hint_enable = false }, ev.buf)
                 end,
             })
         end,
@@ -384,10 +371,10 @@ return {
 
     {
         'hrsh7th/nvim-cmp',
-        commit = '8f3c541407e691af6163e2447f3af1bd6e17f9a3',
+        commit = '24122371810089d390847d8ba66325c1f1aa64c0',
         event = 'InsertEnter',
         dependencies = {
-            'hrsh7th/cmp-nvim-lsp',
+            { 'hrsh7th/cmp-nvim-lsp' }
         },
         config = function()
             vim.opt.completeopt = 'menu,menuone,noselect'
@@ -443,7 +430,7 @@ return {
     -- Git
     {
         'lewis6991/gitsigns.nvim',
-        commit = '9cafac31a091267838e1e90fd6e083d37611f516',
+        commit = '805610a9393fa231f2c2b49cb521bfa413fadb3d',
         event = 'VeryLazy',
         opts = {
             signs = {
@@ -458,14 +445,14 @@ return {
 
     {
         'tpope/vim-fugitive',
-        commit = 'dac8e5c2d85926df92672bf2afb4fc48656d96c7',
+        commit = 'ce882460cf3db12e99f8bf579cbf99e331f6dd4f',
         event = 'VeryLazy',
     },
 
     -- Miscellaneous
     {
         'echasnovski/mini.clue',
-        commit = '76850c33411ab544725d1a66c9ed528eb6202a64',
+        commit = 'bde26d6f142eee03ea63015e73b6ac984d49a382',
         event = 'VeryLazy',
         config = function()
             local miniclue = require('mini.clue')
@@ -544,20 +531,13 @@ return {
     },
 
     {
-        'andrewferrier/debugprint.nvim',
-        commit = 'c7d04c3bf0a83e37434a4319040c2384a7f97acc',
-        event = 'VeryLazy',
-        dependencies = { 'nvim-treesitter/nvim-treesitter' },
-        opts = {},
-    },
-
-    {
         'magicduck/grug-far.nvim',
         commit = '92e26d4485a80a8da478563ab3293cc56dce1cd8',
-        event = 'VeryLazy',
+        cmd = { 'GrugFar' },
+        keys = { { '<Leader>os', desc = 'Open Grug FAR' } },
         config = function()
             require('grug-far').setup()
-            keymap('n', '<Leader>os', ':GrugFar<CR>', { desc = 'Open GrugFar' })
+            keymap('n', '<Leader>os', ':GrugFar<CR>', { desc = 'Open Grug FAR' })
         end,
     },
 
@@ -565,10 +545,10 @@ return {
         'nvim-treesitter/nvim-treesitter',
         event = 'VeryLazy',
         branch = 'master',
-        commit = '4e21361e15b1d4147830c5fe571556eb1b14e6f9',
+        commit = 'd5a1c2b0c8ec5bb377a41c1c414b315d6b3e9432',
         build = ':TSUpdate',
         dependencies = {
-            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '23b820146956b3b681c19e10d3a8bc0cbd9a1d4c'},
+            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = 'dfa4178c0cadb44f687603d72ad0908474c28dd9' },
         },
         config = function()
             ---@diagnostic disable-next-line: missing-fields
