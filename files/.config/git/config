@@ -42,6 +42,7 @@
     pr = pull --rebase
     prp = "!git pull --rebase && git push"
     rh = reset --hard
+    rp = "!git diff -Rp --diff-filter=M --no-ext-diff --color=never | awk '/^(diff |(old|new) mode)/' | git apply"
     rso = remote show origin
     s = status -bsu
     spps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git push && git stash pop; else git pull && git push; fi'"
