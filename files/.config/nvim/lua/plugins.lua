@@ -310,7 +310,7 @@ return {
                             runtime = { version = 'LuaJIT', },
                             diagnostics = { globals = { 'vim' }, },
                             workspace = {
-                                library = vim.api.nvim_get_runtime_file('', true),
+                                library = { vim.env.VIMRUNTIME },
                                 checkThirdParty = false,
                             },
                             telemetry = { enable = false },
@@ -551,7 +551,6 @@ return {
             { 'nvim-treesitter/nvim-treesitter-textobjects', commit = 'dfa4178c0cadb44f687603d72ad0908474c28dd9' },
         },
         config = function()
-            ---@diagnostic disable-next-line: missing-fields
             require('nvim-treesitter.configs').setup({
                 highlight = {
                     enable = true,
