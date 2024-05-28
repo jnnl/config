@@ -239,7 +239,12 @@ autocmd('FileType', {
 
 autocmd('FileType', {
     group = augroup('treesitter', { clear = true }),
-    callback = function()
+    callback = function(args)
+        local filename = vim.api.nvim_buf_get_name(args.buf)
+        if #filename > 0 and vim.fn.getfsize(filename) > 1024 * 100 then
+            vim.notify('treesitter: file is too large, disabling treesitter highlighting', vim.log.levels.WARN)
+            return
+        end
         pcall(vim.treesitter.start)
     end,
 })

@@ -543,7 +543,6 @@ return {
 
     {
         'nvim-treesitter/nvim-treesitter',
-        event = 'VeryLazy',
         branch = 'master',
         commit = 'd5a1c2b0c8ec5bb377a41c1c414b315d6b3e9432',
         build = ':TSUpdate',
@@ -552,16 +551,8 @@ return {
         },
         config = function()
             require('nvim-treesitter.configs').setup({
-                highlight = {
-                    enable = true,
-                    disable = function(_, bufnr)
-                        local filename = vim.api.nvim_buf_get_name(bufnr)
-                        return #filename > 0 and vim.fn.getfsize(filename) > 1024 * 100
-                    end,
-                },
-                matchup = {
-                    enable = true,
-                },
+                highlight = { enable = true },
+                matchup = { enable = true },
                 incremental_selection = {
                     enable = true,
                     keymaps = {
