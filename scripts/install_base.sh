@@ -129,8 +129,22 @@ install_deb_pkgs() {
         if [ "$arch" = "x86_64" ]; then
             arch="amd64"
         fi
-        dl direnv "https://github.com/direnv/direnv/releases/latest/download/direnv.linux-$arch"
+        dl direnv "https://github.com/direnv/direnv/releases/latest/download/direnv.linux-${arch}"
         chmod ug+x direnv
+    )
+
+    (
+        set -eu
+        mkdir -vp "$local_bin_path"
+        cd "$local_bin_path"
+        local arch
+        arch="$(uname -m)"
+        if [ "$arch" = "x86_64" ]; then
+            arch="amd64"
+        fi
+        lazygit_version=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+        dl - "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${lazygit_version}_Linux_${arch}.tar.gz" | tar -xz
+        chmod ug+x lazygit
     )
 
     local apt_pkgs=("chafa" "fd-find" "nodejs" "python3-pip" "ranger" "renameutils" "ripgrep" "shellcheck")
