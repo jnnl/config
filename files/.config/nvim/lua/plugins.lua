@@ -430,17 +430,57 @@ return {
     -- Git
     {
         'lewis6991/gitsigns.nvim',
-        commit = '805610a9393fa231f2c2b49cb521bfa413fadb3d',
+        commit = 'cdfcd9d39d23c46ae9a040de2c6a8b8bf868746e',
         event = 'VeryLazy',
-        opts = {
-            signs = {
-                add = { text = '+' },
-                change = { text = '~' },
-                delete = { text = '-' },
-                topdelete = { text = '‾' },
-                changedelete = { text = '~' },
-            },
-        },
+        config = function()
+            require('gitsigns').setup({
+                signs = {
+                    add = { text = '+' },
+                    change = { text = '~' },
+                    delete = { text = '-' },
+                    topdelete = { text = '‾' },
+                    changedelete = { text = '~' },
+                },
+                on_attach = function(bufnr)
+                    local gitsigns = require('gitsigns')
+                    local map = function(mode, lhs, rhs, opts)
+                        opts = opts or {}
+                        opts.buffer = bufnr
+                        keymap(mode, lhs, rhs, opts)
+                    end
+                    map('n', 'öh', function()
+                        if vim.wo.diff then
+                            vim.cmd.normal({ 'öh', bang = true })
+                        else
+                            gitsigns.nav_hunk('prev')
+                        end
+                    end, { desc = 'Go to previous hunk in buffer' })
+                    map('n', 'äh', function()
+                        if vim.wo.diff then
+                            vim.cmd.normal({ 'äh', bang = true })
+                        else
+                            gitsigns.nav_hunk('next')
+                        end
+                    end, { desc = 'Go to next hunk in buffer' })
+                    map('n', '<Leader>gd', gitsigns.diffthis, { desc = 'Diff file against index' })
+                    map('n', '<Leader>gD', function()
+                        gitsigns.diffthis('~')
+                    end, { desc = 'Diff file against last commit' })
+                    map('n', '<Leader>gp', gitsigns.preview_hunk, { desc = 'Preview hunk under cursor' })
+                    map('n', '<Leader>gr', gitsigns.reset_hunk, { desc = 'Unstage hunk under cursor' })
+                    map('v', '<Leader>gr', function()
+                        gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+                    end, { desc = 'Unstage hunk(s) in visual range' })
+                    map('n', '<Leader>gR', gitsigns.reset_buffer, { desc = 'Unstage all hunks in buffer' })
+                    map('n', '<Leader>gs', gitsigns.stage_hunk, { desc = 'Stage hunk under cursor' })
+                    map('v', '<Leader>gs', function()
+                        gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+                    end, { desc = 'Stage hunk(s) in visual range' })
+                    map('n', '<Leader>gS', gitsigns.stage_buffer, { desc = 'Stage all hunks in buffer' })
+                    map('n', '<Leader>gu', gitsigns.undo_stage_hunk, { desc = 'Undo last stage' })
+                end,
+            })
+        end,
     },
 
     {
