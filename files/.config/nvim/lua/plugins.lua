@@ -2,7 +2,7 @@ return {
     -- Navigation
     {
         'andymass/vim-matchup',
-        commit = '2d660e4aa7c566014c667af2cda0458043527902',
+        commit = 'ff3bea611696f5cfdfe61a939149daadff41f2af',
         event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
@@ -13,7 +13,7 @@ return {
 
     {
         'ggandor/leap.nvim',
-        commit = 'be68eec21e37415d15cffaabc959b8d3f9466665',
+        commit = '8f4d3ab9fe5c906c5745150191831c5ee0a427a0',
         event = 'VeryLazy',
         config = function()
             local leap = require('leap')
@@ -36,7 +36,7 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        commit = 'b64d2802d1349ae9c3d54062492856c2e071326a',
+        commit = 'b92220ec838c195eb1c711daa69c905b1d7b8d8c',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -156,7 +156,7 @@ return {
             keymap('x', '<Leader>f*', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
 
             keymap('n', '<Leader>,', fzf_lua.files, { desc = 'Find files' })
-            keymap('n', '<Leader>.', fzf_lua.buffers, { desc = 'Find open buffers' })
+            keymap('n', '<Leader>.', fzf_lua.buffers, { desc = 'Find buffers' })
             keymap('n', '<Leader>-', fzf_lua.grep_project, { desc = 'Find text' })
             keymap('n', '<Leader>;', fzf_lua.oldfiles, { desc = 'Find recently opened files' })
             keymap('n', '<Leader>:', function()
@@ -200,7 +200,7 @@ return {
 
     {
         'kylechui/nvim-surround',
-        commit = '6d0dc3dbb557bcc6a024969da461df4ba803fc48',
+        commit = '79aaa42da1f698ed31bcbe7f83081f69dca7ba17',
         event = 'VeryLazy',
         opts = {},
     },
@@ -234,7 +234,7 @@ return {
 
     {
         'stevearc/conform.nvim',
-        commit = '59d0dd233a2cafacfa1235ab22054c4d80a72319',
+        commit = 'f3b930db4964d60e255c8f9e37b7f2218dfc08cb',
         event = 'BufWritePre',
         cmd = { 'Format', 'FormatDisable', 'FormatEnable' },
         keys = { { '<Leader>xf', desc = 'Format buffer' } },
@@ -264,21 +264,21 @@ return {
             vim.o.formatexpr = 'v:lua.require("conform").formatexpr()'
             command('Format', function()
                 conform.format()
-            end, { bang = true })
+            end, { bang = true, desc = 'Format buffer' })
             command('FormatDisable', function(args)
                 if args.bang then vim.b.disable_autoformat = true else vim.g.disable_autoformat = true end
-            end, { bang = true })
+            end, { bang = true, desc = 'Disable autoformatting' })
             command('FormatEnable', function()
                 vim.b.disable_autoformat = false
                 vim.g.disable_autoformat = false
-            end, { bang = true })
+            end, { bang = true, desc = 'Enable autoformatting' })
             keymap('n', '<Leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
         end
     },
 
     {
         'ray-x/lsp_signature.nvim',
-        commit = 'aed5d1162b0f07bb3af34bedcc5f70a2b6466ed8',
+        commit = '529e8861d0410389f0163a5e5c2199d4a4ef5bf6',
         lazy = true,
     },
 
@@ -286,8 +286,8 @@ return {
         'neovim/nvim-lspconfig',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
-            { 'williamboman/mason.nvim', commit = '1b3d60405d1d720b2c4927f19672e9479703b00f' },
-            { 'williamboman/mason-lspconfig.nvim', commit = '9ae570e206360e47d30b4c35a4550c165f4ea7b7' },
+            { 'williamboman/mason.nvim', commit = '49ff59aded1047a773670651cfa40e76e63c6377' },
+            { 'williamboman/mason-lspconfig.nvim', commit = 'a4caa0d083aab56f6cd5acf2d42331b74614a585' },
             { 'hrsh7th/cmp-nvim-lsp' },
         },
         config = function()
@@ -365,13 +365,13 @@ return {
     -- Completion
     {
         'hrsh7th/cmp-nvim-lsp',
-        commit = '5af77f54de1b16c34b23cba810150689a3a90312',
+        commit = '39e2eda76828d88b773cc27a3f61d2ad782c922d',
         lazy = true,
     },
 
     {
         'hrsh7th/nvim-cmp',
-        commit = '24122371810089d390847d8ba66325c1f1aa64c0',
+        commit = '5260e5e8ecadaf13e6b82cf867a909f54e15fd07',
         event = 'InsertEnter',
         dependencies = {
             { 'hrsh7th/cmp-nvim-lsp' }
@@ -485,14 +485,14 @@ return {
 
     {
         'tpope/vim-fugitive',
-        commit = 'ce882460cf3db12e99f8bf579cbf99e331f6dd4f',
+        commit = '4f59455d2388e113bd510e85b310d15b9228ca0d',
         event = 'VeryLazy',
     },
 
     -- Miscellaneous
     {
         'echasnovski/mini.clue',
-        commit = 'bde26d6f142eee03ea63015e73b6ac984d49a382',
+        commit = '629f7ddb071faf8eba77c5c56a295a0a206df94c',
         event = 'VeryLazy',
         config = function()
             local miniclue = require('mini.clue')
@@ -572,7 +572,7 @@ return {
 
     {
         'magicduck/grug-far.nvim',
-        commit = '92e26d4485a80a8da478563ab3293cc56dce1cd8',
+        commit = 'a1c3383d7f5d6f8c0a58ccea0711585c1d4ef49a',
         cmd = { 'GrugFar' },
         keys = { { '<Leader>os', desc = 'Open Grug FAR' } },
         config = function()
@@ -584,10 +584,10 @@ return {
     {
         'nvim-treesitter/nvim-treesitter',
         branch = 'master',
-        commit = 'd5a1c2b0c8ec5bb377a41c1c414b315d6b3e9432',
+        commit = '73fb37ed77b18ac357ca8e6e35835a8db6602332',
         build = ':TSUpdate',
         dependencies = {
-            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = 'dfa4178c0cadb44f687603d72ad0908474c28dd9' },
+            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '5f9bf4b1ead7707e4e74e5319ee56bdc81fb73db' },
         },
         config = function()
             require('nvim-treesitter.configs').setup({
@@ -633,6 +633,14 @@ return {
                     },
                 },
             })
+            command('TSInstallPredefined', function(args)
+                local parsers = {
+                    'angular', 'bash', 'c', 'css', 'diff', 'dockerfile', 'go', 'html', 'javascript', 'json',
+                    'lua', 'make', 'markdown', 'markdown_inline', 'python', 'rust', 'scss', 'terraform',
+                    'tsx', 'typescript', 'vim', 'vimdoc', 'yaml',
+                }
+                vim.cmd({ cmd = 'TSInstall', args = parsers, bang = args.bang })
+            end, { bang = true, desc = 'Install predefined treesitter parsers' })
         end,
     },
 }
