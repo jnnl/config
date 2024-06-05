@@ -11,31 +11,44 @@ _G.dx = vim.diagnostic
 
 -- Plugins
 
+local load_plugins = true
 local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.uv.fs_stat(lazy_path) then
-    vim.notify('lazy.nvim not found, installing...', vim.log.levels.INFO)
-    vim.fn.system({
-        'git', 'clone', 'https://github.com/folke/lazy.nvim.git',
-        '--filter=blob:none', '--branch=stable',
-        lazy_path
-    })
-end
-vim.opt.rtp:prepend(lazy_path)
 
-local lazy_ok, lazy = pcall(require, 'lazy')
-if lazy_ok then
-    lazy.setup('plugins', {
-        defaults = { lazy = false },
-        change_detection = { enabled = false },
-        lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
-        performance = {
-            rtp = {
-                disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor', },
+if not vim.uv.fs_stat(lazy_path) then
+    vim.ui.select({ 'yes', 'no' }, { prompt = 'lazy.nvim not found, install now?' },
+        function(choice)
+            if choice == 'yes' then
+                vim.notify('\ninstalling lazy.nvim...')
+                vim.fn.system({
+                    'git', 'clone', 'https://github.com/folke/lazy.nvim.git',
+                    '--filter=blob:none', '--branch=stable',
+                    lazy_path
+                })
+            else
+                vim.notify('\nlazy.nvim not installed, plugins are disabled...', vim.log.levels.WARN)
+                load_plugins = false
+            end
+        end
+    )
+end
+
+if load_plugins then
+    vim.opt.rtp:prepend(lazy_path)
+    local lazy_ok, lazy = pcall(require, 'lazy')
+    if lazy_ok then
+        lazy.setup('plugins', {
+            defaults = { lazy = false },
+            change_detection = { enabled = false },
+            lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
+            performance = {
+                rtp = {
+                    disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor', },
+                },
             },
-        },
-    })
-else
-    vim.notify('failed to load lazy.nvim, plugins are disabled...', vim.log.levels.WARN)
+        })
+    else
+        vim.notify('failed to load lazy.nvim, plugins are disabled...', vim.log.levels.WARN)
+    end
 end
 
 -- Miscellaneous
