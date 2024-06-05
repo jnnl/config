@@ -262,9 +262,17 @@ return {
                 end
             })
             vim.o.formatexpr = 'v:lua.require("conform").formatexpr()'
-            command('Format', function()
-                conform.format()
-            end, { bang = true, desc = 'Format buffer' })
+            vim.api.nvim_create_user_command('Format', function(args)
+                local range = nil
+                if args.count ~= -1 then
+                    local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+                    range = {
+                        start = { args.line1, 0 },
+                        ['end'] = { args.line2, end_line:len() },
+                    }
+                end
+                require('conform').format({ async = true, lsp_fallback = true, range = range })
+            end, { range = true, desc = 'Format buffer' })
             command('FormatDisable', function(args)
                 if args.bang then vim.b.disable_autoformat = true else vim.g.disable_autoformat = true end
             end, { bang = true, desc = 'Disable autoformatting' })
@@ -299,7 +307,7 @@ return {
                     filetypes = { 'html' },
                 },
                 ansiblels = {
-                    settings = { ansible = { validation = { lint = { enabled = false } } } },
+                    settings = { ansible = { validation = { lint = { enabled = true } } } },
                 },
                 bashls = {},
                 cssls = {},
@@ -454,14 +462,14 @@ return {
                         else
                             gitsigns.nav_hunk('prev')
                         end
-                    end, { desc = 'Go to previous hunk in buffer' })
+                    end, { desc = 'Go to previous hunk' })
                     map('n', 'äh', function()
                         if vim.wo.diff then
                             vim.cmd.normal({ 'äh', bang = true })
                         else
                             gitsigns.nav_hunk('next')
                         end
-                    end, { desc = 'Go to next hunk in buffer' })
+                    end, { desc = 'Go to next hunk' })
                     map('n', '<Leader>gd', gitsigns.diffthis, { desc = 'Diff file against index' })
                     map('n', '<Leader>gD', function()
                         gitsigns.diffthis('~')
@@ -571,17 +579,6 @@ return {
     },
 
     {
-        'magicduck/grug-far.nvim',
-        commit = 'a1c3383d7f5d6f8c0a58ccea0711585c1d4ef49a',
-        cmd = { 'GrugFar' },
-        keys = { { '<Leader>os', desc = 'Open Grug FAR' } },
-        config = function()
-            require('grug-far').setup()
-            keymap('n', '<Leader>os', ':GrugFar<CR>', { desc = 'Open Grug FAR' })
-        end,
-    },
-
-    {
         'nvim-treesitter/nvim-treesitter',
         branch = 'master',
         commit = '73fb37ed77b18ac357ca8e6e35835a8db6602332',
@@ -635,7 +632,7 @@ return {
             })
             command('TSInstallPredefined', function(args)
                 local parsers = {
-                    'angular', 'bash', 'c', 'css', 'diff', 'dockerfile', 'go', 'html', 'javascript', 'json',
+                    'angular', 'bash', 'c', 'cpp', 'css', 'diff', 'dockerfile', 'go', 'html', 'javascript', 'json',
                     'lua', 'make', 'markdown', 'markdown_inline', 'python', 'rust', 'scss', 'terraform',
                     'tsx', 'typescript', 'vim', 'vimdoc', 'yaml',
                 }
