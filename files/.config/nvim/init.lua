@@ -71,7 +71,8 @@ _G.statusline = function()
     local separator = '%#StatuslineNC# | %*'
     local line_count = '%3l/%L'
     local file_path = separator .. '%<%f'
-    local buf_attrs = (function()
+    local buf_attrs = ''
+    do
         local attrs = {}
         if #vim.api.nvim_buf_get_name(0) > 0 then
             table.insert(attrs, '%y%r%m ')
@@ -93,8 +94,8 @@ _G.statusline = function()
         if #attrs > 0 then
             table.insert(attrs, 1, separator)
         end
-        return table.concat(attrs)
-    end)()
+        buf_attrs = table.concat(attrs)
+    end
 
     return table.concat({
         line_count,
