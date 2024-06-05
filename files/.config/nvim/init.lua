@@ -140,16 +140,16 @@ keymap('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 keymap('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
 keymap('n', 'ät', '<cmd>tabnext<CR>', { desc = 'Go to next tab' })
 keymap('n', 'ög', function()
-    dx.goto_prev({ severity = { min = dx.severity.WARN } })
+    dx.jump({ count = -1, severity = { min = dx.severity.WARN } })
 end, { desc = 'Go to previous WARN+ diagnostic' })
 keymap('n', 'äg', function()
-    dx.goto_next({ severity = { min = dx.severity.WARN } })
+    dx.jump({ count = 1, severity = { min = dx.severity.WARN } })
 end, { desc = 'Go to next WARN+ diagnostic' })
 keymap('n', 'öG', function()
-    dx.goto_prev({ severity = { min = dx.severity.HINT } })
+    dx.jump({ count = -1, severity = { min = dx.severity.HINT } })
 end, { desc = 'Go to previous HINT+ diagnostic' })
 keymap('n', 'äG', function()
-    dx.goto_next({ severity = { min = dx.severity.HINT } })
+    dx.jump({ count = 1, severity = { min = dx.severity.HINT } })
 end, { desc = 'Go to next HINT+ diagnostic' })
 keymap('n', '<C-Space>', dx.open_float)
 
@@ -254,8 +254,8 @@ autocmd('FileType', {
     group = augroup('treesitter', { clear = true }),
     callback = function(args)
         local filename = vim.api.nvim_buf_get_name(args.buf)
-        if #filename > 0 and vim.fn.getfsize(filename) > 1024 * 100 then
-            vim.notify('treesitter: file is too large, disabling treesitter highlighting', vim.log.levels.WARN)
+        if #filename > 0 and vim.fn.getfsize(filename) > 1024 * 200 then
+            vim.notify('treesitter: file is too large, treesitter highlighting is disabled', vim.log.levels.WARN)
             return
         end
         pcall(vim.treesitter.start)
@@ -267,6 +267,14 @@ autocmd('FileType', {
     pattern = { 'vim', 'help' },
     callback = function()
         vim.opt_local.keywordprg = ':help'
+    end
+})
+
+autocmd('FileType', {
+    group = augroup('terraform', { clear = true }),
+    pattern = { 'terraform' },
+    callback = function()
+        vim.opt_local.commentstring = '# %s'
     end
 })
 
