@@ -36,7 +36,7 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        commit = 'b92220ec838c195eb1c711daa69c905b1d7b8d8c',
+        commit = '2e88254c2045e14c712ee09f1e461c6056a2b18c',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -125,11 +125,9 @@ return {
                     },
                 },
                 files = {
-                    formatter = 'path.filename_first',
                     fzf_opts = { ['--scheme'] = 'path' },
                 },
                 oldfiles = {
-                    formatter = 'path.filename_first',
                     fzf_opts = { ['--scheme'] = 'path' },
                     include_current_session = true,
                     winopts = { preview = { hidden = 'hidden' } },
@@ -222,17 +220,6 @@ return {
 
     -- Language
     {
-        'pmizio/typescript-tools.nvim',
-        commit = 'c43d9580c3ff5999a1eabca849f807ab33787ea7',
-        ft = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
-        dependencies = {
-            { 'nvim-lua/plenary.nvim' },
-            { 'neovim/nvim-lspconfig' }
-        },
-        opts = {},
-    },
-
-    {
         'stevearc/conform.nvim',
         commit = 'f3b930db4964d60e255c8f9e37b7f2218dfc08cb',
         event = 'BufWritePre',
@@ -311,6 +298,9 @@ return {
                 },
                 bashls = {},
                 cssls = {},
+                denols = {
+                    root_dir = lsp.util.root_pattern('deno.json', 'deno.jsonc')
+                },
                 gopls = {},
                 lua_ls = {
                     settings = {
@@ -327,6 +317,7 @@ return {
                 },
                 pylsp = {},
                 terraformls = {},
+                tsserver = {},
             }
             require('mason').setup()
             require('mason-lspconfig').setup({
@@ -342,6 +333,11 @@ return {
                                 vim.lsp.stop_client(client.id)
                             end
                         end
+                        lsp.util.on_setup = lsp.util.add_hook_before(lsp.util.on_setup, function(cfg)
+                            if cfg.name == 'tsserver' and lsp.util.root_pattern('deno.json') then
+                                cfg.single_file_support = false
+                            end
+                        end)
                         lsp[server_name].setup(config)
                     end
                 }
@@ -604,10 +600,10 @@ return {
                         keymaps = {
                             ['aa'] = '@parameter.outer',
                             ['ia'] = '@parameter.inner',
-                            ['ac'] = '@class.outer',
-                            ['ic'] = '@class.inner',
-                            ['aC'] = '@comment.outer',
-                            ['iC'] = '@comment.inner',
+                            ['ac'] = '@comment.outer',
+                            ['ic'] = '@comment.inner',
+                            ['aC'] = '@class.outer',
+                            ['iC'] = '@class.inner',
                             ['af'] = '@function.outer',
                             ['if'] = '@function.inner',
                         },
@@ -617,14 +613,14 @@ return {
                         set_jumps = true,
                         goto_previous_start = {
                             ['öa'] = '@parameter.inner',
-                            ['öc'] = '@class.outer',
-                            ['öC'] = '@comment.outer',
+                            ['öc'] = '@comment.outer',
+                            ['öC'] = '@class.outer',
                             ['öf'] = '@function.outer',
                         },
                         goto_next_start = {
                             ['äa'] = '@parameter.inner',
-                            ['äc'] = '@class.outer',
-                            ['äC'] = '@comment.outer',
+                            ['äc'] = '@comment.outer',
+                            ['äC'] = '@class.outer',
                             ['äf'] = '@function.outer',
                         },
                     },
