@@ -15,21 +15,19 @@ local load_plugins = true
 local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 
 if not vim.uv.fs_stat(lazy_path) then
-    vim.ui.select({ 'yes', 'no' }, { prompt = 'lazy.nvim not found, install now?' },
-        function(choice)
-            if choice == 'yes' then
-                vim.notify('\ninstalling lazy.nvim...')
-                vim.fn.system({
-                    'git', 'clone', 'https://github.com/folke/lazy.nvim.git',
-                    '--filter=blob:none', '--branch=stable',
-                    lazy_path
-                })
-            else
-                vim.notify('\nlazy.nvim not installed, plugins are disabled...', vim.log.levels.WARN)
-                load_plugins = false
-            end
+    vim.ui.select({ 'yes', 'no' }, { prompt = 'lazy.nvim not found, install now?' }, function(choice)
+        if choice == 'yes' then
+            vim.notify('\ninstalling lazy.nvim...')
+            vim.fn.system({
+                'git', 'clone', 'https://github.com/folke/lazy.nvim.git',
+                '--filter=blob:none', '--branch=stable',
+                lazy_path
+            })
+        else
+            vim.notify('\nlazy.nvim not installed, plugins are disabled...', vim.log.levels.WARN)
+            load_plugins = false
         end
-    )
+    end)
 end
 
 if load_plugins then
@@ -59,7 +57,6 @@ vim.opt.mouse = ''
 vim.opt.number = true
 vim.opt.shada = [[r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:,!,'200,<50,s10,h]]
 vim.opt.shortmess:append('cI')
-vim.opt.termguicolors = true
 vim.opt.timeoutlen = 500
 vim.opt.inccommand = 'split'
 
@@ -170,8 +167,11 @@ keymap('n', '<C-w>:', function()
     vim.cmd('resize' .. vim.fn.line('$'))
 end, { desc = 'Fit window height to content' })
 
+keymap('n', '§', '@')
+keymap('n', '§§', '@@')
 keymap('n', 'Q', '@q')
 keymap('x', 'Q', ':normal @q<CR>')
+keymap('x', '§', ':normal @')
 keymap('x', '@', ':normal @')
 keymap('x', '.', ':normal .<CR>')
 
@@ -223,16 +223,16 @@ command('CloseFloatingWindows', function()
     end
 end, { desc = 'Close floating windows' })
 
-command('Redir', function(context)
-    local lines = vim.split(vim.api.nvim_exec2(context.args, { output = true }).output, '\n', { plain = true })
-    vim.cmd(context.bang and 'new' or 'vnew')
+command('Redir', function(opts)
+    local lines = vim.split(vim.api.nvim_exec2(opts.args, { output = true }).output, '\n', { plain = true })
+    vim.cmd(opts.bang and 'new' or 'vnew')
     vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
     vim.opt_local.modified = false
 end, { bang = true, nargs = '+', complete = 'command', desc = 'Redirect command output to a vertical split (!: horizontal split)' })
 
-command('DiffChanges', function(context)
+command('DiffChanges', function(opts)
     local cmd = 'w !git diff --no-index % -'
-    if context.bang then
+    if opts.bang then
         vim.cmd('Redir ' .. cmd)
         vim.bo.filetype = 'diff'
     else
@@ -248,6 +248,14 @@ autocmd('FileType', {
     callback = function()
         vim.opt_local.expandtab = false
         vim.opt_local.shiftwidth = 8
+    end
+})
+
+autocmd('FileType', {
+    group = augroup('terraform_ft_options', { clear = true }),
+    pattern = { 'terraform' },
+    callback = function()
+        vim.opt_local.commentstring = '# %s'
     end
 })
 
@@ -268,14 +276,6 @@ autocmd('FileType', {
     pattern = { 'vim', 'help' },
     callback = function()
         vim.opt_local.keywordprg = ':help'
-    end
-})
-
-autocmd('FileType', {
-    group = augroup('terraform', { clear = true }),
-    pattern = { 'terraform' },
-    callback = function()
-        vim.opt_local.commentstring = '# %s'
     end
 })
 
