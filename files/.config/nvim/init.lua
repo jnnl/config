@@ -38,6 +38,7 @@ if load_plugins then
             defaults = { lazy = false },
             change_detection = { enabled = false },
             lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
+            checker = { check_pinned = true },
             performance = {
                 rtp = {
                     disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor', },

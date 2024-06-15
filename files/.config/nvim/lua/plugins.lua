@@ -198,7 +198,7 @@ return {
 
     {
         'kylechui/nvim-surround',
-        commit = '79aaa42da1f698ed31bcbe7f83081f69dca7ba17',
+        tag = 'v2.2.0',
         event = 'VeryLazy',
         opts = {},
     },
@@ -221,7 +221,7 @@ return {
     -- Language
     {
         'stevearc/conform.nvim',
-        commit = 'f3b930db4964d60e255c8f9e37b7f2218dfc08cb',
+        tag = 'v5.9.0',
         event = 'BufWritePre',
         cmd = { 'Format', 'FormatDisable', 'FormatEnable' },
         keys = { { '<Leader>xf', desc = 'Format buffer' } },
@@ -279,6 +279,7 @@ return {
 
     {
         'neovim/nvim-lspconfig',
+        tag = 'v0.1.8',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
             { 'williamboman/mason.nvim', commit = '49ff59aded1047a773670651cfa40e76e63c6377' },
@@ -434,7 +435,7 @@ return {
     -- Git
     {
         'lewis6991/gitsigns.nvim',
-        commit = 'cdfcd9d39d23c46ae9a040de2c6a8b8bf868746e',
+        tag = 'v0.9.0',
         event = 'VeryLazy',
         config = function()
             require('gitsigns').setup({
@@ -496,7 +497,7 @@ return {
     -- Miscellaneous
     {
         'echasnovski/mini.clue',
-        commit = '629f7ddb071faf8eba77c5c56a295a0a206df94c',
+        tag = 'v0.13.0',
         event = 'VeryLazy',
         config = function()
             local miniclue = require('mini.clue')
@@ -570,7 +571,7 @@ return {
 
     {
         'whiteinge/diffconflicts',
-        commit = '4972d1401e008c5e9afeb703eddd1b2c2a1d1199',
+        tag = '2.3.0',
         cmd = { 'DiffConflicts', 'DiffConflictsShowHistory', 'DiffConflictsWithHistory' },
     },
 
