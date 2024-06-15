@@ -367,6 +367,69 @@ return {
         end,
     },
 
+    {
+        'nvim-treesitter/nvim-treesitter',
+        branch = 'master',
+        commit = '73fb37ed77b18ac357ca8e6e35835a8db6602332',
+        build = ':TSUpdate',
+        dependencies = {
+            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '5f9bf4b1ead7707e4e74e5319ee56bdc81fb73db' },
+        },
+        config = function()
+            require('nvim-treesitter.configs').setup({
+                highlight = { enable = true },
+                matchup = { enable = true },
+                incremental_selection = {
+                    enable = true,
+                    keymaps = {
+                        node_incremental = 'v',
+                        node_decremental = 'V',
+                    },
+                },
+                textobjects = {
+                    select = {
+                        enable = true,
+                        lookahead = true,
+                        keymaps = {
+                            ['aa'] = '@parameter.outer',
+                            ['ia'] = '@parameter.inner',
+                            ['ac'] = '@comment.outer',
+                            ['ic'] = '@comment.inner',
+                            ['aC'] = '@class.outer',
+                            ['iC'] = '@class.inner',
+                            ['af'] = '@function.outer',
+                            ['if'] = '@function.inner',
+                        },
+                    },
+                    move = {
+                        enable = true,
+                        set_jumps = true,
+                        goto_previous_start = {
+                            ['öa'] = '@parameter.inner',
+                            ['öc'] = '@comment.outer',
+                            ['öC'] = '@class.outer',
+                            ['öf'] = '@function.outer',
+                        },
+                        goto_next_start = {
+                            ['äa'] = '@parameter.inner',
+                            ['äc'] = '@comment.outer',
+                            ['äC'] = '@class.outer',
+                            ['äf'] = '@function.outer',
+                        },
+                    },
+                },
+            })
+            command('TSInstallPredefined', function(args)
+                local parsers = {
+                    'angular', 'bash', 'c', 'cpp', 'css', 'diff', 'dockerfile', 'go', 'html', 'javascript', 'json',
+                    'lua', 'make', 'markdown', 'markdown_inline', 'python', 'rust', 'scss', 'terraform',
+                    'tsx', 'typescript', 'vim', 'vimdoc', 'yaml',
+                }
+                vim.cmd({ cmd = 'TSInstall', args = parsers, bang = args.bang })
+            end, { bang = true, desc = 'Install predefined treesitter parsers' })
+        end,
+    },
+
     -- Completion
     {
         'hrsh7th/cmp-nvim-lsp',
@@ -576,65 +639,8 @@ return {
     },
 
     {
-        'nvim-treesitter/nvim-treesitter',
-        branch = 'master',
-        commit = '73fb37ed77b18ac357ca8e6e35835a8db6602332',
-        build = ':TSUpdate',
-        dependencies = {
-            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '5f9bf4b1ead7707e4e74e5319ee56bdc81fb73db' },
-        },
-        config = function()
-            require('nvim-treesitter.configs').setup({
-                highlight = { enable = true },
-                matchup = { enable = true },
-                incremental_selection = {
-                    enable = true,
-                    keymaps = {
-                        node_incremental = 'v',
-                        node_decremental = 'V',
-                    },
-                },
-                textobjects = {
-                    select = {
-                        enable = true,
-                        lookahead = true,
-                        keymaps = {
-                            ['aa'] = '@parameter.outer',
-                            ['ia'] = '@parameter.inner',
-                            ['ac'] = '@comment.outer',
-                            ['ic'] = '@comment.inner',
-                            ['aC'] = '@class.outer',
-                            ['iC'] = '@class.inner',
-                            ['af'] = '@function.outer',
-                            ['if'] = '@function.inner',
-                        },
-                    },
-                    move = {
-                        enable = true,
-                        set_jumps = true,
-                        goto_previous_start = {
-                            ['öa'] = '@parameter.inner',
-                            ['öc'] = '@comment.outer',
-                            ['öC'] = '@class.outer',
-                            ['öf'] = '@function.outer',
-                        },
-                        goto_next_start = {
-                            ['äa'] = '@parameter.inner',
-                            ['äc'] = '@comment.outer',
-                            ['äC'] = '@class.outer',
-                            ['äf'] = '@function.outer',
-                        },
-                    },
-                },
-            })
-            command('TSInstallPredefined', function(args)
-                local parsers = {
-                    'angular', 'bash', 'c', 'cpp', 'css', 'diff', 'dockerfile', 'go', 'html', 'javascript', 'json',
-                    'lua', 'make', 'markdown', 'markdown_inline', 'python', 'rust', 'scss', 'terraform',
-                    'tsx', 'typescript', 'vim', 'vimdoc', 'yaml',
-                }
-                vim.cmd({ cmd = 'TSInstall', args = parsers, bang = args.bang })
-            end, { bang = true, desc = 'Install predefined treesitter parsers' })
-        end,
+        'junegunn/goyo.vim',
+        commit = 'fa0263d456dd43f5926484d1c4c7022dfcb21ba9',
+        cmd = 'Goyo',
     },
 }
