@@ -6,8 +6,8 @@ return {
         event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
-            keymap({ 'n', 'x' }, 'ö%', '<Plug>(matchup-[%)', { desc = 'Go to previous outer open word' })
-            keymap({ 'n', 'x' }, 'ä%', '<Plug>(matchup-]%)', { desc = 'Go to next outer close word' })
+            _keymap({ 'n', 'x' }, 'ö%', '<Plug>(matchup-[%)', { desc = 'Go to previous outer open word' })
+            _keymap({ 'n', 'x' }, 'ä%', '<Plug>(matchup-]%)', { desc = 'Go to next outer close word' })
         end,
     },
 
@@ -18,8 +18,8 @@ return {
         config = function()
             local leap = require('leap')
             leap.opts.safe_labels = {}
-            keymap({ 'n', 'x' }, 's', '<Plug>(leap-forward-to)')
-            keymap({ 'n', 'x' }, 'S', '<Plug>(leap-backward-to)')
+            _keymap({ 'n', 'x' }, 's', '<Plug>(leap-forward-to)')
+            _keymap({ 'n', 'x' }, 'S', '<Plug>(leap-backward-to)')
         end,
     },
 
@@ -147,27 +147,27 @@ return {
                 },
             })
 
-            keymap('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
-            keymap('n', '<Leader>fc', fzf_lua.commands, { desc = 'Find commands' })
-            keymap('n', '<Leader>fr', fzf_lua.registers, { desc = 'Find registers' })
-            keymap('n', '<Leader>f*', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
-            keymap('x', '<Leader>f*', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
+            _keymap('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
+            _keymap('n', '<Leader>fc', fzf_lua.commands, { desc = 'Find commands' })
+            _keymap('n', '<Leader>fr', fzf_lua.registers, { desc = 'Find registers' })
+            _keymap('n', '<Leader>f*', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
+            _keymap('x', '<Leader>f*', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
 
-            keymap('n', '<Leader>,', fzf_lua.files, { desc = 'Find files' })
-            keymap('n', '<Leader>.', fzf_lua.buffers, { desc = 'Find buffers' })
-            keymap('n', '<Leader>-', fzf_lua.grep_project, { desc = 'Find text' })
-            keymap('n', '<Leader>;', fzf_lua.oldfiles, { desc = 'Find recently opened files' })
-            keymap('n', '<Leader>:', function()
+            _keymap('n', '<Leader>,', fzf_lua.files, { desc = 'Find files' })
+            _keymap('n', '<Leader>.', fzf_lua.buffers, { desc = 'Find buffers' })
+            _keymap('n', '<Leader>-', fzf_lua.grep_project, { desc = 'Find text' })
+            _keymap('n', '<Leader>;', fzf_lua.oldfiles, { desc = 'Find recently opened files' })
+            _keymap('n', '<Leader>:', function()
                 fzf_lua.oldfiles({ prompt = 'CwdHistory> ', cwd_only = true })
             end, { desc = 'Find recently opened files under cwd' })
-            keymap('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
-            keymap('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
-            keymap('n', '<Leader>*', function() fzf_lua.files({ cwd = '~' }) end, { desc = 'Find files in $HOME' })
+            _keymap('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
+            _keymap('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
+            _keymap('n', '<Leader>*', function() fzf_lua.files({ cwd = '~' }) end, { desc = 'Find files in $HOME' })
 
-            keymap('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
-            keymap('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
-            keymap('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
-            keymap('n', '<Leader>fgx', function()
+            _keymap('n', '<Leader>fgb', fzf_lua.git_branches, { desc = 'Find git branches' })
+            _keymap('n', '<Leader>fgc', fzf_lua.git_commits, { desc = 'Find git commits' })
+            _keymap('n', '<Leader>fgf', fzf_lua.git_files, { desc = 'Find git files' })
+            _keymap('n', '<Leader>fgx', function()
                 fzf_lua.fzf_exec('git diff --name-only --diff-filter=U', {
                     prompt = 'Conflicts> ',
                     cwd = vim.fn.fnamemodify(vim.fn.finddir('.git', '.;'), ':h'),
@@ -260,14 +260,14 @@ return {
                 end
                 require('conform').format({ async = true, lsp_fallback = true, range = range })
             end, { range = true, desc = 'Format buffer' })
-            command('FormatDisable', function(args)
+            _command('FormatDisable', function(args)
                 if args.bang then vim.b.disable_autoformat = true else vim.g.disable_autoformat = true end
             end, { bang = true, desc = 'Disable autoformatting' })
-            command('FormatEnable', function()
+            _command('FormatEnable', function()
                 vim.b.disable_autoformat = false
                 vim.g.disable_autoformat = false
             end, { bang = true, desc = 'Enable autoformatting' })
-            keymap('n', '<Leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
+            _keymap('n', '<Leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
         end
     },
 
@@ -343,24 +343,24 @@ return {
                     end
                 }
             })
-            autocmd('LspAttach', {
-                group = augroup('lsp_attach_config', { clear = true }),
+            _autocmd('LspAttach', {
+                group = _augroup('lsp_attach_config', { clear = true }),
                 callback = function(ev)
                     local fzf_lua = require('fzf-lua')
                     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-                    keymap('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Go to definition' })
-                    keymap('n', 'gD', fzf_lua.lsp_definitions, { buffer = ev.buf, desc = 'Find definitions' })
-                    keymap('n', 'gi', fzf_lua.lsp_implementations, { desc = 'Find implementations' })
-                    keymap('n', 'gr', fzf_lua.lsp_references, { buffer = ev.buf, desc = 'Find references' })
-                    keymap('n', 'gt', vim.lsp.buf.type_definition, { buffer = ev.buf, desc = 'Go to type definition' })
-                    keymap('n', 'gT', fzf_lua.lsp_typedefs, { buffer = ev.buf, desc = 'Find type definitions' })
-                    keymap('n', '<Space>', vim.lsp.buf.hover, { buffer = ev.buf })
-                    keymap({ 'n', 'x' }, '<Leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
-                    keymap('n', '<Leader>r', vim.lsp.buf.rename, { buffer = ev.buf, desc = 'Rename symbol under cursor' })
-                    keymap('n', '<Leader>fld', fzf_lua.lsp_document_diagnostics, { buffer = ev.buf, desc = 'Find document diagnostics' })
-                    keymap('n', '<Leader>flD', fzf_lua.lsp_workspace_diagnostics, { buffer = ev.buf, desc = 'Find workspace diagnostics' })
-                    keymap('n', '<Leader>fls', fzf_lua.lsp_document_symbols, { buffer = ev.buf, desc = 'Find document symbols' })
-                    keymap('n', '<Leader>flS', fzf_lua.lsp_workspace_symbols, { buffer = ev.buf, desc = 'Find workspace symbols' })
+                    _keymap('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Go to definition' })
+                    _keymap('n', 'gD', fzf_lua.lsp_definitions, { buffer = ev.buf, desc = 'Find definitions' })
+                    _keymap('n', 'gi', fzf_lua.lsp_implementations, { desc = 'Find implementations' })
+                    _keymap('n', 'gr', fzf_lua.lsp_references, { buffer = ev.buf, desc = 'Find references' })
+                    _keymap('n', 'gt', vim.lsp.buf.type_definition, { buffer = ev.buf, desc = 'Go to type definition' })
+                    _keymap('n', 'gT', fzf_lua.lsp_typedefs, { buffer = ev.buf, desc = 'Find type definitions' })
+                    _keymap('n', '<Space>', vim.lsp.buf.hover, { buffer = ev.buf })
+                    _keymap({ 'n', 'x' }, '<Leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
+                    _keymap('n', '<Leader>r', vim.lsp.buf.rename, { buffer = ev.buf, desc = 'Rename symbol under cursor' })
+                    _keymap('n', '<Leader>fld', fzf_lua.lsp_document_diagnostics, { buffer = ev.buf, desc = 'Find document diagnostics' })
+                    _keymap('n', '<Leader>flD', fzf_lua.lsp_workspace_diagnostics, { buffer = ev.buf, desc = 'Find workspace diagnostics' })
+                    _keymap('n', '<Leader>fls', fzf_lua.lsp_document_symbols, { buffer = ev.buf, desc = 'Find document symbols' })
+                    _keymap('n', '<Leader>flS', fzf_lua.lsp_workspace_symbols, { buffer = ev.buf, desc = 'Find workspace symbols' })
                     require('lsp_signature').on_attach({ hint_enable = false }, ev.buf)
                 end,
             })
@@ -419,7 +419,7 @@ return {
                     },
                 },
             })
-            command('TSInstallPredefined', function(args)
+            _command('TSInstallPredefined', function(args)
                 local parsers = {
                     'angular', 'bash', 'c', 'cpp', 'css', 'diff', 'dockerfile', 'go', 'html', 'javascript', 'json',
                     'lua', 'make', 'markdown', 'markdown_inline', 'python', 'rust', 'scss', 'terraform',
@@ -441,6 +441,7 @@ return {
         'hrsh7th/nvim-cmp',
         commit = '5260e5e8ecadaf13e6b82cf867a909f54e15fd07',
         event = 'InsertEnter',
+        cmd = { 'CmpEnable', 'CmpDisable' },
         dependencies = {
             { 'hrsh7th/cmp-nvim-lsp' }
         },
@@ -490,8 +491,8 @@ return {
                 }),
             }
             cmp.setup(cmp_config)
-            command('CmpEnable', function() cmp.setup.buffer(cmp_config) end, {})
-            command('CmpDisable', function() cmp.setup.buffer({ enabled = false }) end, {})
+            _command('CmpEnable', function() cmp.setup.buffer(cmp_config) end, {})
+            _command('CmpDisable', function() cmp.setup.buffer({ enabled = false }) end, {})
         end,
     },
 
@@ -514,7 +515,7 @@ return {
                     local map = function(mode, lhs, rhs, opts)
                         opts = opts or {}
                         opts.buffer = bufnr
-                        keymap(mode, lhs, rhs, opts)
+                        _keymap(mode, lhs, rhs, opts)
                     end
                     map('n', 'öh', function()
                         if vim.wo.diff then
@@ -607,7 +608,7 @@ return {
         commit = '56c684a805fe948936cda0d1b19505b84ad7e065',
         event = 'VeryLazy',
         config = function()
-            keymap('n', '<Leader>ou', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
+            _keymap('n', '<Leader>ou', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
             vim.g.undotree_SetFocusWhenToggle = 1
             vim.g.undotree_ShortIndicators = 1
             vim.g.undotree_WindowLayout = 2
@@ -625,10 +626,10 @@ return {
         commit = '7e65325651ff5a0b06af8df3980d2ee54cf10e14',
         event = 'VeryLazy',
         config = function()
-            keymap('n', 'öl', '<Plug>(qf_loc_previous)', { desc = 'Go to previous location list item' })
-            keymap('n', 'äl', '<Plug>(qf_loc_next)', { desc = 'Go to next location list item' })
-            keymap('n', 'öq', '<Plug>(qf_qf_previous)', { desc = 'Go to previous quickfix item' })
-            keymap('n', 'äq', '<Plug>(qf_qf_next)', { desc = 'Go to next quickfix item' })
+            _keymap('n', 'öl', '<Plug>(qf_loc_previous)', { desc = 'Go to previous location list item' })
+            _keymap('n', 'äl', '<Plug>(qf_loc_next)', { desc = 'Go to next location list item' })
+            _keymap('n', 'öq', '<Plug>(qf_qf_previous)', { desc = 'Go to previous quickfix item' })
+            _keymap('n', 'äq', '<Plug>(qf_qf_next)', { desc = 'Go to next quickfix item' })
         end,
     },
 
