@@ -60,6 +60,7 @@ vim.opt.shada = [[r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:,!,'200,<50,s10,h
 vim.opt.shortmess:append('cI')
 vim.opt.timeoutlen = 500
 vim.opt.inccommand = 'split'
+vim.opt.signcolumn = 'yes'
 
 dx.config({ virtual_text = false })
 
