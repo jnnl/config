@@ -204,10 +204,20 @@ install_z() {
     msg_done "$FUNCNAME"
 }
 
+install_custom_scripts() {
+    printf "Installing custom scripts...\n"
+
+    mkdir -vp "$local_bin_path"
+    find "$script_dir/tools" -type f -name ',*' -exec cp -v '{}' "$local_bin_path/" \;
+
+    msg_done "$FUNCNAME"
+}
+
 install_tool_scripts() {
     printf "Installing tool scripts...\n"
 
     exec_step install_z
+    exec_step install_custom_scripts
 
     msg_done "$FUNCNAME"
 }
