@@ -112,7 +112,7 @@ main() {
 
     exec_step copy_config_files
 
-    printf "\nCompleted %s.\n" "$script_name"
+    printf "Completed %s.\n" "$script_name"
 }
 
 main

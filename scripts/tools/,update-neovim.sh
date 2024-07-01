@@ -29,7 +29,7 @@ if [ -d "$pkg_name" ]; then
     printf " done\n"
 fi
 
-printf "downloading $pkg_name.tar.gz (%s) ..." "$release_type"
+printf "downloading %s (%s) ..." "$pkg_name.tar.gz" "$release_type"
 curl -sfLO "https://github.com/neovim/neovim/releases/download/$release_type/$pkg_name.tar.gz"
 printf " done\n"
 
