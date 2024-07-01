@@ -39,6 +39,7 @@ if load_plugins then
             change_detection = { enabled = false },
             lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
             checker = { check_pinned = true },
+            install = { missing = false },
             performance = {
                 rtp = {
                     disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor', },
@@ -131,10 +132,9 @@ vim.opt.undofile = true
 
 _keymap('n', '<BS>', '<C-^>')
 _keymap('n', '\'', '`')
-_keymap('n', '_', ',')
 _keymap('n', '<Esc>', '<cmd>nohlsearch<CR>')
-_keymap('n', 'öö', '<C-o>', { desc = 'Go to previous jump list position' })
-_keymap('n', 'ää', '<C-i>', { desc = 'Go to next jump list position' })
+_keymap('n', 'Ö', '<C-o>', { desc = 'Go to previous jump list position' })
+_keymap('n', 'Ä', '<C-i>', { desc = 'Go to next jump list position' })
 _keymap('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
 _keymap('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 _keymap('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
@@ -309,7 +309,7 @@ _autocmd('FileType', {
         _command('VCode', ':sp %:p:s?_test.go?.go?', {})
         _command('ETest', ':e %:p:r_test.go', {})
         _command('STest', ':sp %:p:r_test.go', {})
-        _command('qridi.VTest', ':vs %:p:r_test."go"', {})
+        _command('VTest', ':vs %:p:r_test."go"', {})
     end
 })
 
