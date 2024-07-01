@@ -40,6 +40,7 @@ if load_plugins then
             lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
             checker = { check_pinned = true },
             install = { missing = false },
+            rocks = { enabled = false },
             performance = {
                 rtp = {
                     disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor', },
