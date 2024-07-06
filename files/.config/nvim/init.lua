@@ -3,7 +3,18 @@
 vim.g.mapleader = ','
 vim.g.maplocalleader = ','
 
-_G._keymap = vim.keymap.set
+---@param mode string|string[]
+---@param lhs string|string[]
+---@param rhs string|function
+---@param opts? vim.keymap.set.Opts
+---@see vim.keymap.set
+_G._keymap = function(mode, lhs, rhs, opts)
+    ---@type string[]
+    local lhs_tbl = type(lhs) == 'table' and lhs or { lhs }
+    for _, lhs_val in ipairs(lhs_tbl) do
+        vim.keymap.set(mode, lhs_val, rhs, opts)
+    end
+end
 _G._command = vim.api.nvim_create_user_command
 _G._autocmd = vim.api.nvim_create_autocmd
 _G._augroup = vim.api.nvim_create_augroup
@@ -134,8 +145,8 @@ vim.opt.undofile = true
 _keymap('n', '<BS>', '<C-^>')
 _keymap('n', '\'', '`')
 _keymap('n', '<Esc>', '<cmd>nohlsearch<CR>')
-_keymap('n', 'Ö', '<C-o>', { desc = 'Go to previous jump list position' })
-_keymap('n', 'Ä', '<C-i>', { desc = 'Go to next jump list position' })
+_keymap('n', { 'Ö', 'öö' }, '<C-o>', { desc = 'Go to previous jump list position' })
+_keymap('n', { 'Ä', 'ää' }, '<C-i>', { desc = 'Go to next jump list position' })
 _keymap('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
 _keymap('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 _keymap('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
@@ -174,8 +185,7 @@ _keymap('n', '§', '@')
 _keymap('n', '§§', '@@')
 _keymap('n', 'Q', '@q')
 _keymap('x', 'Q', ':normal @q<CR>')
-_keymap('x', '§', ':normal @')
-_keymap('x', '@', ':normal @')
+_keymap('x', { '§', '@' }, ':normal @')
 _keymap('x', '.', ':normal .<CR>')
 
 _keymap({'n', 'x'}, '<Leader>y', '"+y', { desc = 'Copy text to system clipboard' })
