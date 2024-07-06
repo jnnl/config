@@ -13,11 +13,17 @@ return {
 
     {
         'ggandor/leap.nvim',
-        commit = '8f4d3ab9fe5c906c5745150191831c5ee0a427a0',
+        commit = '75c246f562ab34a92c359c3c4d2eb138768b92ec',
         event = 'VeryLazy',
         config = function()
             local leap = require('leap')
             leap.opts.safe_labels = {}
+            leap.opts.preview_filter = function(ch0, ch1, ch2)
+                return not (
+                    (ch1:match('%s') or ch2:match('%s')) or
+                    (ch0:match('%w') and ch1:match('%w') and ch2:match('%w'))
+                )
+            end
             _keymap({ 'n', 'x' }, 's', '<Plug>(leap-forward-to)')
             _keymap({ 'n', 'x' }, 'S', '<Plug>(leap-backward-to)')
         end,
@@ -198,7 +204,7 @@ return {
 
     {
         'kylechui/nvim-surround',
-        tag = 'v2.2.0',
+        tag = 'v2.3.0',
         event = 'VeryLazy',
         opts = {},
     },
@@ -258,7 +264,7 @@ return {
                         ['end'] = { args.line2, end_line:len() },
                     }
                 end
-                require('conform').format({ async = true, lsp_fallback = true, range = range })
+                conform.format({ async = true, lsp_fallback = true, range = range })
             end, { range = true, desc = 'Format buffer' })
             _command('FormatDisable', function(args)
                 if args.bang then vim.b.disable_autoformat = true else vim.g.disable_autoformat = true end
@@ -273,7 +279,7 @@ return {
 
     {
         'ray-x/lsp_signature.nvim',
-        commit = '529e8861d0410389f0163a5e5c2199d4a4ef5bf6',
+        commit = 'a38da0a61c172bb59e34befc12efe48359884793',
         lazy = true,
     },
 
@@ -282,8 +288,8 @@ return {
         tag = 'v0.1.8',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
-            { 'williamboman/mason.nvim', commit = '49ff59aded1047a773670651cfa40e76e63c6377' },
-            { 'williamboman/mason-lspconfig.nvim', commit = 'a4caa0d083aab56f6cd5acf2d42331b74614a585' },
+            { 'williamboman/mason.nvim', commit = '0950b15060067f752fde13a779a994f59516ce3d' },
+            { 'williamboman/mason-lspconfig.nvim', commit = '37a336b653f8594df75c827ed589f1c91d91ff6c' },
             { 'hrsh7th/cmp-nvim-lsp' },
         },
         config = function()
