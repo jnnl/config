@@ -20,8 +20,8 @@ return {
             leap.opts.safe_labels = {}
             leap.opts.preview_filter = function(ch0, ch1, ch2)
                 return not (
-                    (ch1:match('%s') or ch2:match('%s')) or
-                    (ch0:match('%w') and ch1:match('%w') and ch2:match('%w'))
+                    (ch1:match('%s') or ch2:match('%s')) or -- skip whitespace boundaries
+                    (ch0:match('%w') and ch1:match('%w') and ch2:match('%w')) -- skip middle of alphanumerics
                 )
             end
             _keymap({ 'n', 'x' }, 's', '<Plug>(leap-forward-to)')
@@ -221,6 +221,7 @@ return {
         priority = 1000,
         init = function()
             vim.cmd.colorscheme('tonight')
+            vim.api.nvim_set_hl(0, 'Normal', { bg = '#202020' })
         end,
     },
 
