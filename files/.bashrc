@@ -58,7 +58,7 @@ EOF"
 # browse and checkout git branches
 gco() {
     git branch --format="%(refname:short)" | \
-        fzf --preview="git log -10 --color {..}" | \
+        fzf --preview "git log -10 --color {..}" | \
         xargs -r git checkout
 }
 
@@ -194,12 +194,18 @@ if [ -f ~/.config/z/z.sh ]; then
 
     f() {
         [ $# -gt 0 ] && _z "$*" && return
-        cd "$(_z -l 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || return
+        cd "$(_z -l 2>&1 | \
+            awk '{ print $2 }' | \
+            fzf --reverse --tac --no-sort --height=40% --preview 'ls -Aq --color {}' \
+        )" || return
     }
 
     ff() {
         [ $# -gt 0 ] && _z -c "$*" && return
-        cd "$(_z -lc 2>&1 | awk '{ print $2 }' | fzf --reverse --tac --no-sort --height=40%)" || return
+        cd "$(_z -lc 2>&1 | \
+            awk '{ print $2 }' | \
+            fzf --reverse --tac --no-sort --height=40% --preview 'ls -Aq --color {}' \
+        )" || return
     }
 fi
 
