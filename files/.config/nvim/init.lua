@@ -8,14 +8,14 @@ vim.g.maplocalleader = ','
 ---@param rhs string|function
 ---@param opts? vim.keymap.set.Opts
 ---@see vim.keymap.set
-_G._keymap = function(mode, lhs, rhs, opts)
+_G._map = function(mode, lhs, rhs, opts)
     ---@type string[]
     local lhs_tbl = type(lhs) == 'table' and lhs or { lhs }
     for _, lhs_val in ipairs(lhs_tbl) do
         vim.keymap.set(mode, lhs_val, rhs, opts)
     end
 end
-_G._command = vim.api.nvim_create_user_command
+_G._cmd = vim.api.nvim_create_user_command
 _G._autocmd = vim.api.nvim_create_autocmd
 _G._augroup = vim.api.nvim_create_augroup
 _G._dx = vim.diagnostic
@@ -142,93 +142,93 @@ vim.opt.undofile = true
 
 -- Keymaps
 
-_keymap('n', '<BS>', '<C-^>')
-_keymap('n', '\'', '`')
-_keymap('n', '<Esc>', '<cmd>nohlsearch<CR>')
-_keymap('n', { 'Ö', 'öö' }, '<C-o>', { desc = 'Go to previous jump list position' })
-_keymap('n', { 'Ä', 'ää' }, '<C-i>', { desc = 'Go to next jump list position' })
-_keymap('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
-_keymap('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
-_keymap('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
-_keymap('n', 'ät', '<cmd>tabnext<CR>', { desc = 'Go to next tab' })
-_keymap('n', 'ög', function()
+_map('n', '<BS>', '<C-^>')
+_map('n', '\'', '`')
+_map('n', '<Esc>', '<cmd>nohlsearch<CR>')
+_map('n', { 'Ö', 'öö' }, '<C-o>', { desc = 'Go to previous jump list position' })
+_map('n', { 'Ä', 'ää' }, '<C-i>', { desc = 'Go to next jump list position' })
+_map('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
+_map('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
+_map('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
+_map('n', 'ät', '<cmd>tabnext<CR>', { desc = 'Go to next tab' })
+_map('n', 'ög', function()
     _dx.jump({ count = -1, severity = { min = _dx.severity.WARN } })
 end, { desc = 'Go to previous WARN+ diagnostic' })
-_keymap('n', 'äg', function()
+_map('n', 'äg', function()
     _dx.jump({ count = 1, severity = { min = _dx.severity.WARN } })
 end, { desc = 'Go to next WARN+ diagnostic' })
-_keymap('n', 'öG', function()
+_map('n', 'öG', function()
     _dx.jump({ count = -1, severity = { min = _dx.severity.HINT } })
 end, { desc = 'Go to previous HINT+ diagnostic' })
-_keymap('n', 'äG', function()
+_map('n', 'äG', function()
     _dx.jump({ count = 1, severity = { min = _dx.severity.HINT } })
 end, { desc = 'Go to next HINT+ diagnostic' })
-_keymap('n', '<C-Space>', _dx.open_float)
+_map('n', '<C-Space>', _dx.open_float)
 
-_keymap('n', 'j', function() return vim.v.count == 0 and 'gj' or 'j' end, { expr = true })
-_keymap('n', 'k', function() return vim.v.count == 0 and 'gk' or 'k' end, { expr = true })
-_keymap({ 'n', 'x' }, '<C-j>', '}')
-_keymap({ 'n', 'x' }, '<C-k>', '{')
-_keymap('c', '<C-j>', '<Down>')
-_keymap('c', '<C-k>', '<Up>')
+_map('n', 'j', function() return vim.v.count == 0 and 'gj' or 'j' end, { expr = true })
+_map('n', 'k', function() return vim.v.count == 0 and 'gk' or 'k' end, { expr = true })
+_map({ 'n', 'x' }, '<C-j>', '}')
+_map({ 'n', 'x' }, '<C-k>', '{')
+_map('c', '<C-j>', '<Down>')
+_map('c', '<C-k>', '<Up>')
 
-_keymap('n', '<C-w>.', function()
+_map('n', '<C-w>.', function()
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     local longest_line_length = math.max(unpack(vim.tbl_map(function(line) return #line end, lines)))
     vim.cmd('vertical resize ' .. longest_line_length + 8)
 end, { desc = 'Fit window width to content' })
-_keymap('n', '<C-w>:', function()
+_map('n', '<C-w>:', function()
     vim.cmd('resize' .. vim.fn.line('$'))
 end, { desc = 'Fit window height to content' })
 
-_keymap('n', '§', '@')
-_keymap('n', '§§', '@@')
-_keymap('n', 'Q', '@q')
-_keymap('x', 'Q', ':normal @q<CR>')
-_keymap('x', { '§', '@' }, ':normal @')
-_keymap('x', '.', ':normal .<CR>')
+_map('n', '§', '@')
+_map('n', '§§', '@@')
+_map('n', 'Q', '@q')
+_map('x', 'Q', ':normal @q<CR>')
+_map('x', { '§', '@' }, ':normal @')
+_map('x', '.', ':normal .<CR>')
 
-_keymap({'n', 'x'}, '<Leader>y', '"+y', { desc = 'Copy text to system clipboard' })
-_keymap({'n', 'x'}, '<Leader>Y', '"+Y', { desc = 'Copy text from cursor to end of line to system clipboard' })
-_keymap({'n', 'x'}, '<Leader>p', function()
+_map({'n', 'x'}, '<Leader>y', '"+y', { desc = 'Copy text to system clipboard' })
+_map({'n', 'x'}, '<Leader>Y', '"+Y', { desc = 'Copy text from cursor to end of line to system clipboard' })
+_map({'n', 'x'}, '<Leader>p', function()
     vim.cmd('normal "+p')
     vim.cmd([['[,']Rstrip]])
 end, { desc = 'Paste text from system clipboard after the cursor' })
-_keymap({'n', 'x'}, '<Leader>P', function()
+_map({'n', 'x'}, '<Leader>P', function()
     vim.cmd('normal "+P')
     vim.cmd([['[,']Rstrip]])
 end, { desc = 'Paste text from system clipboard before the cursor' })
 
-_keymap('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
-_keymap('n', '<Leader>s', function()
+_map('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
+_map('n', '<Leader>s', function()
     return ':%s/' .. vim.fn.expand('<cword>') .. '/'
 end, { expr = true, desc = 'Substitute word under cursor' })
 
 -- Commands
 
-_command('NonAscii', '/[^\\x00-\\x7F]', { desc = 'Search for non-ASCII characters' })
-_command('Unansify', function(opts)
+_cmd('NonAscii', '/[^\\x00-\\x7F]', { desc = 'Search for non-ASCII characters' })
+_cmd('Unansify', function(opts)
     local range = string.format('%s,%s', opts.line1, opts.line2)
     vim.cmd('keeppatterns ' .. range .. [[s/\%x1b\[[0-9;]*[a-zA-Z]//ge]])
 end, { range = true, desc = 'Remove ANSI escape codes' })
 
-_command('Unblankify', function(opts)
+_cmd('Unblankify', function(opts)
     local range = string.format('%s,%s', opts.line1, opts.line2)
     vim.cmd(range .. [[g/^\s*$/d]])
 end, { range = true, desc = 'Remove blank lines' })
 
-_command('Lstrip', function(opts)
+_cmd('Lstrip', function(opts)
     local range = string.format('%s,%s', opts.line1, opts.line2)
     vim.cmd('keeppatterns ' .. range .. [[s/^\s\+//e]])
 end, { range = true, desc = 'Strip leading whitespace' })
 
-_command('Rstrip', function(opts)
+_cmd('Rstrip', function(opts)
     local range = string.format('%s,%s', opts.line1, opts.line2)
     vim.cmd('keeppatterns ' .. range .. [[s/\s\+$//e]])
     vim.cmd('keeppatterns ' .. range .. [[s/\r//ge]])
 end, { range = true, desc = 'Strip trailing whitespace' })
 
-_command('CloseFloatingWindows', function()
+_cmd('CloseFloatingWindows', function()
     for _, win in ipairs(vim.api.nvim_list_wins()) do
         if vim.api.nvim_win_get_config(win).relative ~= '' then
             vim.api.nvim_win_close(win, false)
@@ -236,14 +236,14 @@ _command('CloseFloatingWindows', function()
     end
 end, { desc = 'Close floating windows' })
 
-_command('Redir', function(opts)
+_cmd('Redir', function(opts)
     local lines = vim.split(vim.api.nvim_exec2(opts.args, { output = true }).output, '\n', { plain = true })
     vim.cmd(opts.bang and 'new' or 'vnew')
     vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
     vim.opt_local.modified = false
 end, { bang = true, nargs = '+', complete = 'command', desc = 'Redirect command output to a vertical split (!: horizontal split)' })
 
-_command('DiffChanges', function(opts)
+_cmd('DiffChanges', function(opts)
     local cmd = 'w !git diff --no-index % -'
     if opts.bang then
         vim.cmd('Redir ' .. cmd)
@@ -298,15 +298,15 @@ _autocmd('FileType', {
     callback = function()
         local is_angular = vim.fn.findfile('angular.json', '.;') ~= ''
         if is_angular then
-            _command('ETemplate', ':e %:p:r.html', {})
-            _command('EComponent', ':e %:p:r.ts', {})
-            _command('EStyle', ':e %:p:r.scss', {})
-            _command('STemplate', ':sp %:p:r.html', {})
-            _command('SComponent', ':sp %:p:r.ts', {})
-            _command('SStyle', ':sp %:p:r.scss', {})
-            _command('VTemplate', ':vs %:p:r.html', {})
-            _command('VComponent', ':vs %:p:r.ts', {})
-            _command('VStyle', ':vs %:p:r.scss', {})
+            _cmd('ETemplate', ':e %:p:r.html', {})
+            _cmd('EComponent', ':e %:p:r.ts', {})
+            _cmd('EStyle', ':e %:p:r.scss', {})
+            _cmd('STemplate', ':sp %:p:r.html', {})
+            _cmd('SComponent', ':sp %:p:r.ts', {})
+            _cmd('SStyle', ':sp %:p:r.scss', {})
+            _cmd('VTemplate', ':vs %:p:r.html', {})
+            _cmd('VComponent', ':vs %:p:r.ts', {})
+            _cmd('VStyle', ':vs %:p:r.scss', {})
         end
     end
 })
@@ -315,12 +315,12 @@ _autocmd('FileType', {
     group = _augroup('go_commands', { clear = true }),
     pattern = 'go',
     callback = function()
-        _command('ECode', ':e %:p:s?_test.go?.go?', {})
-        _command('SCode', ':vs %:p:s?_test.go?.go?', {})
-        _command('VCode', ':sp %:p:s?_test.go?.go?', {})
-        _command('ETest', ':e %:p:r_test.go', {})
-        _command('STest', ':sp %:p:r_test.go', {})
-        _command('VTest', ':vs %:p:r_test."go"', {})
+        _cmd('ECode', ':e %:p:s?_test.go?.go?', {})
+        _cmd('SCode', ':vs %:p:s?_test.go?.go?', {})
+        _cmd('VCode', ':sp %:p:s?_test.go?.go?', {})
+        _cmd('ETest', ':e %:p:r_test.go', {})
+        _cmd('STest', ':sp %:p:r_test.go', {})
+        _cmd('VTest', ':vs %:p:r_test."go"', {})
     end
 })
 
