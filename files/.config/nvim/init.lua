@@ -25,7 +25,7 @@ _G._dx = vim.diagnostic
 local load_plugins = true
 local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 
-if not vim.uv.fs_stat(lazy_path) then
+if load_plugins and not vim.uv.fs_stat(lazy_path) then
     vim.ui.select({ 'yes', 'no' }, { prompt = 'lazy.nvim not found, install now?' }, function(choice)
         if choice == 'yes' then
             vim.notify('\ninstalling lazy.nvim...')
@@ -46,17 +46,18 @@ if load_plugins then
     local lazy_ok, lazy = pcall(require, 'lazy')
     if lazy_ok then
         lazy.setup('plugins', {
-            defaults = { lazy = false },
             change_detection = { enabled = false },
-            lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
             checker = { check_pinned = true },
+            defaults = { lazy = false },
             install = { missing = false },
-            rocks = { enabled = false },
+            lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
             performance = {
                 rtp = {
-                    disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor', },
+                    disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor' },
                 },
             },
+            pkg = { enabled = false },
+            rocks = { enabled = false },
         })
     else
         vim.notify('failed to load lazy.nvim, plugins are disabled...', vim.log.levels.WARN)
