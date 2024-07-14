@@ -81,7 +81,7 @@ _dx.config({ virtual_text = false })
 -- Statusline
 
 _G._statusline = function()
-    local separator = '%#StatuslineNC# | %*'
+    local separator = ' %#StatuslineNC#::%* '
     local line_count = '%3l/%L'
     local file_path = separator .. '%<%f'
     local buf_attrs = ''
