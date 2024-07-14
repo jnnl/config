@@ -11,7 +11,7 @@ return {
 
     {
         'ggandor/leap.nvim',
-        commit = '75c246f562ab34a92c359c3c4d2eb138768b92ec',
+        commit = 'c099aecaf858574909bd38cbadb8543c4dd16611',
         event = 'VeryLazy',
         config = function()
             local leap = require('leap')
@@ -88,7 +88,7 @@ return {
                         ['ctrl-r'] = function()
                             local resume_data = fzf_lua.config.__resume_data
                             local opts = { query = resume_data.last_query }
-                            local git_root_dir = vim.fs.dirname(vim.fn.finddir('.git', '.;'))
+                            local git_root_dir = vim.fs.root(0, '.git')
                             if #git_root_dir > 0 then
                                 opts.cwd = git_root_dir
                             end
@@ -213,7 +213,6 @@ return {
         priority = 1000,
         init = function()
             vim.cmd.colorscheme('tonight')
-            vim.api.nvim_set_hl(0, 'Normal', { bg = '#202020' })
         end,
     },
 
@@ -605,11 +604,5 @@ return {
         'whiteinge/diffconflicts',
         tag = '2.3.0',
         cmd = { 'DiffConflicts', 'DiffConflictsShowHistory', 'DiffConflictsWithHistory' },
-    },
-
-    {
-        'junegunn/goyo.vim',
-        commit = 'fa0263d456dd43f5926484d1c4c7022dfcb21ba9',
-        cmd = 'Goyo',
     },
 }
