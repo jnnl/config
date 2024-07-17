@@ -22,47 +22,30 @@ _G._dx = vim.diagnostic
 
 -- Plugins
 
-local load_plugins = true
 local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-
-if load_plugins and not vim.uv.fs_stat(lazy_path) then
-    vim.ui.select({ 'yes', 'no' }, { prompt = 'lazy.nvim not found, install now?' }, function(choice)
-        if choice == 'yes' then
-            vim.notify('\ninstalling lazy.nvim...')
-            vim.fn.system({
-                'git', 'clone', 'https://github.com/folke/lazy.nvim.git',
-                '--filter=blob:none', '--branch=stable',
-                lazy_path
-            })
-        else
-            vim.notify('\nlazy.nvim not installed, plugins are disabled...', vim.log.levels.WARN)
-            load_plugins = false
-        end
-    end)
+if not vim.uv.fs_stat(lazy_path) then
+    vim.notify('installing lazy.nvim...')
+    vim.fn.system({
+        'git', 'clone', 'https://github.com/folke/lazy.nvim.git',
+        '--filter=blob:none', '--branch=stable',
+        lazy_path
+    })
 end
 
-if load_plugins then
-    vim.opt.rtp:prepend(lazy_path)
-    local lazy_ok, lazy = pcall(require, 'lazy')
-    if lazy_ok then
-        lazy.setup('plugins', {
-            change_detection = { enabled = false },
-            checker = { check_pinned = true },
-            defaults = { lazy = false },
-            install = { missing = false },
-            lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
-            performance = {
-                rtp = {
-                    disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor' },
-                },
-            },
-            pkg = { enabled = false },
-            rocks = { enabled = false },
-        })
-    else
-        vim.notify('failed to load lazy.nvim, plugins are disabled...', vim.log.levels.WARN)
-    end
-end
+vim.opt.rtp:prepend(lazy_path)
+require('lazy').setup('plugins', {
+    change_detection = { enabled = false },
+    checker = { check_pinned = true },
+    defaults = { lazy = false },
+    lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
+    performance = {
+        rtp = {
+            disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor' },
+        },
+    },
+    pkg = { enabled = false },
+    rocks = { enabled = false },
+})
 
 -- Miscellaneous
 
@@ -97,7 +80,7 @@ _G._statusline = function()
             end
         end
         local diagnostic_counts = _dx.count(0)
-        if #diagnostic_counts > 0 then
+        if #diagnostic_counts > 0 and _dx.is_enabled() then
             local diagnostic_start_pos = #attrs + 1
             for severity, count in pairs(diagnostic_counts) do
                 local symbol = _dx.severity[severity]:sub(1, 1)
@@ -152,16 +135,16 @@ _map('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
 _map('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 _map('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
 _map('n', 'ät', '<cmd>tabnext<CR>', { desc = 'Go to next tab' })
-_map('n', 'ög', function()
+_map('n', 'öd', function()
     _dx.jump({ count = -1, severity = { min = _dx.severity.WARN } })
 end, { desc = 'Go to previous WARN+ diagnostic' })
-_map('n', 'äg', function()
+_map('n', 'äd', function()
     _dx.jump({ count = 1, severity = { min = _dx.severity.WARN } })
 end, { desc = 'Go to next WARN+ diagnostic' })
-_map('n', 'öG', function()
+_map('n', 'öD', function()
     _dx.jump({ count = -1, severity = { min = _dx.severity.HINT } })
 end, { desc = 'Go to previous HINT+ diagnostic' })
-_map('n', 'äG', function()
+_map('n', 'äD', function()
     _dx.jump({ count = 1, severity = { min = _dx.severity.HINT } })
 end, { desc = 'Go to next HINT+ diagnostic' })
 _map('n', '<C-Space>', _dx.open_float)
@@ -204,6 +187,11 @@ _map('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating
 _map('n', '<Leader>s', function()
     return ':%s/' .. vim.fn.expand('<cword>') .. '/'
 end, { expr = true, desc = 'Substitute word under cursor' })
+
+_map('n', '<Leader>td', function()
+    _dx.enable(not _dx.is_enabled())
+    vim.notify('diagnostics ' .. (_dx.is_enabled() and 'enabled' or 'disabled'))
+end, { desc = 'Toggle diagnostics' })
 
 -- Commands
 
