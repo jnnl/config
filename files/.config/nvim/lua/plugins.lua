@@ -142,13 +142,6 @@ return {
                     '--glob="!.git/" --color=always --colors "path:fg:green" --colors "line:fg:yellow"',
                     rg_glob = true,
                 },
-                lsp = {
-                    code_actions = {
-                        previewer = 'codeaction_native',
-                        preview_pager = 'delta -s -w=$FZF_PREVIEW_COLUMNS ' ..
-                        '--syntax-theme ansi --file-style=omit --hunk-header-style=omit',
-                    },
-                },
             })
 
             _map('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
@@ -211,7 +204,7 @@ return {
     {
         'jnnl/tonight.nvim',
         priority = 1000,
-        init = function()
+        config = function()
             vim.cmd.colorscheme('tonight')
         end,
     },
@@ -296,6 +289,7 @@ return {
                     root_dir = lsp.util.root_pattern('deno.json', 'deno.jsonc')
                 },
                 gopls = {},
+                html = {},
                 lua_ls = {
                     settings = {
                         Lua = {
@@ -315,7 +309,6 @@ return {
             }
             require('mason').setup()
             require('mason-lspconfig').setup({
-                -- ensure_installed = vim.tbl_keys(servers or {}),
                 handlers = {
                     function(server_name)
                         local config = servers[server_name] or {}
@@ -384,10 +377,12 @@ return {
                             ['ia'] = '@parameter.inner',
                             ['ac'] = '@comment.outer',
                             ['ic'] = '@comment.inner',
-                            ['aC'] = '@class.outer',
-                            ['iC'] = '@class.inner',
+                            ['aC'] = '@conditional.outer',
+                            ['iC'] = '@conditional.inner',
                             ['af'] = '@function.outer',
                             ['if'] = '@function.inner',
+                            ['al'] = '@loop.outer',
+                            ['il'] = '@loop.inner',
                         },
                     },
                     move = {
@@ -396,14 +391,16 @@ return {
                         goto_previous_start = {
                             ['öa'] = '@parameter.inner',
                             ['öc'] = '@comment.outer',
-                            ['öC'] = '@class.outer',
+                            ['öC'] = '@conditional.outer',
                             ['öf'] = '@function.outer',
+                            ['öl'] = '@loop.outer',
                         },
                         goto_next_start = {
                             ['äa'] = '@parameter.inner',
                             ['äc'] = '@comment.outer',
-                            ['äC'] = '@class.outer',
+                            ['äC'] = '@conditional.outer',
                             ['äf'] = '@function.outer',
+                            ['äl'] = '@loop.outer',
                         },
                     },
                 },
@@ -430,14 +427,19 @@ return {
         'hrsh7th/nvim-cmp',
         commit = '5260e5e8ecadaf13e6b82cf867a909f54e15fd07',
         event = 'InsertEnter',
-        cmd = { 'CmpEnable', 'CmpDisable' },
         dependencies = {
             { 'hrsh7th/cmp-nvim-lsp' }
         },
         config = function()
             vim.opt.completeopt = 'menu,menuone,noselect'
+            vim.g.cmp_enabled = true
+            _map('n', '<Leader>tc', function()
+                vim.g.cmp_enabled = vim.g.cmp_enabled ~= true
+                vim.notify('completion ' .. (vim.g.cmp_enabled and 'enabled' or 'disabled'))
+            end, { desc = 'Toggle completion' })
             local cmp = require('cmp')
-            local cmp_config = {
+            cmp.setup({
+                enabled = function() return vim.g.cmp_enabled end,
                 mapping = cmp.mapping.preset.insert({
                     ['<Up>'] = cmp.mapping.select_prev_item(),
                     ['<Down>'] = cmp.mapping.select_next_item(),
@@ -447,10 +449,10 @@ return {
                     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
                     ['<C-Space>'] = cmp.mapping.complete(),
                     ['<C-e>'] = cmp.mapping.close(),
-                    ['<CR>'] = cmp.mapping.confirm {
+                    ['<CR>'] = cmp.mapping.confirm({
                         behavior = cmp.ConfirmBehavior.Insert,
                         select = false,
-                    },
+                    }),
                     ['<Tab>'] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_next_item()
@@ -478,10 +480,7 @@ return {
                 sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
                 }),
-            }
-            cmp.setup(cmp_config)
-            _cmd('CmpEnable', function() cmp.setup.buffer(cmp_config) end, {})
-            _cmd('CmpDisable', function() cmp.setup.buffer({ enabled = false }) end, {})
+            })
         end,
     },
 
@@ -575,7 +574,7 @@ return {
         commit = '56c684a805fe948936cda0d1b19505b84ad7e065',
         event = 'VeryLazy',
         config = function()
-            _map('n', '<Leader>ou', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
+            _map('n', '<Leader>tu', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
             vim.g.undotree_SetFocusWhenToggle = 1
             vim.g.undotree_ShortIndicators = 1
             vim.g.undotree_WindowLayout = 2
