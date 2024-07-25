@@ -40,7 +40,7 @@ configure_common_env() {
 
     mkdir -vp "$local_bin_path"
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 configure_mac_env() {
@@ -85,7 +85,7 @@ configure_mac_env() {
 
     killall Dock Finder
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 install_homebrew() {
@@ -97,70 +97,68 @@ install_homebrew() {
     printf "Installing Homebrew...\n"
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 install_mac_pkgs() {
     printf "Installing packages for macOS...\n"
 
-    local pkgs=("chafa" "coreutils" "fd" "neovim" "node" "python3" "ranger" "renameutils" "ripgrep" "shellcheck")
+    local pkgs=(
+        "chafa"
+        "coreutils"
+        "direnv"
+        "fd"
+        "lazygit"
+        "neovim"
+        "node"
+        "python3"
+        "renameutils"
+        "ripgrep"
+    )
     brew install "${pkgs[@]}"
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 install_deb_pkgs() {
     printf "Installing packages for Debian/Ubuntu...\n"
 
-    (
-        set -eu
-        mkdir -vp "$local_bin_path"
-        cd "$local_bin_path"
-        dl - "https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz" | tar -xz
-        ln -vsnf "$local_bin_path/nvim-linux64/bin/nvim" "$local_bin_path/nvim"
+    local apt_pkgs=(
+        "chafa"
+        "direnv"
+        "fd-find"
+        "nodejs"
+        "python3-pip"
+        "renameutils"
+        "ripgrep"
     )
-
-    (
-        set -eu
-        mkdir -vp "$local_bin_path"
-        cd "$local_bin_path"
-        local arch
-        arch="$(uname -m)"
-        if [ "$arch" = "x86_64" ]; then
-            arch="amd64"
-        fi
-        dl direnv "https://github.com/direnv/direnv/releases/latest/download/direnv.linux-${arch}"
-        chmod ug+x direnv
-    )
-
-    (
-        set -eu
-        mkdir -vp "$local_bin_path"
-        cd "$local_bin_path"
-        local arch
-        arch="$(uname -m)"
-        if [ "$arch" = "x86_64" ]; then
-            arch="amd64"
-        fi
-        lazygit_version=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-        dl - "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${lazygit_version}_Linux_${arch}.tar.gz" | tar -xz
-        chmod ug+x lazygit
-    )
-
-    local apt_pkgs=("chafa" "fd-find" "nodejs" "python3-pip" "ranger" "renameutils" "ripgrep" "shellcheck")
     sudo apt update
     sudo apt install "${apt_pkgs[@]}"
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 install_arch_pkgs() {
     printf "Installing packages for Arch Linux...\n"
 
-    local pkgs=("chafa" "fd" "git" "htop" "jq" "neovim" "nodejs" "openssh" "python" "ranger" "renameutils" "ripgrep" "shellcheck")
+    local pkgs=(
+        "chafa"
+        "direnv"
+        "fd"
+        "git"
+        "htop"
+        "jq"
+        "lazygit"
+        "neovim"
+        "nodejs"
+        "openssh"
+        "python"
+        "renameutils"
+        "ripgrep"
+    )
     sudo pacman -Syyu --needed "${pkgs[@]}"
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 install_fzf() {
@@ -191,7 +189,7 @@ install_fzf() {
 
     [ -d "$tmp_dir" ] && rm -rf "$tmp_dir"
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 install_z() {
@@ -201,7 +199,7 @@ install_z() {
     mkdir -vp "$z_dir"
     cp -v "$script_dir/tools/z.sh" "$z_dir"
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 install_custom_scripts() {
@@ -210,7 +208,7 @@ install_custom_scripts() {
     mkdir -vp "$local_bin_path"
     find "$script_dir/tools" -type f -name ',*' -exec cp -v '{}' "$local_bin_path/" \;
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 install_tool_scripts() {
@@ -219,7 +217,7 @@ install_tool_scripts() {
     exec_step install_z
     exec_step install_custom_scripts
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 main() {

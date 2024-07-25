@@ -93,7 +93,7 @@ copy_config_files() {
         fi
     done
 
-    msg_done "$FUNCNAME"
+    msg_done "${FUNCNAME[0]}"
 }
 
 main() {
