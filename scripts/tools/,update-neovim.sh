@@ -4,24 +4,31 @@
 set -eu
 
 (
-set -eu
-
-base_dir="$HOME/code/bin"
-pkg_name="nvim-linux64"
+base_path="$HOME/code/bin"
+pkg_name=""
 tag="nightly"
 
-if [ "$(uname -s)" = "Darwin" ]; then
-    pkg_name="nvim-macos-$(uname -m)"
+kernel="$(uname -s)"
+arch="$(uname -m)"
+
+if [ "$kernel" = "Linux" ]; then
+    pkg_name="nvim-linux64"
+elif [ "$kernel" = "Darwin" ]; then
+    pkg_name="nvim-macos-$arch"
+else
+    printf "ERROR: unsupported operating system '%s'\n" "$kernel" 1>&2
+    exit 1
 fi
 
-cd "$base_dir"
+cd "$base_path"
+[ -d "$base_path" ] || mkdir -vp "$base_path"
 
 [ "$#" -gt 0 ] && tag="$1"
 
 if type -p nvim &>/dev/null; then
     printf "currently installed neovim version: %s\n" "$(nvim -v | awk 'NR==1 { print $2 }')"
 fi
-printf "base directory: %s\n\n" "$base_dir"
+printf "install directory: %s\n\n" "$base_path/$pkg_name"
 
 if [ -d "$pkg_name" ]; then
     printf "creating backup: %s -> %s ..." "$pkg_name" "$pkg_name.bak"
@@ -29,7 +36,7 @@ if [ -d "$pkg_name" ]; then
     printf " done\n"
 fi
 
-printf "downloading $pkg_name.tar.gz (%s) ..." "$tag"
+printf "downloading $pkg_name.tar.gz (tag: %s) ..." "$tag"
 curl -sfLO "https://github.com/neovim/neovim/releases/download/$tag/$pkg_name.tar.gz"
 printf " done\n"
 
@@ -53,8 +60,8 @@ printf "removing %s, %s ..." "$pkg_name.tar.gz" "$pkg_name.tar.gz.sha256sum"
 rm -f "$pkg_name.tar.gz" "$pkg_name.tar.gz.sha256sum"
 printf " done\n"
 
-printf "linking %s to %s ..." "$base_dir/$pkg_name/bin/nvim" "$base_dir/nvim"
-ln -snf "$base_dir/$pkg_name/bin/nvim" "$base_dir/nvim"
+printf "linking %s to %s ..." "$base_path/$pkg_name/bin/nvim" "$base_path/nvim"
+ln -snf "$base_path/$pkg_name/bin/nvim" "$base_path/nvim"
 printf " done\n"
 
 printf "successfully installed neovim version %s\n" "$(nvim -v | awk 'NR==1 { print $2 }')"
