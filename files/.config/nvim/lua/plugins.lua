@@ -11,7 +11,7 @@ return {
 
     {
         'ggandor/leap.nvim',
-        commit = 'c099aecaf858574909bd38cbadb8543c4dd16611',
+        commit = '3b1d76ee9cd5a12a8f7a42f0e91124332860205c',
         event = 'VeryLazy',
         config = function()
             local leap = require('leap')
@@ -487,7 +487,7 @@ return {
 
     {
         'tpope/vim-fugitive',
-        commit = '4f59455d2388e113bd510e85b310d15b9228ca0d',
+        commit = '0444df68cd1cdabc7453d6bd84099458327e5513',
         event = 'VeryLazy',
     },
 
