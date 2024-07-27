@@ -18,5 +18,3 @@ set smartcase
 
 set splitright
 set splitbelow
-
-colorscheme desert
