@@ -117,13 +117,18 @@ install_mac_pkgs() {
     )
     brew install "${pkgs[@]}"
 
+    local casks=(
+        "wezterm"
+    )
+    brew install --cask "${casks[@]}"
+
     msg_done "${FUNCNAME[0]}"
 }
 
 install_deb_pkgs() {
     printf "Installing packages for Debian/Ubuntu...\n"
 
-    local apt_pkgs=(
+    local pkgs=(
         "chafa"
         "direnv"
         "fd-find"
@@ -133,7 +138,7 @@ install_deb_pkgs() {
         "ripgrep"
     )
     sudo apt update
-    sudo apt install "${apt_pkgs[@]}"
+    sudo apt install "${pkgs[@]}"
 
     msg_done "${FUNCNAME[0]}"
 }
@@ -154,6 +159,7 @@ install_arch_pkgs() {
         "python"
         "renameutils"
         "ripgrep"
+        "wezterm"
         "xsel"
     )
     sudo pacman -Syyu --needed "${pkgs[@]}"
@@ -175,6 +181,7 @@ install_tumbleweed_pkgs() {
         "nodejs22"
         "renameutils"
         "ripgrep"
+        "wezterm"
         "xsel"
     )
     sudo zypper install "${pkgs[@]}"
