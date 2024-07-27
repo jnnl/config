@@ -88,13 +88,13 @@ return {
                         ['ctrl-r'] = function()
                             local resume_data = fzf_lua.config.__resume_data
                             local opts = { query = resume_data.last_query }
-                            local git_root_dir = vim.fs.root(0, '.git')
+                            local git_root_dir = vim.fs.root(0, '.git') or ''
                             if #git_root_dir > 0 then
                                 opts.cwd = git_root_dir
                             end
                             fzf_lua[resume_data.opts.__INFO.cmd](opts)
                         end,
-                        -- Open selected file(s) using system default handler
+                        -- Open selected item(s) using system default handler
                         ['ctrl-o'] = function(selected)
                             for _, item in ipairs(selected) do
                                 local selected_item = item:match('^%s*(.-)%s*$')
@@ -102,7 +102,7 @@ return {
                                 vim.ui.open(selected_item)
                             end
                         end,
-                        -- Open a new vertical split and populate it with selected search results
+                        -- Populate a new vertical split with selected items
                         ['ctrl-p'] = function(selected)
                             vim.cmd('vsplit')
                             local win = vim.api.nvim_get_current_win()
@@ -160,6 +160,7 @@ return {
             _map('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
             _map('n', '<Leader>*', function() fzf_lua.files({ cwd = '~' }) end, { desc = 'Find files in $HOME' })
 
+            _map('n', '<Leader>fgs', fzf_lua.git_status, { desc = 'Find git status' })
             _map('n', '<Leader>fgx', function()
                 fzf_lua.fzf_exec('git diff --name-only --diff-filter=U', {
                     prompt = 'Conflicts> ',
@@ -212,12 +213,11 @@ return {
     -- Language
     {
         'stevearc/conform.nvim',
-        tag = 'v5.9.0',
+        tag = 'v7.0.0',
         event = 'BufWritePre',
-        cmd = { 'Format', 'FormatDisable', 'FormatEnable' },
+        cmd = { 'Format' },
         keys = { { '<Leader>xf', desc = 'Format buffer' } },
         config = function()
-            vim.g.disable_autoformat = true
             local conform = require('conform')
             conform.setup({
                 formatters_by_ft = {
@@ -231,33 +231,16 @@ return {
                     typescript = { 'prettier' },
                     typescriptreact = { 'prettier' },
                 },
-                format_on_save = function(bufnr)
-                    if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
-                    return {
-                        timeout_ms = 500,
-                        lsp_fallback = false,
-                    }
-                end
             })
             vim.o.formatexpr = 'v:lua.require("conform").formatexpr()'
             vim.api.nvim_create_user_command('Format', function(args)
                 local range = nil
-                if args.count ~= -1 then
+                if args.count > -1 then
                     local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
-                    range = {
-                        start = { args.line1, 0 },
-                        ['end'] = { args.line2, end_line:len() },
-                    }
+                    range = { start = { args.line1, 0 }, ['end'] = { args.line2, end_line:len() } }
                 end
-                conform.format({ async = true, lsp_fallback = true, range = range })
+                conform.format({ async = true, lsp_format = 'fallback', range = range })
             end, { range = true, desc = 'Format buffer' })
-            _cmd('FormatDisable', function(args)
-                if args.bang then vim.b.disable_autoformat = true else vim.g.disable_autoformat = true end
-            end, { bang = true, desc = 'Disable autoformatting' })
-            _cmd('FormatEnable', function()
-                vim.b.disable_autoformat = false
-                vim.g.disable_autoformat = false
-            end, { bang = true, desc = 'Enable autoformatting' })
             _map('n', '<Leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
         end
     },
@@ -381,6 +364,8 @@ return {
                             ['iC'] = '@conditional.inner',
                             ['af'] = '@function.outer',
                             ['if'] = '@function.inner',
+                            ['aF'] = '@call.outer',
+                            ['iF'] = '@call.inner',
                             ['al'] = '@loop.outer',
                             ['il'] = '@loop.inner',
                         },
@@ -393,6 +378,7 @@ return {
                             ['öc'] = '@comment.outer',
                             ['öC'] = '@conditional.outer',
                             ['öf'] = '@function.outer',
+                            ['öF'] = '@call.outer',
                             ['öl'] = '@loop.outer',
                         },
                         goto_next_start = {
@@ -400,6 +386,7 @@ return {
                             ['äc'] = '@comment.outer',
                             ['äC'] = '@conditional.outer',
                             ['äf'] = '@function.outer',
+                            ['äF'] = '@call.outer',
                             ['äl'] = '@loop.outer',
                         },
                     },
@@ -441,18 +428,11 @@ return {
             cmp.setup({
                 enabled = function() return vim.g.cmp_enabled end,
                 mapping = cmp.mapping.preset.insert({
-                    ['<Up>'] = cmp.mapping.select_prev_item(),
-                    ['<Down>'] = cmp.mapping.select_next_item(),
                     ['<C-k>'] = cmp.mapping.select_prev_item(),
                     ['<C-j>'] = cmp.mapping.select_next_item(),
                     ['<C-d>'] = cmp.mapping.scroll_docs(4),
                     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-                    ['<C-Space>'] = cmp.mapping.complete(),
-                    ['<C-e>'] = cmp.mapping.close(),
-                    ['<CR>'] = cmp.mapping.confirm({
-                        behavior = cmp.ConfirmBehavior.Insert,
-                        select = false,
-                    }),
+                    ['<CR>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true }),
                     ['<Tab>'] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_next_item()
@@ -472,11 +452,7 @@ return {
                         end
                     end, { 'i', 's' }),
                 }),
-                snippet = {
-                    expand = function(args)
-                        vim.snippet.expand(args.body)
-                    end
-                },
+                snippet = { expand = function(args) vim.snippet.expand(args.body) end },
                 sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
                 }),
@@ -489,33 +465,24 @@ return {
         'lewis6991/gitsigns.nvim',
         tag = 'v0.9.0',
         event = 'VeryLazy',
-        config = function()
-            require('gitsigns').setup({
-                signs = {
-                    add = { text = '+' },
-                    change = { text = '~' },
-                    delete = { text = '-' },
-                    topdelete = { text = '‾' },
-                    changedelete = { text = '~' },
-                },
-                on_attach = function(bufnr)
-                    local gs = require('gitsigns')
-                    _map('n', 'öh', function() gs.nav_hunk('prev') end, { buffer = bufnr, desc = 'Go to previous hunk' })
-                    _map('n', 'äh', function() gs.nav_hunk('next') end, { buffer = bufnr, desc = 'Go to next hunk' })
-                    _map('n', '<Leader>gd', gs.diffthis, { buffer = bufnr, desc = 'Diff file against index' })
-                    _map('n', '<Leader>gD', function() gs.diffthis('~') end, { buffer = bufnr, desc = 'Diff file against last commit' })
-                    _map('n', '<Leader>gp', gs.preview_hunk, { buffer = bufnr, desc = 'Preview hunk under cursor' })
-                    _map('n', '<Leader>gs', gs.stage_hunk, { buffer = bufnr, desc = 'Stage hunk under cursor' })
-                    _map('n', '<Leader>gr', gs.reset_hunk, { buffer = bufnr, desc = 'Unstage hunk under cursor' })
-                    _map('v', '<Leader>gs', function()
-                        gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-                    end, { buffer = bufnr, desc = 'Stage hunk(s) in visual range' })
-                    _map('v', '<Leader>gr', function()
-                        gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-                    end, { buffer = bufnr, desc = 'Unstage hunk(s) in visual range' })
-                end,
-            })
-        end,
+        opts = {
+            on_attach = function(bufnr)
+                local gs = require('gitsigns')
+                _map('n', 'öh', function() gs.nav_hunk('prev') end, { buffer = bufnr, desc = 'Go to previous hunk' })
+                _map('n', 'äh', function() gs.nav_hunk('next') end, { buffer = bufnr, desc = 'Go to next hunk' })
+                _map('n', '<Leader>gd', gs.diffthis, { buffer = bufnr, desc = 'Diff file against index' })
+                _map('n', '<Leader>gD', function() gs.diffthis('~') end, { buffer = bufnr, desc = 'Diff file against last commit' })
+                _map('n', '<Leader>gp', gs.preview_hunk, { buffer = bufnr, desc = 'Preview hunk under cursor' })
+                _map('n', '<Leader>gs', gs.stage_hunk, { buffer = bufnr, desc = 'Stage hunk under cursor' })
+                _map('n', '<Leader>gr', gs.reset_hunk, { buffer = bufnr, desc = 'Unstage hunk under cursor' })
+                _map('v', '<Leader>gs', function()
+                    gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+                end, { buffer = bufnr, desc = 'Stage hunk(s) in visual range' })
+                _map('v', '<Leader>gr', function()
+                    gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+                end, { buffer = bufnr, desc = 'Unstage hunk(s) in visual range' })
+            end,
+        }
     },
 
     {
