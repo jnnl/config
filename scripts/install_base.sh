@@ -149,14 +149,35 @@ install_arch_pkgs() {
         "htop"
         "jq"
         "lazygit"
-        "neovim"
         "nodejs"
         "openssh"
         "python"
         "renameutils"
         "ripgrep"
+        "xsel"
     )
     sudo pacman -Syyu --needed "${pkgs[@]}"
+
+    msg_done "${FUNCNAME[0]}"
+}
+
+install_tumbleweed_pkgs() {
+    printf "Installing packages for OpenSUSE Tumbleweed...\n"
+
+    local pkgs=(
+        "chafa"
+        "direnv"
+        "fd"
+        "git"
+        "htop"
+        "jq"
+        "lazygit"
+        "nodejs22"
+        "renameutils"
+        "ripgrep"
+        "xsel"
+    )
+    sudo zypper install "${pkgs[@]}"
 
     msg_done "${FUNCNAME[0]}"
 }
@@ -236,6 +257,8 @@ main() {
             exec_step install_deb_pkgs
         elif is_distro ubuntu; then
             exec_step install_deb_pkgs
+        elif is_distro opensuse-tumbleweed; then
+            exec_step install_tumbleweed_pkgs
         fi
     fi
 
