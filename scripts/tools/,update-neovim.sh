@@ -31,38 +31,38 @@ fi
 printf "install directory: %s\n\n" "$base_path/$pkg_name"
 
 if [ -d "$pkg_name" ]; then
-    printf "creating backup: %s -> %s ..." "$pkg_name" "$pkg_name.bak"
+    printf "creating backup: %s -> %s ... " "$pkg_name" "$pkg_name.bak"
     cp -rf "$pkg_name" "$pkg_name.bak"
-    printf " done\n"
+    printf "done\n"
 fi
 
-printf "downloading $pkg_name.tar.gz (tag: %s) ..." "$tag"
-curl -sfLO "https://github.com/neovim/neovim/releases/download/$tag/$pkg_name.tar.gz"
-printf " done\n"
+printf "downloading $pkg_name.tar.gz (tag: %s) ... " "$tag"
+curl -sSfLO "https://github.com/neovim/neovim/releases/download/$tag/$pkg_name.tar.gz"
+printf "done\n"
 
-printf "downloading %s ..." "$pkg_name.tar.gz.sha256sum"
-curl -sfLO "https://github.com/neovim/neovim/releases/download/$tag/$pkg_name.tar.gz.sha256sum"
-printf " done\n"
+printf "downloading %s ... " "$pkg_name.tar.gz.sha256sum"
+curl -sSfLO "https://github.com/neovim/neovim/releases/download/$tag/$pkg_name.tar.gz.sha256sum"
+printf "done\n"
 
-printf "verifying %s sha256sum ..." "$pkg_name.tar.gz"
+printf "verifying %s sha256sum ... " "$pkg_name.tar.gz"
 sha256sum --quiet -c "$pkg_name.tar.gz.sha256sum"
-printf " done\n"
+printf "done\n"
 
-printf "removing %s ..." "$pkg_name"
+printf "removing %s ... " "$pkg_name"
 rm -rf "$pkg_name"
-printf " done\n"
+printf "done\n"
 
-printf "unpacking %s ..." "$pkg_name.tar.gz"
+printf "unpacking %s ... " "$pkg_name.tar.gz"
 tar xf "$pkg_name.tar.gz"
-printf " done\n"
+printf "done\n"
 
-printf "removing %s, %s ..." "$pkg_name.tar.gz" "$pkg_name.tar.gz.sha256sum"
+printf "removing %s, %s ... " "$pkg_name.tar.gz" "$pkg_name.tar.gz.sha256sum"
 rm -f "$pkg_name.tar.gz" "$pkg_name.tar.gz.sha256sum"
-printf " done\n"
+printf "done\n"
 
-printf "linking %s to %s ..." "$base_path/$pkg_name/bin/nvim" "$base_path/nvim"
+printf "linking %s to %s ... " "$base_path/$pkg_name/bin/nvim" "$base_path/nvim"
 ln -snf "$base_path/$pkg_name/bin/nvim" "$base_path/nvim"
-printf " done\n"
+printf "done\n"
 
 printf "successfully installed neovim version %s\n" "$(nvim -v | awk 'NR==1 { print $2 }')"
 )
