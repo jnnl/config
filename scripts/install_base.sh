@@ -168,7 +168,7 @@ install_arch_pkgs() {
 }
 
 install_tumbleweed_pkgs() {
-    printf "Installing packages for OpenSUSE Tumbleweed...\n"
+    printf "Installing packages for openSUSE Tumbleweed...\n"
 
     local pkgs=(
         "chafa"
@@ -220,30 +220,12 @@ install_fzf() {
     msg_done "${FUNCNAME[0]}"
 }
 
-install_z() {
-    printf "Installing z...\n"
-
-    local z_dir="$config_dir/z"
-    mkdir -vp "$z_dir"
-    cp -v "$script_dir/tools/z.sh" "$z_dir"
-
-    msg_done "${FUNCNAME[0]}"
-}
-
-install_custom_scripts() {
-    printf "Installing custom scripts...\n"
+install_tool_scripts() {
+    printf "Installing tool scripts...\n"
 
     mkdir -vp "$local_bin_path"
     find "$script_dir/tools" -type f -name ',*' -exec cp -v '{}' "$local_bin_path/" \;
 
-    msg_done "${FUNCNAME[0]}"
-}
-
-install_tool_scripts() {
-    printf "Installing tool scripts...\n"
-
-    exec_step install_z
-    exec_step install_custom_scripts
 
     msg_done "${FUNCNAME[0]}"
 }
