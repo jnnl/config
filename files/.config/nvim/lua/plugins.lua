@@ -204,9 +204,19 @@ return {
     -- Colorschemes
     {
         'jnnl/tonight.nvim',
+        cond = true,
         priority = 1000,
         config = function()
             vim.cmd.colorscheme('tonight')
+        end,
+    },
+    {
+        'verf/deepwhite.nvim',
+        commit = 'f1db7888f0a7cf84d6d802c17c074bccca0a72a5',
+        cond = false,
+        priority = 1000,
+        config = function()
+            vim.cmd.colorscheme('deepwhite')
         end,
     },
 
