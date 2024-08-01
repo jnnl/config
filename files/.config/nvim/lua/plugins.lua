@@ -329,12 +329,10 @@ return {
                     _map('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Go to definition' })
                     _map('n', 'gD', fzf_lua.lsp_definitions, { buffer = ev.buf, desc = 'Find definitions' })
                     _map('n', 'gi', fzf_lua.lsp_implementations, { desc = 'Find implementations' })
-                    _map('n', 'gr', fzf_lua.lsp_references, { buffer = ev.buf, desc = 'Find references' })
                     _map('n', 'gt', vim.lsp.buf.type_definition, { buffer = ev.buf, desc = 'Go to type definition' })
                     _map('n', 'gT', fzf_lua.lsp_typedefs, { buffer = ev.buf, desc = 'Find type definitions' })
                     _map('n', '<Space>', vim.lsp.buf.hover, { buffer = ev.buf })
                     _map({ 'n', 'x' }, '<Leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
-                    _map('n', '<Leader>r', vim.lsp.buf.rename, { buffer = ev.buf, desc = 'Rename symbol under cursor' })
                     require('lsp_signature').on_attach({ hint_enable = false }, ev.buf)
                 end,
             })
