@@ -15,7 +15,13 @@ _G._map = function(mode, lhs, rhs, opts)
         vim.keymap.set(mode, lhs_val, rhs, opts)
     end
 end
-_G._cmd = vim.api.nvim_create_user_command
+---@param name string
+---@param command string|function
+---@param opts? vim.api.keyset.user_command
+_G._cmd = function(name, command, opts)
+    local options = opts or {}
+    vim.api.nvim_create_user_command(name, command, options)
+end
 _G._autocmd = vim.api.nvim_create_autocmd
 _G._augroup = vim.api.nvim_create_augroup
 _G._dx = vim.diagnostic
@@ -155,6 +161,7 @@ _map({ 'n', 'x' }, '<C-j>', '}')
 _map({ 'n', 'x' }, '<C-k>', '{')
 _map('c', '<C-j>', '<Down>')
 _map('c', '<C-k>', '<Up>')
+_map('ca', 'W', 'w')
 
 _map('n', '<C-w>.', function()
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
@@ -287,15 +294,15 @@ _autocmd('FileType', {
     callback = function()
         local is_angular = vim.fn.findfile('angular.json', '.;') ~= ''
         if is_angular then
-            _cmd('ETemplate', ':e %:p:r.html', {})
-            _cmd('EComponent', ':e %:p:r.ts', {})
-            _cmd('EStyle', ':e %:p:r.scss', {})
-            _cmd('STemplate', ':sp %:p:r.html', {})
-            _cmd('SComponent', ':sp %:p:r.ts', {})
-            _cmd('SStyle', ':sp %:p:r.scss', {})
-            _cmd('VTemplate', ':vs %:p:r.html', {})
-            _cmd('VComponent', ':vs %:p:r.ts', {})
-            _cmd('VStyle', ':vs %:p:r.scss', {})
+            _cmd('ETemplate', ':e %:p:r.html')
+            _cmd('EComponent', ':e %:p:r.ts')
+            _cmd('EStyle', ':e %:p:r.scss')
+            _cmd('STemplate', ':sp %:p:r.html')
+            _cmd('SComponent', ':sp %:p:r.ts')
+            _cmd('SStyle', ':sp %:p:r.scss')
+            _cmd('VTemplate', ':vs %:p:r.html')
+            _cmd('VComponent', ':vs %:p:r.ts')
+            _cmd('VStyle', ':vs %:p:r.scss')
         end
     end
 })
@@ -304,12 +311,12 @@ _autocmd('FileType', {
     group = _augroup('go_commands', { clear = true }),
     pattern = 'go',
     callback = function()
-        _cmd('ECode', ':e %:p:s?_test.go?.go?', {})
-        _cmd('SCode', ':vs %:p:s?_test.go?.go?', {})
-        _cmd('VCode', ':sp %:p:s?_test.go?.go?', {})
-        _cmd('ETest', ':e %:p:r_test.go', {})
-        _cmd('STest', ':sp %:p:r_test.go', {})
-        _cmd('VTest', ':vs %:p:r_test."go"', {})
+        _cmd('ECode', ':e %:p:s?_test.go?.go?')
+        _cmd('SCode', ':vs %:p:s?_test.go?.go?')
+        _cmd('VCode', ':sp %:p:s?_test.go?.go?')
+        _cmd('ETest', ':e %:p:r_test.go')
+        _cmd('STest', ':sp %:p:r_test.go')
+        _cmd('VTest', ':vs %:p:r_test."go"')
     end
 })
 
