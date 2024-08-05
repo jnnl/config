@@ -41,6 +41,24 @@ shift "$((OPTIND - 1))"
 # shellcheck source=utils.sh
 source "$(realpath "$(dirname "${BASH_SOURCE[0]}")")/utils.sh"
 
+backup_file() {
+    local src="$1"
+    local dest="$2"
+    if is_mac; then
+        rsync -ab "$src" "$dest" && printf "%s -> %s\n" "$src" "$dest"
+    else
+        cp -bv "$src" "$dest"
+    fi
+}
+
+resolve_path() {
+    local path="$1"
+    if is_mac; then
+        printf "%s" "$(grealpath -m "$path")"
+    else
+        printf "%s" "$(realpath -m "$path")"
+    fi
+}
 
 copy_config_files() {
     printf "Copying config files...\n"
@@ -59,12 +77,8 @@ copy_config_files() {
     fi
 
     for file in "${files[@]}"; do
-        source_file="$(realpath "$file_dir"/"$file")"
-        if is_mac; then
-            destination_file="$(grealpath -m "$out_path"/"$file")"
-        else
-            destination_file="$(realpath -m "$out_path"/"$file")"
-        fi
+        source_file="$(resolve_path "$file_dir/$file")"
+        destination_file="$(resolve_path "$out_path/$file")"
 
         if [ "$should_use_file_pattern" = "1" ] && ! [ -d "$destination_file" ]; then
             {
@@ -83,11 +97,7 @@ copy_config_files() {
         [ -d "$destination_file" ] && continue
 
         if [ "$should_create_backups" = "1" ]; then
-            if is_mac; then
-                rsync -ab "$source_file" "$destination_file" && printf "%s -> %s\n" "$source_file" "$destination_file"
-            else
-                cp -bv "$source_file" "$destination_file"
-            fi
+            backup_file "$source_file" "$destination_file"
         else
             cp -v "$source_file" "$destination_file"
         fi
