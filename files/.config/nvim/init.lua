@@ -190,6 +190,7 @@ _map({'n', 'x'}, '<Leader>P', function()
     vim.cmd([['[,']Rstrip]])
 end, { desc = 'Paste text from system clipboard before the cursor' })
 
+_map('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
 _map('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
 _map('n', '<Leader>s', function()
     return ':%s/' .. vim.fn.expand('<cword>') .. '/'
