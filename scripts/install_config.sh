@@ -18,7 +18,7 @@ usage() {
     exit 2
 }
 
-[[ "${1:--X}" =~ ^\-[^-]+ ]] || usage
+[[ "${1:--X}" =~ ^\-[^-]+ ]] || usage # reject incorrect positional args
 
 should_create_backups=0
 should_use_file_pattern=0

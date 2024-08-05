@@ -16,7 +16,7 @@ usage() {
     exit 2
 }
 
-[[ "${1:--X}" =~ ^\-[^-]+ ]] || usage
+[[ "${1:--X}" =~ ^\-[^-]+ ]] || usage # reject incorrect positional args
 
 is_interactive=1
 out_path="$HOME"
