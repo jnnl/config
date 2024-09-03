@@ -110,12 +110,13 @@ main() {
     printf "Starting %s...\n\n" "$script_name"
     printf "Output base path: %s\n" "$out_path"
 
-    if [ "$should_create_backups" != "1" ]; then
-        warn "backup not enabled, existing config files will be replaced."
-    fi
-
     if [ "$should_use_file_pattern" = "1" ] && [ "$is_interactive" = "1" ]; then
         printf "File pattern '%s' was specified, you will be prompted before copying each matching file.\n" "$file_pattern"
+    fi
+
+    if [ "$should_create_backups" != "1" ]; then
+        printf "\n"
+        warn "backup not enabled, existing config files will be replaced."
     fi
 
     printf "\n"

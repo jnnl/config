@@ -11,7 +11,7 @@ return {
 
     {
         'ggandor/leap.nvim',
-        commit = '3b1d76ee9cd5a12a8f7a42f0e91124332860205c',
+        commit = 'c6bfb191f1161fbabace1f36f578a20ac6c7642c',
         event = 'VeryLazy',
         config = function()
             local leap = require('leap')
@@ -40,7 +40,7 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        commit = '2e88254c2045e14c712ee09f1e461c6056a2b18c',
+        commit = '1572a89acf8c468a230f0f5ee7092a15496213ee',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -211,7 +211,7 @@ return {
     },
     {
         'verf/deepwhite.nvim',
-        commit = 'f1db7888f0a7cf84d6d802c17c074bccca0a72a5',
+        commit = 'eca39dec3d504412ab5efce0046b77f67ffe4640',
         lazy = true,
         priority = 1000,
         config = function()
@@ -222,7 +222,7 @@ return {
     -- Language
     {
         'stevearc/conform.nvim',
-        tag = 'v7.0.0',
+        tag = 'v8.0.0',
         event = 'BufWritePre',
         cmd = { 'Format' },
         keys = { { '<Leader>xf', desc = 'Format buffer' } },
@@ -239,6 +239,7 @@ return {
                     javascriptreact = { 'prettier' },
                     typescript = { 'prettier' },
                     typescriptreact = { 'prettier' },
+                    yaml = { 'yamlfmt' },
                 },
             })
             vim.o.formatexpr = 'v:lua.require("conform").formatexpr()'
@@ -259,8 +260,8 @@ return {
         tag = 'v0.1.8',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
-            { 'williamboman/mason.nvim', commit = '0950b15060067f752fde13a779a994f59516ce3d' },
-            { 'williamboman/mason-lspconfig.nvim', commit = '37a336b653f8594df75c827ed589f1c91d91ff6c' },
+            { 'williamboman/mason.nvim', tag = 'v1.10.0' },
+            { 'williamboman/mason-lspconfig.nvim', tag = 'v1.30.0' },
             { 'ray-x/lsp_signature.nvim', commit = 'a38da0a61c172bb59e34befc12efe48359884793' },
             { 'hrsh7th/cmp-nvim-lsp' },
         },
@@ -342,10 +343,10 @@ return {
     {
         'nvim-treesitter/nvim-treesitter',
         branch = 'master',
-        commit = '73fb37ed77b18ac357ca8e6e35835a8db6602332',
+        commit = '9ac3931bf6891cecd59c432d343d6490afd401e5',
         build = ':TSUpdate',
         dependencies = {
-            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '5f9bf4b1ead7707e4e74e5319ee56bdc81fb73db' },
+            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '3a3c6244553f13fdd92d312c82722b57ce6c4bec' },
         },
         config = function()
             require('nvim-treesitter.configs').setup({
@@ -419,7 +420,7 @@ return {
 
     {
         'hrsh7th/nvim-cmp',
-        commit = '5260e5e8ecadaf13e6b82cf867a909f54e15fd07',
+        commit = 'ae644feb7b67bf1ce4260c231d1d4300b19c6f30',
         event = 'InsertEnter',
         dependencies = {
             { 'hrsh7th/cmp-nvim-lsp' }
@@ -564,13 +565,25 @@ return {
     {
         'romainl/vim-qf',
         commit = '7e65325651ff5a0b06af8df3980d2ee54cf10e14',
-        event = 'VeryLazy',
+        event = 'FileType qf',
         config = function()
             _map('n', 'öl', '<Plug>(qf_loc_previous)', { desc = 'Go to previous location list item' })
             _map('n', 'äl', '<Plug>(qf_loc_next)', { desc = 'Go to next location list item' })
             _map('n', 'öq', '<Plug>(qf_qf_previous)', { desc = 'Go to previous quickfix item' })
             _map('n', 'äq', '<Plug>(qf_qf_next)', { desc = 'Go to next quickfix item' })
         end,
+    },
+
+    {
+        'stevearc/quicker.nvim',
+        tag = 'v1.1.1',
+        event = 'FileType qf',
+        opts = {
+            keys = {
+                { '>', function() require('quicker').expand({ before = 2, after = 2, add_to_existing = true }) end },
+                { '<', function() require('quicker').collapse() end },
+            },
+        },
     },
 
     {
