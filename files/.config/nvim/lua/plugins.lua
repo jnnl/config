@@ -28,11 +28,6 @@ return {
     },
 
     {
-        'justinmk/vim-dirvish',
-        commit = '3851bedb7f191b9a4a5531000b6fc0a8795cc9bb',
-    },
-
-    {
         'junegunn/fzf',
         lazy = true,
         build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc',
@@ -297,6 +292,8 @@ return {
                     },
                 },
                 pylsp = {},
+                rust_analyzer = {},
+                svelte = {},
                 terraformls = {},
                 tsserver = {},
             }
@@ -541,6 +538,18 @@ return {
                     },
                 }
             })
+        end,
+    },
+
+    {
+        'echasnovski/mini.files',
+        tag = 'v0.13.0',
+        keys = { { '<Leader>tf', desc = 'Toggle mini.files' } },
+        config = function()
+            local minifiles = require('mini.files')
+            _map('n', '<Leader>tf', function()
+                if not minifiles.close() then minifiles.open() end
+            end, { desc = 'Toggle mini.files' })
         end,
     },
 
