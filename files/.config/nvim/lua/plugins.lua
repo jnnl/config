@@ -204,6 +204,7 @@ return {
             vim.cmd.colorscheme('tonight')
         end,
     },
+
     {
         'verf/deepwhite.nvim',
         commit = 'eca39dec3d504412ab5efce0046b77f67ffe4640',
@@ -363,6 +364,8 @@ return {
                         keymaps = {
                             ['aa'] = '@parameter.outer',
                             ['ia'] = '@parameter.inner',
+                            ['aA'] = '@assignment.outer',
+                            ['iA'] = '@assignment.inner',
                             ['ac'] = '@comment.outer',
                             ['ic'] = '@comment.inner',
                             ['aC'] = '@conditional.outer',
@@ -380,6 +383,7 @@ return {
                         set_jumps = true,
                         goto_previous_start = {
                             ['öa'] = '@parameter.inner',
+                            ['öA'] = '@assignment.outer',
                             ['öc'] = '@comment.outer',
                             ['öC'] = '@conditional.outer',
                             ['öf'] = '@function.outer',
@@ -388,6 +392,7 @@ return {
                         },
                         goto_next_start = {
                             ['äa'] = '@parameter.inner',
+                            ['äA'] = '@assignment.outer',
                             ['äc'] = '@comment.outer',
                             ['äC'] = '@conditional.outer',
                             ['äf'] = '@function.outer',

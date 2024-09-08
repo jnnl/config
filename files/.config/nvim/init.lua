@@ -98,7 +98,6 @@ _G._statusline = function()
         end
         buf_attrs = table.concat(attrs)
     end
-
     return table.concat({
         line_count,
         file_path,
@@ -179,13 +178,13 @@ _map('x', 'Q', ':normal @q<CR>')
 _map('x', { '§', '@' }, ':normal @')
 _map('x', '.', ':normal .<CR>')
 
-_map({'n', 'x'}, '<Leader>y', '"+y', { desc = 'Copy text to system clipboard' })
-_map({'n', 'x'}, '<Leader>Y', '"+Y', { desc = 'Copy text from cursor to end of line to system clipboard' })
-_map({'n', 'x'}, '<Leader>p', function()
+_map({ 'n', 'x' }, '<Leader>y', '"+y', { desc = 'Copy text to system clipboard' })
+_map({ 'n', 'x' }, '<Leader>Y', '"+Y', { desc = 'Copy text from cursor to end of line to system clipboard' })
+_map({ 'n', 'x' }, '<Leader>p', function()
     vim.cmd('normal "+p')
     vim.cmd([['[,']Rstrip]])
 end, { desc = 'Paste text from system clipboard after the cursor' })
-_map({'n', 'x'}, '<Leader>P', function()
+_map({ 'n', 'x' }, '<Leader>P', function()
     vim.cmd('normal "+P')
     vim.cmd([['[,']Rstrip]])
 end, { desc = 'Paste text from system clipboard before the cursor' })
