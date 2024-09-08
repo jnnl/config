@@ -41,7 +41,6 @@ return {
             local fzf_lua = require('fzf-lua')
             local defaults = require('fzf-lua.defaults').defaults
             local actions = require('fzf-lua.actions')
-
             fzf_lua.setup({
                 'default',
                 winopts = {
@@ -138,12 +137,10 @@ return {
                     rg_glob = true,
                 },
             })
-
             _map('n', '<Leader>ff', fzf_lua.builtin, { desc = 'Find fzf-lua builtins' })
             _map('n', '<Leader>fc', fzf_lua.commands, { desc = 'Find commands' })
             _map('n', '<Leader>f*', fzf_lua.grep_cWORD, { desc = 'Find text matching word under cursor' })
             _map('x', '<Leader>f*', fzf_lua.grep_visual, { desc = 'Find text matching visual selection' })
-
             _map('n', '<Leader>,', fzf_lua.files, { desc = 'Find files' })
             _map('n', '<Leader>.', fzf_lua.buffers, { desc = 'Find buffers' })
             _map('n', '<Leader>-', fzf_lua.grep_project, { desc = 'Find text' })
@@ -154,7 +151,6 @@ return {
             _map('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
             _map('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
             _map('n', '<Leader>*', function() fzf_lua.files({ cwd = '~' }) end, { desc = 'Find files in $HOME' })
-
             _map('n', '<Leader>fgs', fzf_lua.git_status, { desc = 'Find git status' })
             _map('n', '<Leader>fgx', function()
                 fzf_lua.fzf_exec('git diff --name-only --diff-filter=U', {
@@ -266,24 +262,18 @@ return {
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             capabilities.textDocument.completion.completionItem.snippetSupport = true
             local servers = {
-                angularls = {
-                    filetypes = { 'html' },
-                },
-                ansiblels = {
-                    settings = { ansible = { validation = { lint = { enabled = true } } } },
-                },
+                angularls = { filetypes = { 'html' } },
+                ansiblels = { settings = { ansible = { validation = { lint = { enabled = true } } } } },
                 bashls = {},
                 cssls = {},
-                denols = {
-                    root_dir = lsp.util.root_pattern('deno.json', 'deno.jsonc')
-                },
+                denols = { root_dir = lsp.util.root_pattern('deno.json', 'deno.jsonc') },
                 gopls = {},
                 html = {},
                 lua_ls = {
                     settings = {
                         Lua = {
-                            runtime = { version = 'LuaJIT', },
-                            diagnostics = { globals = { 'vim' }, },
+                            runtime = { version = 'LuaJIT' },
+                            diagnostics = { globals = { 'vim' } },
                             workspace = {
                                 library = { vim.env.VIMRUNTIME },
                                 checkThirdParty = false,
@@ -324,14 +314,15 @@ return {
                 group = _augroup('lsp_attach_config', { clear = true }),
                 callback = function(ev)
                     local fzf_lua = require('fzf-lua')
+                    local opts = _make_opts_fn({ buffer = ev.buf })
                     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-                    _map('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Go to definition' })
-                    _map('n', 'gD', fzf_lua.lsp_definitions, { buffer = ev.buf, desc = 'Find definitions' })
-                    _map('n', 'gi', fzf_lua.lsp_implementations, { desc = 'Find implementations' })
-                    _map('n', 'gt', vim.lsp.buf.type_definition, { buffer = ev.buf, desc = 'Go to type definition' })
-                    _map('n', 'gT', fzf_lua.lsp_typedefs, { buffer = ev.buf, desc = 'Find type definitions' })
-                    _map('n', '<Space>', vim.lsp.buf.hover, { buffer = ev.buf })
-                    _map({ 'n', 'x' }, '<Leader><Space>', fzf_lua.lsp_code_actions, { buffer = ev.buf, desc = 'Find code actions' })
+                    _map('n', 'gd', vim.lsp.buf.definition, opts({ desc = 'Go to definition' }))
+                    _map('n', 'gD', fzf_lua.lsp_definitions, opts({ desc = 'Find definitions' }))
+                    _map('n', 'gi', fzf_lua.lsp_implementations, opts({ desc = 'Find implementations' }))
+                    _map('n', 'gt', vim.lsp.buf.type_definition, opts({ desc = 'Go to type definition' }))
+                    _map('n', 'gT', fzf_lua.lsp_typedefs, opts({ desc = 'Find type definitions' }))
+                    _map('n', '<Space>', vim.lsp.buf.hover, opts())
+                    _map({ 'n', 'x' }, '<Leader><Space>', fzf_lua.lsp_code_actions, opts({ desc = 'Find code actions' }))
                     require('lsp_signature').on_attach({ hint_enable = false }, ev.buf)
                 end,
             })
@@ -425,7 +416,7 @@ return {
         commit = 'ae644feb7b67bf1ce4260c231d1d4300b19c6f30',
         event = 'InsertEnter',
         dependencies = {
-            { 'hrsh7th/cmp-nvim-lsp' }
+            { 'hrsh7th/cmp-nvim-lsp' },
         },
         config = function()
             vim.opt.completeopt = 'menu,menuone,noselect'
@@ -463,9 +454,7 @@ return {
                     end, { 'i', 's' }),
                 }),
                 snippet = { expand = function(args) vim.snippet.expand(args.body) end },
-                sources = cmp.config.sources({
-                    { name = 'nvim_lsp' },
-                }),
+                sources = cmp.config.sources({ { name = 'nvim_lsp' } }),
             })
         end,
     },
@@ -478,19 +467,20 @@ return {
         opts = {
             on_attach = function(bufnr)
                 local gs = require('gitsigns')
-                _map('n', 'öh', function() gs.nav_hunk('prev') end, { buffer = bufnr, desc = 'Go to previous hunk' })
-                _map('n', 'äh', function() gs.nav_hunk('next') end, { buffer = bufnr, desc = 'Go to next hunk' })
-                _map('n', '<Leader>gd', gs.diffthis, { buffer = bufnr, desc = 'Diff file against index' })
-                _map('n', '<Leader>gD', function() gs.diffthis('~') end, { buffer = bufnr, desc = 'Diff file against last commit' })
-                _map('n', '<Leader>gp', gs.preview_hunk, { buffer = bufnr, desc = 'Preview hunk under cursor' })
-                _map('n', '<Leader>gs', gs.stage_hunk, { buffer = bufnr, desc = 'Stage hunk under cursor' })
-                _map('n', '<Leader>gr', gs.reset_hunk, { buffer = bufnr, desc = 'Unstage hunk under cursor' })
+                local opts = _make_opts_fn({ buffer = bufnr })
+                _map('n', 'öh', function() gs.nav_hunk('prev') end, opts({ desc = 'Go to previous hunk' }))
+                _map('n', 'äh', function() gs.nav_hunk('next') end, opts({ desc = 'Go to next hunk' }))
+                _map('n', '<Leader>gd', gs.diffthis, opts({ desc = 'Diff file against index' }))
+                _map('n', '<Leader>gD', function() gs.diffthis('~') end, opts({ desc = 'Diff file against last commit' }))
+                _map('n', '<Leader>gp', gs.preview_hunk, opts({ desc = 'Preview hunk under cursor' }))
+                _map('n', '<Leader>gs', gs.stage_hunk, opts({ desc = 'Stage hunk under cursor' }))
+                _map('n', '<Leader>gr', gs.reset_hunk, opts({ desc = 'Unstage hunk under cursor' }))
                 _map('v', '<Leader>gs', function()
                     gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-                end, { buffer = bufnr, desc = 'Stage hunk(s) in visual range' })
+                end, opts({ desc = 'Stage hunk(s) in visual range' }))
                 _map('v', '<Leader>gr', function()
                     gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-                end, { buffer = bufnr, desc = 'Unstage hunk(s) in visual range' })
+                end, opts({ desc = 'Unstage hunk(s) in visual range' }))
             end,
         }
     },
@@ -552,9 +542,8 @@ return {
         config = function()
             local minifiles = require('mini.files')
             minifiles.setup({
-                options = {
-                    use_as_default_explorer = true,
-                },
+                mappings = { go_out_plus = 'h' },
+                options = { use_as_default_explorer = true },
             })
             _map('n', '<Leader>tf', function()
                 if not minifiles.close() then minifiles.open() end

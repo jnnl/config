@@ -25,6 +25,12 @@ end
 _G._autocmd = vim.api.nvim_create_autocmd
 _G._augroup = vim.api.nvim_create_augroup
 _G._dx = vim.diagnostic
+_G._make_opts_fn = function(defaults)
+    return function(options)
+        options = options or {}
+        return vim.tbl_deep_extend('force', defaults or {}, options)
+    end
+end
 
 -- Plugins
 
@@ -85,24 +91,22 @@ _G._statusline = function()
                 table.insert(attrs, string.format('(%s) ', branch_name))
             end
         end
-        local diagnostic_counts = _dx.count(0)
-        if #diagnostic_counts > 0 and _dx.is_enabled() then
-            local diagnostic_start_pos = #attrs + 1
-            for severity, count in pairs(diagnostic_counts) do
-                local symbol = _dx.severity[severity]:sub(1, 1)
-                table.insert(attrs, diagnostic_start_pos, string.format('%s:%s ', symbol, count))
+        if _dx.is_enabled() then
+            local dx_counts = _dx.count(0)
+            if #dx_counts > 0 then
+                local dx_start_pos = #attrs + 1
+                for severity, count in pairs(dx_counts) do
+                    local symbol = _dx.severity[severity]:sub(1, 1)
+                    table.insert(attrs, dx_start_pos, string.format('%s:%s ', symbol, count))
+                end
             end
         end
         if #attrs > 0 then
             table.insert(attrs, 1, separator)
+            buf_attrs = table.concat(attrs)
         end
-        buf_attrs = table.concat(attrs)
     end
-    return table.concat({
-        line_count,
-        file_path,
-        buf_attrs,
-    })
+    return table.concat({ line_count, file_path, buf_attrs })
 end
 
 vim.opt.statusline = '%{%v:lua._statusline()%}'
@@ -140,6 +144,7 @@ _map('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
 _map('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 _map('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
 _map('n', 'ät', '<cmd>tabnext<CR>', { desc = 'Go to next tab' })
+_map('n', '<C-Space>', _dx.open_float)
 _map('n', 'öd', function()
     _dx.jump({ count = -1, severity = { min = _dx.severity.WARN } })
 end, { desc = 'Go to previous WARN+ diagnostic' })
@@ -152,7 +157,6 @@ end, { desc = 'Go to previous HINT+ diagnostic' })
 _map('n', 'äD', function()
     _dx.jump({ count = 1, severity = { min = _dx.severity.HINT } })
 end, { desc = 'Go to next HINT+ diagnostic' })
-_map('n', '<C-Space>', _dx.open_float)
 
 _map('n', 'j', function() return vim.v.count == 0 and 'gj' or 'j' end, { expr = true })
 _map('n', 'k', function() return vim.v.count == 0 and 'gk' or 'k' end, { expr = true })
