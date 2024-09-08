@@ -544,9 +544,13 @@ return {
     {
         'echasnovski/mini.files',
         tag = 'v0.13.0',
-        keys = { { '<Leader>tf', desc = 'Toggle mini.files' } },
         config = function()
             local minifiles = require('mini.files')
+            minifiles.setup({
+                options = {
+                    use_as_default_explorer = true,
+                },
+            })
             _map('n', '<Leader>tf', function()
                 if not minifiles.close() then minifiles.open() end
             end, { desc = 'Toggle mini.files' })
