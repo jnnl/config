@@ -19,16 +19,18 @@ end
 ---@param command string|function
 ---@param opts? vim.api.keyset.user_command
 _G._cmd = function(name, command, opts)
-    local options = opts or {}
-    vim.api.nvim_create_user_command(name, command, options)
+    vim.api.nvim_create_user_command(name, command, opts or {})
+end
+---@param name string
+---@param opts? vim.api.keyset.create_augroup
+_G._augroup = function(name, opts)
+    return vim.api.nvim_create_augroup(name, opts or {})
 end
 _G._autocmd = vim.api.nvim_create_autocmd
-_G._augroup = vim.api.nvim_create_augroup
 _G._dx = vim.diagnostic
 _G._make_opts_fn = function(defaults)
-    return function(options)
-        options = options or {}
-        return vim.tbl_deep_extend('force', defaults or {}, options)
+    return function(opts)
+        return vim.tbl_deep_extend('force', defaults or {}, opts or {})
     end
 end
 
@@ -256,7 +258,7 @@ end, { bang = true, desc = 'Show unsaved changes diff (!: vertical split)' })
 -- Autocommands
 
 _autocmd('FileType', {
-    group = _augroup('make_ft_options', { clear = true }),
+    group = _augroup('make_ft_opts'),
     pattern = 'make',
     callback = function()
         vim.opt_local.expandtab = false
@@ -265,7 +267,7 @@ _autocmd('FileType', {
 })
 
 _autocmd('FileType', {
-    group = _augroup('terraform_ft_options', { clear = true }),
+    group = _augroup('terraform_ft_opts'),
     pattern = { 'terraform' },
     callback = function()
         vim.opt_local.commentstring = '# %s'
@@ -273,7 +275,7 @@ _autocmd('FileType', {
 })
 
 _autocmd('FileType', {
-    group = _augroup('treesitter', { clear = true }),
+    group = _augroup('treesitter'),
     callback = function(args)
         local filename = vim.api.nvim_buf_get_name(args.buf)
         if #filename > 0 and vim.fn.getfsize(filename) > 1024 * 200 then
@@ -285,7 +287,7 @@ _autocmd('FileType', {
 })
 
 _autocmd('FileType', {
-    group = _augroup('help_keywordprg', { clear = true }),
+    group = _augroup('help_keywordprg'),
     pattern = { 'vim', 'help' },
     callback = function()
         vim.opt_local.keywordprg = ':help'
@@ -293,7 +295,7 @@ _autocmd('FileType', {
 })
 
 _autocmd('FileType', {
-    group = _augroup('angular_commands', { clear = true }),
+    group = _augroup('angular_cmds'),
     pattern = { 'html', 'scss', 'typescript' },
     callback = function()
         local is_angular = vim.fn.findfile('angular.json', '.;') ~= ''
@@ -312,7 +314,7 @@ _autocmd('FileType', {
 })
 
 _autocmd('FileType', {
-    group = _augroup('go_commands', { clear = true }),
+    group = _augroup('go_cmds'),
     pattern = 'go',
     callback = function()
         _cmd('ECode', ':e %:p:s?_test.go?.go?')
@@ -325,14 +327,14 @@ _autocmd('FileType', {
 })
 
 _autocmd('TextYankPost', {
-    group = _augroup('yank_highlight', { clear = true }),
+    group = _augroup('yank_highlight'),
     callback = function()
         vim.highlight.on_yank({ higroup = 'IncSearch', timeout = 500, on_visual = false })
     end
 })
 
 _autocmd({ 'BufWritePre', 'FileWritePre' }, {
-    group = _augroup('auto_mkdir', { clear = true }),
+    group = _augroup('auto_mkdir'),
     callback = function()
         local filename = vim.api.nvim_buf_get_name(0)
         local dir = vim.fn.fnamemodify(filename, ':p:h')
@@ -343,7 +345,7 @@ _autocmd({ 'BufWritePre', 'FileWritePre' }, {
 })
 
 _autocmd('DiagnosticChanged', {
-    group = _augroup('statusline_refresh', { clear = true }),
+    group = _augroup('statusline_refresh'),
     callback = function()
         vim.o.statusline = vim.o.statusline
     end,

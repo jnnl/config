@@ -2,7 +2,7 @@ return {
     -- Navigation
     {
         'andymass/vim-matchup',
-        commit = 'ff3bea611696f5cfdfe61a939149daadff41f2af',
+        commit = 'f89858a5ab87feb752c860d396022ae7b13070c2',
         event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
@@ -35,7 +35,7 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        commit = '1572a89acf8c468a230f0f5ee7092a15496213ee',
+        commit = 'f39de2d77755e90a7a80989b007f0bf2ca13b0dd',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -46,6 +46,7 @@ return {
                 winopts = {
                     height = 0.75,
                     width = 0.6,
+                    backdrop = 100,
                     preview = {
                         layout = 'vertical',
                         vertical = 'down:50%',
@@ -311,7 +312,7 @@ return {
                 }
             })
             _autocmd('LspAttach', {
-                group = _augroup('lsp_attach_config', { clear = true }),
+                group = _augroup('lsp_attach_config'),
                 callback = function(ev)
                     local fzf_lua = require('fzf-lua')
                     local opts = _make_opts_fn({ buffer = ev.buf })
@@ -418,13 +419,15 @@ return {
         dependencies = {
             { 'hrsh7th/cmp-nvim-lsp' },
         },
-        config = function()
-            vim.opt.completeopt = 'menu,menuone,noselect'
+        init = function()
             vim.g.cmp_enabled = true
             _map('n', '<Leader>tc', function()
                 vim.g.cmp_enabled = vim.g.cmp_enabled ~= true
                 vim.notify('completion ' .. (vim.g.cmp_enabled and 'enabled' or 'disabled'))
             end, { desc = 'Toggle completion' })
+        end,
+        config = function()
+            vim.opt.completeopt = 'menu,menuone,noselect'
             local cmp = require('cmp')
             cmp.setup({
                 enabled = function() return vim.g.cmp_enabled end,
