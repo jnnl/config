@@ -601,4 +601,24 @@ return {
         tag = '2.3.0',
         cmd = { 'DiffConflicts', 'DiffConflictsShowHistory', 'DiffConflictsWithHistory' },
     },
+
+    {
+        'akinsho/toggleterm.nvim',
+        commit = '137d06fb103952a0fb567882bb8527e2f92d327d',
+        event = 'VeryLazy',
+        opts = {
+            size = function(term)
+                if term.direction == 'horizontal' then
+                    return 10
+                elseif term.direction == 'vertical' then
+                    return vim.o.columns / 2
+                end
+            end
+        },
+        init = function()
+            _map('n', '<Leader>tt', '<cmd>ToggleTerm<CR>', { desc = 'Toggle terminal' })
+            _map('n', '<Leader>tT', '<cmd>ToggleTerm direction=float<CR>', { desc = 'Toggle terminal (float)' })
+            _map('t', '<Leader>tt', '<cmd>ToggleTerm<CR>', { desc = 'Toggle terminal' })
+        end,
+    },
 }

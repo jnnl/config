@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global
 -- Globals
 
 vim.g.mapleader = ','
@@ -8,7 +9,7 @@ vim.g.maplocalleader = ','
 ---@param rhs string|function
 ---@param opts? vim.keymap.set.Opts
 ---@see vim.keymap.set
-_G._map = function(mode, lhs, rhs, opts)
+_map = function(mode, lhs, rhs, opts)
     ---@type string[]
     local lhs_tbl = type(lhs) == 'table' and lhs or { lhs }
     for _, lhs_val in ipairs(lhs_tbl) do
@@ -18,17 +19,17 @@ end
 ---@param name string
 ---@param command string|function
 ---@param opts? vim.api.keyset.user_command
-_G._cmd = function(name, command, opts)
+_cmd = function(name, command, opts)
     vim.api.nvim_create_user_command(name, command, opts or {})
 end
 ---@param name string
 ---@param opts? vim.api.keyset.create_augroup
-_G._augroup = function(name, opts)
+_augroup = function(name, opts)
     return vim.api.nvim_create_augroup(name, opts or {})
 end
-_G._autocmd = vim.api.nvim_create_autocmd
-_G._dx = vim.diagnostic
-_G._make_opts_fn = function(defaults)
+_autocmd = vim.api.nvim_create_autocmd
+_dx = vim.diagnostic
+_make_opts_fn = function(defaults)
     return function(opts)
         return vim.tbl_deep_extend('force', defaults or {}, opts or {})
     end
@@ -77,7 +78,7 @@ _dx.config({ virtual_text = false })
 
 -- Statusline
 
-_G._statusline = function()
+_statusline = function()
     local separator = ' %#StatuslineNC#::%* '
     local line_count = '%3l/%L'
     local file_path = separator .. '%<%f'
