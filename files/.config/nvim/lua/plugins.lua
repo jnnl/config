@@ -333,10 +333,10 @@ return {
     {
         'nvim-treesitter/nvim-treesitter',
         branch = 'master',
-        commit = '9ac3931bf6891cecd59c432d343d6490afd401e5',
+        commit = '6a3c6a42a6e24414bdf337b05a84a0ea013dd155',
         build = ':TSUpdate',
         dependencies = {
-            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '3a3c6244553f13fdd92d312c82722b57ce6c4bec' },
+            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = 'bf8d2ad35d1d1a687eae6c065c3d524f7ab61b23' },
         },
         config = function()
             require('nvim-treesitter.configs').setup({
