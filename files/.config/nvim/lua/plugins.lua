@@ -492,6 +492,11 @@ return {
         'tpope/vim-fugitive',
         commit = '0444df68cd1cdabc7453d6bd84099458327e5513',
         event = 'VeryLazy',
+        config = function()
+            _map('n', '<Leader>gb', '<cmd>Git blame<CR>', { desc = 'Open git blame split' })
+            _map('n', '<Leader>gl', '<cmd>Git log %<CR>', { desc = 'Open file commit history' })
+            _map('n', '<Leader>gL', '<cmd>0Gclog<CR>', { desc = 'Open file commit history in quickfix' })
+        end
     },
 
     -- Miscellaneous
