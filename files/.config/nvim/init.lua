@@ -1,4 +1,5 @@
 ---@diagnostic disable: lowercase-global
+
 -- Globals
 
 vim.g.mapleader = ','
@@ -34,50 +35,6 @@ _make_opts_fn = function(defaults)
         return vim.tbl_deep_extend('force', defaults or {}, opts or {})
     end
 end
-
--- Plugins
-
-local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.uv.fs_stat(lazy_path) then
-    vim.notify('installing lazy.nvim...')
-    vim.fn.system({
-        'git', 'clone', 'https://github.com/folke/lazy.nvim.git',
-        '--filter=blob:none', '--branch=stable',
-        lazy_path
-    })
-end
-
-vim.opt.rtp:prepend(lazy_path)
-require('lazy').setup('plugins', {
-    change_detection = { enabled = false },
-    checker = { check_pinned = true },
-    defaults = { lazy = false },
-    lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
-    performance = {
-        rtp = {
-            disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor' },
-        },
-    },
-    pkg = { enabled = false },
-    rocks = { enabled = false },
-})
-
--- Miscellaneous
-
-vim.opt.fillchars:append('eob: ')
-vim.opt.modeline = false
-vim.opt.mouse = ''
-vim.opt.number = true
-vim.opt.shada = [[r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:,!,'200,<50,s10,h]]
-vim.opt.shortmess:append('cI')
-vim.opt.timeoutlen = 500
-vim.opt.inccommand = 'split'
-vim.opt.signcolumn = 'yes'
-
-_dx.config({ virtual_text = false })
-
--- Statusline
-
 _statusline = function()
     local separator = ' %#StatuslineNC#::%* '
     local line_count = '%3l/%L'
@@ -112,29 +69,58 @@ _statusline = function()
     return table.concat({ line_count, file_path, buf_attrs })
 end
 
-vim.opt.statusline = '%{%v:lua._statusline()%}'
 
--- Indentation
+-- Plugins
+
+local lazy_path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not vim.uv.fs_stat(lazy_path) then
+    vim.notify('installing lazy.nvim...')
+    vim.fn.system({
+        'git', 'clone', 'https://github.com/folke/lazy.nvim.git',
+        '--filter=blob:none', '--branch=stable',
+        lazy_path
+    })
+end
+
+vim.opt.rtp:prepend(lazy_path)
+require('lazy').setup('plugins', {
+    change_detection = { enabled = false },
+    checker = { check_pinned = true },
+    defaults = { lazy = false },
+    lockfile = vim.fn.stdpath('data') .. '/lazy-lock.json',
+    performance = {
+        rtp = {
+            disabled_plugins = { 'gzip', 'matchit', 'matchparen', 'netrwPlugin', 'rplugin', 'tohtml', 'tutor' },
+        },
+    },
+    pkg = { enabled = false },
+    rocks = { enabled = false },
+})
+
+-- Options
 
 vim.opt.expandtab = true
+vim.opt.fillchars:append('eob: ')
+vim.opt.ignorecase = true
+vim.opt.inccommand = 'split'
+vim.opt.modeline = false
+vim.opt.mouse = ''
+vim.opt.number = true
+vim.opt.shada = [[r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:,!,'200,<50,s10,h]]
 vim.opt.shiftround = true
 vim.opt.shiftwidth = 4
-vim.opt.softtabstop = -1
-
--- Search
-
-vim.opt.ignorecase = true
+vim.opt.shortmess:append('cI')
+vim.opt.signcolumn = 'yes'
 vim.opt.smartcase = true
-
--- Splits
-
+vim.opt.softtabstop = -1
 vim.opt.splitbelow = true
 vim.opt.splitright = true
-
--- Undo
-
+vim.opt.statusline = '%{%v:lua._statusline()%}'
+vim.opt.timeoutlen = 500
 vim.opt.undodir = vim.fn.stdpath('state') .. '/undo'
 vim.opt.undofile = true
+
+_dx.config({ virtual_text = false })
 
 -- Keymaps
 
@@ -244,7 +230,7 @@ _cmd('Redir', function(opts)
     vim.cmd(opts.bang and 'new' or 'vnew')
     vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
     vim.opt_local.modified = false
-end, { bang = true, nargs = '+', complete = 'command', desc = 'Redirect command output to a vertical split (!: horizontal split)' })
+end, { bang = true, nargs = '+', complete = 'command', desc = 'Redirect command output to a vsplit (!: hsplit)' })
 
 _cmd('DiffChanges', function(opts)
     local cmd = 'w !git diff --no-index % -'
@@ -254,7 +240,7 @@ _cmd('DiffChanges', function(opts)
     else
         vim.cmd(cmd)
     end
-end, { bang = true, desc = 'Show unsaved changes diff (!: vertical split)' })
+end, { bang = true, desc = 'Show unsaved changes diff (!: vsplit)' })
 
 -- Autocommands
 
@@ -355,7 +341,7 @@ _autocmd('DiagnosticChanged', {
 -- Filetypes
 
 vim.filetype.add({
-  pattern = {
-    ['.*/ansible/.*.ya?ml'] = 'yaml.ansible'
-  },
+    pattern = {
+        ['.*/ansible/.*.ya?ml'] = 'yaml.ansible'
+    },
 })
