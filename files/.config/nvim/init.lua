@@ -30,7 +30,9 @@ _augroup = function(name, opts)
 end
 _autocmd = vim.api.nvim_create_autocmd
 _dx = vim.diagnostic
+---@param defaults? table
 _make_opts_fn = function(defaults)
+    ---@param opts? table
     return function(opts)
         return vim.tbl_deep_extend('force', defaults or {}, opts or {})
     end
@@ -68,7 +70,6 @@ _statusline = function()
     end
     return table.concat({ line_count, file_path, buf_attrs })
 end
-
 
 -- Plugins
 
@@ -250,7 +251,7 @@ _autocmd('FileType', {
     callback = function()
         vim.opt_local.expandtab = false
         vim.opt_local.shiftwidth = 8
-    end
+    end,
 })
 
 _autocmd('FileType', {
@@ -258,7 +259,7 @@ _autocmd('FileType', {
     pattern = { 'terraform' },
     callback = function()
         vim.opt_local.commentstring = '# %s'
-    end
+    end,
 })
 
 _autocmd('FileType', {
@@ -278,7 +279,7 @@ _autocmd('FileType', {
     pattern = { 'vim', 'help' },
     callback = function()
         vim.opt_local.keywordprg = ':help'
-    end
+    end,
 })
 
 _autocmd('FileType', {
@@ -297,7 +298,7 @@ _autocmd('FileType', {
             _cmd('VComponent', ':vs %:p:r.ts')
             _cmd('VStyle', ':vs %:p:r.scss')
         end
-    end
+    end,
 })
 
 _autocmd('FileType', {
@@ -310,14 +311,14 @@ _autocmd('FileType', {
         _cmd('ETest', ':e %:p:r_test.go')
         _cmd('STest', ':sp %:p:r_test.go')
         _cmd('VTest', ':vs %:p:r_test."go"')
-    end
+    end,
 })
 
 _autocmd('TextYankPost', {
     group = _augroup('yank_highlight'),
     callback = function()
         vim.highlight.on_yank({ higroup = 'IncSearch', timeout = 500, on_visual = false })
-    end
+    end,
 })
 
 _autocmd({ 'BufWritePre', 'FileWritePre' }, {
@@ -328,7 +329,7 @@ _autocmd({ 'BufWritePre', 'FileWritePre' }, {
         if vim.fn.isdirectory(dir) == 0 then
             vim.fn.system({ 'mkdir', '-vp', dir })
         end
-    end
+    end,
 })
 
 _autocmd('DiagnosticChanged', {

@@ -245,16 +245,16 @@ return {
                 conform.format({ async = true, lsp_format = 'fallback', range = range })
             end, { range = true, desc = 'Format buffer' })
             _map('n', '<Leader>xf', function() vim.cmd('Format') end, { desc = 'Format buffer' })
-        end
+        end,
     },
 
     {
         'neovim/nvim-lspconfig',
-        tag = 'v0.1.8',
+        tag = 'v1.0.0',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
             { 'williamboman/mason.nvim', tag = 'v1.10.0' },
-            { 'williamboman/mason-lspconfig.nvim', tag = 'v1.30.0' },
+            { 'williamboman/mason-lspconfig.nvim', tag = 'v1.31.0' },
             { 'ray-x/lsp_signature.nvim', commit = 'a38da0a61c172bb59e34befc12efe48359884793' },
             { 'hrsh7th/cmp-nvim-lsp' },
         },
@@ -285,9 +285,8 @@ return {
                 },
                 pylsp = {},
                 rust_analyzer = {},
-                svelte = {},
                 terraformls = {},
-                tsserver = {},
+                ts_ls = {},
             }
             require('mason').setup()
             require('mason-lspconfig').setup({
@@ -303,12 +302,12 @@ return {
                             end
                         end
                         lsp.util.on_setup = lsp.util.add_hook_before(lsp.util.on_setup, function(cfg)
-                            if cfg.name == 'tsserver' and lsp.util.root_pattern('deno.json') then
+                            if cfg.name == 'ts_ls' and lsp.util.root_pattern('deno.json') then
                                 cfg.single_file_support = false
                             end
                         end)
                         lsp[server_name].setup(config)
-                    end
+                    end,
                 }
             })
             _autocmd('LspAttach', {
@@ -333,7 +332,7 @@ return {
     {
         'nvim-treesitter/nvim-treesitter',
         branch = 'master',
-        commit = '6a3c6a42a6e24414bdf337b05a84a0ea013dd155',
+        commit = '4d94c24d6cb9985347bdf0692c1fd81088c6c8b2',
         build = ':TSUpdate',
         dependencies = {
             { 'nvim-treesitter/nvim-treesitter-textobjects', commit = 'bf8d2ad35d1d1a687eae6c065c3d524f7ab61b23' },
@@ -496,7 +495,7 @@ return {
             _map('n', '<Leader>gb', '<cmd>Git blame<CR>', { desc = 'Open git blame split' })
             _map('n', '<Leader>gl', '<cmd>Git log %<CR>', { desc = 'Open file commit history' })
             _map('n', '<Leader>gL', '<cmd>0Gclog<CR>', { desc = 'Open file commit history in quickfix' })
-        end
+        end,
     },
 
     -- Miscellaneous
@@ -618,7 +617,7 @@ return {
                 elseif term.direction == 'vertical' then
                     return vim.o.columns / 2
                 end
-            end
+            end,
         },
         init = function()
             _map('n', '<Leader>tt', '<cmd>ToggleTerm<CR>', { desc = 'Toggle terminal' })
