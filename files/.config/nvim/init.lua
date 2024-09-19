@@ -284,7 +284,7 @@ _autocmd('FileType', {
 
 _autocmd('FileType', {
     group = _augroup('angular_cmds'),
-    pattern = { 'html', 'scss', 'typescript' },
+    pattern = { 'html', 'htmlangular', 'scss', 'typescript' },
     callback = function()
         local is_angular = vim.fn.findfile('angular.json', '.;') ~= ''
         if is_angular then

@@ -35,7 +35,7 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        commit = 'f39de2d77755e90a7a80989b007f0bf2ca13b0dd',
+        commit = 'f513524561060f2b9e3bd6d36ff046bfa03ca114',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -255,7 +255,7 @@ return {
         dependencies = {
             { 'williamboman/mason.nvim', tag = 'v1.10.0' },
             { 'williamboman/mason-lspconfig.nvim', tag = 'v1.31.0' },
-            { 'ray-x/lsp_signature.nvim', commit = 'a38da0a61c172bb59e34befc12efe48359884793' },
+            { 'ray-x/lsp_signature.nvim', commit = 'fc38521ea4d9ec8dbd4c2819ba8126cea743943b' },
             { 'hrsh7th/cmp-nvim-lsp' },
         },
         config = function()
@@ -263,13 +263,13 @@ return {
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             capabilities.textDocument.completion.completionItem.snippetSupport = true
             local servers = {
-                angularls = { filetypes = { 'html' } },
+                angularls = { filetypes = { 'html', 'htmlangular' } },
                 ansiblels = { settings = { ansible = { validation = { lint = { enabled = true } } } } },
                 bashls = {},
                 cssls = {},
                 denols = { root_dir = lsp.util.root_pattern('deno.json', 'deno.jsonc') },
                 gopls = {},
-                html = {},
+                html = { filetypes = { 'html', 'htmlangular' } },
                 lua_ls = {
                     settings = {
                         Lua = {
@@ -489,7 +489,7 @@ return {
 
     {
         'tpope/vim-fugitive',
-        commit = '0444df68cd1cdabc7453d6bd84099458327e5513',
+        commit = 'd4877e54cef67f5af4f950935b1ade19ed6b7370',
         event = 'VeryLazy',
         config = function()
             _map('n', '<Leader>gb', '<cmd>Git blame<CR>', { desc = 'Open git blame split' })
@@ -560,7 +560,7 @@ return {
 
     {
         'mbbill/undotree',
-        commit = '56c684a805fe948936cda0d1b19505b84ad7e065',
+        commit = '78b5241191852ffa9bb5da5ff2ee033160798c3b',
         event = 'VeryLazy',
         config = function()
             _map('n', '<Leader>tu', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
