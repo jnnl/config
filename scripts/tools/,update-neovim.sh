@@ -28,12 +28,15 @@ cd "$base_path"
 if type -p nvim &>/dev/null; then
     printf "currently installed neovim version: %s\n" "$(nvim -v | awk 'NR==1 { print $2 }')"
 fi
-printf "install directory: %s\n\n" "$base_path/$pkg_name"
+printf "install directory: %s\n" "$base_path/$pkg_name"
 
 if [ -d "$pkg_name" ]; then
-    printf "creating backup: %s -> %s ... " "$pkg_name" "$pkg_name.bak"
-    cp -rf "$pkg_name" "$pkg_name.bak"
-    printf "done\n"
+    if ! cmp -s "$base_path/$pkg_name/bin/nvim" "$base_path/$pkg_name.bak/bin/nvim"; then
+        printf "creating backup: %s -> %s ... " "$pkg_name" "$pkg_name.bak"
+        rm -rf "$pkg_name.bak"
+        cp -prf "$pkg_name" "$pkg_name.bak"
+        printf "done\n"
+    fi
 fi
 
 printf "downloading $pkg_name.tar.gz (tag: %s) ... " "$tag"
