@@ -322,6 +322,7 @@ return {
                     _map('n', 'gt', vim.lsp.buf.type_definition, opts({ desc = 'Go to type definition' }))
                     _map('n', 'gT', fzf_lua.lsp_typedefs, opts({ desc = 'Find type definitions' }))
                     _map('n', '<Space>', vim.lsp.buf.hover, opts())
+                    _map('n', '<Leader>r', vim.lsp.buf.rename, opts({ desc = 'Rename symbol under cursor' }))
                     _map({ 'n', 'x' }, '<Leader><Space>', fzf_lua.lsp_code_actions, opts({ desc = 'Find code actions' }))
                     require('lsp_signature').on_attach({ hint_enable = false }, ev.buf)
                 end,
@@ -513,6 +514,8 @@ return {
                     { mode = 'n', keys = 'ä' },
                     { mode = 'n', keys = 'g' },
                     { mode = 'x', keys = 'g' },
+                    { mode = 'n', keys = 'z' },
+                    { mode = 'x', keys = 'z' },
                     { mode = 'n', keys = "'" },
                     { mode = 'x', keys = "'" },
                     { mode = 'n', keys = '"' },
@@ -528,6 +531,7 @@ return {
                     miniclue.gen_clues.marks(),
                     miniclue.gen_clues.registers({ show_contents = true }),
                     miniclue.gen_clues.windows(),
+                    miniclue.gen_clues.z(),
                 },
                 window = {
                     delay = 500,
@@ -620,9 +624,8 @@ return {
             end,
         },
         init = function()
-            _map('n', '<Leader>tt', '<cmd>ToggleTerm<CR>', { desc = 'Toggle terminal' })
+            _map({ 'n', 't' }, '<Leader>tt', '<cmd>ToggleTerm<CR>', { desc = 'Toggle terminal' })
             _map('n', '<Leader>tT', '<cmd>ToggleTerm direction=float<CR>', { desc = 'Toggle terminal (float)' })
-            _map('t', '<Leader>tt', '<cmd>ToggleTerm<CR>', { desc = 'Toggle terminal' })
         end,
     },
 }
