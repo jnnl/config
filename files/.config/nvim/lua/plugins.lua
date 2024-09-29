@@ -2,7 +2,7 @@ return {
     -- Navigation
     {
         'andymass/vim-matchup',
-        commit = 'f89858a5ab87feb752c860d396022ae7b13070c2',
+        commit = '1975afe63198ab6a0dff7200919828e5cd4330b9',
         event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
@@ -35,7 +35,7 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        commit = 'f513524561060f2b9e3bd6d36ff046bfa03ca114',
+        commit = '780899604e0ce490d0d8e402a2fcdbad1cd7c9b8',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -215,7 +215,7 @@ return {
     -- Language
     {
         'stevearc/conform.nvim',
-        tag = 'v8.0.0',
+        tag = 'v8.1.0',
         event = 'BufWritePre',
         cmd = { 'Format' },
         keys = { { '<Leader>xf', desc = 'Format buffer' } },
@@ -332,10 +332,10 @@ return {
     {
         'nvim-treesitter/nvim-treesitter',
         branch = 'master',
-        commit = '4d94c24d6cb9985347bdf0692c1fd81088c6c8b2',
+        commit = '140f534ce9c02189921b80f5c8a68ab9e3f92ce8',
         build = ':TSUpdate',
         dependencies = {
-            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = 'bf8d2ad35d1d1a687eae6c065c3d524f7ab61b23' },
+            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '4a2d05ec24eaa6b655c7d19092a3b6c0219d46b9' },
         },
         config = function()
             require('nvim-treesitter.configs').setup({
@@ -464,7 +464,7 @@ return {
     -- Git
     {
         'lewis6991/gitsigns.nvim',
-        tag = 'v0.9.0',
+        commit = '863903631e676b33e8be2acb17512fdc1b80b4fb',
         event = 'VeryLazy',
         opts = {
             on_attach = function(bufnr)
@@ -501,7 +501,7 @@ return {
     -- Miscellaneous
     {
         'echasnovski/mini.clue',
-        tag = 'v0.13.0',
+        tag = 'v0.14.0',
         event = 'VeryLazy',
         config = function()
             local miniclue = require('mini.clue')
@@ -545,7 +545,7 @@ return {
 
     {
         'echasnovski/mini.files',
-        tag = 'v0.13.0',
+        tag = 'v0.14.0',
         config = function()
             local minifiles = require('mini.files')
             minifiles.setup({
@@ -572,7 +572,7 @@ return {
 
     {
         'michaeljsmith/vim-indent-object',
-        commit = '5c5b24c959478929b54a9e831a8e2e651a465965',
+        commit = '8ab36d5ec2a3a60468437a95e142ce994df598c6',
         event = 'VeryLazy',
     },
 
