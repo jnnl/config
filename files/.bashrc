@@ -116,6 +116,14 @@ t() {
     fi
 }
 
+# copy given files/directories from x to x.bak
+bak() {
+    for f in "$@"; do
+        path="$(realpath -s "$f")"
+        cp -iprv "$path" "$path.bak"
+    done
+}
+
 # print number of stopped jobs
 __nstopjobs() {
     n_stopped="$(jobs -ps 2>/dev/null | wc -l)"
