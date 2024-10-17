@@ -132,7 +132,6 @@ return {
                     winopts = { preview = { hidden = 'hidden' } },
                 },
                 grep = {
-                    fzf_opts = { ['--nth'] = '3..', ['--delimiter'] = ':' },
                     rg_opts = '--column --line-number --no-heading --hidden --smart-case --max-columns=4096 ' ..
                     '--glob="!.git/" --color=always --colors "path:fg:green" --colors "line:fg:yellow"',
                     rg_glob = true,
@@ -152,6 +151,7 @@ return {
             _map('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
             _map('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
             _map('n', '<Leader>*', function() fzf_lua.files({ cwd = '~' }) end, { desc = 'Find files in $HOME' })
+            _map('n', '<Leader>fd', fzf_lua.diagnostics_document, { desc = 'Find document diagnostics' })
             _map('n', '<Leader>fgs', fzf_lua.git_status, { desc = 'Find git status' })
             _map('n', '<Leader>fgx', function()
                 fzf_lua.fzf_exec('git diff --name-only --diff-filter=U', {
@@ -321,8 +321,9 @@ return {
                     _map('n', 'gi', fzf_lua.lsp_implementations, opts({ desc = 'Find implementations' }))
                     _map('n', 'gt', vim.lsp.buf.type_definition, opts({ desc = 'Go to type definition' }))
                     _map('n', 'gT', fzf_lua.lsp_typedefs, opts({ desc = 'Find type definitions' }))
-                    _map('n', '<Space>', vim.lsp.buf.hover, opts())
-                    _map('n', '<Leader>r', vim.lsp.buf.rename, opts({ desc = 'Rename symbol under cursor' }))
+                    _map('n', '<Space>', vim.lsp.buf.hover, opts({ desc = 'Show hover info about symbol under cursor' }))
+                    _map('n', '<Leader>xr', vim.lsp.buf.rename, opts({ desc = 'Rename symbol under cursor' }))
+                    _map('n', '<Leader>fs', fzf_lua.lsp_document_symbols, opts({ desc = 'Find document symbols' }))
                     _map({ 'n', 'x' }, '<Leader><Space>', fzf_lua.lsp_code_actions, opts({ desc = 'Find code actions' }))
                     require('lsp_signature').on_attach({ hint_enable = false }, ev.buf)
                 end,

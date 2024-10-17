@@ -82,7 +82,6 @@ if not vim.uv.fs_stat(lazy_path) then
         lazy_path
     })
 end
-
 vim.opt.rtp:prepend(lazy_path)
 require('lazy').setup('plugins', {
     change_detection = { enabled = false },
@@ -127,14 +126,29 @@ _dx.config({ virtual_text = false })
 
 _map('n', '<BS>', '<C-^>')
 _map('n', '\'', '`')
+_map('n', '<C-Space>', _dx.open_float)
 _map('n', '<Esc>', '<cmd>nohlsearch<CR>')
+_map('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
+_map('ca', 'W', 'w')
+
+_map('n', 'j', function() return vim.v.count == 0 and 'gj' or 'j' end, { expr = true })
+_map('n', 'k', function() return vim.v.count == 0 and 'gk' or 'k' end, { expr = true })
+_map({ 'n', 'x' }, '<C-j>', '}')
+_map({ 'n', 'x' }, '<C-k>', '{')
+_map('c', '<C-j>', '<Down>')
+_map('c', '<C-k>', '<Up>')
+
+_map('n', 'Q', '@q')
+_map('x', 'Q', ':normal @q<CR>')
+_map('x', '@', ':normal @')
+_map('x', '.', ':normal .<CR>')
+
 _map('n', { 'Ö', 'öö' }, '<C-o>', { desc = 'Go to previous jump list position' })
 _map('n', { 'Ä', 'ää' }, '<C-i>', { desc = 'Go to next jump list position' })
 _map('n', 'öb', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
 _map('n', 'äb', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 _map('n', 'öt', '<cmd>tabprevious<CR>', { desc = 'Go to previous tab' })
 _map('n', 'ät', '<cmd>tabnext<CR>', { desc = 'Go to next tab' })
-_map('n', '<C-Space>', _dx.open_float)
 _map('n', 'öd', function()
     _dx.jump({ count = -1, severity = { min = _dx.severity.WARN } })
 end, { desc = 'Go to previous WARN+ diagnostic' })
@@ -148,29 +162,12 @@ _map('n', 'äD', function()
     _dx.jump({ count = 1, severity = { min = _dx.severity.HINT } })
 end, { desc = 'Go to next HINT+ diagnostic' })
 
-_map('n', 'j', function() return vim.v.count == 0 and 'gj' or 'j' end, { expr = true })
-_map('n', 'k', function() return vim.v.count == 0 and 'gk' or 'k' end, { expr = true })
-_map({ 'n', 'x' }, '<C-j>', '}')
-_map({ 'n', 'x' }, '<C-k>', '{')
-_map('c', '<C-j>', '<Down>')
-_map('c', '<C-k>', '<Up>')
-_map('ca', 'W', 'w')
-
+_map('n', '<C-w>:', function() vim.cmd('resize' .. vim.fn.line('$')) end, { desc = 'Fit window height to content' })
 _map('n', '<C-w>.', function()
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     local longest_line_length = math.max(unpack(vim.tbl_map(function(line) return #line end, lines)))
     vim.cmd('vertical resize ' .. longest_line_length + 8)
 end, { desc = 'Fit window width to content' })
-_map('n', '<C-w>:', function()
-    vim.cmd('resize' .. vim.fn.line('$'))
-end, { desc = 'Fit window height to content' })
-
-_map('n', '§', '@')
-_map('n', '§§', '@@')
-_map('n', 'Q', '@q')
-_map('x', 'Q', ':normal @q<CR>')
-_map('x', { '§', '@' }, ':normal @')
-_map('x', '.', ':normal .<CR>')
 
 _map({ 'n', 'x' }, '<Leader>y', '"+y', { desc = 'Copy text to system clipboard' })
 _map({ 'n', 'x' }, '<Leader>Y', '"+Y', { desc = 'Copy text from cursor to end of line to system clipboard' })
@@ -183,12 +180,10 @@ _map({ 'n', 'x' }, '<Leader>P', function()
     vim.cmd([['[,']Rstrip]])
 end, { desc = 'Paste text from system clipboard before the cursor' })
 
-_map('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
-_map('n', '<Leader>q', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
-_map('n', '<Leader>s', function()
+_map('n', '<Leader>xq', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
+_map('n', '<Leader>xs', function()
     return ':%s/' .. vim.fn.expand('<cword>') .. '/'
 end, { expr = true, desc = 'Substitute word under cursor' })
-
 _map('n', '<Leader>td', function()
     _dx.enable(not _dx.is_enabled())
     vim.notify('diagnostics ' .. (_dx.is_enabled() and 'enabled' or 'disabled'))
