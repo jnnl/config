@@ -582,18 +582,6 @@ return {
     },
 
     {
-        'romainl/vim-qf',
-        commit = '7e65325651ff5a0b06af8df3980d2ee54cf10e14',
-        event = 'FileType qf',
-        config = function()
-            _map('n', 'öl', '<Plug>(qf_loc_previous)', { desc = 'Go to previous location list item' })
-            _map('n', 'äl', '<Plug>(qf_loc_next)', { desc = 'Go to next location list item' })
-            _map('n', 'öq', '<Plug>(qf_qf_previous)', { desc = 'Go to previous quickfix item' })
-            _map('n', 'äq', '<Plug>(qf_qf_next)', { desc = 'Go to next quickfix item' })
-        end,
-    },
-
-    {
         'stevearc/quicker.nvim',
         tag = 'v1.1.1',
         event = 'FileType qf',
