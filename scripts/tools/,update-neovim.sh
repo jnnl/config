@@ -1,9 +1,8 @@
 #!/bin/bash
 # install/update neovim
 
-set -eu
+set -eu -o pipefail
 
-(
 base_path="$HOME/code/bin"
 pkg_name=""
 tag="nightly"
@@ -31,12 +30,10 @@ fi
 printf "install directory: %s\n" "$base_path/$pkg_name"
 
 if [ -d "$pkg_name" ]; then
-    if ! cmp -s "$base_path/$pkg_name/bin/nvim" "$base_path/$pkg_name.bak/bin/nvim"; then
-        printf "creating backup: %s -> %s ... " "$pkg_name" "$pkg_name.bak"
-        rm -rf "$pkg_name.bak"
-        cp -prf "$pkg_name" "$pkg_name.bak"
-        printf "done\n"
-    fi
+    printf "creating backup: %s -> %s ... " "$pkg_name" "$pkg_name.bak"
+    rm -rf "$pkg_name.bak"
+    cp -prf "$pkg_name" "$pkg_name.bak"
+    printf "done\n"
 fi
 
 printf "downloading $pkg_name.tar.gz (tag: %s) ... " "$tag"
@@ -68,4 +65,3 @@ ln -snf "$base_path/$pkg_name/bin/nvim" "$base_path/nvim"
 printf "done\n"
 
 printf "successfully installed neovim version %s\n" "$(nvim -v | awk 'NR==1 { print $2 }')"
-)
