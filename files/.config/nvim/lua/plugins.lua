@@ -187,28 +187,12 @@ return {
         opts = {},
     },
 
-    {
-        'tpope/vim-abolish',
-        commit = 'dcbfe065297d31823561ba787f51056c147aa682',
-        event = 'VeryLazy',
-    },
-
     -- Colorschemes
     {
         'jnnl/tonight.nvim',
         priority = 1000,
         config = function()
             vim.cmd.colorscheme('tonight')
-        end,
-    },
-
-    {
-        'verf/deepwhite.nvim',
-        commit = 'eca39dec3d504412ab5efce0046b77f67ffe4640',
-        lazy = true,
-        priority = 1000,
-        config = function()
-            vim.cmd.colorscheme('deepwhite')
         end,
     },
 
@@ -256,7 +240,7 @@ return {
             { 'williamboman/mason.nvim', tag = 'v1.10.0' },
             { 'williamboman/mason-lspconfig.nvim', tag = 'v1.31.0' },
             { 'ray-x/lsp_signature.nvim', commit = 'fc38521ea4d9ec8dbd4c2819ba8126cea743943b' },
-            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'hrsh7th/cmp-nvim-lsp', commit = '39e2eda76828d88b773cc27a3f61d2ad782c922d' },
         },
         config = function()
             local lsp = require('lspconfig')
@@ -408,18 +392,9 @@ return {
 
     -- Completion
     {
-        'hrsh7th/cmp-nvim-lsp',
-        commit = '39e2eda76828d88b773cc27a3f61d2ad782c922d',
-        lazy = true,
-    },
-
-    {
         'hrsh7th/nvim-cmp',
         commit = 'ae644feb7b67bf1ce4260c231d1d4300b19c6f30',
         event = 'InsertEnter',
-        dependencies = {
-            { 'hrsh7th/cmp-nvim-lsp' },
-        },
         init = function()
             vim.g.cmp_enabled = true
             _map('n', '<Leader>tc', function()
