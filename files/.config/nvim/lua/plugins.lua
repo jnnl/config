@@ -2,7 +2,7 @@ return {
     -- Navigation
     {
         'andymass/vim-matchup',
-        commit = '1975afe63198ab6a0dff7200919828e5cd4330b9',
+        commit = '5fb083de1e06fdd134c6ad8d007d4b5576b25ba7',
         event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
@@ -35,7 +35,7 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        commit = '780899604e0ce490d0d8e402a2fcdbad1cd7c9b8',
+        commit = 'ce1e24f2a48089b65deefcb0a71a9856839002b5',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -200,7 +200,6 @@ return {
     {
         'stevearc/conform.nvim',
         tag = 'v8.1.0',
-        event = 'BufWritePre',
         cmd = { 'Format' },
         keys = { { '<Leader>xf', desc = 'Format buffer' } },
         config = function()
@@ -393,7 +392,7 @@ return {
     -- Completion
     {
         'hrsh7th/nvim-cmp',
-        commit = 'ae644feb7b67bf1ce4260c231d1d4300b19c6f30',
+        commit = '29fb4854573355792df9e156cb779f0d31308796',
         event = 'InsertEnter',
         init = function()
             vim.g.cmp_enabled = true
@@ -541,7 +540,8 @@ return {
     {
         'mbbill/undotree',
         commit = '78b5241191852ffa9bb5da5ff2ee033160798c3b',
-        event = 'VeryLazy',
+        keys = { '<leader>tu' },
+        cmd = { 'UndotreeToggle', 'UndotreeShow', 'UndotreeHide' },
         config = function()
             _map('n', '<Leader>tu', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
             vim.g.undotree_SetFocusWhenToggle = 1
