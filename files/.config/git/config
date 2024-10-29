@@ -1,11 +1,9 @@
 [user]
-    name = Juho Junnila
-    email = git@jnnl.eu
     useConfigOnly = true
+    email = git@jnnl.eu
+    name = Juho Junnila
 [init]
     defaultBranch = master
-[github]
-    user = jnnl
 [core]
     editor = nvim
 [diff]
@@ -13,6 +11,8 @@
     colorMoved = default
 [push]
     default = current
+[pull]
+    rebase = true
 [merge]
     tool = diffconflicts
     conflictStyle = diff3
@@ -28,22 +28,18 @@
     b = branch
     c = commit
     ca = commit --amend
-    cb = "!bash -ic gcb"
     co = checkout
     d = diff
     dc = diff --cached
     dh = diff HEAD^ HEAD
     dr = diff @{upstream}
-    du = diff --name-only --diff-filter=U
     l = log --oneline --decorate --graph
     lg = log --date=format:'%a %_d %b %H:%M %Y' --pretty=format:'%C(auto)%h  %C(green)%ad  %C(blue)%<(15,trunc)%an %C(auto)%s%d'
-    mff = merge --ff-only
     pp = "!git pull && git push"
     pr = pull --rebase
     prp = "!git pull --rebase && git push"
     rh = reset --hard
     rp = "!git diff -Rp --diff-filter=M --no-ext-diff --color=never | awk '/^(diff |(old|new) mode)/' | git apply"
-    rso = remote show origin
     s = status -bsu
     spps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git push && git stash pop; else git pull && git push; fi'"
     sps = "!bash -c 'if [[ -n $(git status -s) ]]; then git stash -u && git pull && git stash pop; else git pull; fi'"
