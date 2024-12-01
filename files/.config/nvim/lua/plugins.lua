@@ -35,7 +35,7 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        commit = 'ce1e24f2a48089b65deefcb0a71a9856839002b5',
+        commit = '175ddbb9bbe28eef006516f38b126215de1fef57',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -182,7 +182,7 @@ return {
 
     {
         'kylechui/nvim-surround',
-        tag = 'v2.3.0',
+        tag = 'v2.3.1',
         event = 'VeryLazy',
         opts = {},
     },
@@ -199,7 +199,7 @@ return {
     -- Language
     {
         'stevearc/conform.nvim',
-        tag = 'v8.1.0',
+        tag = 'v8.2.0',
         cmd = { 'Format' },
         keys = { { '<Leader>xf', desc = 'Format buffer' } },
         config = function()
@@ -317,10 +317,10 @@ return {
     {
         'nvim-treesitter/nvim-treesitter',
         branch = 'master',
-        commit = '140f534ce9c02189921b80f5c8a68ab9e3f92ce8',
+        tag = 'v0.9.3',
         build = ':TSUpdate',
         dependencies = {
-            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '4a2d05ec24eaa6b655c7d19092a3b6c0219d46b9' },
+            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = 'e0a7b5a6b7f18a5d508d05ca8853273db7bcbe50' },
         },
         config = function()
             require('nvim-treesitter.configs').setup({
@@ -392,7 +392,7 @@ return {
     -- Completion
     {
         'hrsh7th/nvim-cmp',
-        commit = '29fb4854573355792df9e156cb779f0d31308796',
+        commit = 'ca4d3330d386e76967e53b85953c170658255ecb',
         event = 'InsertEnter',
         init = function()
             vim.g.cmp_enabled = true
@@ -440,7 +440,7 @@ return {
     -- Git
     {
         'lewis6991/gitsigns.nvim',
-        commit = '863903631e676b33e8be2acb17512fdc1b80b4fb',
+        commit = '5f808b5e4fef30bd8aca1b803b4e555da07fc412',
         event = 'VeryLazy',
         opts = {
             on_attach = function(bufnr)
@@ -465,7 +465,7 @@ return {
 
     {
         'tpope/vim-fugitive',
-        commit = 'd4877e54cef67f5af4f950935b1ade19ed6b7370',
+        commit = '320b18fba2a4f2fe3c8225c778c687e0d2620384',
         event = 'VeryLazy',
         config = function()
             _map('n', '<Leader>gb', '<cmd>Git blame<CR>', { desc = 'Open git blame split' })
@@ -558,7 +558,7 @@ return {
 
     {
         'stevearc/quicker.nvim',
-        tag = 'v1.1.1',
+        tag = 'v1.2.0',
         event = 'FileType qf',
         opts = {
             keys = {
@@ -576,7 +576,7 @@ return {
 
     {
         'akinsho/toggleterm.nvim',
-        commit = '137d06fb103952a0fb567882bb8527e2f92d327d',
+        tag = 'v2.13.0',
         event = 'VeryLazy',
         opts = {
             size = function(term)
