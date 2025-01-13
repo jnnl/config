@@ -2,7 +2,7 @@ return {
     -- Navigation
     {
         'andymass/vim-matchup',
-        commit = '5fb083de1e06fdd134c6ad8d007d4b5576b25ba7',
+        commit = 'aca23ce53ebfe34e02c4fe07e29e9133a2026481',
         event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
@@ -29,13 +29,14 @@ return {
 
     {
         'junegunn/fzf',
+        version = '*',
         lazy = true,
         build = './install --xdg --key-bindings --completion --no-fish --no-zsh --no-update-rc',
     },
 
     {
         'ibhagwan/fzf-lua',
-        commit = '175ddbb9bbe28eef006516f38b126215de1fef57',
+        commit = '6f7249741168c0751356e3b6c5c1e3bade833b6b',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -112,7 +113,7 @@ return {
                         args = '--style=numbers,changes,header-filename,rule --color always --line-range=:1000',
                     },
                     builtin = {
-                        treesitter = { enable = true },
+                        treesitter = { enabled = true },
                         extensions = {
                             ['gif'] = { 'chafa' },
                             ['png'] = { 'chafa' },
@@ -121,6 +122,7 @@ return {
                             ['svg'] = { 'chafa' },
                         },
                         title_fnamemodify = function(s) return vim.fn.fnamemodify(s, ':p:.') end,
+                        syntax_limit_b = 100 * 1024,
                     },
                 },
                 files = {
@@ -148,7 +150,7 @@ return {
             _map('n', '<Leader>:', function()
                 fzf_lua.oldfiles({ prompt = 'CwdHistory> ', cwd_only = true })
             end, { desc = 'Find recently opened files under cwd' })
-            _map('n', '<Leader>_', fzf_lua.blines, { desc = 'Find text in current file' })
+            _map('n', '<Leader>_', fzf_lua.grep_curbuf, { desc = 'Find text in current file' })
             _map('n', '<Leader>\'', fzf_lua.resume, { desc = 'Resume most recent fzf-lua search' })
             _map('n', '<Leader>*', function() fzf_lua.files({ cwd = '~' }) end, { desc = 'Find files in $HOME' })
             _map('n', '<Leader>fd', fzf_lua.diagnostics_document, { desc = 'Find document diagnostics' })
@@ -199,7 +201,7 @@ return {
     -- Language
     {
         'stevearc/conform.nvim',
-        tag = 'v8.2.0',
+        tag = 'v8.3.0',
         cmd = { 'Format' },
         keys = { { '<Leader>xf', desc = 'Format buffer' } },
         config = function()
@@ -233,13 +235,13 @@ return {
 
     {
         'neovim/nvim-lspconfig',
-        tag = 'v1.0.0',
+        tag = 'v1.3.0',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
-            { 'williamboman/mason.nvim', tag = 'v1.10.0' },
-            { 'williamboman/mason-lspconfig.nvim', tag = 'v1.31.0' },
-            { 'ray-x/lsp_signature.nvim', commit = 'fc38521ea4d9ec8dbd4c2819ba8126cea743943b' },
-            { 'hrsh7th/cmp-nvim-lsp', commit = '39e2eda76828d88b773cc27a3f61d2ad782c922d' },
+            { 'williamboman/mason.nvim', commit = 'e2f7f9044ec30067bc11800a9e266664b88cda22' },
+            { 'williamboman/mason-lspconfig.nvim', commit = '8e46de9241d3997927af12196bd8faa0ed08c29a' },
+            { 'ray-x/lsp_signature.nvim', commit = '5b64964ed02098c85613ee3d20f96bed1dfb64cc' },
+            { 'hrsh7th/cmp-nvim-lsp', commit = '99290b3ec1322070bcfb9e846450a46f6efa50f0' },
         },
         config = function()
             local lsp = require('lspconfig')
@@ -250,7 +252,6 @@ return {
                 ansiblels = { settings = { ansible = { validation = { lint = { enabled = true } } } } },
                 bashls = {},
                 cssls = {},
-                denols = { root_dir = lsp.util.root_pattern('deno.json', 'deno.jsonc') },
                 gopls = {},
                 html = { filetypes = { 'html', 'htmlangular' } },
                 lua_ls = {
@@ -284,11 +285,6 @@ return {
                                 vim.lsp.stop_client(client.id)
                             end
                         end
-                        lsp.util.on_setup = lsp.util.add_hook_before(lsp.util.on_setup, function(cfg)
-                            if cfg.name == 'ts_ls' and lsp.util.root_pattern('deno.json') then
-                                cfg.single_file_support = false
-                            end
-                        end)
                         lsp[server_name].setup(config)
                     end,
                 }
@@ -317,10 +313,10 @@ return {
     {
         'nvim-treesitter/nvim-treesitter',
         branch = 'master',
-        tag = 'v0.9.3',
+        commit = 'dc9bf52c1f8b9abae0c10e0192baea2e720472ef',
         build = ':TSUpdate',
         dependencies = {
-            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = 'e0a7b5a6b7f18a5d508d05ca8853273db7bcbe50' },
+            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = 'ad8f0a472148c3e0ae9851e26a722ee4e29b1595' },
         },
         config = function()
             require('nvim-treesitter.configs').setup({
@@ -392,7 +388,7 @@ return {
     -- Completion
     {
         'hrsh7th/nvim-cmp',
-        commit = 'ca4d3330d386e76967e53b85953c170658255ecb',
+        commit = '8c82d0bd31299dbff7f8e780f5e06d2283de9678',
         event = 'InsertEnter',
         init = function()
             vim.g.cmp_enabled = true
@@ -440,7 +436,7 @@ return {
     -- Git
     {
         'lewis6991/gitsigns.nvim',
-        commit = '5f808b5e4fef30bd8aca1b803b4e555da07fc412',
+        commit = 'abcd00a7d5bc1a9470cb21b023c575acade3e4db',
         event = 'VeryLazy',
         opts = {
             on_attach = function(bufnr)
@@ -465,7 +461,7 @@ return {
 
     {
         'tpope/vim-fugitive',
-        commit = '320b18fba2a4f2fe3c8225c778c687e0d2620384',
+        commit = '174230d6a7f2df94705a7ffd8d5413e27ec10a80',
         event = 'VeryLazy',
         config = function()
             _map('n', '<Leader>gb', '<cmd>Git blame<CR>', { desc = 'Open git blame split' })
@@ -540,10 +536,9 @@ return {
     {
         'mbbill/undotree',
         commit = '78b5241191852ffa9bb5da5ff2ee033160798c3b',
-        keys = { '<leader>tu' },
+        keys = { { '<Leader>tu', '<cmd>UndotreeToggle<CR>', desc = 'Toggle undotree' } },
         cmd = { 'UndotreeToggle', 'UndotreeShow', 'UndotreeHide' },
         config = function()
-            _map('n', '<Leader>tu', '<cmd>UndotreeToggle<CR>', { desc = 'Toggle undotree' })
             vim.g.undotree_SetFocusWhenToggle = 1
             vim.g.undotree_ShortIndicators = 1
             vim.g.undotree_WindowLayout = 2
@@ -558,7 +553,7 @@ return {
 
     {
         'stevearc/quicker.nvim',
-        tag = 'v1.2.0',
+        tag = 'v1.3.0',
         event = 'FileType qf',
         opts = {
             keys = {
@@ -572,24 +567,5 @@ return {
         'whiteinge/diffconflicts',
         tag = '2.3.0',
         cmd = { 'DiffConflicts', 'DiffConflictsShowHistory', 'DiffConflictsWithHistory' },
-    },
-
-    {
-        'akinsho/toggleterm.nvim',
-        tag = 'v2.13.0',
-        event = 'VeryLazy',
-        opts = {
-            size = function(term)
-                if term.direction == 'horizontal' then
-                    return 10
-                elseif term.direction == 'vertical' then
-                    return vim.o.columns / 2
-                end
-            end,
-        },
-        init = function()
-            _map({ 'n', 't' }, '<Leader>tt', '<cmd>ToggleTerm<CR>', { desc = 'Toggle terminal' })
-            _map('n', '<Leader>tT', '<cmd>ToggleTerm direction=float<CR>', { desc = 'Toggle terminal (float)' })
-        end,
     },
 }
