@@ -78,8 +78,7 @@ if not vim.uv.fs_stat(lazy_path) then
     vim.notify('installing lazy.nvim...')
     vim.fn.system({
         'git', 'clone', 'https://github.com/folke/lazy.nvim.git',
-        '--filter=blob:none', '--branch=stable',
-        lazy_path
+        '--filter=blob:none', '--branch=stable', lazy_path
     })
 end
 vim.opt.rtp:prepend(lazy_path)
@@ -106,21 +105,39 @@ vim.opt.inccommand = 'split'
 vim.opt.modeline = false
 vim.opt.mouse = ''
 vim.opt.number = true
+vim.opt.numberwidth = 3
 vim.opt.shada = [[r/tmp/,r/private/,rfugitive:,rterm:,rzipfile:,!,'200,<50,s10,h]]
 vim.opt.shiftround = true
 vim.opt.shiftwidth = 4
 vim.opt.shortmess:append('cI')
-vim.opt.signcolumn = 'yes'
+vim.opt.signcolumn = 'yes:1'
 vim.opt.smartcase = true
 vim.opt.softtabstop = -1
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+vim.opt.statuscolumn = '%l%s'
 vim.opt.statusline = '%{%v:lua._statusline()%}'
 vim.opt.timeoutlen = 500
 vim.opt.undodir = vim.fn.stdpath('state') .. '/undo'
 vim.opt.undofile = true
 
-_dx.config({ virtual_text = false })
+_dx.config({
+    virtual_text = false,
+    signs = {
+        text = {
+            [_dx.severity.HINT] = '',
+            [_dx.severity.INFO] = '',
+            [_dx.severity.ERROR] = '',
+            [_dx.severity.WARN] = '',
+        },
+        numhl = {
+            [_dx.severity.HINT] = 'DiagnosticHint',
+            [_dx.severity.INFO] = 'DiagnosticInfo',
+            [_dx.severity.WARN] = 'DiagnosticWarn',
+            [_dx.severity.ERROR] = 'DiagnosticError',
+        }
+    },
+})
 
 -- Keymaps
 
@@ -182,6 +199,7 @@ _map({ 'n', 'x' }, '<Leader>P', function()
     vim.cmd([['[,']Rstrip]])
 end, { desc = 'Paste text from system clipboard before the cursor' })
 
+_map('n', '<Leader>L', '<cmd>Lazy<CR>', { desc = 'Open lazy.nvim' })
 _map('n', '<Leader>xq', '<cmd>CloseFloatingWindows<CR>', { desc = 'Close floating windows' })
 _map('n', '<Leader>xs', function()
     return ':%s/' .. vim.fn.expand('<cword>') .. '/'
