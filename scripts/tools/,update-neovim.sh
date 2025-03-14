@@ -11,7 +11,7 @@ kernel="$(uname -s)"
 arch="$(uname -m)"
 
 if [ "$kernel" = "Linux" ]; then
-    pkg_name="nvim-linux64"
+    pkg_name="nvim-linux-$arch"
 elif [ "$kernel" = "Darwin" ]; then
     pkg_name="nvim-macos-$arch"
 else
@@ -40,12 +40,12 @@ printf "downloading $pkg_name.tar.gz (tag: %s) ... " "$tag"
 curl -sSfLO "https://github.com/neovim/neovim/releases/download/$tag/$pkg_name.tar.gz"
 printf "done\n"
 
-printf "downloading %s ... " "$pkg_name.tar.gz.sha256sum"
-curl -sSfLO "https://github.com/neovim/neovim/releases/download/$tag/$pkg_name.tar.gz.sha256sum"
+printf "downloading %s ... " "shasum.txt"
+curl -sSfLO "https://github.com/neovim/neovim/releases/download/$tag/shasum.txt"
 printf "done\n"
 
 printf "verifying %s sha256sum ... " "$pkg_name.tar.gz"
-sha256sum --quiet -c "$pkg_name.tar.gz.sha256sum"
+sha256sum --quiet --ignore-missing -c "shasum.txt"
 printf "done\n"
 
 printf "removing %s ... " "$pkg_name"
@@ -56,8 +56,8 @@ printf "unpacking %s ... " "$pkg_name.tar.gz"
 tar xf "$pkg_name.tar.gz"
 printf "done\n"
 
-printf "removing %s, %s ... " "$pkg_name.tar.gz" "$pkg_name.tar.gz.sha256sum"
-rm -f "$pkg_name.tar.gz" "$pkg_name.tar.gz.sha256sum"
+printf "removing %s, %s ... " "$pkg_name.tar.gz" "shasum.txt"
+rm -f "$pkg_name.tar.gz" "shasum.txt"
 printf "done\n"
 
 printf "linking %s to %s ... " "$base_path/$pkg_name/bin/nvim" "$base_path/nvim"
