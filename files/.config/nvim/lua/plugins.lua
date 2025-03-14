@@ -11,7 +11,7 @@ return {
 
     {
         'ggandor/leap.nvim',
-        commit = 'c6bfb191f1161fbabace1f36f578a20ac6c7642c',
+        commit = '346a16ef942635a8ca5ff92e603d07e7e8be6cbe',
         event = 'VeryLazy',
         config = function()
             local leap = require('leap')
@@ -22,8 +22,7 @@ return {
                     (ch0:match('%w') and ch1:match('%w') and ch2:match('%w')) -- skip middle of alphanumerics
                 )
             end
-            _map({ 'n', 'x' }, 's', '<Plug>(leap-forward-to)')
-            _map({ 'n', 'x' }, 'S', '<Plug>(leap-backward-to)')
+            _map({ 'n', 'x' }, 's', '<Plug>(leap)')
         end,
     },
 
@@ -36,7 +35,7 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        commit = '6f7249741168c0751356e3b6c5c1e3bade833b6b',
+        commit = '480e29c20cb324bb9bf3d6f7d8e5505bcb49d555',
         event = 'VeryLazy',
         config = function()
             local fzf_lua = require('fzf-lua')
@@ -184,7 +183,7 @@ return {
 
     {
         'kylechui/nvim-surround',
-        tag = 'v2.3.1',
+        tag = 'v2.3.2',
         event = 'VeryLazy',
         opts = {},
     },
@@ -201,7 +200,7 @@ return {
     -- Language
     {
         'stevearc/conform.nvim',
-        tag = 'v8.3.0',
+        tag = 'v9.0.0',
         cmd = { 'Format' },
         keys = { { '<Leader>xf', desc = 'Format buffer' } },
         config = function()
@@ -235,12 +234,12 @@ return {
 
     {
         'neovim/nvim-lspconfig',
-        tag = 'v1.3.0',
+        tag = 'v1.6.0',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
-            { 'williamboman/mason.nvim', commit = 'e2f7f9044ec30067bc11800a9e266664b88cda22' },
-            { 'williamboman/mason-lspconfig.nvim', commit = '8e46de9241d3997927af12196bd8faa0ed08c29a' },
-            { 'ray-x/lsp_signature.nvim', commit = '5b64964ed02098c85613ee3d20f96bed1dfb64cc' },
+            { 'williamboman/mason.nvim', tag = 'v1.11.0' },
+            { 'williamboman/mason-lspconfig.nvim', tag = 'v1.32.0' },
+            { 'ray-x/lsp_signature.nvim', commit = '02a2784275e05fba89395e1d5e147d7a2b4877d2' },
             { 'hrsh7th/cmp-nvim-lsp', commit = '99290b3ec1322070bcfb9e846450a46f6efa50f0' },
         },
         config = function()
@@ -388,7 +387,7 @@ return {
     -- Completion
     {
         'hrsh7th/nvim-cmp',
-        commit = '8c82d0bd31299dbff7f8e780f5e06d2283de9678',
+        commit = '12509903a5723a876abd65953109f926f4634c30',
         event = 'InsertEnter',
         init = function()
             vim.g.cmp_enabled = true
@@ -436,7 +435,7 @@ return {
     -- Git
     {
         'lewis6991/gitsigns.nvim',
-        commit = 'abcd00a7d5bc1a9470cb21b023c575acade3e4db',
+        tag = 'v1.0.1',
         event = 'VeryLazy',
         opts = {
             on_attach = function(bufnr)
@@ -461,7 +460,7 @@ return {
 
     {
         'tpope/vim-fugitive',
-        commit = '174230d6a7f2df94705a7ffd8d5413e27ec10a80',
+        commit = 'd74a7cff4cfcf84f83cc7eccfa365488f3bbabc2',
         event = 'VeryLazy',
         config = function()
             _map('n', '<Leader>gb', '<cmd>Git blame<CR>', { desc = 'Open git blame split' })
@@ -473,7 +472,7 @@ return {
     -- Miscellaneous
     {
         'echasnovski/mini.clue',
-        tag = 'v0.14.0',
+        tag = 'v0.15.0',
         event = 'VeryLazy',
         config = function()
             local miniclue = require('mini.clue')
@@ -520,7 +519,7 @@ return {
 
     {
         'echasnovski/mini.files',
-        tag = 'v0.14.0',
+        tag = 'v0.15.0',
         config = function()
             local minifiles = require('mini.files')
             minifiles.setup({
@@ -535,7 +534,7 @@ return {
 
     {
         'mbbill/undotree',
-        commit = '78b5241191852ffa9bb5da5ff2ee033160798c3b',
+        commit = '2556c6800b210b2096b55b66e74b4cc1d9ebbe4f',
         keys = { { '<Leader>tu', '<cmd>UndotreeToggle<CR>', desc = 'Toggle undotree' } },
         cmd = { 'UndotreeToggle', 'UndotreeShow', 'UndotreeHide' },
         config = function()
@@ -553,7 +552,7 @@ return {
 
     {
         'stevearc/quicker.nvim',
-        tag = 'v1.3.0',
+        tag = 'v1.4.0',
         event = 'FileType qf',
         opts = {
             keys = {
