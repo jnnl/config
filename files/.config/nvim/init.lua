@@ -147,6 +147,7 @@ _map('n', '<C-Space>', _dx.open_float)
 _map('n', '<Esc>', '<cmd>nohlsearch<CR>')
 _map('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
 _map('ca', 'W', 'w')
+_map('n', 'J', 'mJJ`J<cmd>delm J<CR>')
 
 _map('n', 'j', function() return vim.v.count == 0 and 'gj' or 'j' end, { expr = true })
 _map('n', 'k', function() return vim.v.count == 0 and 'gk' or 'k' end, { expr = true })
@@ -351,6 +352,25 @@ _autocmd('DiagnosticChanged', {
     group = _augroup('statusline_refresh'),
     callback = function()
         vim.o.statusline = vim.o.statusline
+    end,
+})
+
+_autocmd('LspAttach', {
+    group = _augroup('lsp_attach_config'),
+    callback = function(ev)
+        local fzf_lua = require('fzf-lua')
+        local opts = _make_opts_fn({ buffer = ev.buf })
+        vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+        _map('n', 'gd', vim.lsp.buf.definition, opts({ desc = 'Go to definition' }))
+        _map('n', 'gD', fzf_lua.lsp_definitions, opts({ desc = 'Find definitions' }))
+        _map('n', 'gi', fzf_lua.lsp_implementations, opts({ desc = 'Find implementations' }))
+        _map('n', 'gt', vim.lsp.buf.type_definition, opts({ desc = 'Go to type definition' }))
+        _map('n', 'gT', fzf_lua.lsp_typedefs, opts({ desc = 'Find type definitions' }))
+        _map('n', '<Space>', vim.lsp.buf.hover, opts({ desc = 'Show hover info about symbol under cursor' }))
+        _map('n', '<Leader>xr', vim.lsp.buf.rename, opts({ desc = 'Rename symbol under cursor' }))
+        _map('n', '<Leader>fs', fzf_lua.lsp_document_symbols, opts({ desc = 'Find document symbols' }))
+        _map({ 'n', 'x' }, '<Leader><Space>', fzf_lua.lsp_code_actions, opts({ desc = 'Find code actions' }))
+        require('lsp_signature').on_attach({ hint_enable = false }, ev.buf)
     end,
 })
 

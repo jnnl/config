@@ -2,7 +2,7 @@ return {
     -- Navigation
     {
         'andymass/vim-matchup',
-        commit = 'aca23ce53ebfe34e02c4fe07e29e9133a2026481',
+        commit = 'ea2ff43e09e68b63fc6d9268fc5d82d82d433cb3',
         event = { 'BufNewFile', 'BufReadPost' },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = 'popup' }
@@ -11,7 +11,7 @@ return {
 
     {
         'ggandor/leap.nvim',
-        commit = '346a16ef942635a8ca5ff92e603d07e7e8be6cbe',
+        commit = '2b68ddc0802bd295e64c9e2e75f18f755e50dbcc',
         event = 'VeryLazy',
         config = function()
             local leap = require('leap')
@@ -183,7 +183,7 @@ return {
 
     {
         'kylechui/nvim-surround',
-        tag = 'v2.3.2',
+        tag = 'v3.1.1',
         event = 'VeryLazy',
         opts = {},
     },
@@ -234,18 +234,14 @@ return {
 
     {
         'neovim/nvim-lspconfig',
-        tag = 'v1.6.0',
+        tag = 'v2.1.0',
         event = { 'BufNewFile', 'BufReadPre' },
         dependencies = {
-            { 'williamboman/mason.nvim', tag = 'v1.11.0' },
-            { 'williamboman/mason-lspconfig.nvim', tag = 'v1.32.0' },
-            { 'ray-x/lsp_signature.nvim', commit = '02a2784275e05fba89395e1d5e147d7a2b4877d2' },
+            { 'mason-org/mason.nvim', tag = 'v2.0.0' },
+            { 'ray-x/lsp_signature.nvim', commit = 'a793d02b6a5e639fa9d3f2a89a839fa688ab2d0a' },
             { 'hrsh7th/cmp-nvim-lsp', commit = '99290b3ec1322070bcfb9e846450a46f6efa50f0' },
         },
         config = function()
-            local lsp = require('lspconfig')
-            local capabilities = require('cmp_nvim_lsp').default_capabilities()
-            capabilities.textDocument.completion.completionItem.snippetSupport = true
             local servers = {
                 angularls = { filetypes = { 'html', 'htmlangular' } },
                 ansiblels = { settings = { ansible = { validation = { lint = { enabled = true } } } } },
@@ -272,50 +268,20 @@ return {
                 ts_ls = {},
             }
             require('mason').setup()
-            require('mason-lspconfig').setup({
-                handlers = {
-                    function(server_name)
-                        local config = servers[server_name] or {}
-                        config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
-                        config.on_attach = function(client, bufnr)
-                            local filename = vim.api.nvim_buf_get_name(bufnr)
-                            if #filename > 0 and vim.fn.getfsize(filename) > 1024 * 100 then
-                                vim.notify('lsp: file is too large, stopping ' .. client.name, vim.log.levels.WARN)
-                                vim.lsp.stop_client(client.id)
-                            end
-                        end
-                        lsp[server_name].setup(config)
-                    end,
-                }
-            })
-            _autocmd('LspAttach', {
-                group = _augroup('lsp_attach_config'),
-                callback = function(ev)
-                    local fzf_lua = require('fzf-lua')
-                    local opts = _make_opts_fn({ buffer = ev.buf })
-                    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-                    _map('n', 'gd', vim.lsp.buf.definition, opts({ desc = 'Go to definition' }))
-                    _map('n', 'gD', fzf_lua.lsp_definitions, opts({ desc = 'Find definitions' }))
-                    _map('n', 'gi', fzf_lua.lsp_implementations, opts({ desc = 'Find implementations' }))
-                    _map('n', 'gt', vim.lsp.buf.type_definition, opts({ desc = 'Go to type definition' }))
-                    _map('n', 'gT', fzf_lua.lsp_typedefs, opts({ desc = 'Find type definitions' }))
-                    _map('n', '<Space>', vim.lsp.buf.hover, opts({ desc = 'Show hover info about symbol under cursor' }))
-                    _map('n', '<Leader>xr', vim.lsp.buf.rename, opts({ desc = 'Rename symbol under cursor' }))
-                    _map('n', '<Leader>fs', fzf_lua.lsp_document_symbols, opts({ desc = 'Find document symbols' }))
-                    _map({ 'n', 'x' }, '<Leader><Space>', fzf_lua.lsp_code_actions, opts({ desc = 'Find code actions' }))
-                    require('lsp_signature').on_attach({ hint_enable = false }, ev.buf)
-                end,
-            })
+            for server, config in pairs(servers) do
+                vim.lsp.config(server, config)
+                vim.lsp.enable(server)
+            end
         end,
     },
 
     {
         'nvim-treesitter/nvim-treesitter',
         branch = 'master',
-        commit = 'dc9bf52c1f8b9abae0c10e0192baea2e720472ef',
+        commit = '28d480e0624b259095e56f353ec911f9f2a0f404',
         build = ':TSUpdate',
         dependencies = {
-            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = 'ad8f0a472148c3e0ae9851e26a722ee4e29b1595' },
+            { 'nvim-treesitter/nvim-treesitter-textobjects', commit = '0e3be38005e9673d044e994b1e4b123adb040179' },
         },
         config = function()
             require('nvim-treesitter.configs').setup({
@@ -387,7 +353,7 @@ return {
     -- Completion
     {
         'hrsh7th/nvim-cmp',
-        commit = '12509903a5723a876abd65953109f926f4634c30',
+        commit = 'b5311ab3ed9c846b585c0c15b7559be131ec4be9',
         event = 'InsertEnter',
         init = function()
             vim.g.cmp_enabled = true
@@ -435,7 +401,7 @@ return {
     -- Git
     {
         'lewis6991/gitsigns.nvim',
-        tag = 'v1.0.1',
+        tag = 'v1.0.2',
         event = 'VeryLazy',
         opts = {
             on_attach = function(bufnr)
@@ -460,7 +426,7 @@ return {
 
     {
         'tpope/vim-fugitive',
-        commit = 'd74a7cff4cfcf84f83cc7eccfa365488f3bbabc2',
+        commit = '4a745ea72fa93bb15dd077109afbb3d1809383f2',
         event = 'VeryLazy',
         config = function()
             _map('n', '<Leader>gb', '<cmd>Git blame<CR>', { desc = 'Open git blame split' })
@@ -534,7 +500,7 @@ return {
 
     {
         'mbbill/undotree',
-        commit = '2556c6800b210b2096b55b66e74b4cc1d9ebbe4f',
+        commit = 'b951b87b46c34356d44aa71886aecf9dd7f5788a',
         keys = { { '<Leader>tu', '<cmd>UndotreeToggle<CR>', desc = 'Toggle undotree' } },
         cmd = { 'UndotreeToggle', 'UndotreeShow', 'UndotreeHide' },
         config = function()
