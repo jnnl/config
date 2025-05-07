@@ -170,6 +170,7 @@ export PATH="$HOME/code/bin:$PATH"
 if has nvim; then
     alias vim=nvim
     export VISUAL=nvim EDITOR=nvim
+    export MANPAGER="nvim -i NONE +Man!"
 elif has vim; then
     export VISUAL=vim EDITOR=vim
 fi
